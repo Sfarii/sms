@@ -1,0 +1,206 @@
+header.view_profile: 'My profile'
+header.logout: Logout
+header.profile_setting: Settings
+delete.name: 'Delete %item%'
+delete.message: 'Are you sure you want to delete this %item%?'
+delete.yes: 'yes'
+delete.no: 'no'
+action.name: Action
+action.save: save
+action.edit: edit
+action.delete: delete
+action.show: show
+index.search: search
+index.count: 'Showing %per_page% of %total% entries'
+menu.users.section: User managment
+menu.student.section: Studnet
+menu.parentstudent.section: Parent
+menu.professor.section: Professor
+menu.adminstrator.section: Administrator
+administrator.show.title: __administrator.show.title
+administrator.show.detail: __administrator.show.detail
+administrator.field.firstName: __administrator.field.firstName
+administrator.field.lastName: __administrator.field.lastName
+administrator.field.gender: __administrator.field.gender
+administrator.field.phone: __administrator.field.phone
+administrator.field.address: __administrator.field.address
+administrator.field.id: __administrator.field.id
+administrator.field.username: __administrator.field.username
+administrator.field.usernameCanonical: __administrator.field.usernameCanonical
+administrator.field.email: __administrator.field.email
+administrator.field.emailCanonical: __administrator.field.emailCanonical
+administrator.field.enabled: __administrator.field.enabled
+administrator.field.salt: __administrator.field.salt
+administrator.field.password: __administrator.field.password
+administrator.field.lastLogin: __administrator.field.lastLogin
+administrator.field.confirmationToken: __administrator.field.confirmationToken
+administrator.field.passwordRequestedAt: __administrator.field.passwordRequestedAt
+administrator.field.roles: __administrator.field.roles
+author.info: __author.info
+administrator.item: __administrator.item
+administrator.list.title: __administrator.list.title
+user.username: __user.username
+user.password: __user.password
+login.submit: __login.submit
+login.help_show: __login.help_show
+login.stay_signed: __login.stay_signed
+registration.email.title: __registration.email.title
+registration.email.subject: __registration.email.subject
+registration.email.message: __registration.email.message
+registration.email.button: __registration.email.button
+registration.email.note: __registration.email.note
+registration.email.footer: __registration.email.footer
+registration.title: __registration.title
+registration.submit: __registration.submit
+profile.section.about: __profile.section.about
+profile.section.activity: __profile.section.activity
+profile.view.general_info: __profile.view.general_info
+user.empty: __user.empty
+user.first_name: __user.first_name
+user.last_name: __user.last_name
+user.about: __user.about
+profile.view.contact_info: __profile.view.contact_info
+user.email: __user.email
+user.facebook: __user.facebook
+user.phone: __user.phone
+user.twitter: __user.twitter
+profile.view.friends: __profile.view.friends
+profile.view.show_all: __profile.view.show_all
+reset.email.title: __reset.email.title
+reset.email.subject: __reset.email.subject
+reset.email.message: __reset.email.message
+reset.email.button: __reset.email.button
+reset.email.note: __reset.email.note
+reset.email.footer: __reset.email.footer
+reset.send_email: __reset.send_email
+student.show.title: __student.show.title
+student.show.detail: __student.show.detail
+student.field.recordeNumber: __student.field.recordeNumber
+student.field.firstName: __student.field.firstName
+student.field.lastName: __student.field.lastName
+student.field.gender: __student.field.gender
+student.field.birthday: __student.field.birthday
+student.field.id: __student.field.id
+student.field.username: __student.field.username
+student.field.usernameCanonical: __student.field.usernameCanonical
+student.field.email: __student.field.email
+student.field.emailCanonical: __student.field.emailCanonical
+student.field.enabled: __student.field.enabled
+student.field.salt: __student.field.salt
+student.field.password: __student.field.password
+student.field.lastLogin: __student.field.lastLogin
+student.field.confirmationToken: __student.field.confirmationToken
+student.field.passwordRequestedAt: __student.field.passwordRequestedAt
+student.field.roles: __student.field.roles
+student.item: __student.item
+student.list.title: __student.list.title
+professor.show.title: __professor.show.title
+professor.show.detail: __professor.show.detail
+professor.field.firstName: __professor.field.firstName
+professor.field.lastName: __professor.field.lastName
+professor.field.gender: __professor.field.gender
+professor.field.birthday: __professor.field.birthday
+professor.field.phone: __professor.field.phone
+professor.field.address: __professor.field.address
+professor.field.grade: __professor.field.grade
+professor.field.id: __professor.field.id
+professor.field.username: __professor.field.username
+professor.field.usernameCanonical: __professor.field.usernameCanonical
+professor.field.email: __professor.field.email
+professor.field.emailCanonical: __professor.field.emailCanonical
+professor.field.enabled: __professor.field.enabled
+professor.field.salt: __professor.field.salt
+professor.field.password: __professor.field.password
+professor.field.lastLogin: __professor.field.lastLogin
+professor.field.confirmationToken: __professor.field.confirmationToken
+professor.field.passwordRequestedAt: __professor.field.passwordRequestedAt
+professor.field.roles: __professor.field.roles
+professor.item: __professor.item
+professor.list.title: __professor.list.title
+studentparent.show.title: __studentparent.show.title
+studentparent.show.detail: __studentparent.show.detail
+studentparent.field.fatherName: __studentparent.field.fatherName
+studentparent.field.motherName: __studentparent.field.motherName
+studentparent.field.familyName: __studentparent.field.familyName
+studentparent.field.fatherProfession: __studentparent.field.fatherProfession
+studentparent.field.motherProfession: __studentparent.field.motherProfession
+studentparent.field.address: __studentparent.field.address
+studentparent.field.phone: __studentparent.field.phone
+studentparent.field.id: __studentparent.field.id
+studentparent.field.username: __studentparent.field.username
+studentparent.field.usernameCanonical: __studentparent.field.usernameCanonical
+studentparent.field.email: __studentparent.field.email
+studentparent.field.emailCanonical: __studentparent.field.emailCanonical
+studentparent.field.enabled: __studentparent.field.enabled
+studentparent.field.salt: __studentparent.field.salt
+studentparent.field.password: __studentparent.field.password
+studentparent.field.lastLogin: __studentparent.field.lastLogin
+studentparent.field.confirmationToken: __studentparent.field.confirmationToken
+studentparent.field.passwordRequestedAt: __studentparent.field.passwordRequestedAt
+studentparent.field.roles: __studentparent.field.roles
+studentparent.item: __studentparent.item
+studentparent.list.title: __studentparent.list.title
+#form
+user:
+  field:
+    first_name: First name
+    last_name: Last Name
+    about: About
+    phone: Phone
+    facebook: Facebook
+    twitter: Twitter
+    email : E-mail
+    username : Username
+    password : Password
+    repeat_password : Repeat password
+    new_password: 'New password'
+    new_password_confirmation: 'Repeat new password'
+    terms : I agree to the terms of service.
+    empty: Empty field 
+# login 
+login:
+  submit: Sign In
+  stay_signed: Stay signed in
+  help_show: Need help?
+# reset 
+reset:
+  send_email: |
+        An email has been sent. It contains a link you must click to reset your password.
+        Note: You can only request a new password within %tokenLifetime% hours.
+        If you don't get an email check your spam folder or try again.
+  success: The password has been reset successfully.
+  email:
+    not_found : The email account that you tried to reach does not exist.
+    title: Reset Password
+    footer: © 2014 All Rights Reserved
+    button: Reset Your password
+    subject: Hi, %name%
+    message : You recently requested to reset your password for your Dev corporation Account. Click the button to reset it.
+    note : "Note: If you did not request , please ignore this email or reply to let us know ."
+# registration
+registration:
+    check_email: An email has been sent to %email%. It contains an activation link you must click to activate your account.
+    confirmed: 'Congrats %username%, your account is now activated.'
+    repeat_confirmed: 'Congrats %username%, your account is now activated.'
+    submit: Sign Up
+    title: Create an account
+    flash:
+        user_created: 'The user has been created successfully.'
+    email:
+        subject: 'Welcome %name%!'
+        title: Please Activate Your Account
+        footer: © 2014 All Rights Reserved
+        button: Activate Your Account
+        message : To finish activating your account. Click the button to activated it.
+        note : "Note: This link can only be used once to validate your account ."
+#profile
+profile:
+  view:
+    friends: Friends
+    show_all: Show All
+    general_info: General info
+    contact_info: Contact info
+  section:
+    about: About
+    profile: Profile
+    activity: Activity

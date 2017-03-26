@@ -1,0 +1,46 @@
+<!-- main sidebar -->
+<aside id="sidebar_main">
+    
+    <div class="sidebar_main_header">
+        <div class="sidebar_logo">
+            <a href="index.html" class="sSidebar_hide sidebar_logo_large">
+                <img class="logo_regular" src="{{ asset('assets/img/logo_main.png')}}" alt="" height="15" width="71"/>
+                <img class="logo_light" src="{{ asset('assets/img/logo_main_white.png')}}" alt="" height="15" width="71"/>
+            </a>
+            <a href="index.html" class="sSidebar_show sidebar_logo_small">
+                <img class="logo_regular" src="{{ asset('assets/img/logo_main_small.png')}}" alt="" height="32" width="32"/>
+                <img class="logo_light" src="{{ asset('assets/img/logo_main_small_light.png')}}" alt="" height="32" width="32"/>
+            </a>
+        </div>
+        <div class="sidebar_actions">
+            <select id="lang_switcher" name="lang_switcher">
+                <option value="gb" selected>English</option>
+            </select>
+        </div>
+    </div>
+    
+    <div class="menu_section">
+        <ul>
+            <li class="submenu_trigger">
+                <a href="#">
+                    <span class="menu_icon"><i class="material-icons">&#xE7EF;</i></span>
+                    <span class="menu_title">{{ 'menu.users.section'|trans }}</span>
+                </a>
+                <ul>
+                    <li>
+                        <a href="{{ path('student_index')}}">{{ 'menu.student.section'|trans }}</a>
+                    </li>
+                    <li>
+                        <a href="{{ path('studentparent_index')}}">{{ 'menu.parentstudent.section'|trans }}</a>
+                    </li>
+                    <li>
+                        <a href="{{ path('professor_index')}}">{{ 'menu.professor.section'|trans }}</a>
+                    </li>
+                    <li>
+                        <a href="{{ path('administrator_index')}}">{{ 'menu.adminstrator.section'|trans }}</a>
+                    </li>
+                </ul>
+            </li>
+        </ul>
+    </div>
+</aside><!-- main sidebar end -->

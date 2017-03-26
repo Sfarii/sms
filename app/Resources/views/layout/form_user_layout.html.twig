@@ -1,0 +1,25 @@
+<div class="uk-width-medium-8-10 uk-container-center">
+    <div class="md-card md-card-single">
+        {{ form_start(form) }}
+            <div class="md-card-toolbar">
+                <a href="{{ index_url }}"><span class="md-icon md-card-fullscreen-deactivate material-icons uk-float-left">&#xE5C4;</span></a>
+                <div class="md-card-toolbar-actions">
+                    <div class="uk-margin-small-top">
+                        {{ form_widget(form.show_username_password, { 'attr': {'data-switchery-color': '#d32f2f' , "data-switchery-size" : "small" , "class": "show_username_password" ,  "data-switchery" : ""} }) }}
+                        <label for="switch_demo_card" class="inline-label">{{ form_label(form.show_username_password) }}</label>
+                    </div>
+                </div>
+                <h3 class="md-card-toolbar-heading-text large uk-margin-small-left">
+                     {{ form_name }}
+                </h3>
+            </div>
+            <div class="md-card-content">
+                <div class="uk-margin-large-bottom">
+
+                    {{ form_widget(form) }}
+                    
+                </div>
+            </div>
+        {{ form_end(form) }}
+    </div>
+</div>

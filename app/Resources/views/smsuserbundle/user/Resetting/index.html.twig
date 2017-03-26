@@ -1,0 +1,12 @@
+{% extends "@SNSBundlesUser/layout.html.twig" %}
+
+{% block body %}  
+    <div class="md-card-content large-padding" >
+        <a href="{{ path ('login') }}" class="uk-position-top-right uk-close uk-margin-right uk-margin-top "></a>
+
+        <h2 class="heading_a uk-margin-large-bottom">Reset password</h2>
+        <img style="display: block;margin-left: auto;margin-right: auto" src="{{ asset('bundles/snsbundlesuser/img/Send_mail.png') }}"/>
+        <p> {{ "reset.send_email"|trans({'%tokenLifetime%': tokenLifetime}) }} </p>
+
+    </div>
+{% endblock %}   

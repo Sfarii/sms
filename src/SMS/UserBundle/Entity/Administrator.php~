@@ -1,0 +1,254 @@
+<?php
+
+namespace SMS\UserBundle\Entity;
+
+use Doctrine\ORM\Mapping as ORM;
+use Symfony\Component\Validator\Constraints as Assert;
+
+/**
+ * Administrator
+ *
+ * @ORM\Table(name="administrator")
+ * @ORM\Entity(repositoryClass="SMS\UserBundle\Repository\AdministratorRepository")
+ */
+class Administrator extends User
+{
+
+    /**
+     * @var string
+     *
+     * @ORM\Column(name="firstName", type="string", length=50)
+     * @Assert\Regex(
+     *     pattern="/\d/"
+     * )
+     * @Assert\Type("string")
+     * @Assert\NotBlank()
+     * @Assert\Length(
+     *      min = 2,
+     *      max = 40,
+     * )
+     */
+    private $firstName;
+
+    /**
+     * @var string
+     *
+     * @ORM\Column(name="lastName", type="string", length=50)
+     * @Assert\Regex(
+     *     pattern="/\d/"
+     * )
+     * @Assert\Type("string")
+     * @Assert\NotBlank()
+     * @Assert\Length(
+     *      min = 2,
+     *      max = 50,
+     * )
+     */
+    private $lastName;
+
+    /**
+     * @var string
+     *
+     * @ORM\Column(name="gender", type="string", length=20)
+     * @Assert\NotBlank()
+     */
+    private $gender;
+
+    /**
+     * @var string
+     *
+     * @ORM\Column(name="phone", type="string", length=20)
+     * @Assert\Type("integer")
+     * @Assert\NotBlank()
+     * @Assert\Length(
+     *      min = 8,
+     *      max = 20,
+     * )
+     */
+    private $phone;
+
+    /**
+     * @var string
+     *
+     * @ORM\Column(name="address", type="string", length=150)
+     * @Assert\Type("string")
+     * @Assert\NotBlank()
+     * @Assert\Length(
+     *      min = 4,
+     *      max = 150,
+     * )
+     */
+    private $address;
+
+
+    /**
+     * Get id
+     *
+     * @return integer 
+     */
+    public function getId()
+    {
+        return $this->id;
+    }
+
+    /**
+     * Set firstName
+     *
+     * @param string $firstName
+     * @return Administrator
+     */
+    public function setFirstName($firstName)
+    {
+        $this->firstName = $firstName;
+
+        return $this;
+    }
+
+    /**
+     * Get firstName
+     *
+     * @return string 
+     */
+    public function getFirstName()
+    {
+        return $this->firstName;
+    }
+
+    /**
+     * Set lastName
+     *
+     * @param string $lastName
+     * @return Administrator
+     */
+    public function setLastName($lastName)
+    {
+        $this->lastName = $lastName;
+
+        return $this;
+    }
+
+    /**
+     * Get lastName
+     *
+     * @return string 
+     */
+    public function getLastName()
+    {
+        return $this->lastName;
+    }
+
+    /**
+     * Set gender
+     *
+     * @param string $gender
+     * @return Administrator
+     */
+    public function setGender($gender)
+    {
+        $this->gender = $gender;
+
+        return $this;
+    }
+
+    /**
+     * Get gender
+     *
+     * @return string 
+     */
+    public function getGender()
+    {
+        return $this->gender;
+    }
+
+    /**
+     * Set phone
+     *
+     * @param string $phone
+     * @return Administrator
+     */
+    public function setPhone($phone)
+    {
+        $this->phone = $phone;
+
+        return $this;
+    }
+
+    /**
+     * Get phone
+     *
+     * @return string 
+     */
+    public function getPhone()
+    {
+        return $this->phone;
+    }
+
+    /**
+     * Set address
+     *
+     * @param string $address
+     * @return Administrator
+     */
+    public function setAddress($address)
+    {
+        $this->address = $address;
+
+        return $this;
+    }
+
+    /**
+     * Get address
+     *
+     * @return string 
+     */
+    public function getAddress()
+    {
+        return $this->address;
+    }
+
+    /**
+     * Set created
+     *
+     * @param \DateTime $created
+     * @return Administrator
+     */
+    public function setCreated($created)
+    {
+        $this->created = $created;
+
+        return $this;
+    }
+
+    /**
+     * Get created
+     *
+     * @return \DateTime 
+     */
+    public function getCreated()
+    {
+        return $this->created;
+    }
+
+    /**
+     * Set updated
+     *
+     * @param \DateTime $updated
+     * @return Administrator
+     */
+    public function setUpdated($updated)
+    {
+        $this->updated = $updated;
+
+        return $this;
+    }
+
+    /**
+     * Get updated
+     *
+     * @return \DateTime 
+     */
+    public function getUpdated()
+    {
+        return $this->updated;
+    }
+}

@@ -1,0 +1,205 @@
+{% extends 'layout/base.html.twig' %}
+
+{% block heading_actions %}
+    <a href="{{ path('student_edit', { 'id': student.id }) }}" data-uk-tooltip="{pos:'bottom'}" title="{{ 'action.edit'|trans }}"><i class="md-icon material-icons">&#xE254;</i></a>
+    <a href="#" data-box="#delete" class="mb-control" data-uk-tooltip="{pos:'bottom'}" title="{{'action.delete'|trans }}"><i class="md-icon material-icons">&#xE872;</i></a>
+{% endblock %}
+
+{% block sticky_button %}
+<a class="md-fab md-fab-primary" href="{{ path('student_index') }}">
+    <i class="material-icons">&#xE145;</i>
+</a>
+{% endblock %}
+
+{% block title_page %} 
+ {{ 'student.show.title'|trans }}
+{% endblock %}
+
+{% block body %}
+    <div class="uk-grid uk-grid-medium" data-uk-grid-margin>
+        
+        <div class="uk-width-xLarge-8-10  uk-width-large-7-10">
+            <div class="md-card">
+                <div class="md-card-toolbar">
+                    <h3 class="md-card-toolbar-heading-text">
+                        {{ 'student.show.detail'|trans }}
+                    </h3>
+                </div>
+                <div class="md-card-content">
+                    <ul class="md-list">
+                        <li>
+                            <div class="md-list-content">
+                                <span class="uk-text-small uk-text-muted uk-display-block"> {{'student.field.recordeNumber'|trans }}</span>
+                            <th>Recordenumber</th>
+                            <span class="md-list-heading uk-text-large">{{ student.recordeNumber }}</span>                        </div>
+                            </li>
+                        <li>
+                            <div class="md-list-content">
+                                <span class="uk-text-small uk-text-muted uk-display-block"> {{'student.field.firstName'|trans }}</span>
+                            <th>Firstname</th>
+                            <span class="md-list-heading uk-text-large">{{ student.firstName }}</span>                        </div>
+                            </li>
+                        <li>
+                            <div class="md-list-content">
+                                <span class="uk-text-small uk-text-muted uk-display-block"> {{'student.field.lastName'|trans }}</span>
+                            <th>Lastname</th>
+                            <span class="md-list-heading uk-text-large">{{ student.lastName }}</span>                        </div>
+                            </li>
+                        <li>
+                            <div class="md-list-content">
+                                <span class="uk-text-small uk-text-muted uk-display-block"> {{'student.field.gender'|trans }}</span>
+                            <th>Gender</th>
+                            <span class="md-list-heading uk-text-large">{{ student.gender }}</span>                        </div>
+                            </li>
+                        <li>
+                            <div class="md-list-content">
+                                <span class="uk-text-small uk-text-muted uk-display-block"> {{'student.field.birthday'|trans }}</span>
+                            <th>Birthday</th>
+                            <span class="md-list-heading uk-text-large">{% if student.birthday %}{{ student.birthday|date('Y-m-d') }}{% endif %}</span>                        </div>
+                            </li>
+                        <li>
+                            <div class="md-list-content">
+                                <span class="uk-text-small uk-text-muted uk-display-block"> {{'student.field.id'|trans }}</span>
+                            <th>Id</th>
+                            <span class="md-list-heading uk-text-large">{{ student.id }}</span>                        </div>
+                            </li>
+                        <li>
+                            <div class="md-list-content">
+                                <span class="uk-text-small uk-text-muted uk-display-block"> {{'student.field.username'|trans }}</span>
+                            <th>Username</th>
+                            <span class="md-list-heading uk-text-large">{{ student.username }}</span>                        </div>
+                            </li>
+                        <li>
+                            <div class="md-list-content">
+                                <span class="uk-text-small uk-text-muted uk-display-block"> {{'student.field.usernameCanonical'|trans }}</span>
+                            <th>Usernamecanonical</th>
+                            <span class="md-list-heading uk-text-large">{{ student.usernameCanonical }}</span>                        </div>
+                            </li>
+                        <li>
+                            <div class="md-list-content">
+                                <span class="uk-text-small uk-text-muted uk-display-block"> {{'student.field.email'|trans }}</span>
+                            <th>Email</th>
+                            <span class="md-list-heading uk-text-large">{{ student.email }}</span>                        </div>
+                            </li>
+                        <li>
+                            <div class="md-list-content">
+                                <span class="uk-text-small uk-text-muted uk-display-block"> {{'student.field.emailCanonical'|trans }}</span>
+                            <th>Emailcanonical</th>
+                            <span class="md-list-heading uk-text-large">{{ student.emailCanonical }}</span>                        </div>
+                            </li>
+                        <li>
+                            <div class="md-list-content">
+                                <span class="uk-text-small uk-text-muted uk-display-block"> {{'student.field.enabled'|trans }}</span>
+                            <th>Enabled</th>
+                            <span class="md-list-heading uk-text-large">{% if student.enabled %}Yes{% else %}No{% endif %}</span>                        </div>
+                            </li>
+                        <li>
+                            <div class="md-list-content">
+                                <span class="uk-text-small uk-text-muted uk-display-block"> {{'student.field.salt'|trans }}</span>
+                            <th>Salt</th>
+                            <span class="md-list-heading uk-text-large">{{ student.salt }}</span>                        </div>
+                            </li>
+                        <li>
+                            <div class="md-list-content">
+                                <span class="uk-text-small uk-text-muted uk-display-block"> {{'student.field.password'|trans }}</span>
+                            <th>Password</th>
+                            <span class="md-list-heading uk-text-large">{{ student.password }}</span>                        </div>
+                            </li>
+                        <li>
+                            <div class="md-list-content">
+                                <span class="uk-text-small uk-text-muted uk-display-block"> {{'student.field.lastLogin'|trans }}</span>
+                            <th>Lastlogin</th>
+                            <span class="md-list-heading uk-text-large">{% if student.lastLogin %}{{ student.lastLogin|date('Y-m-d H:i:s') }}{% endif %}</span>                        </div>
+                            </li>
+                        <li>
+                            <div class="md-list-content">
+                                <span class="uk-text-small uk-text-muted uk-display-block"> {{'student.field.confirmationToken'|trans }}</span>
+                            <th>Confirmationtoken</th>
+                            <span class="md-list-heading uk-text-large">{{ student.confirmationToken }}</span>                        </div>
+                            </li>
+                        <li>
+                            <div class="md-list-content">
+                                <span class="uk-text-small uk-text-muted uk-display-block"> {{'student.field.passwordRequestedAt'|trans }}</span>
+                            <th>Passwordrequestedat</th>
+                            <span class="md-list-heading uk-text-large">{% if student.passwordRequestedAt %}{{ student.passwordRequestedAt|date('Y-m-d H:i:s') }}{% endif %}</span>                        </div>
+                            </li>
+                        <li>
+                            <div class="md-list-content">
+                                <span class="uk-text-small uk-text-muted uk-display-block"> {{'student.field.roles'|trans }}</span>
+                            <th>Roles</th>
+                            <span class="md-list-heading uk-text-large">{% if student.roles %}{{ student.roles|join(', ') }}{% endif %}</span>                        </div>
+                            </li>                    </ul>
+                </div>
+            </div>
+        </div>
+        <div class="uk-width-xLarge-2-10 uk-width-large-3-10">
+            <div class="md-card">
+                <div class="md-card-toolbar">
+                    <h3 class="md-card-toolbar-heading-text">
+                        {{ 'author.info'|trans }}
+                    </h3>
+                </div>
+                <div class="md-card-content">
+                    <ul class="md-list md-list-addon">
+                        <li>
+                            <div class="md-list-addon-element">
+                                <i class="md-list-addon-icon material-icons">&#xE7FD;</i>
+                            </div>
+                            <div class="md-list-content">
+                                <span class="md-list-heading">Sonny Upton</span>
+                                <span class="uk-text-small uk-text-muted">Assignee</span>
+                            </div>
+                        </li>
+                        <li>
+                            <div class="md-list-addon-element">
+                                <i class="md-list-addon-icon material-icons">&#xE8DF;</i>
+                            </div>
+                            <div class="md-list-content">
+                                <span class="md-list-heading">14 Jun 2015</span>
+                                <span class="uk-text-small uk-text-muted">Created</span>
+                            </div>
+                        </li>
+                        <li>
+                            <div class="md-list-addon-element">
+                                <i class="md-list-addon-icon material-icons">&#xE8B5;</i>
+                            </div>
+                            <div class="md-list-content">
+                                <span class="md-list-heading">18 Jun 2015</span>
+                                <span class="uk-text-small uk-text-muted">Updated</span>
+                            </div>
+                        </li>
+                    </ul>
+                </div>
+            </div>
+        </div>
+    </div>
+    <!-- MESSAGE BOX-->
+    <div class="message-box animated fadeIn " data-sound="alert" id="delete">
+        <div class="mb-container">
+            <div class="mb-middle">
+                <div class="mb-title">
+                    <i class="uk-icon-trash "></i> {{ 'delete.name'|trans({'%item%' : 'student.item'|trans }) }} ?
+                </div>
+                <div class="mb-content">
+                    <p>{{ 'delete.message'|trans({'%item%' : 'student.item'|trans }) }}</p>
+                </div>
+                
+                <div class="mb-footer">
+                    <div class="uk-float-right">
+                        <div class="md-btn-group">
+                            {{ form_start(delete_form) }}
+                            <button type="submit" class="md-btn md-btn-danger md-btn-medium md-btn-wave-light waves-effect waves-button waves-light">
+                            <i class="icon-trash"></i>
+                             {{ 'delete.yes'|trans }}
+                            </button>
+                            <button type="reset" class="md-btn md-btn-default md-btn-medium md-btn-wave-light waves-effect waves-button waves-light mb-control-close" >{{ 'delete.no'|trans }}</button>
+                            {{ form_end(delete_form) }}
+                        </div>
+                        
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+    <!-- END MESSAGE BOX-->
+{% endblock %}

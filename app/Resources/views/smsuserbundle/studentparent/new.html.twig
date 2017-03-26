@@ -1,0 +1,23 @@
+{% extends 'layout/base_header_double_height.html.twig' %}
+
+{% block stylesheets %}
+	{{ parent() }}
+	<!-- additional styles for plugins -->
+    <!-- dropify -->
+    <link rel="stylesheet" href="{{ asset('assets/skins/dropify/css/dropify.css')}}">
+{% endblock %}
+
+{% block body %}
+
+	{% include 'layout/form_user_layout.html.twig' with {'form': form , 'form_name' : 'studentparent.edit.title' , 'index_url': path('studentparent_index')} %}
+
+{% endblock %}
+
+{% block javascripts %}
+	{{ parent() }}
+	<!-- page specific plugins -->
+    <!--  dropify -->
+    <script src="{{ asset('assets/js/custom/dropify/dist/js/dropify.min.js')}}"></script>
+    <!--  form file input functions -->
+    <script src="{{ asset('assets/js/pages/forms_file_input.min.js')}}"></script>
+{% endblock %}

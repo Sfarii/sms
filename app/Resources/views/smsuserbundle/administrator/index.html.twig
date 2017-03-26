@@ -1,0 +1,172 @@
+{% extends 'layout/base.html.twig' %}
+
+{% block sticky_button %}
+<a class="md-fab md-fab-primary" href="{{ path('administrator_new') }}">
+    <i class="material-icons">&#xE145;</i>
+</a>
+{% endblock %}
+
+{% block title_page %} 
+ {{ 'administrator.list.title'|trans }}
+{% endblock %}
+
+{% block body %}
+    <div class="md-card uk-margin-medium-bottom">
+        <div class="md-card-content">
+            <div class="dataTables_wrapper form-inline dt-uikit md-processed">
+                <div class="dt-uikit-header">
+                    <div class="uk-grid">
+                        <div class="uk-width-medium-2-3">
+                            <div class="uk-button-dropdown" data-uk-dropdown="{mode:'click'}">
+                                <button class="md-btn"><b>{{'action.name'|trans }}</b> <i class="material-icons">&#xE313;</i></button>
+                                <div class="uk-dropdown uk-dropdown-small">
+                                    <ul class="uk-nav uk-nav-dropdown">
+                                        <li>
+                                            <a data-box="#delete" class="mb-control" href="#">
+                                                <i class="uk-icon-trash"></i> {{'action.delete'|trans }}
+                                            </a>
+                                        </li>
+                                    </ul>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="uk-width-medium-1-3">
+                            <div id="dt_individual_search_filter" class="dataTables_filter">
+                                <div class="md-input-wrapper">
+                                    <form action="{{ path('administrator_index') }}" method="get">
+                                        <input type="search" name="search" class="md-input" placeholder="{{'index.search'|trans }}" value="{{ search }}" aria-controls="dt_individual_search">
+                                        <span class="md-input-bar "></span>
+                                    </form>
+                                </div>
+                            </div>
+                        </div>
+                        
+                    </div>
+                </div>
+                <div class="uk-overflow-container">
+                    <form action="{{ path('administrator_bulk_action') }}" method="post">
+                        <table id="dt_individual_search" class="uk-table dataTable table_check" role="grid" aria-describedby="dt_individual_search_info">
+                            <thead>
+                                <tr role="row">
+                                    <th class="uk-text-center small_col">
+                                        <input type="checkbox" data-md-icheck class="check_all">
+                                    </th>
+                                        <th {% if administrators.isSorted('f.firstName') %}{% if  administrators.direction == 'asc' %} class='sorting_asc uk-text-center' {% else %} class='sorting_desc uk-text-center'{% endif %}{% else %}class='sorting uk-text-center'{% endif %}>
+                                            {{ knp_pagination_sortable(administrators, 'administrators.field.firstName', 'f.firstName') }}</th>
+                                        <th {% if administrators.isSorted('f.lastName') %}{% if  administrators.direction == 'asc' %} class='sorting_asc uk-text-center' {% else %} class='sorting_desc uk-text-center'{% endif %}{% else %}class='sorting uk-text-center'{% endif %}>
+                                            {{ knp_pagination_sortable(administrators, 'administrators.field.lastName', 'f.lastName') }}</th>
+                                        <th {% if administrators.isSorted('f.gender') %}{% if  administrators.direction == 'asc' %} class='sorting_asc uk-text-center' {% else %} class='sorting_desc uk-text-center'{% endif %}{% else %}class='sorting uk-text-center'{% endif %}>
+                                            {{ knp_pagination_sortable(administrators, 'administrators.field.gender', 'f.gender') }}</th>
+                                        <th {% if administrators.isSorted('f.phone') %}{% if  administrators.direction == 'asc' %} class='sorting_asc uk-text-center' {% else %} class='sorting_desc uk-text-center'{% endif %}{% else %}class='sorting uk-text-center'{% endif %}>
+                                            {{ knp_pagination_sortable(administrators, 'administrators.field.phone', 'f.phone') }}</th>
+                                        <th {% if administrators.isSorted('f.address') %}{% if  administrators.direction == 'asc' %} class='sorting_asc uk-text-center' {% else %} class='sorting_desc uk-text-center'{% endif %}{% else %}class='sorting uk-text-center'{% endif %}>
+                                            {{ knp_pagination_sortable(administrators, 'administrators.field.address', 'f.address') }}</th>
+                                        <th {% if administrators.isSorted('f.id') %}{% if  administrators.direction == 'asc' %} class='sorting_asc uk-text-center' {% else %} class='sorting_desc uk-text-center'{% endif %}{% else %}class='sorting uk-text-center'{% endif %}>
+                                            {{ knp_pagination_sortable(administrators, 'administrators.field.id', 'f.id') }}</th>
+                                        <th {% if administrators.isSorted('f.username') %}{% if  administrators.direction == 'asc' %} class='sorting_asc uk-text-center' {% else %} class='sorting_desc uk-text-center'{% endif %}{% else %}class='sorting uk-text-center'{% endif %}>
+                                            {{ knp_pagination_sortable(administrators, 'administrators.field.username', 'f.username') }}</th>
+                                        <th {% if administrators.isSorted('f.usernameCanonical') %}{% if  administrators.direction == 'asc' %} class='sorting_asc uk-text-center' {% else %} class='sorting_desc uk-text-center'{% endif %}{% else %}class='sorting uk-text-center'{% endif %}>
+                                            {{ knp_pagination_sortable(administrators, 'administrators.field.usernameCanonical', 'f.usernameCanonical') }}</th>
+                                        <th {% if administrators.isSorted('f.email') %}{% if  administrators.direction == 'asc' %} class='sorting_asc uk-text-center' {% else %} class='sorting_desc uk-text-center'{% endif %}{% else %}class='sorting uk-text-center'{% endif %}>
+                                            {{ knp_pagination_sortable(administrators, 'administrators.field.email', 'f.email') }}</th>
+                                        <th {% if administrators.isSorted('f.emailCanonical') %}{% if  administrators.direction == 'asc' %} class='sorting_asc uk-text-center' {% else %} class='sorting_desc uk-text-center'{% endif %}{% else %}class='sorting uk-text-center'{% endif %}>
+                                            {{ knp_pagination_sortable(administrators, 'administrators.field.emailCanonical', 'f.emailCanonical') }}</th>
+                                        <th {% if administrators.isSorted('f.enabled') %}{% if  administrators.direction == 'asc' %} class='sorting_asc uk-text-center' {% else %} class='sorting_desc uk-text-center'{% endif %}{% else %}class='sorting uk-text-center'{% endif %}>
+                                            {{ knp_pagination_sortable(administrators, 'administrators.field.enabled', 'f.enabled') }}</th>
+                                        <th {% if administrators.isSorted('f.salt') %}{% if  administrators.direction == 'asc' %} class='sorting_asc uk-text-center' {% else %} class='sorting_desc uk-text-center'{% endif %}{% else %}class='sorting uk-text-center'{% endif %}>
+                                            {{ knp_pagination_sortable(administrators, 'administrators.field.salt', 'f.salt') }}</th>
+                                        <th {% if administrators.isSorted('f.password') %}{% if  administrators.direction == 'asc' %} class='sorting_asc uk-text-center' {% else %} class='sorting_desc uk-text-center'{% endif %}{% else %}class='sorting uk-text-center'{% endif %}>
+                                            {{ knp_pagination_sortable(administrators, 'administrators.field.password', 'f.password') }}</th>
+                                        <th {% if administrators.isSorted('f.lastLogin') %}{% if  administrators.direction == 'asc' %} class='sorting_asc uk-text-center' {% else %} class='sorting_desc uk-text-center'{% endif %}{% else %}class='sorting uk-text-center'{% endif %}>
+                                            {{ knp_pagination_sortable(administrators, 'administrators.field.lastLogin', 'f.lastLogin') }}</th>
+                                        <th {% if administrators.isSorted('f.confirmationToken') %}{% if  administrators.direction == 'asc' %} class='sorting_asc uk-text-center' {% else %} class='sorting_desc uk-text-center'{% endif %}{% else %}class='sorting uk-text-center'{% endif %}>
+                                            {{ knp_pagination_sortable(administrators, 'administrators.field.confirmationToken', 'f.confirmationToken') }}</th>
+                                        <th {% if administrators.isSorted('f.passwordRequestedAt') %}{% if  administrators.direction == 'asc' %} class='sorting_asc uk-text-center' {% else %} class='sorting_desc uk-text-center'{% endif %}{% else %}class='sorting uk-text-center'{% endif %}>
+                                            {{ knp_pagination_sortable(administrators, 'administrators.field.passwordRequestedAt', 'f.passwordRequestedAt') }}</th>
+                                        <th {% if administrators.isSorted('f.roles') %}{% if  administrators.direction == 'asc' %} class='sorting_asc uk-text-center' {% else %} class='sorting_desc uk-text-center'{% endif %}{% else %}class='sorting uk-text-center'{% endif %}>
+                                            {{ knp_pagination_sortable(administrators, 'administrators.field.roles', 'f.roles') }}</th>
+                                    <th class="uk-text-center">{{'action.name'|trans }}</th>
+                                </tr>
+                            </thead>
+
+                            <tbody>
+                        
+                                {% for administrator in administrators %}
+                                    <tr>
+                                    <td class="uk-text-center uk-table-middle small_col">
+                                            <input type="checkbox" name="{{keys}}" value="{{ administrator.id }}" data-md-icheck class="check_row"></td>
+                                        <td class="uk-text-center"><a href="{{ path('administrator_show', { 'id': administrator.id }) }}">{{ administrator.firstName }}</a></td>
+                                        <td class="uk-text-center">{{ administrator.lastName }}</td>
+                                        <td class="uk-text-center">{{ administrator.gender }}</td>
+                                        <td class="uk-text-center">{{ administrator.phone }}</td>
+                                        <td class="uk-text-center">{{ administrator.address }}</td>
+                                        <td class="uk-text-center">{{ administrator.id }}</td>
+                                        <td class="uk-text-center">{{ administrator.username }}</td>
+                                        <td class="uk-text-center">{{ administrator.usernameCanonical }}</td>
+                                        <td class="uk-text-center">{{ administrator.email }}</td>
+                                        <td class="uk-text-center">{{ administrator.emailCanonical }}</td>
+                                        <td class="uk-text-center">{% if administrator.enabled %}Yes{% else %}No{% endif %}</td>
+                                        <td class="uk-text-center">{{ administrator.salt }}</td>
+                                        <td class="uk-text-center">{{ administrator.password }}</td>
+                                        <td class="uk-text-center">{% if administrator.lastLogin %}{{ administrator.lastLogin|date('Y-m-d H:i:s') }}{% endif %}</td>
+                                        <td class="uk-text-center">{{ administrator.confirmationToken }}</td>
+                                        <td class="uk-text-center">{% if administrator.passwordRequestedAt %}{{ administrator.passwordRequestedAt|date('Y-m-d H:i:s') }}{% endif %}</td>
+                                        <td class="uk-text-center">{% if administrator.roles %}{{ administrator.roles|join(', ') }}{% endif %}</td>
+                                        <td class="uk-text-center">
+                                            <a data-uk-tooltip="{pos:'top'}" title="{{'action.show'|trans }}" href="{{ path('administrator_show', { 'id': administrator.id }) }}"><i class="md-icon material-icons" >&#xE8F4;</i></a>
+                                            
+                                            <a data-uk-tooltip="{pos:'top'}" title="{{'action.edit'|trans }}" href="{{ path('administrator_edit', { 'id': administrator.id }) }}"><i class="md-icon material-icons">&#xE254;</i></a>
+                                        </td>
+                                    </tr>
+                                {% endfor %}
+                                <!-- MESSAGE BOX-->
+                                    <div class="message-box animated fadeIn " data-sound="alert" id="delete">
+                                        <div class="mb-container">
+                                            <div class="mb-middle">
+                                                <div class="uk-float-left">
+                                                    <div class="mb-title">
+                                                        <i class="uk-icon-trash "></i> {{ 'delete.name'|trans({'%item%' : 'administrator.item'|trans }) }} ?
+                                                    </div>
+                                                    <div class="mb-content">
+                                                        <p>{{ 'delete.message'|trans({'%item%' : 'administrator.item'|trans }) }}</p>
+                                                    </div>
+                                                </div>
+                                                
+                                                <div class="mb-footer">
+                                                    <div class="uk-float-right">
+                                                        <div class="md-btn-group">
+                                                            <input type="hidden" name="{{actions}}" value="{{ delete}}">
+                                                            <button type="submit" class="md-btn md-btn-danger md-btn-medium md-btn-wave-light waves-effect waves-button waves-light">
+                                                            <i class="icon-trash"></i>
+                                                             {{ 'delete.yes'|trans }}
+                                                            </button>
+                                                            <button type="reset" class="md-btn md-btn-default md-btn-medium md-btn-wave-light waves-effect waves-button waves-light mb-control-close" >{{ 'delete.no'|trans }}</button>
+                                                        </div>
+                                                        
+                                                    </div>
+                                                </div>
+                                            </div>
+                                        </div>
+                                    </div>
+                                <!-- END MESSAGE BOX-->
+                            </tbody>
+                        </table>
+                    </form>
+                </div>
+                <div class="dt-uikit-footer">
+                    <div class="uk-grid">
+                        <div class="uk-width-medium-3-10">
+                            <div class="dataTables_info" id="dt_individual_search_info" role="status" aria-live="polite">{{ 'index.count'|trans({ '%per_page%' : per_page , '%total%' : administrators.getTotalItemCount})}}</div>
+                        </div>
+                        <div class="uk-width-medium-7-10">
+                            <div class="simple_numbers" id="dt_individual_search_paginate">
+                                {{ knp_pagination_render(administrators) }}
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </form>
+        </div>
+    </div>
+
+{% endblock %}

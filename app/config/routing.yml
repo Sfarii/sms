@@ -1,0 +1,22 @@
+sms_administrative:
+    resource: "@SMSAdministrativeBundle/Controller/"
+    type:     annotation
+    prefix:   /
+
+sms_user:
+    resource: "@SMSUserBundle/Controller/"
+    type:     annotation
+    prefix:   /
+
+sms_study_plan:
+    resource: "@SMSStudyPlanBundle/Controller/"
+    type:     annotation
+    prefix:   /
+
+sms_establishment:
+    resource: "@SMSEstablishmentBundle/Controller/"
+    type:     annotation
+    prefix:   /
+
+fos_js_routing:
+    resource: "@FOSJsRoutingBundle/Resources/config/routing/routing.xml"

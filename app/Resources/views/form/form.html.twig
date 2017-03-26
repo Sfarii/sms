@@ -1,0 +1,198 @@
+{% block form_row %}
+    {% spaceless %}
+        {% set class = attr['form.grid']|default('uk-grid-margin') %}
+
+        <div class="{{ class }}" data-uk-grid-margin >
+            <div class="parsley-row">
+                <div class="md-input-wrapper {{ value|length > 0 ? "md-input-filled" : "md-input-info"}} {{ errors|length > 0 ? "md-input-wrapper-danger" : "md-input-wrapper-info"}}">
+                    <label class="uk-form-label" for="input">{{ form_label(form) }} </label>
+                    {{ form_widget(form) }}
+                    <span class="md-input-bar"></span>
+                </div>
+                <div class="parsley-errors-list filled uk-text-danger">
+                    {{ form_errors(form) }}
+                </div>
+            </div>
+        </div>
+    {% endspaceless %}
+    
+    
+{% endblock form_row %}
+
+{% block button_row -%}
+    <div class="md-fab-wrapper md-fab-in-card">
+        <div class="md-fab md-fab-danger md-fab-toolbar">
+            {{- form_widget(form) -}}
+        </div>
+    </div>
+{%- endblock button_row %}
+
+{%- block button_widget -%}
+    {%- if label is empty -%}
+        {%- if label_format is not empty -%}
+            {% set label = label_format|replace({
+                '%name%': name,
+                '%id%': id,
+            }) %}
+        {%- else -%}
+            {% set label = name|humanize %}
+        {%- endif -%}
+    {%- endif -%}
+    <button type="{{ type|default('button') }}" title="{{'action.save'|trans}}" class="md-fab md-fab-primary md-fab-wave-light waves-effect waves-button waves-light" data-uk-tooltip="{pos:'top'}" {{ block('button_attributes') }}>
+        <i class="material-icons">&#xE161;</i>
+    </button>
+{%- endblock button_widget -%}
+
+
+{%- block choice_widget_collapsed -%}
+    {%- if required and placeholder is none and not placeholder_in_choices and not multiple and (attr.size is not defined or attr.size <= 1) -%}
+        {% set required = false %}
+    {%- endif -%}
+    <select  data-md-selectize {{ block('widget_attributes') }}{% if multiple %} multiple="multiple"{% endif %}>
+        {%- if placeholder is not none -%}
+            <option value=""{% if required and value is empty %} selected="selected"{% endif %}>{{ placeholder != '' ? (translation_domain is same as(false) ? placeholder : placeholder|trans({}, translation_domain)) }}</option>
+        {%- endif -%}
+        {%- if preferred_choices|length > 0 -%}
+            {% set options = preferred_choices %}
+            {{- block('choice_widget_options') -}}
+            {%- if choices|length > 0 and separator is not none -%}
+                <option disabled="disabled">{{ separator }}</option>
+            {%- endif -%}
+        {%- endif -%}
+        {%- set options = choices -%}
+        {{- block('choice_widget_options') -}}
+    </select>
+{%- endblock choice_widget_collapsed -%}
+
+{%- block form_widget -%}
+    {% if compound %}
+        {{- block('form_widget_compound') -}}
+    {% else %}
+        {{- block('form_widget_simple') -}}
+    {% endif %}
+{%- endblock form_widget -%}
+
+{%- block form_widget_simple -%}
+    {%- set type = type|default('text') -%}
+        {% if type == "file" %}
+            {% if download_uri is defined and download_uri %}
+                {% set value = download_uri %}
+            {% endif %}
+            <input type="{{ type }}" class="dropify" {{ block('widget_attributes') }} {% if value is not empty %}data-default-file="{{ value }}" {% endif %}/>
+
+        {% else %}
+        <input class="md-input {{ value|length > 0 ? "md-input-filled" : "md-input-info"}}"  type="{{ type }}" {{ block('widget_attributes') }} {% if value is not empty %}value="{{ value }}" {% endif %}/>
+
+        {% endif %}
+
+{%- endblock form_widget_simple -%}
+
+{%- block form_widget_compound -%}
+    {%- if form.parent is empty -%}
+        {{ form_errors(form) }}
+    {%- endif -%}
+    {{- block('form_rows') -}}
+    {{- form_rest(form) -}}
+{%- endblock form_widget_compound -%}
+
+
+{%- block textarea_widget -%}
+    <textarea class="form-control" {{ block('widget_attributes') }}>{{ value }}</textarea>      
+{%- endblock textarea_widget -%}
+
+{% block form_errors %}
+    {% spaceless %}
+        {% if errors|length > 0 %}
+                {% for error in errors %}
+                    <span class="parsley-required">{{ error.message }}</span>
+                {% endfor %}
+        {% endif %}
+    {% endspaceless %}
+{% endblock form_errors %}
+
+{%- block checkbox_widget -%}
+        <input type="checkbox" {{ block('widget_attributes') }}{% if value is defined %} value="{{ value }}"{% endif %}{% if checked %} checked="checked"{% endif %}  />
+{%- endblock checkbox_widget -%}
+
+{%- block form -%}
+    {{ form_start(form) }}
+        {{- form_widget(form) -}}
+    {{ form_end(form) }}
+{%- endblock form -%}
+
+{%- block form_start -%}
+    {% set method = method|upper %}
+    {%- if method in ["GET", "POST"] -%}
+        {% set form_method = method %}
+    {%- else -%}
+        {% set form_method = "POST" %}
+    {%- endif -%}
+    <form novalidate="novalidate" class="uk-form-stacked" name="{{ name }}" method="{{ form_method|lower }}"{% if action != '' %} action="{{ action }}"{% endif %}{% for attrname, attrvalue in attr %} {{ attrname }}="{{ attrvalue }}"{% endfor %}{% if multipart %} enctype="multipart/form-data"{% endif %}>
+    {%- if form_method != method -%}
+        <input type="hidden" name="_method" value="{{ method }}" />
+    {%- endif -%}
+{%- endblock form_start -%}
+
+{%- block form_label -%}
+    {% if label is not same as(false) -%}
+        {% if not compound -%}
+            {% set label_attr = label_attr|merge({'for': id}) %}
+        {%- endif -%}
+        {% if required -%}
+            {% set label_attr = label_attr|merge({'class': (label_attr.class|default('') ~ ' required')|trim}) %}
+        {%- endif -%}
+        {% if label is empty -%}
+            {%- if label_format is not empty -%}
+                {% set label = label_format|replace({
+                    '%name%': name,
+                    '%id%': id,
+                }) %}
+            {%- else -%}
+                {% set label = name|humanize %}
+            {%- endif -%}
+        {%- endif -%}
+        <label class="control-label text-info text-capitalize" {% for attrname, attrvalue in label_attr %} {{ attrname }}="{{ attrvalue }}"{% endfor %}> {{ translation_domain is same as(false) ? label : label|trans({}, translation_domain) }}</label>
+    {%- endif -%}
+{%- endblock form_label -%}
+
+{% block vich_file_row -%}
+    {% set force_error = true %}
+    {{- block('form_row') }}
+{%- endblock %}
+
+{% block vich_file_widget %}
+{% spaceless %}
+    <div class="vich-file">
+        {{ form_widget(form.file) }}
+        {% if form.delete is defined %}
+        {{ form_row(form.delete) }}
+        {% endif %}
+
+        {% if download_uri is defined and download_uri %}
+        <a href="{{ download_uri }}">{{ 'download'|trans({}, 'VichUploaderBundle') }}</a>
+        {% endif %}
+    </div>
+{% endspaceless %}
+{% endblock %}
+
+{% block vich_image_row -%}
+    {% set force_error = true %}
+    {{- block('form_row') }}
+{%- endblock %}
+
+{% block vich_image_widget %}
+{% spaceless %}
+    <div class="vich-image">
+        {{ form_widget(form.file) }}
+        {% if form.delete is defined %}
+        {{ form_row(form.delete) }}
+        {% endif %}
+        {% if download_uri is defined and download_uri %}
+        <input type="file" class="dropify" data-default-file="{{ download_uri }}" disabled="" />
+        {% endif %}
+        {% if show_download_link and download_uri is defined and download_uri%}
+        <a href="{{ download_uri }}">{{ 'download'|trans({}, 'VichUploaderBundle') }}</a>
+        {% endif %}
+    </div>
+{% endspaceless %}
+{% endblock %}

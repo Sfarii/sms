@@ -1,0 +1,29 @@
+# Learn more about services, parameters and containers at
+# http://symfony.com/doc/current/service_container.html
+parameters:
+    search_field: 'search'
+    index_delete: '_delete'
+    index_actions: '_actions'
+    flash_msg_success: '_msg_success'
+    flash_msg_error: '_msg_error'
+    limit_per_page: 5
+    index_keys: '_keys'
+services:
+    sms.entity_manager:
+        class: SMS\Classes\Services\EntityManager
+        arguments: ["@doctrine.orm.entity_Manager" , "@knp_paginator"]
+        calls:
+          - [setPaginatorLimitPerPage, ['%limit_per_page%']]
+          - [setSearchField, ['%search_field%']]
+    sms.user.entity_manager:
+        class: SMS\Classes\Services\UserEntityManager
+        arguments: ["@doctrine.orm.entity_Manager" , "@security.password_encoder"]
+        calls:
+          - [setMailer, ['@sms.mailer']]
+    sms.mailer:
+        class: SMS\Classes\Services\Mailer
+        arguments: ["@mailer" , "@templating"]
+        calls:
+          - method: setEmail
+            arguments:
+              - "%mailer_user%"
