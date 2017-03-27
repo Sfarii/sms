@@ -78,7 +78,7 @@ class UserEntityManager
             // saveUser the user in the database
     		$this->saveUser($user);
             // send email 
-            $this->_mailer->sendRegistrationEmail($user);
+            //$this->_mailer->sendRegistrationEmail($user);
     	}
     }
 
@@ -94,9 +94,10 @@ class UserEntityManager
     {
         $i = 0;
         do {
-            $first_string = substr($first_name, mt_rand($i , strlen($first_name)), strlen($first_name));
-            $seconde_string = substr($last_name, mt_rand($i , strlen($last_name)), strlen($first_name));
-            $username = substr($first_string.$seconde_string , 0 , $max_size);
+            $first_string = substr($first_name, 0, mt_rand($i , strlen($first_name)));
+            $seconde_string = mb_convert_case($last_name, MB_CASE_LOWER , "UTF-8");
+            $first_string = mb_convert_case($first_string, MB_CASE_LOWER , "UTF-8");
+            $username = substr($seconde_string.$first_string , 0 , $max_size);
 
             $i++;
             $user = $this->_getUserRepository->findUserByUsername(mb_convert_case($username, MB_CASE_LOWER , "UTF-8"));
@@ -118,7 +119,6 @@ class UserEntityManager
      
         // define variables used within the function    
         $symbols = array();
-        $passwords = array();
         $used_symbols = '';
         $pass = '';
      
@@ -138,9 +138,8 @@ class UserEntityManager
             $n = rand(0, $symbols_length); // get a random character from the string with all characters
             $pass .= $used_symbols[$n]; // add the character to the password string
         }
-        $passwords[] = $pass;
          
-        return $passwords; // return the generated password
+        return $pass; // return the generated password
     }
 
     /**

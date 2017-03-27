@@ -9,7 +9,7 @@ use Symfony\Component\Validator\Constraints as Assert;
 
 /**
  * Administrator
- *
+ * @Vich\Uploadable
  * @ORM\Table(name="administrator")
  * @ORM\Entity(repositoryClass="SMS\UserBundle\Repository\AdministratorRepository")
  */
@@ -79,6 +79,15 @@ class Administrator extends User
      * )
      */
     private $address;
+
+    /**
+     * NOTE: This is not a mapped field of entity metadata, just a simple property.
+     * 
+     * @Vich\UploadableField(mapping="user_image", fileNameProperty="imageName")
+     * @Assert\Image()
+     * @var File
+     */
+    protected $imageFile;
 
 
     /**
@@ -204,51 +213,5 @@ class Administrator extends User
     public function getAddress()
     {
         return $this->address;
-    }
-
-    /**
-     * Set created
-     *
-     * @param \DateTime $created
-     * @return Administrator
-     */
-    public function setCreated($created)
-    {
-        $this->created = $created;
-
-        return $this;
-    }
-
-    /**
-     * Get created
-     *
-     * @return \DateTime 
-     */
-    public function getCreated()
-    {
-        return $this->created;
-    }
-
-    /**
-     * Set updated
-     *
-     * @param \DateTime $updated
-     * @return Administrator
-     */
-    public function setUpdated($updated)
-    {
-        $this->updated = $updated;
-
-        return $this;
-    }
-
-    /**
-     * Get updated
-     *
-     * @return \DateTime 
-     */
-    public function getUpdated()
-    {
-        return $this->updated;
     }
 }

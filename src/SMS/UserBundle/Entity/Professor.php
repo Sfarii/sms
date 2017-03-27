@@ -3,11 +3,12 @@
 namespace SMS\UserBundle\Entity;
 
 use Doctrine\ORM\Mapping as ORM;
-use Symfony\Component\HttpFoundation\File\File;
+use Symfony\Component\Validator\Constraints as Assert;
 use Vich\UploaderBundle\Mapping\Annotation as Vich;
+
 /**
  * Professor
- *
+ * @Vich\Uploadable
  * @ORM\Table(name="professor")
  * @ORM\Entity(repositoryClass="SMS\UserBundle\Repository\ProfessorRepository")
  */
@@ -19,6 +20,9 @@ class Professor extends User
      * @var string
      *
      * @ORM\Column(name="firstName", type="string", length=50)
+     * @Assert\NotBlank(groups= {"Registration" , "SimpleRegistration"}),
+     * @Assert\Regex(pattern="/\d/",match=false , groups= {"Registration" , "SimpleRegistration"}),
+     * @Assert\Length(min = 2, max = 40 , groups= {"Registration" , "SimpleRegistration"})
      */
     private $firstName;
 
@@ -26,6 +30,9 @@ class Professor extends User
      * @var string
      *
      * @ORM\Column(name="lastName", type="string", length=50)
+     * @Assert\NotBlank(groups= {"Registration" , "SimpleRegistration"}),
+     * @Assert\Regex(pattern="/\d/",match=false , groups= {"Registration" , "SimpleRegistration"}),
+     * @Assert\Length(min = 2, max = 40 , groups= {"Registration" , "SimpleRegistration"})
      */
     private $lastName;
 
@@ -33,6 +40,7 @@ class Professor extends User
      * @var string
      *
      * @ORM\Column(name="gender", type="string", length=20)
+     * @Assert\NotBlank(groups= {"Registration" , "SimpleRegistration"})
      */
     private $gender;
 
@@ -40,6 +48,8 @@ class Professor extends User
      * @var \DateTime
      *
      * @ORM\Column(name="birthday", type="date")
+     * @Assert\NotBlank(groups= {"Registration" , "SimpleRegistration"})
+     * @Assert\Date(groups= {"Registration" , "SimpleRegistration"})
      */
     private $birthday;
 
@@ -47,6 +57,13 @@ class Professor extends User
      * @var string
      *
      * @ORM\Column(name="phone", type="string", length=20)
+     * @Assert\Regex( pattern="/\d/", groups= {"Registration" , "SimpleRegistration"}),
+     * @Assert\NotBlank(groups= {"Registration" , "SimpleRegistration"}),
+     * @Assert\Length(
+     *    min = 8,
+     *    max = 20,
+     *    groups= {"Registration" , "SimpleRegistration"}
+     * )
      */
     private $phone;
 
@@ -54,6 +71,12 @@ class Professor extends User
      * @var string
      *
      * @ORM\Column(name="address", type="string", length=150)
+     * @Assert\NotBlank(groups= {"Registration" , "SimpleRegistration"}),
+     * @Assert\Length(
+     *   min = 2,
+     *   max = 150,
+     *   groups= {"Registration" , "SimpleRegistration"}
+     * )
      */
     private $address;
 
@@ -61,6 +84,12 @@ class Professor extends User
      * @var string
      *
      * @ORM\Column(name="grade", type="string", length=150)
+     * @Assert\NotBlank(groups= {"Registration" , "SimpleRegistration"}),
+     * @Assert\Length(
+     *   min = 2,
+     *   max = 150,
+     *   groups= {"Registration" , "SimpleRegistration"}
+     * )
      */
     private $grade;
 

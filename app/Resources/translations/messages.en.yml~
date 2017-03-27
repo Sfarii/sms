@@ -20,22 +20,98 @@ action:
 index:
   search: search
   count: Showing %per_page% of %total% entries
+administrator:
+    show:
+        title: __administrator.show.title
+        detail: __administrator.show.detail
+    field:
+        firstName: firstName
+        lastName: lastName
+        gender: gender
+        phone: phone
+        address: address
+        email: E-mail
+
+    item: administrator
+    list:
+        title: List of administrator
+    new: 
+        title: Add administrator
+    edit:
+        title: Edit administrator
+author:
+    info: author information
+#student
+student:
+    show:
+        title: __student.show.title
+        detail: __student.show.detail
+    field:
+        recordeNumber: recordeNumber
+        firstName: firstName
+        lastName: lastName
+        birthday: birthday
+    item: __student.item
+    list:
+        title: List of student
+    new: 
+        title: Add student
+    edit:
+        title: Edit student
+#professor
+professor:
+    show:
+        title: __professor.show.title
+        detail: __professor.show.detail
+    field:
+        firstName: firstName
+        lastName: lastName
+        gender: gender
+        birthday: birthday
+        phone: phone
+        address: address
+        grade: grade
+    item: __professor.item
+    list:
+        title: List of professor
+    new: 
+        title: Add student
+    edit:
+        title: Edit student
+#studentparent
+studentparent:
+    show:
+        title: __studentparent.show.title
+        detail: __studentparent.show.detail
+    field:
+        fatherName: father Name
+        motherName: mother Name
+        familyName: family Name
+        fatherProfession: fatherProfession
+        motherProfession: mother Profession
+        address: address
+        phone: phone
+    item: __studentparent.item
+    list:
+        title: List of Parent
+    new: 
+        title: Add Parent
+    edit:
+        title: Edit Parent
 #form
 user:
-  first_name: First name
-  last_name: Last Name
-  about: About
-  phone: Phone
-  facebook: Facebook
-  twitter: Twitter
-  email : E-mail
-  username : Username
-  password : Password
-  repeat_password : Repeat password
-  new_password: 'New password'
-  new_password_confirmation: 'Repeat new password'
-  terms : I agree to the terms of service.
-  empty: Empty field 
+  field:
+    first_name: First name
+    last_name: Last Name
+    email : E-mail
+    gender: Select a gender
+    username : Username
+    password : Password
+    repeat_password : Repeat password
+    new_password: 'New password'
+    new_password_confirmation: 'Repeat new password'
+    terms : I agree to the terms of service.
+    empty: Empty field 
 # login 
 login:
   submit: Sign In
@@ -83,5 +159,3 @@ profile:
     about: About
     profile: Profile
     activity: Activity
-
-

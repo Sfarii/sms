@@ -8,6 +8,7 @@
         
         <constraint name="Symfony\Bridge\Doctrine\Validator\Constraints\UniqueEntity">
             <option name="fields">username</option>
+            <option name="repositoryMethod">findByUniqueCriteria</option>
             <option name="groups">
                 <value>Registration</value>
                 <value>Profile</value>
@@ -16,6 +17,7 @@
 
         <constraint name="Symfony\Bridge\Doctrine\Validator\Constraints\UniqueEntity">
             <option name="fields">email</option>
+            <option name="repositoryMethod">findByUniqueCriteria</option>
             <option name="groups">
                 <value>Registration</value>
                 <value>SimpleRegistration</value>

@@ -8,11 +8,12 @@
         "classmap": [ "app/AppKernel.php", "app/AppCache.php" ]
     },
     "require": {
-        "php": ">=5.3.9",
         "ali/datatable": "^2.1",
+        "ddeboer/data-import-bundle": "~0.1",
         "doctrine/doctrine-bundle": "~1.4",
         "doctrine/orm": "^2.4.8",
         "friendsofsymfony/jsrouting-bundle": "^1.6",
+        "gos/web-socket-bundle": "^1.8",
         "incenteev/composer-parameter-handler": "~2.0",
         "knplabs/knp-paginator-bundle": "^2.5",
         "sensio/distribution-bundle": "~4.0",
@@ -46,9 +47,6 @@
     },
     "config": {
         "bin-dir": "bin",
-        "platform": {
-            "php": "5.3.9"
-        },
         "sort-packages": true
     },
     "extra": {

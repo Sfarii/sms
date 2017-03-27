@@ -22,6 +22,9 @@ class AppKernel extends Kernel
             new FOS\JsRoutingBundle\FOSJsRoutingBundle(),
             new Knp\Bundle\PaginatorBundle\KnpPaginatorBundle(),
             new Vich\UploaderBundle\VichUploaderBundle(),
+            new Ddeboer\DataImportBundle\DdeboerDataImportBundle(),
+            new Gos\Bundle\WebSocketBundle\GosWebSocketBundle(),
+            new Gos\Bundle\PubSubRouterBundle\GosPubSubRouterBundle(),
             /*new Sg\DatatablesBundle\SgDatatablesBundle(),
             
             new Ali\DatatableBundle\AliDatatableBundle(),*/

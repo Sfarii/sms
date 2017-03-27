@@ -88,17 +88,20 @@
 
         {% endblock %}
     </div>
-
     <!-- main sidebar -->
     {% include 'layout/sidebar.html.twig' %}
     <!-- main sidebar end -->
     {% block javascripts %}
+
         <!-- common functions -->
         <script src="{{ asset('assets/js/common.min.js')}}"></script>
         <!-- uikit functions -->
         <script src="{{ asset('assets/js/uikit_custom.min.js')}}"></script>
         <!-- altair common functions/helpers -->
         <script src="{{ asset('assets/js/altair_admin_common.min.js')}}"></script>
+        <!-- sms Web Socket-->
+        <script src='{{ asset('assets/websocket/autobahn.min.js')}}'></script>
+        <script src='{{ asset('assets/websocket/gos_web_socket_client.js')}}'></script>
     {% endblock %}
 
     {% block audio %}

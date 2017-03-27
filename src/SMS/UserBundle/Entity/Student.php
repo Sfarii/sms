@@ -3,11 +3,12 @@
 namespace SMS\UserBundle\Entity;
 
 use Doctrine\ORM\Mapping as ORM;
-use Symfony\Component\HttpFoundation\File\File;
+use Symfony\Component\Validator\Constraints as Assert;
 use Vich\UploaderBundle\Mapping\Annotation as Vich;
+
 /**
  * Student
- *
+ * @Vich\Uploadable
  * @ORM\Table(name="student")
  * @ORM\Entity(repositoryClass="SMS\UserBundle\Repository\StudentRepository")
  */
@@ -24,6 +25,9 @@ class Student extends User
      * @var string
      *
      * @ORM\Column(name="firstName", type="string", length=50)
+     * @Assert\NotBlank(groups= {"Registration" , "SimpleRegistration"}),
+     * @Assert\Regex(pattern="/\d/",match=false , groups= {"Registration" , "SimpleRegistration"}),
+     * @Assert\Length(min = 2, max = 40 , groups= {"Registration" , "SimpleRegistration"})
      */
     private $firstName;
 
@@ -31,6 +35,9 @@ class Student extends User
      * @var string
      *
      * @ORM\Column(name="lastName", type="string", length=50)
+     * @Assert\NotBlank(groups= {"Registration" , "SimpleRegistration"}),
+     * @Assert\Regex(pattern="/\d/",match=false , groups= {"Registration" , "SimpleRegistration"}),
+     * @Assert\Length(min = 2, max = 40 , groups= {"Registration" , "SimpleRegistration"})
      */
     private $lastName;
 
@@ -38,6 +45,7 @@ class Student extends User
      * @var string
      *
      * @ORM\Column(name="gender", type="string", length=30)
+     * @Assert\NotBlank(groups= {"Registration" , "SimpleRegistration"}),
      */
     private $gender;
 
@@ -45,6 +53,8 @@ class Student extends User
      * @var \DateTime
      *
      * @ORM\Column(name="birthday", type="date")
+     * @Assert\NotBlank(groups= {"Registration" , "SimpleRegistration"})
+     * @Assert\Date(groups= {"Registration" , "SimpleRegistration"})
      */
     private $birthday;
 
@@ -52,6 +62,7 @@ class Student extends User
      * Many Students have One Section.
      * @ORM\ManyToOne(targetEntity="SMS\EstablishmentBundle\Entity\Section")
      * @ORM\JoinColumn(name="section_id", referencedColumnName="id")
+     * @Assert\NotBlank(groups= {"Registration" , "SimpleRegistration"}),
      */
     private $section;
 
@@ -59,6 +70,7 @@ class Student extends User
      * Many Students have One Parent.
      * @ORM\ManyToOne(targetEntity="StudentParent" , inversedBy="students")
      * @ORM\JoinColumn(name="student_parent_id", referencedColumnName="id")
+     * @Assert\NotBlank(groups= {"Registration" , "SimpleRegistration"}),
      */
     private $studentParent;
 

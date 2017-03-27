@@ -52,19 +52,16 @@
                                         <input type="checkbox" data-md-icheck class="check_all">
                                     </th>
                                         <th {% if studentParents.isSorted('f.fatherName') %}{% if  studentParents.direction == 'asc' %} class='sorting_asc uk-text-center' {% else %} class='sorting_desc uk-text-center'{% endif %}{% else %}class='sorting uk-text-center'{% endif %}>
-                                            {{ knp_pagination_sortable(studentParents, 'studentparents.field.fatherName', 'f.fatherName') }}</th>
+                                            {{ knp_pagination_sortable(studentParents, 'studentparent.field.fatherName'|trans, 'f.fatherName') }}</th>
                                         <th {% if studentParents.isSorted('f.motherName') %}{% if  studentParents.direction == 'asc' %} class='sorting_asc uk-text-center' {% else %} class='sorting_desc uk-text-center'{% endif %}{% else %}class='sorting uk-text-center'{% endif %}>
-                                            {{ knp_pagination_sortable(studentParents, 'studentparents.field.motherName', 'f.motherName') }}</th>
+                                            {{ knp_pagination_sortable(studentParents, 'studentparent.field.motherName'|trans, 'f.motherName') }}</th>
                                         <th {% if studentParents.isSorted('f.familyName') %}{% if  studentParents.direction == 'asc' %} class='sorting_asc uk-text-center' {% else %} class='sorting_desc uk-text-center'{% endif %}{% else %}class='sorting uk-text-center'{% endif %}>
-                                            {{ knp_pagination_sortable(studentParents, 'studentparents.field.familyName', 'f.familyName') }}</th>
-                                        <th {% if studentParents.isSorted('f.fatherProfession') %}{% if  studentParents.direction == 'asc' %} class='sorting_asc uk-text-center' {% else %} class='sorting_desc uk-text-center'{% endif %}{% else %}class='sorting uk-text-center'{% endif %}>
-                                            {{ knp_pagination_sortable(studentParents, 'studentparents.field.fatherProfession', 'f.fatherProfession') }}</th>
-                                        <th {% if studentParents.isSorted('f.motherProfession') %}{% if  studentParents.direction == 'asc' %} class='sorting_asc uk-text-center' {% else %} class='sorting_desc uk-text-center'{% endif %}{% else %}class='sorting uk-text-center'{% endif %}>
-                                            {{ knp_pagination_sortable(studentParents, 'studentparents.field.motherProfession', 'f.motherProfession') }}</th>
+                                            {{ knp_pagination_sortable(studentParents, 'studentparent.field.familyName'|trans, 'f.familyName') }}</th>
+                                        
                                         <th {% if studentParents.isSorted('f.address') %}{% if  studentParents.direction == 'asc' %} class='sorting_asc uk-text-center' {% else %} class='sorting_desc uk-text-center'{% endif %}{% else %}class='sorting uk-text-center'{% endif %}>
-                                            {{ knp_pagination_sortable(studentParents, 'studentparents.field.address', 'f.address') }}</th>
+                                            {{ knp_pagination_sortable(studentParents, 'studentparent.field.address'|trans, 'f.address') }}</th>
                                         <th {% if studentParents.isSorted('f.phone') %}{% if  studentParents.direction == 'asc' %} class='sorting_asc uk-text-center' {% else %} class='sorting_desc uk-text-center'{% endif %}{% else %}class='sorting uk-text-center'{% endif %}>
-                                            {{ knp_pagination_sortable(studentParents, 'studentparents.field.phone', 'f.phone') }}</th>
+                                            {{ knp_pagination_sortable(studentParents, 'studentparent.field.phone'|trans, 'f.phone') }}</th>
                                     <th class="uk-text-center">{{'action.name'|trans }}</th>
                                 </tr>
                             </thead>
@@ -78,8 +75,7 @@
                                         <td class="uk-text-center"><a href="{{ path('studentparent_show', { 'id': studentParent.id }) }}">{{ studentParent.fatherName }}</a></td>
                                         <td class="uk-text-center">{{ studentParent.motherName }}</td>
                                         <td class="uk-text-center">{{ studentParent.familyName }}</td>
-                                        <td class="uk-text-center">{{ studentParent.fatherProfession }}</td>
-                                        <td class="uk-text-center">{{ studentParent.motherProfession }}</td>
+                                        
                                         <td class="uk-text-center">{{ studentParent.address }}</td>
                                         <td class="uk-text-center">{{ studentParent.phone }}</td>
                                         <td class="uk-text-center">

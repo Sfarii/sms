@@ -3,11 +3,12 @@
 namespace SMS\UserBundle\Entity;
 
 use Doctrine\ORM\Mapping as ORM;
-use Symfony\Component\HttpFoundation\File\File;
+use Symfony\Component\Validator\Constraints as Assert;
 use Vich\UploaderBundle\Mapping\Annotation as Vich;
+
 /**
  * Parent
- *
+ * @Vich\Uploadable
  * @ORM\Table(name="parent")
  * @ORM\Entity(repositoryClass="SMS\UserBundle\Repository\ParentRepository")
  */
@@ -19,6 +20,9 @@ class StudentParent extends User
      * @var string
      *
      * @ORM\Column(name="fatherName", type="string", length=50)
+     * @Assert\NotBlank(groups= {"Registration" , "SimpleRegistration"}),
+     * @Assert\Regex(pattern="/\d/",match=false , groups= {"Registration" , "SimpleRegistration"}),
+     * @Assert\Length(min = 2, max = 40 , groups= {"Registration" , "SimpleRegistration"})
      */
     private $fatherName;
 
@@ -26,6 +30,10 @@ class StudentParent extends User
      * @var string
      *
      * @ORM\Column(name="motherName", type="string", length=50)
+     *
+     * @Assert\NotBlank(groups= {"Registration" , "SimpleRegistration"}),
+     * @Assert\Regex(pattern="/\d/",match=false , groups= {"Registration" , "SimpleRegistration"}),
+     * @Assert\Length(min = 2, max = 40 , groups= {"Registration" , "SimpleRegistration"})
      */
     private $motherName;
 
@@ -33,13 +41,19 @@ class StudentParent extends User
      * @var string
      *
      * @ORM\Column(name="familyName", type="string", length=50)
+     * @Assert\NotBlank(groups= {"Registration" , "SimpleRegistration"}),
+     * @Assert\Regex(pattern="/\d/",match=false , groups= {"Registration" , "SimpleRegistration"}),
+     * @Assert\Length(min = 2, max = 40 , groups= {"Registration" , "SimpleRegistration"})
      */
     private $familyName;
 
     /**
      * @var string
      *
-     * @ORM\Column(name="fatherProfession", type="string", length=50)
+     * @ORM\Column(name="fatherProfession", type="string", length=100)
+     * @Assert\NotBlank(groups= {"Registration" , "SimpleRegistration"}),
+     * @Assert\Regex(pattern="/\d/",match=false , groups= {"Registration" , "SimpleRegistration"}),
+     * @Assert\Length(min = 2, max = 100 , groups= {"Registration" , "SimpleRegistration"})
      */
     private $fatherProfession;
 
@@ -47,6 +61,9 @@ class StudentParent extends User
      * @var string
      *
      * @ORM\Column(name="motherProfession", type="string", length=100)
+     * @Assert\NotBlank(groups= {"Registration" , "SimpleRegistration"}),
+     * @Assert\Regex(pattern="/\d/",match=false , groups= {"Registration" , "SimpleRegistration"}),
+     * @Assert\Length(min = 2, max = 100 , groups= {"Registration" , "SimpleRegistration"})
      */
     private $motherProfession;
 
@@ -54,6 +71,12 @@ class StudentParent extends User
      * @var string
      *
      * @ORM\Column(name="address", type="string", length=150)
+     * @Assert\NotBlank(groups= {"Registration" , "SimpleRegistration"})
+     * @Assert\Length(
+     *   min = 2,
+     *   max = 150,
+     *   groups= {"Registration" , "SimpleRegistration"}
+     * )
      */
     private $address;
 
@@ -61,6 +84,13 @@ class StudentParent extends User
      * @var string
      *
      * @ORM\Column(name="phone", type="string", length=20)
+     * @Assert\Regex( pattern="/\d/", groups= {"Registration" , "SimpleRegistration"}),
+     * @Assert\NotBlank(groups= {"Registration" , "SimpleRegistration"}),
+     * @Assert\Length(
+     *    min = 8,
+     *    max = 20,
+     *    groups= {"Registration" , "SimpleRegistration"}
+     * )
      */
     private $phone;
 

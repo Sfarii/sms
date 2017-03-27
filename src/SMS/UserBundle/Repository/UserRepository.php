@@ -2,6 +2,7 @@
 
 namespace SMS\UserBundle\Repository;
 
+use SMS\UserBundle\Entity\User;
 use Doctrine\ORM\EntityRepository;
 use SMS\UserBundle\Repository\BaseUserRepositoryInterface;
 
@@ -24,6 +25,15 @@ class UserRepository extends EntityRepository implements UserRepositoryInterface
             ->setParameter('email', mb_convert_case($username, MB_CASE_LOWER , "UTF-8"))
             ->getQuery()
             ->getOneOrNullResult();
+    }
+
+    /**
+     * @param string[] $criteria format: array('user' => <user_id>, 'name' => <name>)
+     */
+    public function findByUniqueCriteria(array $criteria)
+    {
+        // would use findOneBy() but Symfony expects a Countable object
+        return $this->_em->getRepository(User::class)->findBy($criteria);
     }
 
     /**
