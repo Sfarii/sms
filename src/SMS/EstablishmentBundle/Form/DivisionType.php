@@ -5,7 +5,11 @@ namespace SMS\EstablishmentBundle\Form;
 use Symfony\Component\Form\AbstractType;
 use Symfony\Component\Form\FormBuilderInterface;
 use Symfony\Component\OptionsResolver\OptionsResolver;
+use Symfony\Component\Form\Extension\Core\Type\TextType;
 use Symfony\Component\Form\Extension\Core\Type\DateType;
+use Symfony\Bridge\Doctrine\Form\Type\EntityType;
+use Symfony\Component\Form\Extension\Core\Type\SubmitType;
+use SMS\EstablishmentBundle\Entity\Division;
 
 class DivisionType extends AbstractType
 {
@@ -14,25 +18,24 @@ class DivisionType extends AbstractType
      */
     public function buildForm(FormBuilderInterface $builder, array $options)
     {
-        $builder->add('name' , null , array('attr' => [ 'form.grid'=> "none"]))
-                ->add('startDate' , DateType::class, array(
+        $builder
+                ->add('divisionName' ,TextType::class , array(
+                    'label' => 'division.field.divisionName')
+                )
+                ->add('startDate', DateType::class, array(
                     'widget' => 'single_text',
-
-                    // do not render as type="date", to avoid HTML5 date pickers
                     'html5' => false,
-
-                    // add a class that can be selected in JavaScript
+                    'label' => 'division.field.startDate' ,
                     'attr' => [ 'data-uk-datepicker'=> "{format:'YYYY-MM-DD'}"],
                 ))
                 ->add('endDate', DateType::class, array(
                     'widget' => 'single_text',
-
-                    // do not render as type="date", to avoid HTML5 date pickers
                     'html5' => false,
-
-                    // add a class that can be selected in JavaScript
+                    'label' => 'division.field.endDate' ,
                     'attr' => [ 'data-uk-datepicker'=> "{format:'YYYY-MM-DD'}"],
-                ));
+                ))
+                ->add('save', SubmitType::class);
+
     }
     
     /**
@@ -41,7 +44,7 @@ class DivisionType extends AbstractType
     public function configureOptions(OptionsResolver $resolver)
     {
         $resolver->setDefaults(array(
-            'data_class' => 'SMS\EstablishmentBundle\Entity\Division'
+            'data_class' => Division::class
         ));
     }
 

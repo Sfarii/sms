@@ -11,7 +11,10 @@ use Symfony\Component\Security\Core\User\AdvancedUserInterface;
 
 interface UserInterface extends AdvancedUserInterface , \Serializable
 {
-    const ROLE_DEFAULT = 'ROLE_USER';
+    const ROLE_STUDENT = 'ROLE_STUDENT';
+    const ROLE_PARENT = 'ROLE_PARENT';
+    const ROLE_PROFESSOR = 'ROLE_PROFESSOR';
+    const ROLE_ADMIN = 'ROLE_ADMIN';
     const ROLE_SUPER_ADMIN = 'ROLE_SUPER_ADMIN';
 
     /**

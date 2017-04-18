@@ -1,0 +1,197 @@
+{% extends 'layout/base.html.twig' %}
+
+{% block title_page %}
+    {{ 'student.attendance.title'|trans }}
+{% endblock %}
+
+{% block body %}
+    <div class="filter md-card">
+        <div class="md-card-toolbar">
+            <div class="md-card-toolbar-actions">
+                <i class="md-icon material-icons md-card-toggle">&#xE316;</i>
+            </div>
+            <h3 class="md-card-toolbar-heading-text">
+                {{ 'student.attendance.title'|trans }}
+            </h3>
+        </div>
+        <div class="md-card-content">
+            {{ form_start(form) }}
+            {{ form_widget(form) }}
+            {{ form_end(form) }}
+        </div>
+    </div>
+    {% if sessions is defined and attendances is defined %}
+        <div class="uk-grid" data-uk-grid-margin>
+            <div class="uk-width-medium-1-2">
+                <div class="uk-grid uk-text-center" data-uk-grid-margin>
+                    <div class="uk-width-medium-1-2">
+                        <div class="md-card md-card-hover md-card-overlay">
+                            <div class="md-card-content">
+                                <div class="epc_chart" data-percent="53" data-bar-color="#1976d2">
+                                    <span class="chart_text">
+                                        P
+                                    </span>
+                                </div>
+                            </div>
+                            <div class="md-card-overlay-content">
+                                <div class="uk-clearfix md-card-overlay-header">
+                                    <i class="md-icon material-icons md-card-overlay-toggler">&#xE5D4;</i>
+                                    <h3>
+                                        {{ "attendance.present"|trans }}
+                                    </h3>
+                                </div>
+                                Lorem ipsum dolor sit amet, consectetur adipisicing elit.
+                            </div>
+                        </div>
+                    </div>
+                    <div class="uk-width-medium-1-2">
+                        <div class="md-card md-card-hover md-card-overlay">
+                            <div class="md-card-content">
+                                <div class="epc_chart" data-percent="53" data-bar-color="#e53935">
+                                    <span class="chart_text">
+                                        <span class="countUpMe">A</span>
+                                    </span>
+                                </div>
+                            </div>
+                            <div class="md-card-overlay-content">
+                                <div class="uk-clearfix md-card-overlay-header">
+                                    <i class="md-icon material-icons md-card-overlay-toggler">&#xE5D4;</i>
+                                    <h3>
+                                        {{ "attendance.absent"|trans }}
+                                    </h3>
+                                </div>
+                                Lorem ipsum dolor sit amet, consectetur adipisicing elit.
+                            </div>
+                        </div>
+                    </div>
+                    <div class="uk-width-medium-1-2">
+                        <div class="md-card md-card-hover md-card-overlay">
+                            <div class="md-card-content">
+                                <div class="epc_chart" data-percent="53" data-bar-color="#ffa000">
+                                    <span class="chart_text">
+                                        <span class="countUpMe">E</span>
+                                    </span>
+                                </div>
+                            </div>
+                            <div class="md-card-overlay-content">
+                                <div class="uk-clearfix md-card-overlay-header">
+                                    <i class="md-icon material-icons md-card-overlay-toggler">&#xE5D4;</i>
+                                    <h3>
+                                        {{ "attendance.exclude"|trans }}
+                                    </h3>
+                                </div>
+                                Lorem ipsum dolor sit amet, consectetur adipisicing elit.
+                            </div>
+                        </div>
+                    </div>
+                    <div class="uk-width-medium-1-2">
+                        <div class="md-card md-card-hover md-card-overlay">
+                            <div class="md-card-content">
+                                <div class="epc_chart" data-percent="150" data-bar-color="#0097a7">
+                                    <span class="chart_text">
+                                        <span class="countUpMe">R</span>
+                                    </span>
+                                </div>
+                            </div>
+                            <div class="md-card-overlay-content">
+                                <div class="uk-clearfix md-card-overlay-header">
+                                    <i class="md-icon material-icons md-card-overlay-toggler">&#xE5D4;</i>
+                                    <h3>
+                                        {{ "attendance.retard"|trans }}
+                                    </h3>
+                                </div>
+                                Lorem ipsum dolor sit amet, consectetur adipisicing elit.
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="md-card">
+                    <div class="md-card-content">
+                        <div class="uk-float-right uk-margin-top uk-margin-small-right">
+                            <i class="material-icons md-24">&#xE85C;</i>
+                        </div>
+                        <span class="uk-text-muted uk-text-small">{{ "attendance.stats"|trans }}</span>
+                        <h2 class="uk-margin-remove">
+                            <span class="countUpMe">0<noscript>64</noscript>
+                            </span>
+                        </h2>
+                    </div>
+                </div>
+            </div>
+            <div class="uk-width-medium-1-2">
+                <div class="md-card">
+                    <div class="md-card-content">
+                        {% if stats is empty %}
+                            <div class="echart-large">
+                                <span class="chart_icon">
+                                    <i class="material-icons">&#xE88B;</i>
+                                    <h1 class="uk-text-large">{{ 'student.stats.not_found'|trans }}</h1>
+                                </span>
+
+                            </div>
+                        {% else %}
+                            <div data-echarts-pie data-title="{{ 'student.stats.name'|trans }}" data-values='{{ stats|json_encode|raw }}' class="echart-large"></div>
+                        {% endif %}
+
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <div id="attendance" class="md-card">
+            <div class="md-card-content">
+                <div class="uk-overflow-container">
+                    <table class="uk-table uk-table-hover uk-table-nowrap uk-table-align-vertical">
+                        <thead>
+                            <tr>
+                                <th class="uk-width-1-10"></th>
+                                {% for session in sessions %}
+                                    <th class="border-table uk-text-nowrap uk-text-center md-bg-grey-100">
+                                        <h4 class="heading_d uk-margin-small-bottom">
+                                            {{ session.sessionName }}
+                                        </h4>
+                                        <p class="uk-margin-remove">
+                                            <i class="material-icons">&#xE425;</i>
+                                            {{ session.startTime|date('H:m') }}
+                                            <i class="material-icons">&#xE5C8;</i>
+                                            {{ session.endTime|date('H:m') }}
+                                        </p>
+                                    </th>
+                                {% endfor %}
+                            </tr>
+                        </thead>
+                        <tbody>
+                            {% for attendance in attendances %}
+                                <tr>
+                                    <td class="uk-text-large uk-text-nowrap uk-text-capitalize md-bg-grey-100 uk-text-center">
+                                        {{attendance.day|trans }}
+                                    </td>
+                                    {% for session in attendance.sessions %}
+                                        {% if session.empty == true %}
+                                            <td class="uk-text-center uk-text-bold border-table">
+                                                --
+                                            </td>
+                                        {% else %}
+                                            <td class="uk-text-center uk-text-bold border-table">
+                                                <div data-echarts-table data-title="Yes We Can" style="height: 150px;" data-values='{{ session.status|json_encode|raw }}'></div>
+                                            </td>
+                                        {% endif %}
+
+                                    {% endfor %}
+                                </tr>
+                            {% endfor %}
+                        </tbody>
+                    </table>
+                </div>
+            </div>
+        </div>
+    {% endif %}
+{% endblock %}
+
+{% block javascripts %}
+    {{ parent() }}
+    <script src="{{ asset('assets/plugins/chart/echarts.min.js')}}"></script>
+    <script src="{{ asset('assets/plugins/easypiechart/jquery.easypiechart.min.js')}}"></script>
+    <script src="{{ asset('assets/js/custom/echarts_functions.js')}}"></script>
+{% endblock %}

@@ -1,0 +1,226 @@
+action:
+    delete: action.delete
+
+administrator:
+    field:
+        address: administrator.field.address
+        firstName: administrator.field.firstName
+        lastName: administrator.field.lastName
+        phone: administrator.field.phone
+
+attendance:
+    field:
+        absente: attendance.field.absente
+        date: attendance.field.date
+        present: attendance.field.present
+        status: attendance.field.status
+
+attendanceProfessor:
+    delete:
+        fail: attendanceProfessor.delete.fail
+        success: attendanceProfessor.delete.success
+
+author:
+    creator: author.creator
+
+course:
+    delete:
+        fail: course.delete.fail
+        success: course.delete.success
+
+    field:
+        coefficient: course.field.coefficient
+        courseName: course.field.courseName
+        division: course.field.division
+        grade: course.field.grade
+
+datatables:
+    actions:
+        edit: datatables.actions.edit
+        show: datatables.actions.show
+        title: datatables.actions.title
+
+    bulk:
+        confirmMsg: datatables.bulk.confirmMsg
+        selectError: datatables.bulk.selectError
+
+day:
+    delete:
+        fail: day.delete.fail
+        success: day.delete.success
+
+    field:
+        day: day.field.day
+
+    friday: day.friday
+    monday: day.monday
+    saturday: day.saturday
+    sunday: day.sunday
+    thursday: day.thursday
+    tuesday: day.tuesday
+    wednesday: day.wednesday
+
+division:
+    delete:
+        fail: division.delete.fail
+        success: division.delete.success
+
+    field:
+        divisionName: division.field.divisionName
+        endDate: division.field.endDate
+        startDate: division.field.startDate
+
+editable:
+    tableRedraw: editable.tableRedraw
+
+exam:
+    delete:
+        fail: exam.delete.fail
+        success: exam.delete.success
+
+    field:
+        dateExam: exam.field.dateExam
+        examName: exam.field.examName
+        factor: exam.field.factor
+        session: exam.field.session
+        typeExam: exam.field.typeExam
+
+filter:
+    field:
+        course: filter.field.course
+        exam: filter.field.exam
+        grade: filter.field.grade
+        professor: filter.field.professor
+        section: filter.field.section
+        session: filter.field.session
+        student: filter.field.student
+
+gender:
+    female: gender.female
+    male: gender.male
+    other: gender.other
+
+grade:
+    delete:
+        fail: grade.delete.fail
+        success: grade.delete.success
+
+    field:
+        gradeCode: grade.field.gradeCode
+        gradeName: grade.field.gradeName
+
+md-fab: md-fab
+
+note:
+    field:
+        by_student: note.field.by_student
+        mark: note.field.mark
+
+professor:
+    field:
+        address: professor.field.address
+        birthday: professor.field.birthday
+        email: professor.field.email
+        firstName: professor.field.firstName
+        grade: professor.field.grade
+        lastName: professor.field.lastName
+        phone: professor.field.phone
+
+reset:
+    email:
+        not_found: reset.email.not_found
+
+    success: reset.success
+
+sanction:
+    delete:
+        fail: sanction.delete.fail
+        success: sanction.delete.success
+
+    field:
+        cause: sanction.field.cause
+        punishment: sanction.field.punishment
+
+schedule:
+    delete:
+        fail: schedule.delete.fail
+        success: schedule.delete.success
+
+    field:
+        course: schedule.field.course
+        day: schedule.field.day
+        professor: schedule.field.professor
+        section: schedule.field.section
+        session: schedule.field.session
+
+section:
+    delete:
+        fail: section.delete.fail
+        success: section.delete.success
+
+    field:
+        grade: section.field.grade
+        sectionName: section.field.sectionName
+
+session:
+    delete:
+        fail: session.delete.fail
+        success: session.delete.success
+
+    field:
+        endTime: session.field.endTime
+        sessionName: session.field.sessionName
+        startTime: session.field.startTime
+
+student:
+    field:
+        birthday: student.field.birthday
+        firstName: student.field.firstName
+        lastName: student.field.lastName
+        recordeNumber: student.field.recordeNumber
+        studentParent: student.field.studentParent
+
+student_sanction:
+    field:
+        firstName: student_sanction.field.firstName
+        lastName: student_sanction.field.lastName
+
+studentparent:
+    field:
+        address: studentparent.field.address
+        familyName: studentparent.field.familyName
+        fatherName: studentparent.field.fatherName
+        fatherProfession: studentparent.field.fatherProfession
+        motherName: studentparent.field.motherName
+        motherProfession: studentparent.field.motherProfession
+        phone: studentparent.field.phone
+
+typeExam:
+    delete:
+        fail: typeExam.delete.fail
+        success: typeExam.delete.success
+
+typeexam:
+    field:
+        typeExamName: typeexam.field.typeExamName
+
+user:
+    active:
+        false_label: user.active.false_label
+        true_label: user.active.true_label
+
+    delete:
+        fail: user.delete.fail
+        success: user.delete.success
+
+    field:
+        email: user.field.email
+        enabled: user.field.enabled
+        gender: user.field.gender
+        password: user.field.password
+        role: user.field.role
+        show_username_password: user.field.show_username_password
+        username: user.field.username
+
+    new_password: user.new_password
+    new_password_confirmation: user.new_password_confirmation

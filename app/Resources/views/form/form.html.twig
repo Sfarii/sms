@@ -1,46 +1,45 @@
 {% block form_row %}
     {% spaceless %}
-        {% set class = attr['form.grid']|default('uk-grid-margin') %}
-
-        <div class="{{ class }}" data-uk-grid-margin >
-            <div class="parsley-row">
-                <div class="md-input-wrapper {{ value|length > 0 ? "md-input-filled" : "md-input-info"}} {{ errors|length > 0 ? "md-input-wrapper-danger" : "md-input-wrapper-info"}}">
-                    <label class="uk-form-label" for="input">{{ form_label(form) }} </label>
-                    {{ form_widget(form) }}
-                    <span class="md-input-bar"></span>
-                </div>
-                <div class="parsley-errors-list filled uk-text-danger">
-                    {{ form_errors(form) }}
-                </div>
+        <div class="uk-form-row">
+            {{ form_label(form) }}
+            {{ form_widget(form) }}
+            <div class="parsley-errors-list filled uk-text-danger">
+                {{ form_errors(form) }}
             </div>
         </div>
     {% endspaceless %}
-    
-    
 {% endblock form_row %}
 
+{%- block choice_widget -%}
+    {% if expanded %}
+        {{- block('choice_widget_expanded') -}}
+    {% else %}
+        {{- block('choice_widget_collapsed') -}}
+    {% endif %}
+{%- endblock choice_widget -%}
+
 {% block button_row -%}
-    <div class="md-fab-wrapper md-fab-in-card">
-        <div class="md-fab md-fab-danger md-fab-toolbar">
-            {{- form_widget(form) -}}
-        </div>
-    </div>
+    {{- form_widget(form) -}}
 {%- endblock button_row %}
 
 {%- block button_widget -%}
-    {%- if label is empty -%}
-        {%- if label_format is not empty -%}
-            {% set label = label_format|replace({
-                '%name%': name,
-                '%id%': id,
-            }) %}
-        {%- else -%}
-            {% set label = name|humanize %}
-        {%- endif -%}
-    {%- endif -%}
-    <button type="{{ type|default('button') }}" title="{{'action.save'|trans}}" class="md-fab md-fab-primary md-fab-wave-light waves-effect waves-button waves-light" data-uk-tooltip="{pos:'top'}" {{ block('button_attributes') }}>
-        <i class="material-icons">&#xE161;</i>
-    </button>
+    {% if attr.button_type is not defined %}
+    <div class="uk-form-row">
+        <div class="md-fab-wrapper {{ label|default('md-fab-in-card') }}">
+            <div class="md-fab md-fab-danger md-fab-toolbar">
+                <button type="{{ type|default('button') }}" title="{{'action.save'|trans}}" class="md-fab md-fab-primary md-fab-wave-light waves-effect waves-button waves-light" data-uk-tooltip="{pos:'top'}" {{ block('button_attributes') }}>
+                    <i class="material-icons">&#xE161;</i>
+                </button>
+            </div>
+        </div>
+    </div>
+    {% else %}
+        <div class="uk-form-row">
+            <button type="{{ type|default('button') }}" class="md-btn md-btn-primary md-btn-wave-light" {{ block('button_attributes') }}>
+                <i class="material-icons">&#xE8B6;</i>
+            </button>
+        </div>
+    {% endif %}
 {%- endblock button_widget -%}
 
 
@@ -78,10 +77,10 @@
             {% if download_uri is defined and download_uri %}
                 {% set value = download_uri %}
             {% endif %}
-            <input type="{{ type }}" class="dropify" {{ block('widget_attributes') }} {% if value is not empty %}data-default-file="{{ value }}" {% endif %}/>
+            <input type="{{ type }}" {{ block('widget_attributes') }} {% if value is not empty %} {% endif %}/>
 
         {% else %}
-        <input class="md-input {{ value|length > 0 ? "md-input-filled" : "md-input-info"}}"  type="{{ type }}" {{ block('widget_attributes') }} {% if value is not empty %}value="{{ value }}" {% endif %}/>
+        <input class="md-input" type="{{ type }}" {{ block('widget_attributes') }} {% if value is not empty %}value="{{ value }}" {% endif %}/>
 
         {% endif %}
 
@@ -97,7 +96,7 @@
 
 
 {%- block textarea_widget -%}
-    <textarea class="form-control" {{ block('widget_attributes') }}>{{ value }}</textarea>      
+    <textarea  class="md-input" {{ block('widget_attributes') }}>{{ value }}</textarea>
 {%- endblock textarea_widget -%}
 
 {% block form_errors %}
@@ -111,7 +110,7 @@
 {% endblock form_errors %}
 
 {%- block checkbox_widget -%}
-        <input type="checkbox" {{ block('widget_attributes') }}{% if value is defined %} value="{{ value }}"{% endif %}{% if checked %} checked="checked"{% endif %}  />
+        <input data-switchery type="checkbox" {{ block('widget_attributes') }}{% if value is defined %} value="{{ value }}"{% endif %}{% if checked %} checked="checked"{% endif %}  />
 {%- endblock checkbox_widget -%}
 
 {%- block form -%}
@@ -151,7 +150,7 @@
                 {% set label = name|humanize %}
             {%- endif -%}
         {%- endif -%}
-        <label class="control-label text-info text-capitalize" {% for attrname, attrvalue in label_attr %} {{ attrname }}="{{ attrvalue }}"{% endfor %}> {{ translation_domain is same as(false) ? label : label|trans({}, translation_domain) }}</label>
+        <label  {% for attrname, attrvalue in label_attr %} {{ attrname }}="{{ attrvalue }}"{% endfor %}> {{ translation_domain is same as(false) ? label : label|trans({}, translation_domain) }}</label>
     {%- endif -%}
 {%- endblock form_label -%}
 
@@ -187,9 +186,7 @@
         {% if form.delete is defined %}
         {{ form_row(form.delete) }}
         {% endif %}
-        {% if download_uri is defined and download_uri %}
-        <input type="file" class="dropify" data-default-file="{{ download_uri }}" disabled="" />
-        {% endif %}
+
         {% if show_download_link and download_uri is defined and download_uri%}
         <a href="{{ download_uri }}">{{ 'download'|trans({}, 'VichUploaderBundle') }}</a>
         {% endif %}

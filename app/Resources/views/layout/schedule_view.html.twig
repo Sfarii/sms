@@ -1,0 +1,61 @@
+<div id="schedule" class="md-card">
+    <div class="md-card-content">
+        <div class="uk-overflow-container">
+            <table class="uk-table uk-table-hover uk-table-nowrap uk-table-align-vertical">
+            <thead>
+                <tr>
+                    <th class="uk-width-1-10"></th>
+                    {% for session in sessions %}
+                        <th class="border-table uk-text-center md-bg-grey-100">
+                            <h4 class="heading_d uk-margin-small-bottom">
+                                {{ session.sessionName }}
+                            </h4>
+                            <p class="uk-margin-remove">
+                                <i class="material-icons">&#xE425;</i>
+                                {{ session.startTime|date('H:m') }} 
+                                <i class="material-icons">&#xE5C8;</i>
+                                {{ session.endTime|date('H:m') }}
+                            </p>
+                        </th>
+                    {% endfor %}
+                </tr>
+            </thead>
+            <tbody>
+                {% for schedule in schedules %}
+                    <tr>
+                        <td class="uk-text-large uk-text-capitalize md-bg-grey-100 uk-text-center">
+                            {{schedule.day|trans }}
+                         </td>
+                        {% for session in schedule.sessions %}
+                            {% if session.empty == true %}
+                                <td class="uk-text-center uk-text-bold border-table">
+                                    --
+                                </td>
+                            {% else %}
+                                <td colspan="{{ session.colspan }}" class="border-table uk-text-center">
+                                    <h4 class="heading_c uk-margin-small-bottom">
+                                        {{ session.courseName }}
+                                    </h4>
+                                    <p class="uk-margin-remove">
+                                        <span class="uk-text-muted">
+                                            {{ "schedule_view.schedule.professor"|trans }} :
+                                        </span>
+                                        {{ session.professor }}
+                                    </p>
+                                    <p class="uk-margin-remove">
+                                        <span class="uk-text-muted">
+                                            {{ "schedule_view.schedule.coefficient"|trans }} :
+                                        </span>
+                                        {{ session.coefficient}}
+                                    </p>
+                                </td>
+                            {% endif %}
+                            
+                        {% endfor %} 
+                    </tr>
+                {% endfor %}
+            </tbody>
+        </table>
+        </div>
+    </div>
+</div>

@@ -12,9 +12,8 @@ use Symfony\Bridge\Doctrine\Form\Type\EntityType;
 use Symfony\Component\Form\Extension\Core\Type\SubmitType;
 use SMS\UserBundle\Entity\StudentParent;
 use Vich\UploaderBundle\Form\Type\VichImageType;
-use SMS\UserBundle\Form\Type\GenderType;
 use Symfony\Component\Form\Extension\Core\Type\CheckboxType;
-use SMS\UserBundle\Form\EventSubscriber\AddUsernamePasswordFieldListener;
+use API\Form\EventSubscriber\AddUsernamePasswordFieldListener;
 
 class StudentParentType extends AbstractType
 {
@@ -52,7 +51,7 @@ class StudentParentType extends AbstractType
                 'label' => 'studentparent.field.phone')
             )
             ->add('email' ,TextType::class , array(
-                'label' => 'studentparent.field.email')
+                'label' => 'user.field.email')
             )
             ->add('show_username_password', CheckboxType::class, array(
                 'label' => 'user.field.show_username_password',
@@ -62,6 +61,7 @@ class StudentParentType extends AbstractType
             ->addEventSubscriber(new AddUsernamePasswordFieldListener())
             ->add('save', SubmitType::class ,array(
                 'validation_groups' => "SimpleRegistration",
+                'label' => 'md-fab'
             ));
 
     }
@@ -72,7 +72,8 @@ class StudentParentType extends AbstractType
     public function configureOptions(OptionsResolver $resolver)
     {
         $resolver->setDefaults(array(
-            'data_class' => StudentParent::class
+            'data_class' => StudentParent::class,
+            'allow_extra_fields' => true
         ));
     }
 

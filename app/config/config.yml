@@ -2,7 +2,7 @@ imports:
     - { resource: parameters.yml }
     - { resource: security.yml }
     - { resource: services.yml }
-
+    - { resource: datatables.yml }
 # Put parameters here that don't need to change on each machine where the app is deployed
 # http://symfony.com/doc/current/best_practices/configuration.html#application-related-configuration
 parameters:
@@ -18,6 +18,7 @@ framework:
     form: ~
     csrf_protection: ~
     validation: { enable_annotations: true }
+    serializer: { enable_annotations: true }
     #serializer: { enable_annotations: true }
     templating:
         engines: ['twig']
@@ -33,13 +34,10 @@ framework:
 # Twig Configuration
 twig:
     globals:
-        search_field: '%search_field%'
-        delete: '%index_delete%'
-        actions: '%index_actions%'
-        keys: '_keys[]'
+        app_name: '%app_name%'
         msg_success: '%flash_msg_success%'
         msg_danger: '%flash_msg_error%'
-        per_page: '%limit_per_page%'
+        attendance: '%attendance%'
     debug: '%kernel.debug%'
     strict_variables: '%kernel.debug%'
     form_themes:
@@ -48,6 +46,7 @@ twig:
 # Doctrine Configuration
 doctrine:
     dbal:
+        default_connection: default
         driver: pdo_mysql
         host: '%database_host%'
         port: '%database_port%'
@@ -61,19 +60,23 @@ doctrine:
         #   2. Uncomment database_path in parameters.yml.dist
         #   3. Uncomment next line:
         #path: '%database_path%'
-
     orm:
         auto_generate_proxy_classes: '%kernel.debug%'
         naming_strategy: doctrine.orm.naming_strategy.underscore
         auto_mapping: true
+        dql:
+            string_functions:
+                GROUP_CONCAT: API\DoctrineExtensions\GroupConcat
+                DATE_FORMAT: API\DoctrineExtensions\DateFormat
+                CONCAT_WS: API\DoctrineExtensions\ConcatWs
 
 # Swiftmailer Configuration
 swiftmailer:
-    transport: '%mailer_transport%'
-    host: '%mailer_host%'
-    username: '%mailer_user%'
-    password: '%mailer_password%'
-    spool: { type: memory }
+    transport: "%mailer_transport%"
+    host:      "%mailer_host%"
+    username:  "%mailer_user%"
+    password:  "%mailer_password%"
+    spool:     { type: memory }
 knp_paginator:
     page_range: 5                      # default page range used in pagination control
     default_options:
@@ -100,3 +103,11 @@ gos_web_socket:
     server:
         port: 8080        #The port the socket server will listen on
         host: 127.0.0.1   #The host ip to bind to
+knp_menu:
+    # use "twig: false" to disable the Twig extension and the TwigRenderer
+    twig:
+        template: KnpMenuBundle::menu.html.twig
+    #  if true, enables the helper for PHP templates
+    templating: false
+    # the renderer to use, list is also available by default
+    default_renderer: twig

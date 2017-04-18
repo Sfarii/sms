@@ -1,0 +1,15 @@
+{% extends 'SgDatatablesBundle:Column:column.html.twig' %}
+
+
+{% block data %}
+    "data": "{{ column.data }}",
+    {% if column.editable %}
+        "render": function(data, type, row, meta) {
+                return render_editable_choice(data, type, row, meta, '{{ column.data }}', '{{ column.index }}');
+            },
+    {% else %}
+        "render": function(data, type, row, meta) {
+            return {{ column.render }}(data, type, row, meta);
+        },
+    {% endif %}
+{% endblock %}

@@ -50,6 +50,14 @@
             </constraint>
         </property>
 
+        <property name="roles">
+            <constraint name="NotBlank">
+                <option name="groups">
+                    <value>Edit</value>
+                </option>
+            </constraint>
+        </property>
+
         <property name="email">
             <constraint name="NotBlank">
                 <option name="groups">

@@ -1,107 +1,94 @@
 <!doctype html>
 <!--[if lte IE 9]> <html class="lte-ie9" lang="en"> <![endif]-->
-<!--[if gt IE 9]><!--> <html lang="en"> <!--<![endif]-->
+<!--[if gt IE 9]><!-->
+<html lang="en">
+    <!--<![endif]-->
+    <head>
+        <meta charset="UTF-8">
+        <meta name="viewport" content="initial-scale=1.0,maximum-scale=1.0,user-scalable=no">
+        <meta http-equiv="X-UA-Compatible" content="IE=edge">
+        <!-- Remove Tap Highlight on Windows Phone IE -->
+        <meta name="msapplication-tap-highlight" content="no"/>
 
-<head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="initial-scale=1.0,maximum-scale=1.0,user-scalable=no">
-    <meta http-equiv="X-UA-Compatible" content="IE=edge">
-    <!-- Remove Tap Highlight on Windows Phone IE -->
-    <meta name="msapplication-tap-highlight" content="no"/>
+        <link rel="icon" type="image/png" href="{{ asset('assets/img/favicon-16x16.png')}}" sizes="16x16">
+        <link rel="icon" type="image/png" href="{{ asset('assets/img/favicon-32x32.png')}}" sizes="32x32">
 
-    <link rel="icon" type="image/png" href="{{ asset('assets/img/favicon-16x16.png')}}" sizes="16x16">
-    <link rel="icon" type="image/png" href="{{ asset('assets/img/favicon-32x32.png')}}" sizes="32x32">
+        <title>{{ app_name }}</title>
 
-    <title>Altair Admin v2.9.1</title>
-    
-    {% block stylesheets %}
-        <!-- uikit -->
-        <link rel="stylesheet" href="{{ asset('assets/css/uikit.almost-flat.min.css') }}" media="all">
+        {% block stylesheets %}
+            <!-- uikit -->
+            <link rel="stylesheet" href="{{ asset('assets/css/uikit.almost-flat.min.css') }}" media="all">
 
-        <!-- flag icons -->
-        <link rel="stylesheet" href="{{ asset('assets/icons/flags/flags.min.css') }}" media="all">
-        
-        <!-- altair admin -->
-        <link rel="stylesheet" href="{{ asset('assets/css/main.min.css') }}" media="all">
+            <!-- flag icons -->
+            <link rel="stylesheet" href="{{ asset('assets/icons/flags/flags.min.css') }}" media="all">
 
-        <!-- altair notifiaction -->
-        <link rel="stylesheet" href="{{ asset('assets/css/notification.css') }}" />
+            <!-- altair admin -->
+            <link rel="stylesheet" href="{{ asset('assets/css/main.min.css') }}" media="all">
 
-        <!-- themes -->
-        <link rel="stylesheet" href="{{ asset('assets/css/themes/themes_combined.min.css') }}" media="all">
+            <!-- altair notifiaction -->
+            <link rel="stylesheet" href="{{ asset('assets/css/notification.css') }}"/>
 
-        <!-- matchMedia polyfill for testing media queries in JS -->
-        <!--[if lte IE 9]>
-            <script type="text/javascript" src="bower_components/matchMedia/matchMedia.js"></script>
-            <script type="text/javascript" src="bower_components/matchMedia/matchMedia.addListener.js"></script>
-            <link rel="stylesheet" href="assets/css/ie.css" media="all">
-        <![endif]-->
-    {% endblock %}
+            <!-- themes -->
+            <link rel="stylesheet" href="{{ asset('assets/css/themes/themes_combined.min.css') }}" media="all">
 
-</head>
-<body class="sidebar_main_open sidebar_main_swipe header_double_height">
-
-    <!-- main header -->
-    {% include 'layout/header.html.twig' %}
-    <!-- main header end -->
-
-     <!-- main sidebar -->
-    {% include 'layout/sidebar_main.html.twig' %}
-    <!-- main sidebar end -->
-
-    <div id="page_content">
-        
-        <div id="page_content_inner">
-            
-            <!-- main flash success message -->
-            {% for flash_message in app.session.flashbag.get(msg_success) %}
-                <div class="uk-alert" data-uk-alert>
-                    <a href="#" class="uk-alert-close uk-close"></a>
-                    {{ flash_message }}
-                </div>
-            {% endfor %}
-            <!-- main flash success message end -->
-
-            <!-- main flash success message -->
-            {% for flash_message in app.session.flashbag.get(msg_danger) %}
-                <div class="uk-alert uk-alert-danger" data-uk-alert>
-                    <a href="#" class="uk-alert-close uk-close"></a>
-                    {{ flash_message }}
-                </div>
-            {% endfor %}
-            <!-- main flash success message end -->
-
-            {% block body %}
-
-            {% endblock %}
-        </div>
-    </div>
-
-    <div class="md-fab-wrapper">
-        {% block sticky_button %}
-
+            <!-- matchMedia polyfill for testing media queries in JS -->
+            <!--[if lte IE 9]> <script type="text/javascript" src="bower_components/matchMedia/matchMedia.js"></script> <script type="text/javascript" src="bower_components/matchMedia/matchMedia.addListener.js"></script> <link rel="stylesheet" href="assets/css/ie.css" media="all"> <![endif]-->
         {% endblock %}
-    </div>
 
-    <!-- main sidebar -->
-    {% include 'layout/sidebar.html.twig' %}
-    <!-- main sidebar end -->
-    {% block javascripts %}
-        <!-- common functions -->
-        <script src="{{ asset('assets/js/common.min.js')}}"></script>
-        <!-- uikit functions -->
-        <script src="{{ asset('assets/js/uikit_custom.min.js')}}"></script>
-        <!-- altair common functions/helpers -->
-        <script src="{{ asset('assets/js/altair_admin_common.min.js')}}"></script>
-    {% endblock %}
+    </head>
+    <body class="sidebar_main_open sidebar_main_swipe header_double_height">
 
-    {% block audio %}
-        <audio id="audio-alert" src="{{ asset('assets/audio/alert.mp3')}}" preload="auto">
-        </audio>
-        <audio id="audio-fail" src="{{ asset('assets/audio/fail.mp3')}}" preload="auto">
-        </audio>
-        <audio id="audio-newMessage" src="{{ asset('assets/audio/newMessage.wav')}}" preload="auto">
-        </audio>
-    {% endblock %}
-</body>
+        <!-- main header -->
+        {% include 'layout/header.html.twig' %}
+        <!-- main header end -->
+
+        <!-- main sidebar -->
+        {% include 'layout/sidebar_main.html.twig' %}
+        <!-- main sidebar end -->
+
+        <div id="page_content">
+
+            <div id="page_content_inner">
+
+                {% block body %}{% endblock %}
+            </div>
+        </div>
+
+        <div class="md-fab-wrapper">
+            {% block sticky_button %}{% endblock %}
+        </div>
+
+        <!-- main sidebar -->
+        {% include 'layout/sidebar.html.twig' %}
+        <!-- main sidebar end -->
+        {% block javascripts %}
+            <!-- common functions -->
+            <script src="{{ asset('assets/js/common.min.js')}}"></script>
+            <!-- uikit functions -->
+            <script src="{{ asset('assets/js/uikit_custom.min.js')}}"></script>
+            <!-- altair common functions/helpers -->
+            <script src="{{ asset('assets/js/altair_admin_common.min.js')}}"></script>
+        {% endblock %}
+
+        {% block audio %}
+            <audio id="audio-alert" src="{{ asset('assets/audio/alert.mp3')}}" preload="auto"></audio>
+            <audio id="audio-fail" src="{{ asset('assets/audio/fail.mp3')}}" preload="auto"></audio>
+        {% endblock %}
+        <!-- main flash success message -->
+        {% for flash_message in app.session.flashbag.get(msg_success) %}
+            <script type="text/javascript">
+                UIkit.notify({message: "<a href='#' class='notify-action'><span class='uk-icon-times'></span></a>{{ flash_message }}", status: "success", timeout: 1000, group: null, pos: 'top-right'});
+            </script>
+
+        {% endfor %}
+        <!-- main flash success message end -->
+
+        <!-- main flash success message -->
+        {% for flash_message in app.session.flashbag.get(msg_danger) %}
+            <script type="text/javascript">
+                UIkit.notify({message: "<a href='#' class='notify-action'><span class='uk-icon-times'></span></a>{{ flash_message }}", status: "error", timeout: 1000, group: null, pos: 'top-right'});
+            </script>
+        {% endfor %}
+        <!-- main flash success message end -->
+    </body>
 </html>

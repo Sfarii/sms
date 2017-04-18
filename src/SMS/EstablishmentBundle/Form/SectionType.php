@@ -5,6 +5,13 @@ namespace SMS\EstablishmentBundle\Form;
 use Symfony\Component\Form\AbstractType;
 use Symfony\Component\Form\FormBuilderInterface;
 use Symfony\Component\OptionsResolver\OptionsResolver;
+use Symfony\Component\Form\Extension\Core\Type\TextType;
+use Symfony\Component\Form\Extension\Core\Type\DateType;
+use Symfony\Bridge\Doctrine\Form\Type\EntityType;
+use Symfony\Component\Form\Extension\Core\Type\SubmitType;
+use SMS\EstablishmentBundle\Entity\Section;
+use SMS\EstablishmentBundle\Entity\Grade;
+
 
 class SectionType extends AbstractType
 {
@@ -13,7 +20,18 @@ class SectionType extends AbstractType
      */
     public function buildForm(FormBuilderInterface $builder, array $options)
     {
-        $builder->add('name')->add('grade');
+        $builder
+            ->add('sectionName' ,TextType::class , array(
+                'label' => 'section.field.sectionName')
+            )
+            ->add('grade' , EntityType::class , array(
+                'class' => Grade::Class,
+                'property' => 'gradeName',
+                'label' => 'section.field.grade',
+                'placeholder'=> 'section.field.grade')
+            )
+            ->add('save', SubmitType::class);
+
     }
     
     /**
@@ -22,7 +40,7 @@ class SectionType extends AbstractType
     public function configureOptions(OptionsResolver $resolver)
     {
         $resolver->setDefaults(array(
-            'data_class' => 'SMS\EstablishmentBundle\Entity\Section'
+            'data_class' => Section::class
         ));
     }
 

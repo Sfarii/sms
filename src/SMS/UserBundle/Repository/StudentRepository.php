@@ -20,4 +20,28 @@ class StudentRepository extends EntityRepository
         // would use findOneBy() but Symfony expects a Countable object
         return $this->_em->getRepository(User::class)->findBy($criteria);
     }
+
+    /**
+     * Get Student By Section
+     *
+     * @param integer $section
+     * @return array
+     */
+	public function findBySection($section)
+	{
+		return $this->createQueryBuilder('student')
+				->join('student.section', 'section')
+				->andWhere('section.id = :section')
+				->setParameter('section', $section)
+				->getQuery()
+				->getResult();
+	}
+
+    public function findLast() {
+        return $this->createQueryBuilder('student')
+                    ->select("student.recordeNumber as recordeNumber")
+                    ->setMaxResults( 1 )
+                    ->orderBy('student.id', 'DESC')
+                    ->getQuery()->getSingleResult();
+    }
 }

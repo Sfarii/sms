@@ -3,16 +3,23 @@
 namespace SMS\EstablishmentBundle\Controller;
 
 use SMS\EstablishmentBundle\Entity\Division;
-use SMS\Classes\BaseController\BaseController;
+use SMS\EstablishmentBundle\Form\DivisionType;
+use API\BaseController\BaseController;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\Method;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\Route;
+use Sensio\Bundle\FrameworkExtraBundle\Configuration\Template;
 use Symfony\Component\HttpFoundation\Request;
-use SMS\EstablishmentBundle\Form\DivisionType;
+use Symfony\Component\HttpFoundation\Response;
 
 /**
  * Division controller.
  *
  * @Route("division")
+ *
+ * @author Rami Sfari <rami2sfari@gmail.com>
+ * @copyright Copyright (c) 2017, SMS
+ * @package SMS\EstablishmentBundle\Controller
+ *
  */
 class DivisionController extends BaseController
 {
@@ -21,113 +28,143 @@ class DivisionController extends BaseController
      *
      * @Route("/", name="division_index")
      * @Method("GET")
+     * @Template("smsestablishmentbundle/division/index.html.twig")
      */
-    public function indexAction(Request $request)
+    public function indexAction()
     {
-        $pagination = $this->getEntityManager()->getEntityBy(Division::class , $request);
+        $divisions = $this->getDivisionEntityManager();
+        $divisions->buildDatatable();
 
-        return $this->render('division/index.html.twig', array(
-            'divisions' => $pagination,
-            'search' => $request->query->get($this->getParameter('search_field'), null)
-        ));
+        return array('divisions' => $divisions);
+    } 
+
+    /**
+     * Lists all division entities.
+     *
+     * @Route("/results", name="division_results")
+     * @Method("GET")
+     * @return Response
+     */
+    public function indexResultsAction()
+    {
+        $divisions = $this->getDivisionEntityManager();
+        $divisions->buildDatatable();
+
+        $query = $this->getDataTableQuery()->getQueryFrom($divisions);
+
+        return $query->getResponse();
     }
-
     /**
      * Creates a new division entity.
      *
      * @Route("/new", name="division_new")
      * @Method({"GET", "POST"})
+     * @Template("smsestablishmentbundle/division/new.html.twig")
      */
     public function newAction(Request $request)
     {
         $division = new Division();
-        $form = $this->createForm(DivisionType::class, $division)->handleRequest($request);
+        $form = $this->createForm(DivisionType::class, $division);
+        $form->handleRequest($request);
 
-        if ($form->isSubmitted() && $form->isValid()) {
-            $this->getEntityManager()->insert($division);
-
+        if ($form->isSubmitted() && $form->isValid() && $form->get('save')->isClicked()) {
+            $this->getEntityManager()->insert($division , $this->getUser());
+            $this->flashSuccessMsg('division.add.success');
             return $this->redirectToRoute('division_index');
         }
 
-        return $this->render('division/new.html.twig', array(
+        return array(
             'division' => $division,
             'form' => $form->createView(),
-        ));
+        );
     }
 
     /**
      * Finds and displays a division entity.
      *
-     * @Route("/show/{id}", name="division_show")
+     * @Route("/{id}", name="division_show", options={"expose"=true})
      * @Method("GET")
      */
     public function showAction(Division $division)
     {
         $deleteForm = $this->createDeleteForm($division);
 
-        return $this->render('division/show.html.twig', array(
+        return $this->render('smsestablishmentbundle/division/show.html.twig', array(
             'division' => $division,
             'delete_form' => $deleteForm->createView(),
         ));
-    }
-
-    /**
-     * Finds and displays a division entity.
-     *
-     * @Route("/actions", name="division_actions")
-     * @Method("Post")
-     */
-    public function multipleActionsAction(Request $request)
-    {
-        $actions = $request->request->get($this->getParameter('index_actions') , null);
-        $keys = $request->request->get($this->getParameter('index_keys') , null);
-        
-        if(!is_null($keys) && $actions === $this->getParameter('index_delete')){
-            $this->getEntityManager()->deleteAll(Division::class ,$keys);
-            $this->flashSuccessMsg('delete actions');
-        }else{
-            $this->flashErrorMsg('no entity selected');
-        }
-
-        return $this->redirectToRoute('division_index');
     }
 
     /**
      * Displays a form to edit an existing division entity.
      *
-     * @Route("/{id}/edit", name="division_edit")
+     * @Route("/{id}/edit", name="division_edit", options={"expose"=true})
      * @Method({"GET", "POST"})
+     * @Template("smsestablishmentbundle/division/edit.html.twig")
      */
     public function editAction(Request $request, Division $division)
     {
-        $deleteForm = $this->createDeleteForm($division);
-        $editForm = $this->createForm(DivisionType::class, $division);
-        $editForm->handleRequest($request);
-
-        if ($editForm->isSubmitted() && $editForm->isValid()) {
+        $editForm = $this->createForm(DivisionType::class, $division)->handleRequest($request);
+        if ($editForm->isSubmitted() && $editForm->isValid() && $editForm->get('save')->isClicked()) {
             $this->getEntityManager()->update($division);
-            return $this->redirectToRoute('division_edit', array('id' => $division->getId()));
+            $this->flashSuccessMsg('division.edit.success');
+            return $this->redirectToRoute('division_index');
         }
 
-        return $this->render('division/edit.html.twig', array(
+        return array(
             'division' => $division,
             'edit_form' => $editForm->createView(),
-            'delete_form' => $deleteForm->createView(),
-        ));
+        );
+    }
+
+    /**
+     * Bulk delete action.
+     *
+     * @param Request $request
+     *
+     * @Route("/bulk/delete", name="division_bulk_delete")
+     * @Method("POST")
+     *
+     * @return Response
+     */
+    public function bulkDeleteAction(Request $request)
+    {
+        $isAjax = $request->isXmlHttpRequest();
+
+        if ($isAjax) {
+            $choices = $request->request->get('data');
+            $token = $request->request->get('token');
+
+            if (!$this->isCsrfTokenValid('multiselect', $token)) {
+                throw new AccessDeniedException('The CSRF token is invalid.');
+            }
+
+            try {
+                $this->getEntityManager()->deleteAll(division::class ,$choices);
+            } catch (\Exception $e) {
+                return new Response($this->get('translator')->trans('division.delete.fail'), 200);
+            }
+            
+
+            return new Response($this->get('translator')->trans('division.delete.success'), 200);
+        }
+
+        return new Response('Bad Request', 400);
     }
 
     /**
      * Deletes a division entity.
      *
-     * @Route("/delete", name="division_delete")
+     * @Route("/{id}", name="division_delete")
      * @Method("DELETE")
      */
-    public function deleteAction(Request $request)
+    public function deleteAction(Request $request, Division $division)
     {
+        $form = $this->createDeleteForm($division)->handleRequest($request);
+
         if ($form->isSubmitted() && $form->isValid()) {
-            $em = $this->getDoctrine()->getManager();
-            $em->remove($division);
-            $em->flush();
+            $this->getEntityManager()->delete($division);
+            $this->flashSuccessMsg('division.delete.one.success');
         }
 
         return $this->redirectToRoute('division_index');
@@ -147,5 +184,21 @@ class DivisionController extends BaseController
             ->setMethod('DELETE')
             ->getForm()
         ;
+    }
+
+    /**
+     * Get division Entity Manager Service.
+     *
+     * @return API\Services\EntityManager
+     *
+     * @throws \NotFoundException
+     */
+    protected function getDivisionEntityManager()
+    {
+        if (!$this->has('sms.datatable.division')){
+           throw $this->createNotFoundException('Service Not Found');
+        }
+
+        return $this->get('sms.datatable.division');
     }
 }

@@ -4,9 +4,11 @@ namespace SMS\UserBundle\Controller;
 
 use SMS\UserBundle\Entity\Administrator;
 use SMS\UserBundle\Form\AdministratorType;
-use SMS\Classes\BaseController\BaseController;
+use API\BaseController\BaseController;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\Method;
-use Sensio\Bundle\FrameworkExtraBundle\Configuration\Route;use Symfony\Component\HttpFoundation\Request;
+use Sensio\Bundle\FrameworkExtraBundle\Configuration\Route;
+use Symfony\Component\HttpFoundation\Request;
+use Sensio\Bundle\FrameworkExtraBundle\Configuration\Template;
 
 /**
  * Administrator controller.
@@ -25,15 +27,31 @@ class AdministratorController extends BaseController
      *
      * @Route("/", name="administrator_index")
      * @Method("GET")
+     * @Template("smsuserbundle/administrator/index.html.twig")
      */
     public function indexAction(Request $request)
     {
-        $administrators = $this->getEntityManager()->getEntityBy(Administrator::class , $request);
+        $administrator = $this->getAdministratorEntityManager();
+        $administrator->buildDatatable();
 
-        return $this->render('smsuserbundle/administrator/index.html.twig', array(
-            'administrators' => $administrators,
-            'search' => $request->query->get($this->getParameter('search_field'), null)
-        ));
+        return array('administrators' => $administrator);
+    }
+
+    /**
+     * Lists all administrator entities.
+     *
+     * @Route("/results", name="administrator_results")
+     * @Method("GET")
+     * @return Response
+     */
+    public function indexResultsAction()
+    {
+        $administrator = $this->getAdministratorEntityManager();
+        $administrator->buildDatatable();
+
+        $query = $this->getDataTableQuery()->getQueryFrom($administrator);
+
+        return $query->getResponse();
     }
 
     /**
@@ -41,6 +59,7 @@ class AdministratorController extends BaseController
      *
      * @Route("/new", name="administrator_new")
      * @Method({"GET", "POST"})
+     * @Template("smsuserbundle/administrator/new.html.twig")
      */
     public function newAction(Request $request)
     {
@@ -54,33 +73,35 @@ class AdministratorController extends BaseController
             return $this->redirectToRoute('administrator_index');
         }
 
-        return $this->render('smsuserbundle/administrator/new.html.twig', array(
+        return  array(
             'administrator' => $administrator,
             'form' => $form->createView(),
-        ));
+        );
     }
 
     /**
      * Finds and displays a administrator entity.
      *
-     * @Route("/{id}", name="administrator_show")
+     * @Route("/{id}", name="administrator_show", options={"expose"=true})
      * @Method("GET")
+     * @Template("smsuserbundle/administrator/show.html.twig")
      */
     public function showAction(Administrator $administrator)
     {
         $deleteForm = $this->createDeleteForm($administrator);
 
-        return $this->render('smsuserbundle/administrator/show.html.twig', array(
+        return array(
             'administrator' => $administrator,
             'delete_form' => $deleteForm->createView(),
-        ));
+        );
     }
 
     /**
      * Displays a form to edit an existing administrator entity.
      *
-     * @Route("/{id}/edit", name="administrator_edit")
+     * @Route("/{id}/edit", name="administrator_edit", options={"expose"=true})
      * @Method({"GET", "POST"})
+     * @Template("smsuserbundle/administrator/edit.html.twig")
      */
     public function editAction(Request $request, Administrator $administrator)
     {
@@ -92,31 +113,10 @@ class AdministratorController extends BaseController
             return $this->redirectToRoute('administrator_index');
         }
 
-        return $this->render('smsuserbundle/administrator/edit.html.twig', array(
-            'administrator' => $administrator,
+        return array(
+            'user' => $administrator,
             'edit_form' => $editForm->createView(),
-        ));
-    }
-
-    /**
-     * Finds and displays a administrator entity.
-     *
-     * @Route("/multiple_actions", name="administrator_bulk_action")
-     * @Method("POST")
-     */
-    public function multipleActionsAction(Request $request)
-    {
-        $actions = $request->request->get($this->getParameter('index_actions') , null);
-        $keys = $request->request->get($this->getParameter('index_keys') , null);
-            
-        if(!is_null($keys) && $actions === $this->getParameter('index_delete')){
-            $this->getEntityManager()->deleteAll(administrator::class ,$keys);
-            $this->flashSuccessMsg('administrator.delete.all.success');
-        }else{
-            $this->flashErrorMsg('administrator.delete.all.error');
-        }
-
-        return $this->redirectToRoute('administrator_index');
+        );
     }
 
     /**
@@ -151,5 +151,21 @@ class AdministratorController extends BaseController
             ->setMethod('DELETE')
             ->getForm()
         ;
+    }
+
+    /**
+     * Get administrator Entity Manager Service.
+     *
+     * @return API\Services\EntityManager
+     *
+     * @throws \NotFoundException
+     */
+    protected function getAdministratorEntityManager()
+    {
+        if (!$this->has('sms.datatable.administrator')){
+           throw $this->createNotFoundException('Service Not Found');
+        }
+
+        return $this->get('sms.datatable.administrator');
     }
 }

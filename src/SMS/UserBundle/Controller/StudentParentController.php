@@ -4,10 +4,11 @@ namespace SMS\UserBundle\Controller;
 
 use SMS\UserBundle\Entity\StudentParent;
 use SMS\UserBundle\Form\StudentParentType;
-use SMS\Classes\BaseController\BaseController;
+use API\BaseController\BaseController;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\Method;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\Route;
 use Symfony\Component\HttpFoundation\Request;
+use Sensio\Bundle\FrameworkExtraBundle\Configuration\Template;
 
 /**
  * Studentparent controller.
@@ -26,22 +27,40 @@ class StudentParentController extends BaseController
      *
      * @Route("/", name="studentparent_index")
      * @Method("GET")
+     * @Template("smsuserbundle/studentparent/index.html.twig")
      */
     public function indexAction(Request $request)
     {
-        $studentParents = $this->getEntityManager()->getEntityBy(StudentParent::class , $request);
+        $studentParent = $this->getStudentParentEntityManager();
+        $studentParent->buildDatatable();
 
-        return $this->render('smsuserbundle/studentparent/index.html.twig', array(
-            'studentParents' => $studentParents,
-            'search' => $request->query->get($this->getParameter('search_field'), null)
-        ));
+        return array('studentParents' => $studentParent);
     }
+
+    /**
+     * Lists all studentParent entities.
+     *
+     * @Route("/results", name="studentparent_results")
+     * @Method("GET")
+     * @return Response
+     */
+    public function indexResultsAction()
+    {
+        $studentParent = $this->getStudentParentEntityManager();
+        $studentParent->buildDatatable();
+
+        $query = $this->getDataTableQuery()->getQueryFrom($studentParent);
+
+        return $query->getResponse();
+    }
+
 
     /**
      * Creates a new studentParent entity.
      *
      * @Route("/new", name="studentparent_new")
      * @Method({"GET", "POST"})
+     * @Template("smsuserbundle/studentparent/new.html.twig")
      */
     public function newAction(Request $request)
     {
@@ -55,33 +74,35 @@ class StudentParentController extends BaseController
             return $this->redirectToRoute('studentparent_index');
         }
 
-        return $this->render('smsuserbundle/studentparent/new.html.twig', array(
+        return  array(
             'studentParent' => $studentParent,
             'form' => $form->createView(),
-        ));
+        );
     }
 
     /**
      * Finds and displays a studentParent entity.
      *
-     * @Route("/{id}", name="studentparent_show")
+     * @Route("/{id}", name="studentparent_show", options={"expose"=true})
      * @Method("GET")
+     * @Template("smsuserbundle/studentparent/show.html.twig")
      */
     public function showAction(StudentParent $studentParent)
     {
         $deleteForm = $this->createDeleteForm($studentParent);
 
-        return $this->render('smsuserbundle/studentparent/show.html.twig', array(
+        return array(
             'studentParent' => $studentParent,
             'delete_form' => $deleteForm->createView(),
-        ));
+        );
     }
 
     /**
      * Displays a form to edit an existing studentParent entity.
      *
-     * @Route("/{id}/edit", name="studentparent_edit")
+     * @Route("/{id}/edit", name="studentparent_edit", options={"expose"=true})
      * @Method({"GET", "POST"})
+     * @Template("smsuserbundle/studentparent/edit.html.twig")
      */
     public function editAction(Request $request, StudentParent $studentParent)
     {
@@ -93,31 +114,10 @@ class StudentParentController extends BaseController
             return $this->redirectToRoute('studentparent_index');
         }
 
-        return $this->render('smsuserbundle/studentparent/edit.html.twig', array(
-            'studentParent' => $studentParent,
+        return array(
+            'user' => $studentParent,
             'edit_form' => $editForm->createView(),
-        ));
-    }
-
-    /**
-     * Finds and displays a studentParent entity.
-     *
-     * @Route("/multiple_actions", name="studentparent_bulk_action")
-     * @Method("POST")
-     */
-    public function multipleActionsAction(Request $request)
-    {
-        $actions = $request->request->get($this->getParameter('index_actions') , null);
-        $keys = $request->request->get($this->getParameter('index_keys') , null);
-            
-        if(!is_null($keys) && $actions === $this->getParameter('index_delete')){
-            $this->getEntityManager()->deleteAll(studentParent::class ,$keys);
-            $this->flashSuccessMsg('studentParent.delete.all.success');
-        }else{
-            $this->flashErrorMsg('studentParent.delete.all.error');
-        }
-
-        return $this->redirectToRoute('studentparent_index');
+        );
     }
 
     /**
@@ -152,5 +152,21 @@ class StudentParentController extends BaseController
             ->setMethod('DELETE')
             ->getForm()
         ;
+    }
+
+    /**
+     * Get studentParent Entity Manager Service.
+     *
+     * @return API\Services\EntityManager
+     *
+     * @throws \NotFoundException
+     */
+    protected function getStudentParentEntityManager()
+    {
+        if (!$this->has('sms.datatable.student_parent')){
+           throw $this->createNotFoundException('Service Not Found');
+        }
+
+        return $this->get('sms.datatable.student_parent');
     }
 }

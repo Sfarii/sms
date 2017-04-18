@@ -1,0 +1,12 @@
+{% extends 'layout/base_header_double_height.html.twig' %}
+
+{% block body %}
+
+	{% include 'layout/grade_section_student_form_layout.html.twig' with {'form': edit_form , 'form_name' : 'sanction.edit.title' , 'index_url': path('sanction_index')} %}
+
+{% endblock %}
+
+{% block javascripts %}
+	{{ parent() }}
+	{% include 'filter/grade_section_student_filter.html.twig' %}
+{% endblock %}

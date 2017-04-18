@@ -12,4 +12,16 @@ use Doctrine\ORM\EntityRepository;
  */
 class TypeExamRepository extends EntityRepository
 {
+	/**
+     * Get all Type Exam 
+     *
+     * @return array
+     */
+	public function getTypeExamAll()
+	{
+		return $this->createQueryBuilder('t')
+				->select('t.id , t.typeExamName')
+				->getQuery()
+				->getResult();
+	}
 }

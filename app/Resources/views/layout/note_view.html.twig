@@ -1,0 +1,64 @@
+<div class="md-card">
+    <div class="md-card-content">
+        <div class="uk-overflow-container">
+            <table class="uk-table uk-table-nowrap uk-table-align-vertical">
+            <thead>
+                <tr>
+                    <th class="uk-width-1-10"></th>
+                    {% for typeExam in typeExams %}
+                        <th class="uk-text-center md-bg-grey-100">
+                            <h4 class="heading_d uk-margin-small-bottom">
+                                {{ typeExam.typeExamName }}
+                            </h4>
+                        </th>
+                    {% endfor %}
+                </tr>
+            </thead>
+            <tbody>
+                {% for mark in marks %}
+                    <tr>
+                        <td class="uk-text-large md-bg-grey-100 uk-text-center border-table">
+                            {{mark.courseName }}
+                            <p class="uk-margin-remove">
+                                <span class="uk-text-muted">
+                                    {{ "note_view.mark.coefficient"|trans }} :
+                                </span>
+                                {{mark.coefficient }}
+                            </p>
+                         </td>
+                        {% for typeExam in mark.typeExams %}
+                            <td class="uk-text-center border-table">
+                            {% for exam in typeExam.exams %}
+
+                                {% if exam.empty == true %}
+                                    <p class=" uk-text-bold">--</p>
+                                {% else %}
+                                    <h4 class="heading_c uk-margin-small-bottom">
+                                        {{ exam.examName }}
+                                    </h4>
+                                    <p class="uk-margin-remove">
+                                        <span class="uk-text-muted">        
+                                            {{ "note_view.mark.factor"|trans }} :
+                                        </span>
+                                        {{ exam.factor }}
+                                    </p>
+                                    <p class="uk-margin-remove">
+                                        <span class="uk-text-muted">          
+                                            {{ "note_view.mark.mark"|trans }} :
+                                        </span>   
+                                        {% if exam.mark %}
+                                            {{ exam.mark }}
+                                        {% else %}
+                                            <i class="material-icons">&#xE033;</i>
+                                        {% endif %}
+                                    </p>       
+                                {% endif %}
+                            {% endfor %} 
+                            </td>
+                        {% endfor %} 
+                    </tr>
+                {% endfor %}
+            </tbody>
+        </table>
+    </div>
+</div>

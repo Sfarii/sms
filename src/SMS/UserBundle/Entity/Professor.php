@@ -20,9 +20,9 @@ class Professor extends User
      * @var string
      *
      * @ORM\Column(name="firstName", type="string", length=50)
-     * @Assert\NotBlank(groups= {"Registration" , "SimpleRegistration"}),
-     * @Assert\Regex(pattern="/\d/",match=false , groups= {"Registration" , "SimpleRegistration"}),
-     * @Assert\Length(min = 2, max = 40 , groups= {"Registration" , "SimpleRegistration"})
+     * @Assert\NotBlank(groups= {"Registration" , "SimpleRegistration" , "Edit"}),
+     * @Assert\Regex(pattern="/^[a-z0-9 .\-]+$/i" ,match=true , groups= {"Registration" , "SimpleRegistration" , "Edit"})
+     * @Assert\Length(min = 2, max = 40 , groups= {"Registration" , "SimpleRegistration" , "Edit"})
      */
     private $firstName;
 
@@ -30,9 +30,9 @@ class Professor extends User
      * @var string
      *
      * @ORM\Column(name="lastName", type="string", length=50)
-     * @Assert\NotBlank(groups= {"Registration" , "SimpleRegistration"}),
-     * @Assert\Regex(pattern="/\d/",match=false , groups= {"Registration" , "SimpleRegistration"}),
-     * @Assert\Length(min = 2, max = 40 , groups= {"Registration" , "SimpleRegistration"})
+     * @Assert\NotBlank(groups= {"Registration" , "SimpleRegistration" , "Edit"}),
+     * @Assert\Regex(pattern="/^[a-z0-9 .\-]+$/i" ,match=true , groups= {"Registration" , "SimpleRegistration" , "Edit"})
+     * @Assert\Length(min = 2, max = 40 , groups= {"Registration" , "SimpleRegistration" , "Edit"})
      */
     private $lastName;
 
@@ -40,7 +40,8 @@ class Professor extends User
      * @var string
      *
      * @ORM\Column(name="gender", type="string", length=20)
-     * @Assert\NotBlank(groups= {"Registration" , "SimpleRegistration"})
+     * @Assert\Choice(choices = {"gender.male", "gender.female", "gender.other"} , groups= {"Registration" , "SimpleRegistration" , "Edit"})
+     * @Assert\NotBlank(groups= {"Registration" , "SimpleRegistration" , "Edit"})
      */
     private $gender;
 
@@ -48,8 +49,8 @@ class Professor extends User
      * @var \DateTime
      *
      * @ORM\Column(name="birthday", type="date")
-     * @Assert\NotBlank(groups= {"Registration" , "SimpleRegistration"})
-     * @Assert\Date(groups= {"Registration" , "SimpleRegistration"})
+     * @Assert\NotBlank(groups= {"Registration" , "SimpleRegistration" , "Edit"})
+     * @Assert\Date(groups= {"Registration" , "SimpleRegistration" , "Edit"})
      */
     private $birthday;
 
@@ -57,12 +58,12 @@ class Professor extends User
      * @var string
      *
      * @ORM\Column(name="phone", type="string", length=20)
-     * @Assert\Regex( pattern="/\d/", groups= {"Registration" , "SimpleRegistration"}),
-     * @Assert\NotBlank(groups= {"Registration" , "SimpleRegistration"}),
+     * @Assert\Regex( pattern="/\d/", groups= {"Registration" , "SimpleRegistration" , "Edit"}),
+     * @Assert\NotBlank(groups= {"Registration" , "SimpleRegistration" , "Edit"}),
      * @Assert\Length(
      *    min = 8,
      *    max = 20,
-     *    groups= {"Registration" , "SimpleRegistration"}
+     *    groups= {"Registration" , "SimpleRegistration" , "Edit"}
      * )
      */
     private $phone;
@@ -71,12 +72,13 @@ class Professor extends User
      * @var string
      *
      * @ORM\Column(name="address", type="string", length=150)
-     * @Assert\NotBlank(groups= {"Registration" , "SimpleRegistration"}),
+     * @Assert\NotBlank(groups= {"Registration" , "SimpleRegistration" , "Edit"}),
      * @Assert\Length(
      *   min = 2,
      *   max = 150,
-     *   groups= {"Registration" , "SimpleRegistration"}
+     *   groups= {"Registration" , "SimpleRegistration" , "Edit"}
      * )
+     * @Assert\Regex(pattern="/^[a-z0-9 .\-]+$/i" ,match=true , groups= {"Registration" , "SimpleRegistration" , "Edit"})
      */
     private $address;
 
@@ -84,12 +86,13 @@ class Professor extends User
      * @var string
      *
      * @ORM\Column(name="grade", type="string", length=150)
-     * @Assert\NotBlank(groups= {"Registration" , "SimpleRegistration"}),
+     * @Assert\NotBlank(groups= {"Registration" , "SimpleRegistration" , "Edit"}),
      * @Assert\Length(
      *   min = 2,
      *   max = 150,
-     *   groups= {"Registration" , "SimpleRegistration"}
+     *   groups= {"Registration" , "SimpleRegistration" , "Edit"}
      * )
+     * @Assert\Regex(pattern="/^[a-z0-9 .\-]+$/i" ,match=true , groups= {"Registration" , "SimpleRegistration" , "Edit"})
      */
     private $grade;
 
@@ -99,6 +102,14 @@ class Professor extends User
      */
     private $schedules;
 
+    /**
+     * constructor.
+     */
+    public function __construct()
+    {
+        parent::__construct();
+        $this->roles = array(self::ROLE_PROFESSOR);
+    }
 
     /**
      * Get id
@@ -348,5 +359,13 @@ class Professor extends User
     public function getUpdated()
     {
         return $this->updated;
+    }
+
+    /**
+     * @return string
+     */
+    public function __toString()
+    {
+        return sprintf("%s %s",$this->getFirstName(),$this->getLastName());
     }
 }

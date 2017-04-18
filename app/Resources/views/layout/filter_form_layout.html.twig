@@ -1,0 +1,15 @@
+<div class="filter md-card">
+    <div class="md-card-toolbar">
+        <div class="md-card-toolbar-actions">
+            <i class="md-icon material-icons md-card-toggle">&#xE316;</i>
+        </div>
+        <h3 class="md-card-toolbar-heading-text">
+            {{ form_name|trans }}
+        </h3>
+    </div>
+    <div class="md-card-content">
+        {{ form_start(form) }}
+        {{ form_widget(form) }}
+        {{ form_end(form) }}
+    </div>
+</div>

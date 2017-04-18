@@ -1,0 +1,80 @@
+<script>
+$(function() {
+	var $token = $('input[type="hidden"]');
+	var $grade = $('.gradeField');
+	var $section = $('.sectionField');
+
+	// When grade gets selected ...
+	$grade.change(function() {
+	  // ... retrieve the corresponding form.
+	  var $form = $(this).closest('form');
+	  // Simulate form data, but only include the selected grade value.
+	  var data = {};
+	  data[$grade.attr('name')] = $grade.val();
+	  data[$section.attr('name')] = $section.val();
+	  data[$token.attr('name')] = $token.val();
+	  // Submit data via AJAX to the form's action path.
+	  $.ajax({
+	    url : $form.attr('action'),
+	    type: $form.attr('method'),
+	    data : data,
+        cache: false,
+        timeout: 3000,
+	    success: function(html) {
+	      // Replace current position field ...
+	      $('.sectionField').parent(".uk-form-row").empty().append(
+	        // ... with the returned one from the AJAX response.
+	        $(html).find('.sectionField').parent()
+	      );
+	      $('.studentField').parent(".uk-form-row").empty().append(
+	        // ... with the returned one from the AJAX response.
+	        $(html).find('.studentField').parent()
+	      );
+	      altair_forms.init();
+	      // Position field now displays the appropriate positions.
+	    }
+	  });
+	});
+
+	$(document).on('change' , '.sectionField', function () {
+	  // ... retrieve the corresponding form.
+	  if ($(this).val() !== null || $(this).val() !== ""){
+		$(this).parent(".uk-form-row").find('.parsley-errors-list').hide();
+	  }else{
+		$(this).parent(".uk-form-row").find('.parsley-errors-list').show();
+	  }
+
+	  var $form = $(this).closest('form');
+	  
+	  var $section = $(this);
+	  // Simulate form data, but only include the selected typeExam value.
+	  var data = {};
+	  data[$grade.attr('name')] = $grade.val();
+	  data[$section.attr('name')] = $section.val();
+	  data[$token.attr('name')] = $token.val();
+	  // Submit data via AJAX to the form's action path.
+	  $.ajax({
+	    url : $form.attr('action'),
+	    type: $form.attr('method'),
+	    data : data,
+	    success: function(html) {
+	      // Replace current position field ...
+	      $('.studentField').parent(".uk-form-row").empty().append(
+	        // ... with the returned one from the AJAX response.
+	        $(html).find('.studentField').parent()
+	      );
+	      altair_forms.init();
+	      // Position field now displays the appropriate positions.
+	    }
+	  });
+	});
+
+	$(document).on('change' , '.studentField', function () {
+		if ($(this).val() !== null || $(this).val() !== ""){
+			$(this).parent(".uk-form-row").find('.parsley-errors-list').hide();
+		}else{
+			$(this).parent(".uk-form-row").find('.parsley-errors-list').show();
+		}
+	});
+});
+</script>

@@ -1,29 +1,124 @@
 # Learn more about services, parameters and containers at
 # http://symfony.com/doc/current/service_container.html
 parameters:
-    search_field: 'search'
-    index_delete: '_delete'
-    index_actions: '_actions'
     flash_msg_success: '_msg_success'
     flash_msg_error: '_msg_error'
-    limit_per_page: 5
-    index_keys: '_keys'
+    tokenLifetime: 21600
+    app_name: 'SMS v0.1'
+    # mailer
+    mailer_transport: smtp
+    mailer_host: 127.0.0.1
+    mailer_user:     ramisfari22@gmail.com
+    mailer_password: ramisfari123
+    # days
+    days:
+        monday      : day.monday
+        tuesday     : day.tuesday
+        wednesday   : day.wednesday
+        thursday    : day.thursday
+        friday      : day.friday
+        saturday    : day.saturday
+        sunday      : day.sunday
+    attendance:
+        R: Retard
+        P: Present
+        A: Absent
+        E: Exclude
 services:
     sms.entity_manager:
-        class: SMS\Classes\Services\EntityManager
-        arguments: ["@doctrine.orm.entity_Manager" , "@knp_paginator"]
+        class: API\Services\EntityManager
+        arguments: ["@doctrine.orm.entity_Manager" ]
+    sms.user_space:
+        class: API\Services\UserSpaceManager
+        arguments: ["@doctrine.orm.entity_Manager" ]
         calls:
-          - [setPaginatorLimitPerPage, ['%limit_per_page%']]
-          - [setSearchField, ['%search_field%']]
+            - [ setDays , ["%days%"]]
     sms.user.entity_manager:
-        class: SMS\Classes\Services\UserEntityManager
+        class: API\Services\UserEntityManager
         arguments: ["@doctrine.orm.entity_Manager" , "@security.password_encoder"]
         calls:
           - [setMailer, ['@sms.mailer']]
     sms.mailer:
-        class: SMS\Classes\Services\Mailer
+        class: API\Services\Mailer
         arguments: ["@mailer" , "@templating"]
         calls:
           - method: setEmail
             arguments:
               - "%mailer_user%"
+    sms.menu_builder:
+        class: API\Menu\MenuBuilder
+        arguments: ["@knp_menu.factory"]
+        tags:
+            - { name: knp_menu.menu_builder, method: createMainMenu, alias: main }
+            - { name: knp_menu.menu_builder, method: createSidebarMenu, alias: sidebar }
+    #listener
+    #sms.exception_listener:
+        #class: API\EventListener\ExceptionListener
+        #tags:
+            #- { name: kernel.event_listener, event: kernel.exception }
+    sms.locale_listener:
+        class: API\EventListener\LocaleListener
+        arguments: ['%kernel.default_locale%']
+        tags:
+            - { name: kernel.event_subscriber }
+    #form type
+    sms.form.type.role:
+        class: API\Form\Type\RoleType
+        arguments:
+            - '%security.role_hierarchy.roles%'
+        tags:
+            - { name: form.type }
+    sms.form.type.day:
+        class: API\Form\Type\DayType
+        arguments:
+            - '%days%'
+        tags:
+            - { name: form.type }
+    sms.form.type.schedule:
+        class: SMS\StudyPlanBundle\Form\ScheduleType
+        arguments:
+            - '@doctrine.orm.entity_Manager'
+        tags:
+            - { name: form.type }
+    sms.form.type.schedule_student:
+        class: SMS\StudyPlanBundle\Form\ScheduleStudentFilterType
+        arguments:
+            - '@doctrine.orm.entity_Manager'
+        tags:
+            - { name: form.type }
+    sms.form.type.exam:
+        class: SMS\StudyPlanBundle\Form\ExamType
+        arguments:
+            - '@doctrine.orm.entity_Manager'
+        tags:
+            - { name: form.type }
+    sms.form.type.note:
+        class: SMS\StudyPlanBundle\Form\NoteType
+        arguments:
+            - '@doctrine.orm.entity_Manager'
+        tags:
+            - { name: form.type }
+    sms.form.type.student:
+        class: SMS\UserBundle\Form\StudentType
+        arguments:
+            - '@doctrine.orm.entity_Manager'
+        tags:
+            - { name: form.type }
+    sms.form.type.sanction:
+        class: SMS\AdministrativeBundle\Form\SanctionType
+        arguments:
+            - '@doctrine.orm.entity_Manager'
+        tags:
+            - { name: form.type }
+    sms.form.type.attendance.professor:
+        class: SMS\AdministrativeBundle\Form\ProfessorAttendanceType
+        arguments:
+            - '@doctrine.orm.entity_Manager'
+        tags:
+            - { name: form.type }
+    sms.form.type.attendance.student:
+        class: SMS\AdministrativeBundle\Form\StudentAttendanceType
+        arguments:
+            - '@doctrine.orm.entity_Manager'
+        tags:
+            - { name: form.type }

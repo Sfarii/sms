@@ -4,9 +4,11 @@ namespace SMS\UserBundle\Controller;
 
 use SMS\UserBundle\Entity\Student;
 use SMS\UserBundle\Form\StudentType;
-use SMS\Classes\BaseController\BaseController;
+use API\BaseController\BaseController;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\Method;
-use Sensio\Bundle\FrameworkExtraBundle\Configuration\Route;use Symfony\Component\HttpFoundation\Request;
+use Sensio\Bundle\FrameworkExtraBundle\Configuration\Route;
+use Symfony\Component\HttpFoundation\Request;
+use Sensio\Bundle\FrameworkExtraBundle\Configuration\Template;
 
 /**
  * Student controller.
@@ -25,22 +27,40 @@ class StudentController extends BaseController
      *
      * @Route("/", name="student_index")
      * @Method("GET")
+     * @Template("smsuserbundle/student/index.html.twig")
      */
     public function indexAction(Request $request)
     {
-        $students = $this->getEntityManager()->getEntityBy(Student::class , $request);
+        $student = $this->getStudentEntityManager();
+        $student->buildDatatable();
 
-        return $this->render('smsuserbundle/student/index.html.twig', array(
-            'students' => $students,
-            'search' => $request->query->get($this->getParameter('search_field'), null)
-        ));
+        return array('students' => $student);
     }
+
+    /**
+     * Lists all student entities.
+     *
+     * @Route("/results", name="student_results")
+     * @Method("GET")
+     * @return Response
+     */
+    public function indexResultsAction()
+    {
+        $student = $this->getStudentEntityManager();
+        $student->buildDatatable();
+
+        $query = $this->getDataTableQuery()->getQueryFrom($student);
+
+        return $query->getResponse();
+    }
+
 
     /**
      * Creates a new student entity.
      *
      * @Route("/new", name="student_new")
      * @Method({"GET", "POST"})
+     * @Template("smsuserbundle/student/new.html.twig")
      */
     public function newAction(Request $request)
     {
@@ -54,33 +74,35 @@ class StudentController extends BaseController
             return $this->redirectToRoute('student_index');
         }
 
-        return $this->render('smsuserbundle/student/new.html.twig', array(
+        return array(
             'student' => $student,
             'form' => $form->createView(),
-        ));
+        );
     }
 
     /**
      * Finds and displays a student entity.
      *
-     * @Route("/{id}", name="student_show")
+     * @Route("/{id}", name="student_show", options={"expose"=true})
      * @Method("GET")
+     * @Template("smsuserbundle/student/show.html.twig")
      */
     public function showAction(Student $student)
     {
         $deleteForm = $this->createDeleteForm($student);
 
-        return $this->render('smsuserbundle/student/show.html.twig', array(
+        return array(
             'student' => $student,
             'delete_form' => $deleteForm->createView(),
-        ));
+        );
     }
 
     /**
      * Displays a form to edit an existing student entity.
      *
-     * @Route("/{id}/edit", name="student_edit")
+     * @Route("/{id}/edit", name="student_edit", options={"expose"=true})
      * @Method({"GET", "POST"})
+     * @Template("smsuserbundle/student/edit.html.twig")
      */
     public function editAction(Request $request, Student $student)
     {
@@ -92,31 +114,10 @@ class StudentController extends BaseController
             return $this->redirectToRoute('student_index');
         }
 
-        return $this->render('smsuserbundle/student/edit.html.twig', array(
-            'student' => $student,
+        return array(
+            'user' => $student,
             'edit_form' => $editForm->createView(),
-        ));
-    }
-
-    /**
-     * Finds and displays a student entity.
-     *
-     * @Route("/multiple_actions", name="student_bulk_action")
-     * @Method("POST")
-     */
-    public function multipleActionsAction(Request $request)
-    {
-        $actions = $request->request->get($this->getParameter('index_actions') , null);
-        $keys = $request->request->get($this->getParameter('index_keys') , null);
-            
-        if(!is_null($keys) && $actions === $this->getParameter('index_delete')){
-            $this->getEntityManager()->deleteAll(student::class ,$keys);
-            $this->flashSuccessMsg('student.delete.all.success');
-        }else{
-            $this->flashErrorMsg('student.delete.all.error');
-        }
-
-        return $this->redirectToRoute('student_index');
+        );
     }
 
     /**
@@ -151,5 +152,21 @@ class StudentController extends BaseController
             ->setMethod('DELETE')
             ->getForm()
         ;
+    }
+
+    /**
+     * Get student Entity Manager Service.
+     *
+     * @return API\Services\EntityManager
+     *
+     * @throws \NotFoundException
+     */
+    protected function getStudentEntityManager()
+    {
+        if (!$this->has('sms.datatable.student')){
+           throw $this->createNotFoundException('Service Not Found');
+        }
+
+        return $this->get('sms.datatable.student');
     }
 }

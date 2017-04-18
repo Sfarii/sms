@@ -12,4 +12,40 @@ use Doctrine\ORM\EntityRepository;
  */
 class CourseRepository extends EntityRepository
 {
+	/**
+     * Get Course By Grade
+     *
+     * @param integer $grade
+     * @return array
+     */
+	public function findByGrade($grade)
+	{
+		return $this->createQueryBuilder('course')
+				->join('course.grade', 'grade')
+				->andWhere('grade.id = :grade')
+				->setParameter('grade', $grade)
+				->getQuery()
+				->getResult();
+	}
+
+	/**
+     * Get Course By Grade
+     *
+     * @param integer $grade
+     * @return array
+     */
+	public function findByGradeAndDivision($grade , $division)
+	{
+		return $this->createQueryBuilder('course')
+				->join('course.grade', 'grade')
+				->join('course.division', 'division')
+				->andWhere('division.id = :division')
+				->andWhere('grade.id = :grade')
+				->setParameter('grade', $grade)
+				->setParameter('division', $division)
+				->getQuery()
+				->getResult();
+	}
+
+	
 }

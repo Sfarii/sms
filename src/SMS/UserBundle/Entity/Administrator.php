@@ -21,9 +21,9 @@ class Administrator extends User
      *
      * @ORM\Column(name="firstName", type="string", length=50)
      *
-     * @Assert\NotBlank(groups= {"Registration" , "SimpleRegistration"}),
-     * @Assert\Regex(pattern="/\d/",match=false , groups= {"Registration" , "SimpleRegistration"}),
-     * @Assert\Length(min = 2, max = 40 , groups= {"Registration" , "SimpleRegistration"})
+     * @Assert\NotBlank(groups= {"Registration" , "SimpleRegistration" , "Edit"}),
+     * @Assert\Regex(pattern="/^[a-z0-9 .\-]+$/i" ,match=true , groups= {"Registration" , "SimpleRegistration" , "Edit"})
+     * @Assert\Length(min = 2, max = 40 , groups= {"Registration" , "SimpleRegistration" , "Edit"})
      * 
      */
     private $firstName;
@@ -33,12 +33,12 @@ class Administrator extends User
      *
      * @ORM\Column(name="lastName", type="string", length=50)
      *
-     * @Assert\NotBlank(groups= {"Registration" , "SimpleRegistration"}),
-     * @Assert\Regex( pattern="/\d/",match=false, groups= {"Registration" , "SimpleRegistration"}),
+     * @Assert\NotBlank(groups= {"Registration" , "SimpleRegistration" , "Edit"})
+     * @Assert\Regex(pattern="/^[a-z0-9 .\-]+$/i" ,match=true, groups= {"Registration" , "SimpleRegistration" , "Edit"})
      * @Assert\Length(
      *    min = 2,
      *    max = 40,
-     *    groups= {"Registration" , "SimpleRegistration"}
+     *    groups= {"Registration" , "SimpleRegistration" , "Edit"}
      *  )
      */
     private $lastName;
@@ -47,7 +47,8 @@ class Administrator extends User
      * @var string
      *
      * @ORM\Column(name="gender", type="string", length=20)
-     * @Assert\NotBlank(groups= {"Registration" , "SimpleRegistration"})
+     * @Assert\Choice(choices = {"gender.male", "gender.female", "gender.other"} , groups= {"Registration" , "SimpleRegistration" , "Edit"})
+     * @Assert\NotBlank(groups= {"Registration" , "SimpleRegistration" , "Edit"})
      */
     private $gender;
 
@@ -56,12 +57,12 @@ class Administrator extends User
      *
      * @ORM\Column(name="phone", type="string", length=20)
      *
-     * @Assert\Regex( pattern="/\d/", groups= {"Registration" , "SimpleRegistration"}),
-     * @Assert\NotBlank(groups= {"Registration" , "SimpleRegistration"}),
+     * @Assert\Regex( pattern="/\d/", groups= {"Registration" , "SimpleRegistration" , "Edit"}),
+     * @Assert\NotBlank(groups= {"Registration" , "SimpleRegistration" , "Edit"}),
      * @Assert\Length(
      *    min = 8,
      *    max = 20,
-     *    groups= {"Registration" , "SimpleRegistration"}
+     *    groups= {"Registration" , "SimpleRegistration" , "Edit"}
      * )
      */
     private $phone;
@@ -70,25 +71,26 @@ class Administrator extends User
      * @var string
      *
      * @ORM\Column(name="address", type="string", length=150)
-     * 
-     * @Assert\NotBlank(groups= {"Registration" , "SimpleRegistration"}),
+     * @Assert\Regex(pattern="/^[a-z0-9 .\-]+$/i" ,match=true, groups= {"Registration" , "SimpleRegistration" , "Edit"})
+     * @Assert\NotBlank(groups= {"Registration" , "SimpleRegistration" , "Edit"}),
      * @Assert\Length(
      *   min = 2,
      *   max = 150,
-     *   groups= {"Registration" , "SimpleRegistration"}
+     *   groups= {"Registration" , "SimpleRegistration" , "Edit"}
      * )
+
      */
     private $address;
 
+    
     /**
-     * NOTE: This is not a mapped field of entity metadata, just a simple property.
-     * 
-     * @Vich\UploadableField(mapping="user_image", fileNameProperty="imageName")
-     * @Assert\Image()
-     * @var File
+     * constructor.
      */
-    protected $imageFile;
-
+    public function __construct()
+    {
+        parent::__construct();
+        $this->roles = array(self::ROLE_ADMIN);
+    }
 
     /**
      * Get id

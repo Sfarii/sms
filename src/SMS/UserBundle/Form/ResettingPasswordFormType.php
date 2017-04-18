@@ -1,0 +1,46 @@
+<?php
+
+namespace SMS\UserBundle\Form;
+
+use Symfony\Component\Form\AbstractType;
+use Symfony\Component\Form\FormBuilderInterface;
+use Symfony\Component\OptionsResolver\OptionsResolver;
+use Symfony\Component\Validator\Constraints\NotBlank;
+use Symfony\Component\Validator\Constraints\Length;
+
+use Symfony\Component\Form\Extension\Core\Type\RepeatedType;
+use Symfony\Component\Form\Extension\Core\Type\PasswordType;
+
+class ResettingPasswordFormType extends AbstractType
+{
+    /**
+     * {@inheritdoc}
+     */
+    public function buildForm(FormBuilderInterface $builder, array $options)
+    {
+        $builder
+            ->add('plainPassword', RepeatedType::class, array(
+                'type' => PasswordType::class,
+                'first_options' => array('label' => 'user.new_password', 'constraints' => array(
+                                    new NotBlank() , 
+                                    new Length(array("min" => 8,"max" => 60))
+                )),
+                'second_options' => array('label' => 'user.new_password_confirmation'),
+                'invalid_message' => 'user.password.mismatch'
+            ))  
+        ;
+    }
+
+    public function configureOptions(OptionsResolver $resolver)
+    {
+        $resolver->setDefaults(array(
+            'validation_groups' => array('ChangePassword'),
+        ));
+    }
+    
+    public function getName()
+    {
+        return 'resetting_form';
+    }
+
+}

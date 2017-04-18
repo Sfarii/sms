@@ -17,7 +17,7 @@ class Student extends User
     /**
      * @var string
      *
-     * @ORM\Column(name="recordeNumber", type="string", length=150)
+     * @ORM\Column(name="recordeNumber", type="string", length=150, unique=true)
      */
     private $recordeNumber;
 
@@ -25,9 +25,9 @@ class Student extends User
      * @var string
      *
      * @ORM\Column(name="firstName", type="string", length=50)
-     * @Assert\NotBlank(groups= {"Registration" , "SimpleRegistration"}),
-     * @Assert\Regex(pattern="/\d/",match=false , groups= {"Registration" , "SimpleRegistration"}),
-     * @Assert\Length(min = 2, max = 40 , groups= {"Registration" , "SimpleRegistration"})
+     * @Assert\NotBlank(groups= {"Registration" , "SimpleRegistration" , "Edit"}),
+     * @Assert\Regex(pattern="/^[a-z0-9 .\-]+$/i" ,match=true , groups= {"Registration" , "SimpleRegistration" , "Edit"})
+     * @Assert\Length(min = 2, max = 40 , groups= {"Registration" , "SimpleRegistration" , "Edit"})
      */
     private $firstName;
 
@@ -35,9 +35,9 @@ class Student extends User
      * @var string
      *
      * @ORM\Column(name="lastName", type="string", length=50)
-     * @Assert\NotBlank(groups= {"Registration" , "SimpleRegistration"}),
-     * @Assert\Regex(pattern="/\d/",match=false , groups= {"Registration" , "SimpleRegistration"}),
-     * @Assert\Length(min = 2, max = 40 , groups= {"Registration" , "SimpleRegistration"})
+     * @Assert\NotBlank(groups= {"Registration" , "SimpleRegistration" , "Edit"})
+     * @Assert\Regex(pattern="/^[a-z0-9 .\-]+$/i" ,match=true , groups= {"Registration" , "SimpleRegistration" , "Edit"})
+     * @Assert\Length(min = 2, max = 40 , groups= {"Registration" , "SimpleRegistration" , "Edit"})
      */
     private $lastName;
 
@@ -45,7 +45,8 @@ class Student extends User
      * @var string
      *
      * @ORM\Column(name="gender", type="string", length=30)
-     * @Assert\NotBlank(groups= {"Registration" , "SimpleRegistration"}),
+     * @Assert\Choice(choices = {"gender.male", "gender.female", "gender.other"} , groups= {"Registration" , "SimpleRegistration" , "Edit"})
+     * @Assert\NotBlank(groups= {"Registration" , "SimpleRegistration" , "Edit"}),
      */
     private $gender;
 
@@ -53,8 +54,8 @@ class Student extends User
      * @var \DateTime
      *
      * @ORM\Column(name="birthday", type="date")
-     * @Assert\NotBlank(groups= {"Registration" , "SimpleRegistration"})
-     * @Assert\Date(groups= {"Registration" , "SimpleRegistration"})
+     * @Assert\NotBlank(groups= {"Registration" , "SimpleRegistration" , "Edit"})
+     * @Assert\Date(groups= {"Registration" , "SimpleRegistration" , "Edit"})
      */
     private $birthday;
 
@@ -62,7 +63,7 @@ class Student extends User
      * Many Students have One Section.
      * @ORM\ManyToOne(targetEntity="SMS\EstablishmentBundle\Entity\Section")
      * @ORM\JoinColumn(name="section_id", referencedColumnName="id")
-     * @Assert\NotBlank(groups= {"Registration" , "SimpleRegistration"}),
+     * @Assert\NotBlank(groups= {"Edit"}),
      */
     private $section;
 
@@ -70,10 +71,18 @@ class Student extends User
      * Many Students have One Parent.
      * @ORM\ManyToOne(targetEntity="StudentParent" , inversedBy="students")
      * @ORM\JoinColumn(name="student_parent_id", referencedColumnName="id")
-     * @Assert\NotBlank(groups= {"Registration" , "SimpleRegistration"}),
+     * @Assert\NotBlank(groups= {"Registration" , "SimpleRegistration" , "Edit"}),
      */
     private $studentParent;
 
+    /**
+     * constructor.
+     */
+    public function __construct()
+    {
+        parent::__construct();
+        $this->roles = array(self::ROLE_STUDENT);
+    }
 
     /**
      * Get id
@@ -290,5 +299,13 @@ class Student extends User
     public function getUpdated()
     {
         return $this->updated;
+    }
+
+    /**
+     * @return string
+     */
+    public function __toString()
+    {
+        return sprintf("%s %s",$this->getFirstName(),$this->getLastName());
     }
 }

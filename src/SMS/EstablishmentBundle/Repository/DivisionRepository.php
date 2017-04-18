@@ -12,23 +12,5 @@ use Doctrine\ORM\EntityRepository;
  */
 class DivisionRepository extends EntityRepository
 {
-	/**
-     * @return Query
-     */
-    public function findAll()
-    {
-        return $this->createQueryBuilder('f');
-    }
-
-    /**
-     * @param String $field
-     * @return Query
-     */
-    public function findByAnything($field)
-    {
-        return $this->createQueryBuilder('f')
-        			->Where('f.name LIKE :search OR f.startDate LIKE :search OR f.endDate LIKE :search')
-                	->setParameter('search', '%'.$field.'%')
-                	->orderBy('f.id', 'ASC');
-    }
+	
 }

@@ -1,0 +1,19 @@
+{% extends 'layout/base.html.twig' %}
+
+{% block sticky_button %}
+<a class="md-fab md-fab-primary" href="{{ path('attendancestudent_new') }}">
+    <i class="material-icons">&#xE145;</i>
+</a>
+{% endblock %}
+
+{% block title_page %} 
+ {{ 'attendancestudent.list.title'|trans }}
+{% endblock %}
+
+{% block body %}
+    <div class="md-card uk-margin-medium-bottom">
+        <div class="md-card-content">
+            {{ datatable_render(attendanceStudents) }}
+        </div>
+    </div>
+{% endblock %}

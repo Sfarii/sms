@@ -1,0 +1,110 @@
+<script>
+$(function() {
+	var $token = $('input[type="hidden"]');
+	var $professor = $('.professorField');
+	var $date = $('#sms_administrativebundle_attendance_date');
+	var $division = $(".divisionField");
+
+	$date.on("hide.uk.datepicker" , function () {
+		// ... retrieve the corresponding form.
+	  var $form = $(this).closest('form');
+	  // test if professor and date existe
+	  	if ($professor.val() === null || $professor.val() === "" || $date.val() === null || $date.val() === "" || $division.val() === null || $division.val() === ""){
+	  		return ;
+	  	}
+	  // Simulate form data, but only include the selected typeExam value.
+	  var data = {};
+	  data[$date.attr('name')] = $date.val();
+	  data[$professor.attr('name')] = $professor.val();
+	  data[$token.attr('name')] = $token.val();
+	  data[$division.attr('name')] = $division.val();
+	  // Submit data via AJAX to the form's action path.
+	  $.ajax({
+	    url : $form.attr('action'),
+	    type: $form.attr('method'),
+	    data : data,
+        cache: false,
+        timeout: 3000,
+	    success: function(html) {
+	      // Replace current position field ...
+	      $('.sessionField').parent(".uk-form-row").empty().append(
+	        // ... with the returned one from the AJAX response.
+	        $(html).find('.sessionField').parent()
+	      );
+	      altair_forms.init();
+	      // Position field now displays the appropriate positions.
+	    }
+	  });
+	});
+
+	$(document).on('change' , '.professorField', function () {
+	  // ... retrieve the corresponding form.
+	  var $form = $(this).closest('form');
+	  // test if professor and date existe
+	  	if ($professor.val() === null || $professor.val() === "" || $date.val() === null || $date.val() === "" || $division.val() === null || $division.val() === ""){
+	  		return ;
+	  	}
+	  // Simulate form data, but only include the selected typeExam value.
+	  var data = {};
+	  data[$date.attr('name')] = $date.val();
+	  data[$professor.attr('name')] = $professor.val();
+	  data[$token.attr('name')] = $token.val();
+	  data[$division.attr('name')] = $division.val();
+	  // Submit data via AJAX to the form's action path.
+	  $.ajax({
+	    url : $form.attr('action'),
+	    type: $form.attr('method'),
+	    data : data,
+        cache: false,
+        timeout: 3000,
+	    success: function(html) {
+	      // Replace current position field ...
+	      $('.sessionField').parent(".uk-form-row").empty().append(
+	        // ... with the returned one from the AJAX response.
+	        $(html).find('.sessionField').parent()
+	      );
+	      altair_forms.init();
+	      // Position field now displays the appropriate positions.
+	    }
+	  });
+	});
+	$division.change(function() {
+		$section = $(".sectionField");
+		if ($professor.val() === null || $professor.val() === "" || $date.val() === null || $date.val() === "" || $division.val() === null || $division.val() === ""){
+			console.log('hey');
+	  		return ;
+	  	}
+	  // ... retrieve the corresponding form.
+	  var $form = $(this).closest('form');
+	  // Simulate form data, but only include the selected grade value.
+	  var data = {};
+	  data[$date.attr('name')] = $date.val();
+	  data[$professor.attr('name')] = $professor.val();
+	  data[$token.attr('name')] = $token.val();
+	  data[$division.attr('name')] = $division.val();
+	  // Submit data via AJAX to the form's action path.
+	  $.ajax({
+	    url : $form.attr('action'),
+	    type: $form.attr('method'),
+	    data : data,
+        cache: false,
+        timeout: 3000,
+	    success: function(html) {
+	      $('.sessionField').parent(".uk-form-row").empty().append(
+	        // ... with the returned one from the AJAX response.
+	        $(html).find('.sessionField').parent()
+	      );
+	      altair_forms.init();
+	      // Position field now displays the appropriate positions.
+	    }
+	  });
+	});
+	$(document).on('change' , '.sessionField', function () {
+		if ($(this).val() !== null || $(this).val() !== ""){
+			$(this).parent(".uk-form-row").find('.parsley-errors-list').hide();
+		}else{
+			$(this).parent(".uk-form-row").find('.parsley-errors-list').show();
+		}
+	});
+});
+</script>

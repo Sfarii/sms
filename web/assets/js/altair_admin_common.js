@@ -33,21 +33,6 @@
         // material design
         altair_md.init();
 
-        // forms
-        altair_forms.init();
-
-        // truncate text helper
-        altair_helpers.truncate_text($('.truncate-text'));
-
-        // full screen
-        altair_helpers.full_screen();
-
-        // table check
-        altair_helpers.table_check();
-
-        // print page
-        altair_helpers.print_page();
-
     });
 
 
@@ -1717,7 +1702,7 @@
                     height = height ? height : 48;
 
                 var preloader_content = (style == 'regular')
-                    ? '<img src="assets/img/spinners/spinner' + image_density + '.gif" alt="" width="32" height="32">'
+                    ? '<img src="' + $spinner + '" alt="" width="32" height="32">'
                     : '<div class="md-preloader"><svg xmlns="http://www.w3.org/2000/svg" version="1.1" height="'+height+'" width="'+width+'" viewbox="0 0 75 75"><circle cx="37.5" cy="37.5" r="33.5" stroke-width="8"/></svg></div>';
 
                 var thisContainer = (typeof container !== 'undefined') ? $(container) : $body;

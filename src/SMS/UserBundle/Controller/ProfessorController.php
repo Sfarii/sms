@@ -4,9 +4,11 @@ namespace SMS\UserBundle\Controller;
 
 use SMS\UserBundle\Entity\Professor;
 use SMS\UserBundle\Form\ProfessorType;
-use SMS\Classes\BaseController\BaseController;
+use API\BaseController\BaseController;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\Method;
-use Sensio\Bundle\FrameworkExtraBundle\Configuration\Route;use Symfony\Component\HttpFoundation\Request;
+use Sensio\Bundle\FrameworkExtraBundle\Configuration\Route;
+use Symfony\Component\HttpFoundation\Request;
+use Sensio\Bundle\FrameworkExtraBundle\Configuration\Template;
 
 /**
  * Professor controller.
@@ -25,15 +27,31 @@ class ProfessorController extends BaseController
      *
      * @Route("/", name="professor_index")
      * @Method("GET")
+     * @Template("smsuserbundle/professor/index.html.twig")
      */
-    public function indexAction(Request $request)
+    public function indexAction()
     {
-        $professors = $this->getEntityManager()->getEntityBy(Professor::class , $request);
+        $professor = $this->getProfessorEntityManager();
+        $professor->buildDatatable();
 
-        return $this->render('smsuserbundle/professor/index.html.twig', array(
-            'professors' => $professors,
-            'search' => $request->query->get($this->getParameter('search_field'), null)
-        ));
+        return array('professors' => $professor);
+    }
+
+    /**
+     * Lists all professor entities.
+     *
+     * @Route("/results", name="professor_results")
+     * @Method("GET")
+     * @return Response
+     */
+    public function indexResultsAction()
+    {
+        $professor = $this->getProfessorEntityManager();
+        $professor->buildDatatable();
+
+        $query = $this->getDataTableQuery()->getQueryFrom($professor);
+
+        return $query->getResponse();
     }
 
     /**
@@ -41,6 +59,7 @@ class ProfessorController extends BaseController
      *
      * @Route("/new", name="professor_new")
      * @Method({"GET", "POST"})
+     * @Template("smsuserbundle/professor/new.html.twig")
      */
     public function newAction(Request $request)
     {
@@ -54,33 +73,35 @@ class ProfessorController extends BaseController
             return $this->redirectToRoute('professor_index');
         }
 
-        return $this->render('smsuserbundle/professor/new.html.twig', array(
+        return  array(
             'professor' => $professor,
             'form' => $form->createView(),
-        ));
+        );
     }
 
     /**
      * Finds and displays a professor entity.
      *
-     * @Route("/{id}", name="professor_show")
+     * @Route("/{id}", name="professor_show", options={"expose"=true})
      * @Method("GET")
+     * @Template("smsuserbundle/professor/show.html.twig")
      */
     public function showAction(Professor $professor)
     {
         $deleteForm = $this->createDeleteForm($professor);
 
-        return $this->render('smsuserbundle/professor/show.html.twig', array(
+        return array(
             'professor' => $professor,
             'delete_form' => $deleteForm->createView(),
-        ));
+        );
     }
 
     /**
      * Displays a form to edit an existing professor entity.
      *
-     * @Route("/{id}/edit", name="professor_edit")
+     * @Route("/{id}/edit", name="professor_edit", options={"expose"=true})
      * @Method({"GET", "POST"})
+     * @Template("smsuserbundle/professor/edit.html.twig")
      */
     public function editAction(Request $request, Professor $professor)
     {
@@ -92,31 +113,10 @@ class ProfessorController extends BaseController
             return $this->redirectToRoute('professor_index');
         }
 
-        return $this->render('smsuserbundle/professor/edit.html.twig', array(
-            'professor' => $professor,
+        return array(
+            'user' => $professor,
             'edit_form' => $editForm->createView(),
-        ));
-    }
-
-    /**
-     * Finds and displays a professor entity.
-     *
-     * @Route("/multiple_actions", name="professor_bulk_action")
-     * @Method("POST")
-     */
-    public function multipleActionsAction(Request $request)
-    {
-        $actions = $request->request->get($this->getParameter('index_actions') , null);
-        $keys = $request->request->get($this->getParameter('index_keys') , null);
-            
-        if(!is_null($keys) && $actions === $this->getParameter('index_delete')){
-            $this->getEntityManager()->deleteAll(professor::class ,$keys);
-            $this->flashSuccessMsg('professor.delete.all.success');
-        }else{
-            $this->flashErrorMsg('professor.delete.all.error');
-        }
-
-        return $this->redirectToRoute('professor_index');
+        );
     }
 
     /**
@@ -151,5 +151,21 @@ class ProfessorController extends BaseController
             ->setMethod('DELETE')
             ->getForm()
         ;
+    }
+
+    /**
+     * Get professor Entity Manager Service.
+     *
+     * @return API\Services\EntityManager
+     *
+     * @throws \NotFoundException
+     */
+    protected function getProfessorEntityManager()
+    {
+        if (!$this->has('sms.datatable.professor')){
+           throw $this->createNotFoundException('Service Not Found');
+        }
+
+        return $this->get('sms.datatable.professor');
     }
 }

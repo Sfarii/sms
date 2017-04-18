@@ -1,0 +1,121 @@
+<script>
+$(function() {
+	var $token = $('input[type="hidden"]');
+	var $grade = $('.gradeField');
+	var $section = $('.sectionField');
+	var $date = $('#sms_administrativebundle_attendance_date');
+
+	// When grade gets selected ...
+	$grade.change(function() {
+	  // ... retrieve the corresponding form.
+	  var $form = $(this).closest('form');
+	  // Simulate form data, but only include the selected grade value.
+	  var data = {};
+	  data[$grade.attr('name')] = $grade.val();
+	  data[$section.attr('name')] = $section.val();
+	  data[$token.attr('name')] = $token.val();
+	  data[$date.attr('name')] = $date.val();
+	  // Submit data via AJAX to the form's action path.
+	  $.ajax({
+	    url : $form.attr('action'),
+	    type: $form.attr('method'),
+	    data : data,
+        cache: false,
+        timeout: 3000,
+	    success: function(html) {
+	      // Replace current position field ...
+	      $('.sectionField').parent(".uk-form-row").empty().append(
+	        // ... with the returned one from the AJAX response.
+	        $(html).find('.sectionField').parent()
+	      );
+
+	      $('.sessionField').parent(".uk-form-row").empty().append(
+	        // ... with the returned one from the AJAX response.
+	        $(html).find('.sessionField').parent()
+	      );
+
+	      altair_forms.init();
+	    }
+	  });
+	});
+
+	$date.on("hide.uk.datepicker" , function () {
+		// ... retrieve the corresponding form.
+	  var $form = $(this).closest('form');
+	  var $section = $('.sectionField');
+	  // test if section and date existe
+	  	if ($section.val() === null || $section.val() === "" || $date.val() === null){
+	  		return ;
+	  	}
+	  // Simulate form data, but only include the selected typeExam value.
+	  var data = {};
+	  data[$grade.attr('name')] = $grade.val();
+	  data[$date.attr('name')] = $date.val();
+	  data[$section.attr('name')] = $section.val();
+	  data[$token.attr('name')] = $token.val();
+	  // Submit data via AJAX to the form's action path.
+	  $.ajax({
+	    url : $form.attr('action'),
+	    type: $form.attr('method'),
+	    data : data,
+        cache: false,
+        timeout: 3000,
+	    success: function(html) {
+	      // Replace current position field ...
+	      $('.sessionField').empty().append(
+	        // ... with the returned one from the AJAX response.
+	        $(html).find('.sessionField')
+	      );
+
+	      altair_forms.init();
+	      // Position field now displays the appropriate positions.
+	    }
+	  });
+	});
+
+	$(document).on('change' , '.sectionField', function () {
+	  // ... retrieve the corresponding form.
+	  if ($(this).val() !== null || $(this).val() !== ""){
+			$(this).parent(".uk-form-row").find('.parsley-errors-list').hide();
+		}else{
+			$(this).parent(".uk-form-row").find('.parsley-errors-list').show();
+		}
+	  var $form = $(this).closest('form');
+	  var $section = $(this);
+	  // test if section and date existe
+	  	if ($section.val() === null || $section.val() === "" || $date.val() === null || $date.val() === ""){
+	  		return ;
+	  	}
+	  // Simulate form data, but only include the selected typeExam value.
+	  var data = {};
+	  data[$grade.attr('name')] = $grade.val();
+	  data[$date.attr('name')] = $date.val();
+	  data[$section.attr('name')] = $section.val();
+	  data[$token.attr('name')] = $token.val();
+	  // Submit data via AJAX to the form's action path.
+	  $.ajax({
+	    url : $form.attr('action'),
+	    type: $form.attr('method'),
+	    data : data,
+        cache: false,
+        timeout: 3000,
+	    success: function(html) {
+	      // Replace current position field ...
+	      $('.sessionField').parent(".uk-form-row").empty().append(
+	        // ... with the returned one from the AJAX response.
+	        $(html).find('.sessionField').parent()
+	      );
+	      altair_forms.init();
+	      // Position field now displays the appropriate positions.
+	    }
+	  });
+	});
+	$(document).on('change' , '.sessionField', function () {
+		if ($(this).val() !== null || $(this).val() !== ""){
+			$(this).parent(".uk-form-row").find('.parsley-errors-list').hide();
+		}else{
+			$(this).parent(".uk-form-row").find('.parsley-errors-list').show();
+		}
+	});
+});
+</script>

@@ -1,0 +1,101 @@
+{##
+ # This file is part of the SgDatatablesBundle package.
+ #
+ # (c) stwe <https://github.com/stwe/DatatablesBundle>
+ #
+ # For the full copyright and license information, please view the LICENSE
+ # file that was distributed with this source code.
+ #}
+{% set multiple_actions %}
+    <div class="dt_colVis_buttons">
+        {% for action in column.actions %}
+            {% if action.isRenderIfClosure %}
+                {% set route = action.route ? path(action.route, action.routeParameters) : '' %}
+                {% set attributes %}
+                    {% for key, value in action.attributes %} {{ key }}='{{ value }}'{% endfor %}
+                {% endset %}
+                <a href="{{ route }}" {{ attributes }}>{{ datatable_icon(action.icon, action.label) }}</a>
+            {% endif %}
+        {% endfor %}
+    </div>
+{% endset %}
+
+$("#{{ view_table_id }}_multiselect_actions").append("{{ multiple_actions|e('js') }}");
+
+$('.{{ view_table_id }}_multiselect_checkall')
+            .iCheck({
+                checkboxClass: 'icheckbox_md',
+                increaseArea: '20%',
+                handle: 'checkbox'
+            })
+            .on('ifChecked', function(event){
+              $("input.{{ view_table_id }}_multiselect_checkbox:checkbox").iCheck('check');
+            }).on('ifUnchecked', function(event){
+              $("input.{{ view_table_id }}_multiselect_checkbox:checkbox").iCheck('uncheck');
+            });
+
+$(".{{ view_table_id }}_multiselect_action_click").on('click', function(event) {
+    var length = $("input.{{ view_table_id }}_multiselect_checkbox:checkbox:checked").length;
+
+    event.preventDefault();
+
+    if (length > 0) {
+        var $route = $(this).attr('href');
+        UIkit.modal.confirm("{{ 'datatables.bulk.confirmMsg'|trans({}, 'messages') }} ",
+        function(){ 
+            {% set token = csrf_token('multiselect') %}
+
+            $.ajax({
+                url: $route,
+                type: "POST",
+                cache: false,
+                data: {
+                    'data': $("input:checkbox:checked.{{ view_table_id }}_multiselect_checkbox", oTable.rows().nodes()).serializeArray(),
+                    'token': '{{ token }}'
+                },
+                success: function(msg) {
+                    new UIkit.notify({
+                        message: "<a href='#' class='notify-action'><span class='uk-icon-times'></span></a>"+ msg,
+                        status: "error",
+                        timeout: 5000,
+                        group: null,
+                        pos: 'top-right',
+                    });
+
+                    {% if view_ajax.pipeline > 0 %}
+                        oTable.clearPipeline().draw();
+                    {% else %}
+                        oTable.draw();
+                    {% endif %}
+                },
+                error: function (XMLHttpRequest, textStatus, errorThrown) {
+                    console.log(XMLHttpRequest + ' ' + textStatus + ' ' +errorThrown);
+                    new UIkit.notify({
+                        message: "<a href='#' class='notify-action'><span class='uk-icon-times'></span></a>"+textStatus,
+                        status: "error",
+                        timeout: 5000,
+                        group: null,
+                        pos: 'top-right',
+                    });
+                }
+            })
+        });
+    } else {
+        UIkit.modal.alert("{{ 'datatables.bulk.selectError'|trans({}, 'messages') }}");
+    }
+});
+
+function updateCheckAll(){
+    var $individual_all        = $("input.{{ view_table_id }}_multiselect_checkbox:checkbox");
+    var $individual_checked    = $("input.{{ view_table_id }}_multiselect_checkbox:checkbox:checked");
+    var $all                   = $(".{{ view_table_id }}_multiselect_checkall");
+    console.log($individual_checked.length);
+    console.log($individual_all.length);
+    if ($individual_checked.length === $individual_all.length){
+        $all.iCheck('check');
+        $all.iCheck('determinate');
+    } else {
+        $all.iCheck('uncheck');
+        $all.iCheck('indeterminate');
+    }
+}

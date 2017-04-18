@@ -23,7 +23,7 @@ use Vich\UploaderBundle\Mapping\Annotation as Vich;
  * @copyright Copyright (c) 2016, SNS
  */
 
-abstract class User implements UserInterface
+ class User implements UserInterface
 {
     /**
      * @var int
@@ -159,8 +159,20 @@ abstract class User implements UserInterface
      */
     public function __construct()
     {
-        $this->enabled = false;
-        $this->roles = array(self::ROLE_DEFAULT);
+        $this->enabled = true;
+    }
+
+     /**
+     * @ORM\PrePersist
+     * @ORM\PreUpdate
+     */
+    public function updatedTimestamps()
+    {
+        $this->setUpdated(new \DateTime('now'));
+
+        if ($this->getCreated() == null) {
+            $this->setCreated(new \DateTime('now'));
+        }
     }
     
     /**
@@ -178,19 +190,6 @@ abstract class User implements UserInterface
             $this->email,
             $this->emailCanonical,
         ));
-    }
-
-     /**
-     * @ORM\PrePersist
-     * @ORM\PreUpdate
-     */
-    public function updatedTimestamps()
-    {
-        $this->setUpdated(new \DateTime('now'));
-
-        if ($this->getCreated() == null) {
-            $this->setCreated(new \DateTime('now'));
-        }
     }
 
     /**
@@ -516,10 +515,7 @@ abstract class User implements UserInterface
      */
     public function getRoles()
     {
-        $roles = $this->roles;
-        // we need to make sure to have at least one role
-        $roles[] = static::ROLE_DEFAULT;
-        return $roles;
+        return $this->roles;
     }
 
     /**

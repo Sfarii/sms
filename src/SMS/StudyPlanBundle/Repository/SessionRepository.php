@@ -12,4 +12,67 @@ use Doctrine\ORM\EntityRepository;
  */
 class SessionRepository extends EntityRepository
 {
+
+	/**
+     * Get Session By Section And Date
+     *
+     * @return array
+     */
+	public function findAllByStartTime()
+	{
+		return $this->createQueryBuilder('session')
+					->orderBy('session.startTime',"asc")
+					->getQuery()
+					->getResult();
+	}
+	
+	/**
+     * Get Session By Section And Date
+     *
+     * @param integer $section
+     * @param String $day
+     * @param integer $division
+     * @return array
+     */
+	public function findBySectionAndDateAndDivision($section , $day ,$division)
+	{
+		return $this->createQueryBuilder('session')
+				->join('session.schedules', 'schedule')
+				->join('schedule.course', 'course')
+				->join('course.division', 'division')
+				->join('schedule.section', 'section')
+				->Where('section.id = :section')
+				->andWhere('schedule.day = :day')
+				->andWhere('division.id = :division')
+				->setParameter('day', $day)
+				->setParameter('section', $section)
+				->setParameter('division', $division)
+				->getQuery()
+				->getResult();
+	}
+
+	/**
+     * Get Session By Professor And Date
+     *
+     * @param integer $professor
+     * @param String $day
+     * @param integer $division
+     * @return array
+     */
+	public function findByProfessorAndDateAndDivision($professor , $day ,$division)
+	{
+		return $this->createQueryBuilder('session')
+				->join('session.schedules', 'schedule')
+				->join('schedule.course', 'course')
+				->join('course.division', 'division')
+				->join('schedule.professor', 'professor')
+				->Where('professor.id = :professor')
+				->andWhere('schedule.day = :day')
+				->andWhere('division.id = :division')
+				->setParameter('day', $day)
+				->setParameter('professor', $professor)
+				->setParameter('division', $division)
+				->getQuery()
+				->getResult();
+	}
 }

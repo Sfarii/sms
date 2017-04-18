@@ -1,0 +1,15 @@
+student/parent:
+schedule
+course
+exam
+note
+attendance
+sanction
+professor:
+schedule
+course
+exam
+typeExam
+note
+attendance professor
+admin:

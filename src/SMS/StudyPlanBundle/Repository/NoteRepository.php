@@ -12,4 +12,23 @@ use Doctrine\ORM\EntityRepository;
  */
 class NoteRepository extends EntityRepository
 {
+	/**
+     * Get Note By ids
+     *
+     * @param SMS\StudyPlanBundle\Entity\Exam $ids
+     * @param SMS\UserBundle\Entity\Student $ids
+     * @return array
+     */
+	public function findByExamAndStudent($exam , $student)
+	{
+		return $this->createQueryBuilder('note')
+				->join('note.student', 'student')
+				->join('note.exam', 'exam')
+				->Where('exam.id = :exam')
+				->andWhere('student.id = :student')
+				->setParameter('exam', $exam->getId())
+				->setParameter('student', $student->getId())
+				->getQuery()
+            	->getOneOrNullResult();
+	}
 }

@@ -1,0 +1,12 @@
+{% extends 'layout/base_header_double_height.html.twig' %}
+
+{% block body %}
+
+	{% include 'layout/attendance_form_layout.html.twig' with {'form': form , 'form_name' : 'attendanceprofessor.new.title'} %}
+
+{% endblock %}
+
+{% block javascripts %}
+	{{ parent() }}
+	{% include 'filter/professor_attendance_filter.html.twig' %}
+{% endblock %}

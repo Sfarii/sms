@@ -3,10 +3,13 @@
 namespace SMS\EstablishmentBundle\Entity;
 
 use Doctrine\ORM\Mapping as ORM;
+use Symfony\Component\Validator\Constraints as Assert;
+use Symfony\Bridge\Doctrine\Validator\Constraints\UniqueEntity;
 
 /**
  * Division
- *
+ * @ORM\HasLifecycleCallbacks
+ * @UniqueEntity("divisionName")
  * @ORM\Table(name="division")
  * @ORM\Entity(repositoryClass="SMS\EstablishmentBundle\Repository\DivisionRepository")
  */
@@ -24,14 +27,19 @@ class Division
     /**
      * @var string
      *
-     * @ORM\Column(name="name", type="string", length=100, unique=true)
+     * @ORM\Column(name="division_name", type="string", length=100, unique=true)
+     * @Assert\NotBlank()
+     * @Assert\Length(min = 2, max = 99)
+     * @Assert\Regex(pattern="/^[a-z0-9 .\-]+$/i" ,match=true)
      */
-    private $name;
+    private $divisionName;
 
     /**
      * @var \DateTime
      *
      * @ORM\Column(name="startDate", type="date")
+     * @Assert\NotBlank()
+     * @Assert\Date()
      */
     private $startDate;
 
@@ -39,12 +47,48 @@ class Division
      * @var \DateTime
      *
      * @ORM\Column(name="endDate", type="date")
+     * @Assert\Expression(expression="this.getStartDate() < value")
+     * @Assert\NotBlank()
+     * @Assert\Date()
      */
     private $endDate;
 
+    /**
+     * @var datetime $created
+     *
+     * @ORM\Column(type="datetime")
+     */
+    protected $created;
+
+    /**
+     * @var datetime $updated
+     * 
+     * @ORM\Column(type="datetime", nullable = true)
+     */
+    protected $updated;
+
+    /**
+     * One User has Many Divivsions.
+     * @ORM\ManyToOne(targetEntity="SMS\UserBundle\Entity\User" ,fetch="EXTRA_LAZY")
+     * @ORM\JoinColumn(name="user_id", referencedColumnName="id")
+     */
+    private $user;
     
 
+     /**
+     * @ORM\PrePersist
+     * @ORM\PreUpdate
+     */
+    public function updatedTimestamps()
+    {
+        $this->setUpdated(new \DateTime('now'));
 
+        if ($this->getCreated() == null) {
+            $this->setCreated(new \DateTime('now'));
+        }
+    }
+
+    
     /**
      * Get id
      *
@@ -56,26 +100,26 @@ class Division
     }
 
     /**
-     * Set name
+     * Set divisionName
      *
-     * @param string $name
+     * @param string $divisionName
      * @return Division
      */
-    public function setName($name)
+    public function setDivisionName($divisionName)
     {
-        $this->name = $name;
+        $this->divisionName = $divisionName;
 
         return $this;
     }
 
     /**
-     * Get name
+     * Get divisionName
      *
      * @return string 
      */
-    public function getName()
+    public function getDivisionName()
     {
-        return $this->name;
+        return $this->divisionName;
     }
 
     /**
@@ -122,5 +166,74 @@ class Division
     public function getEndDate()
     {
         return $this->endDate;
+    }
+
+    /**
+     * Set created
+     *
+     * @param \DateTime $created
+     * @return Division
+     */
+    public function setCreated($created)
+    {
+        $this->created = $created;
+
+        return $this;
+    }
+
+    /**
+     * Get created
+     *
+     * @return \DateTime 
+     */
+    public function getCreated()
+    {
+        return $this->created;
+    }
+
+    /**
+     * Set updated
+     *
+     * @param \DateTime $updated
+     * @return Division
+     */
+    public function setUpdated($updated)
+    {
+        $this->updated = $updated;
+
+        return $this;
+    }
+
+    /**
+     * Get updated
+     *
+     * @return \DateTime 
+     */
+    public function getUpdated()
+    {
+        return $this->updated;
+    }
+
+    /**
+     * Set user
+     *
+     * @param \SMS\UserBundle\Entity\User $user
+     * @return Division
+     */
+    public function setUser(\SMS\UserBundle\Entity\User $user = null)
+    {
+        $this->user = $user;
+
+        return $this;
+    }
+
+    /**
+     * Get user
+     *
+     * @return \SMS\UserBundle\Entity\User 
+     */
+    public function getUser()
+    {
+        return $this->user;
     }
 }

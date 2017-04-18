@@ -13,8 +13,8 @@ use Symfony\Component\Form\Extension\Core\Type\SubmitType;
 use Symfony\Component\Form\Extension\Core\Type\CheckboxType;
 use SMS\UserBundle\Entity\Professor;
 use Vich\UploaderBundle\Form\Type\VichImageType;
-use SMS\UserBundle\Form\Type\GenderType;
-use SMS\UserBundle\Form\EventSubscriber\AddUsernamePasswordFieldListener;
+use API\Form\Type\GenderType;
+use API\Form\EventSubscriber\AddUsernamePasswordFieldListener;
 
 class ProfessorType extends AbstractType
 {
@@ -28,8 +28,7 @@ class ProfessorType extends AbstractType
                     'allow_delete' => false, // not mandatory, default is true
                     'download_link' => false, // not mandatory, default is true
                     'label' => false ,
-                    'attr' => [ 'form.grid'=> "none"])
-                )
+                ))
                 ->add('firstName' ,TextType::class , array(
                     'label' => 'professor.field.firstName')
                 )
@@ -37,7 +36,7 @@ class ProfessorType extends AbstractType
                     'label' => 'professor.field.lastName')
                 )
                 ->add('gender' ,GenderType::class , array(
-                    'label' => false)
+                    'label' => 'user.field.gender')
                 )
                 ->add('birthday', DateType::class, array(
                     'widget' => 'single_text',
@@ -65,6 +64,7 @@ class ProfessorType extends AbstractType
                 ->addEventSubscriber(new AddUsernamePasswordFieldListener())
                 ->add('save', SubmitType::class ,array(
                     'validation_groups' => "SimpleRegistration",
+                    'label' => 'md-fab'
                 ));
 
     }
@@ -75,7 +75,8 @@ class ProfessorType extends AbstractType
     public function configureOptions(OptionsResolver $resolver)
     {
         $resolver->setDefaults(array(
-            'data_class' => Professor::class
+            'data_class' => Professor::class,
+            'allow_extra_fields' => true
         ));
     }
 

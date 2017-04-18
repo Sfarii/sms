@@ -7,7 +7,7 @@
 
 {% block sticky_button %}
 <a class="md-fab md-fab-primary" href="{{ path('student_index') }}">
-    <i class="material-icons">&#xE145;</i>
+    <i class="material-icons">&#xE5C4;</i>
 </a>
 {% endblock %}
 
@@ -16,129 +16,169 @@
 {% endblock %}
 
 {% block body %}
-    <div class="uk-grid uk-grid-medium" data-uk-grid-margin>
-        
-        <div class="uk-width-xLarge-8-10  uk-width-large-7-10">
+    <div class="uk-grid" data-uk-grid-margin data-uk-grid-match id="user_profile">
+        <div class="uk-width-large-7-10">
             <div class="md-card">
-                <div class="md-card-toolbar">
-                    <h3 class="md-card-toolbar-heading-text">
-                        {{ 'student.show.detail'|trans }}
-                    </h3>
+                <div class="user_heading">
+                    <div class="user_heading_avatar fileinput fileinput-new">
+                        <div class="fileinput-new thumbnail">
+                            {% if student.imageName %}
+                                <img src="{{ vich_uploader_asset(student, 'imageFile') }}" alt="{{ student.imageName }}" />
+                            {% else %}
+                                <img src="{{ asset('assets/img/avatars/user@2x.png') }}" alt="user avatar"/>
+                            {% endif %}
+                        </div>
+                    </div>
+                    <div class="user_heading_content">
+                        <h2 class="heading_b uk-margin-bottom">
+                            <span class="uk-text-truncate">{{ student.username }}</span>
+                            <span class="sub-heading">{{ student.firstName }} {{ student.lastName }}</span></h2>
+                    </div>
+                    
                 </div>
-                <div class="md-card-content">
-                    <ul class="md-list">
-                        <li>
-                            <div class="md-list-content">
-                                <span class="uk-text-small uk-text-muted uk-display-block"> {{'student.field.recordeNumber'|trans }}</span>
-                            <th>Recordenumber</th>
-                            <span class="md-list-heading uk-text-large">{{ student.recordeNumber }}</span>                        </div>
-                            </li>
-                        <li>
-                            <div class="md-list-content">
-                                <span class="uk-text-small uk-text-muted uk-display-block"> {{'student.field.firstName'|trans }}</span>
-                            <th>Firstname</th>
-                            <span class="md-list-heading uk-text-large">{{ student.firstName }}</span>                        </div>
-                            </li>
-                        <li>
-                            <div class="md-list-content">
-                                <span class="uk-text-small uk-text-muted uk-display-block"> {{'student.field.lastName'|trans }}</span>
-                            <th>Lastname</th>
-                            <span class="md-list-heading uk-text-large">{{ student.lastName }}</span>                        </div>
-                            </li>
-                        <li>
-                            <div class="md-list-content">
-                                <span class="uk-text-small uk-text-muted uk-display-block"> {{'student.field.gender'|trans }}</span>
-                            <th>Gender</th>
-                            <span class="md-list-heading uk-text-large">{{ student.gender }}</span>                        </div>
-                            </li>
-                        <li>
-                            <div class="md-list-content">
-                                <span class="uk-text-small uk-text-muted uk-display-block"> {{'student.field.birthday'|trans }}</span>
-                            <th>Birthday</th>
-                            <span class="md-list-heading uk-text-large">{% if student.birthday %}{{ student.birthday|date('Y-m-d') }}{% endif %}</span>                        </div>
-                            </li>
-                        <li>
-                            <div class="md-list-content">
-                                <span class="uk-text-small uk-text-muted uk-display-block"> {{'student.field.id'|trans }}</span>
-                            <th>Id</th>
-                            <span class="md-list-heading uk-text-large">{{ student.id }}</span>                        </div>
-                            </li>
-                        <li>
-                            <div class="md-list-content">
-                                <span class="uk-text-small uk-text-muted uk-display-block"> {{'student.field.username'|trans }}</span>
-                            <th>Username</th>
-                            <span class="md-list-heading uk-text-large">{{ student.username }}</span>                        </div>
-                            </li>
-                        <li>
-                            <div class="md-list-content">
-                                <span class="uk-text-small uk-text-muted uk-display-block"> {{'student.field.usernameCanonical'|trans }}</span>
-                            <th>Usernamecanonical</th>
-                            <span class="md-list-heading uk-text-large">{{ student.usernameCanonical }}</span>                        </div>
-                            </li>
-                        <li>
-                            <div class="md-list-content">
-                                <span class="uk-text-small uk-text-muted uk-display-block"> {{'student.field.email'|trans }}</span>
-                            <th>Email</th>
-                            <span class="md-list-heading uk-text-large">{{ student.email }}</span>                        </div>
-                            </li>
-                        <li>
-                            <div class="md-list-content">
-                                <span class="uk-text-small uk-text-muted uk-display-block"> {{'student.field.emailCanonical'|trans }}</span>
-                            <th>Emailcanonical</th>
-                            <span class="md-list-heading uk-text-large">{{ student.emailCanonical }}</span>                        </div>
-                            </li>
-                        <li>
-                            <div class="md-list-content">
-                                <span class="uk-text-small uk-text-muted uk-display-block"> {{'student.field.enabled'|trans }}</span>
-                            <th>Enabled</th>
-                            <span class="md-list-heading uk-text-large">{% if student.enabled %}Yes{% else %}No{% endif %}</span>                        </div>
-                            </li>
-                        <li>
-                            <div class="md-list-content">
-                                <span class="uk-text-small uk-text-muted uk-display-block"> {{'student.field.salt'|trans }}</span>
-                            <th>Salt</th>
-                            <span class="md-list-heading uk-text-large">{{ student.salt }}</span>                        </div>
-                            </li>
-                        <li>
-                            <div class="md-list-content">
-                                <span class="uk-text-small uk-text-muted uk-display-block"> {{'student.field.password'|trans }}</span>
-                            <th>Password</th>
-                            <span class="md-list-heading uk-text-large">{{ student.password }}</span>                        </div>
-                            </li>
-                        <li>
-                            <div class="md-list-content">
-                                <span class="uk-text-small uk-text-muted uk-display-block"> {{'student.field.lastLogin'|trans }}</span>
-                            <th>Lastlogin</th>
-                            <span class="md-list-heading uk-text-large">{% if student.lastLogin %}{{ student.lastLogin|date('Y-m-d H:i:s') }}{% endif %}</span>                        </div>
-                            </li>
-                        <li>
-                            <div class="md-list-content">
-                                <span class="uk-text-small uk-text-muted uk-display-block"> {{'student.field.confirmationToken'|trans }}</span>
-                            <th>Confirmationtoken</th>
-                            <span class="md-list-heading uk-text-large">{{ student.confirmationToken }}</span>                        </div>
-                            </li>
-                        <li>
-                            <div class="md-list-content">
-                                <span class="uk-text-small uk-text-muted uk-display-block"> {{'student.field.passwordRequestedAt'|trans }}</span>
-                            <th>Passwordrequestedat</th>
-                            <span class="md-list-heading uk-text-large">{% if student.passwordRequestedAt %}{{ student.passwordRequestedAt|date('Y-m-d H:i:s') }}{% endif %}</span>                        </div>
-                            </li>
-                        <li>
-                            <div class="md-list-content">
-                                <span class="uk-text-small uk-text-muted uk-display-block"> {{'student.field.roles'|trans }}</span>
-                            <th>Roles</th>
-                            <span class="md-list-heading uk-text-large">{% if student.roles %}{{ student.roles|join(', ') }}{% endif %}</span>                        </div>
-                            </li>                    </ul>
+                <div class="user_content">
+                    <h3 class="full_width_in_card heading_c">{{ 'user.show.general_info'|trans }}</h3>
+                    <div class="uk-grid uk-margin-medium-top uk-margin-large-bottom" data-uk-grid-margin>
+                        <div class="uk-width-large-1-2">
+                            <ul class="md-list">
+                                <li>
+                                    <div class="md-list-content">
+                                        
+                                        <span class="md-list-heading uk-text-large">{{ student.firstName }}</span>
+                                        <span class="uk-text-small uk-text-muted uk-display-block"> {{'student.field.firstName'|trans }}</span>
+                                    </div>
+                                </li>
+                                <li>
+                                    <div class="md-list-content">
+                                        
+                                        <span class="md-list-heading uk-text-large">{{ student.gender }}</span>
+                                        <span class="uk-text-small uk-text-muted uk-display-block"> {{'student.field.gender'|trans }}</span>
+                                    </div>
+                                </li>
+                                
+                            </ul>
+                        </div>
+                        <div class="uk-width-large-1-2">
+                            <ul class="md-list">
+                                <li>
+                                    <div class="md-list-content">
+                                        
+                                        <span class="md-list-heading uk-text-large">{{ student.lastName }}</span>
+                                        <span class="uk-text-small uk-text-muted uk-display-block"> {{'student.field.lastName'|trans }}</span>
+                                    </div>
+                                </li>
+                                <li>
+                                    <div class="md-list-content">
+                                        
+                                        <span class="md-list-heading uk-text-large">{% if student.birthday %}{{ student.birthday|date('d/m/Y') }}{% endif %}</span>
+                                        <span class="uk-text-small uk-text-muted uk-display-block"> {{'student.field.birthday'|trans }}</span>
+                                    </div>
+                                </li>
+                            </ul>
+                        </div>
+                        
+                    </div>
+                    <h3 class="full_width_in_card heading_c">{{ 'user.show.parent_info'|trans }}</h3>
+                    <div class="uk-grid uk-margin-medium-top uk-margin-large-bottom" data-uk-grid-margin>
+                        <div class="uk-width-large-1-2">
+                            <ul class="md-list">
+                                <li>
+                                    <div class="md-list-content">
+                                        <span class="md-list-heading uk-text-large">{{ student.studentParent.fatherName }}</span>
+                                        <span class="uk-text-small uk-text-muted uk-display-block"> {{'studentparent.field.fatherName'|trans }}</span>
+                                    </div>
+                                </li>
+                                <li>
+                                    <div class="md-list-content">
+                                        <span class="md-list-heading uk-text-large">{{ student.studentParent.fatherProfession }}</span>
+                                        <span class="uk-text-small uk-text-muted uk-display-block"> {{'studentparent.field.fatherProfession'|trans }}</span>
+                                    </div>
+                                </li>
+                                
+                            </ul>
+                        </div>
+                        <div class="uk-width-large-1-2">
+                            <ul class="md-list">
+                                <li>
+                                    <div class="md-list-content">
+                                        <span class="md-list-heading uk-text-large">{{ student.studentParent.motherName }}</span>
+                                        <span class="uk-text-small uk-text-muted uk-display-block"> {{'studentparent.field.motherName'|trans }}</span>
+                                    </div>
+                                </li>
+                                <li>
+                                    <div class="md-list-content">
+                                        <span class="md-list-heading uk-text-large">{{ student.studentParent.motherProfession }}</span>
+                                        <span class="uk-text-small uk-text-muted uk-display-block"> {{'studentparent.field.motherProfession'|trans }}</span>
+                                    </div>
+                                </li>
+                            </ul>
+                        </div>
+                        <div class="uk-width-large-1-1">
+                            <ul class="md-list">
+                                <li>
+                                    <div class="md-list-content">
+                                        
+                                        <span class="md-list-heading uk-text-large">{{ student.studentParent.familyName }}</span>
+                                        <span class="uk-text-small uk-text-muted uk-display-block"> {{'studentparent.field.familyName'|trans }}</span>
+                                    </div>
+                                </li>
+                            </ul>
+                        </div>
+                    </div>
+                    <h3 class="full_width_in_card heading_c">{{ 'user.show.contact_info'|trans }}</h3>
+                    <div class="uk-grid uk-margin-medium-top uk-margin-large-bottom" data-uk-grid-margin>
+                        <div class="uk-width-large-1-2">
+                            <ul class="md-list md-list-addon">
+                                <li>
+                                    <div class="md-list-content">
+                                        <div class="md-list-addon-element">
+                                            <i class="md-list-addon-icon material-icons">&#xE0BE;</i>
+                                        </div>
+                                        <span class="md-list-heading uk-text-large">{{ student.email }}</span>
+                                        <span class="uk-text-small uk-text-muted uk-display-block"> {{'user.field.email'|trans }}</span>
+                                    </div>
+                                </li>
+                                <li>
+                                    <div class="md-list-content">
+                                        <div class="md-list-addon-element">
+                                            <i class="md-list-addon-icon material-icons">&#xE0CD;</i>
+                                        </div>
+                                        <span class="md-list-heading uk-text-large">{{ student.studentParent.phone }}
+                                        </span>
+                                        <span class="uk-text-small uk-text-muted uk-display-block"> {{'studentparent.field.phone'|trans }}</span>
+                                    </div>
+                                </li>
+                            </ul>
+                        </div>
+                        <div class="uk-width-large-1-2">
+                            <ul class="md-list md-list-addon">
+                                <li>
+                                    <div class="md-list-content">
+                                        <div class="md-list-addon-element">
+                                            <i class="md-list-addon-icon material-icons">&#xE0BE;</i>
+                                        </div>
+                                        <span class="md-list-heading uk-text-large">{{ student.recordeNumber }}</span>
+                                        <span class="uk-text-small uk-text-muted uk-display-block">  {{'student.field.recordeNumber'|trans }}</span>
+                                    </div>
+                                </li>
+                                <li>
+                                    <div class="md-list-content">
+                                        <div class="md-list-addon-element">
+                                            <i class="md-list-addon-icon material-icons">&#xE55C;</i>
+                                        </div>
+                                        
+                                        <span class="md-list-heading uk-text-large">{{ student.studentParent.address }}</span>
+                                        <span class="uk-text-small uk-text-muted uk-display-block"> {{'studentparent.field.address'|trans }}</span>
+                                    </div>
+                                </li>
+                            </ul>
+                        </div>
+                    </div>
                 </div>
             </div>
         </div>
         <div class="uk-width-xLarge-2-10 uk-width-large-3-10">
             <div class="md-card">
-                <div class="md-card-toolbar">
-                    <h3 class="md-card-toolbar-heading-text">
-                        {{ 'author.info'|trans }}
-                    </h3>
-                </div>
                 <div class="md-card-content">
                     <ul class="md-list md-list-addon">
                         <li>
@@ -147,7 +187,7 @@
                             </div>
                             <div class="md-list-content">
                                 <span class="md-list-heading">Sonny Upton</span>
-                                <span class="uk-text-small uk-text-muted">Assignee</span>
+                                <span class="uk-text-small uk-text-muted">{{ 'author.creator'|trans }}</span>
                             </div>
                         </li>
                         <li>
@@ -155,8 +195,8 @@
                                 <i class="md-list-addon-icon material-icons">&#xE8DF;</i>
                             </div>
                             <div class="md-list-content">
-                                <span class="md-list-heading">14 Jun 2015</span>
-                                <span class="uk-text-small uk-text-muted">Created</span>
+                                <span class="md-list-heading">{% if student.created %}{{ student.created|date('d M Y') }}{% endif %}</span>
+                                <span class="uk-text-small uk-text-muted">{{ 'author.created'|trans }}</span>
                             </div>
                         </li>
                         <li>
@@ -164,10 +204,11 @@
                                 <i class="md-list-addon-icon material-icons">&#xE8B5;</i>
                             </div>
                             <div class="md-list-content">
-                                <span class="md-list-heading">18 Jun 2015</span>
-                                <span class="uk-text-small uk-text-muted">Updated</span>
+                                <span class="md-list-heading">{% if student.updated %}{{ student.updated|date('d M Y') }}{% endif %}</span>
+                                <span class="uk-text-small uk-text-muted">{{ 'author.updated'|trans }}</span>
                             </div>
                         </li>
+                        
                     </ul>
                 </div>
             </div>
@@ -202,4 +243,5 @@
         </div>
     </div>
     <!-- END MESSAGE BOX-->
+    
 {% endblock %}

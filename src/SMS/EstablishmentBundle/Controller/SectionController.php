@@ -4,14 +4,22 @@ namespace SMS\EstablishmentBundle\Controller;
 
 use SMS\EstablishmentBundle\Entity\Section;
 use SMS\EstablishmentBundle\Form\SectionType;
-use SMS\Classes\BaseController\BaseController;
+use API\BaseController\BaseController;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\Method;
-use Sensio\Bundle\FrameworkExtraBundle\Configuration\Route;use Symfony\Component\HttpFoundation\Request;
+use Sensio\Bundle\FrameworkExtraBundle\Configuration\Route;
+use Symfony\Component\HttpFoundation\Request;
+use Symfony\Component\HttpFoundation\Response;
+use Sensio\Bundle\FrameworkExtraBundle\Configuration\Template;
 
 /**
  * Section controller.
  *
  * @Route("section")
+ *
+ * @author Rami Sfari <rami2sfari@gmail.com>
+ * @copyright Copyright (c) 2017, SMS
+ * @package SMS\EstablishmentBundle\Controller
+ *
  */
 class SectionController extends BaseController
 {
@@ -20,15 +28,29 @@ class SectionController extends BaseController
      *
      * @Route("/", name="section_index")
      * @Method("GET")
+     * @Template("smsestablishmentbundle/section/index.html.twig")
      */
     public function indexAction(Request $request)
     {
-        $sections = $this->getEntityManager()->getEntityBy(Section::class , $request);
+        $section = $this->getSectionEntityManager();
+        $section->buildDatatable();
 
-        return $this->render('section/index.html.twig', array(
-            'sections' => $sections,
-            'search' => $request->query->get($this->getParameter('search_field'), null)
-        ));
+        return array('section' => $section);
+    }
+
+    /**
+     * @Route("/results", name="section_results" )
+     * @Method("GET")
+     * @return Response
+     */
+    public function indexResultsAction()
+    {
+        $section = $this->getSectionEntityManager();
+        $section->buildDatatable();
+
+        $query = $this->getDataTableQuery()->getQueryFrom($section);
+
+        return $query->getResponse();
     }
 
     /**
@@ -36,6 +58,7 @@ class SectionController extends BaseController
      *
      * @Route("/new", name="section_new")
      * @Method({"GET", "POST"})
+     * @Template("smsestablishmentbundle/section/new.html.twig")
      */
     public function newAction(Request $request)
     {
@@ -43,108 +66,88 @@ class SectionController extends BaseController
         $form = $this->createForm(SectionType::class, $section);
         $form->handleRequest($request);
 
-        if ($form->isSubmitted() && $form->isValid()) {
-            $this->getEntityManager()->insert($section);
+        if ($form->isSubmitted() && $form->isValid() && $form->get('save')->isClicked()) {
+            $this->getEntityManager()->insert($section , $this->getUser());
             $this->flashSuccessMsg('section.add.success');
             return $this->redirectToRoute('section_index');
         }
 
-        return $this->render('section/new.html.twig', array(
+        return  array(
             'section' => $section,
             'form' => $form->createView(),
-        ));
-    }
-
-    /**
-     * Finds and displays a section entity.
-     *
-     * @Route("/{id}", name="section_show")
-     * @Method("GET")
-     */
-    public function showAction(Section $section)
-    {
-        $deleteForm = $this->createDeleteForm($section);
-
-        return $this->render('section/show.html.twig', array(
-            'section' => $section,
-            'delete_form' => $deleteForm->createView(),
-        ));
+        );
     }
 
     /**
      * Displays a form to edit an existing section entity.
      *
-     * @Route("/{id}/edit", name="section_edit")
+     * @Route("/{id}/edit", name="section_edit", options={"expose"=true})
      * @Method({"GET", "POST"})
+     * @Template("smsestablishmentbundle/section/edit.html.twig")
      */
     public function editAction(Request $request, Section $section)
     {
 
         $editForm = $this->createForm(SectionType::class, $section)->handleRequest($request);
-        if ($editForm->isSubmitted() && $editForm->isValid()) {
+        if ($editForm->isSubmitted() && $editForm->isValid() && $editForm->get('save')->isClicked()) {
             $this->getEntityManager()->update($section);
             $this->flashSuccessMsg('section.edit.success');
             return $this->redirectToRoute('section_index');
         }
 
-        return $this->render('section/edit.html.twig', array(
+        return  array(
             'section' => $section,
             'edit_form' => $editForm->createView(),
-        ));
+        );
     }
 
     /**
-     * Finds and displays a section entity.
+     * Bulk delete action.
      *
-     * @Route("/multiple_actions", name="section_actions")
+     * @param Request $request
+     *
+     * @Route("/bulk/delete", name="section_bulk_delete")
      * @Method("POST")
+     *
+     * @return Response
      */
-    public function multipleActionsAction(Request $request)
+    public function bulkDeleteAction(Request $request)
     {
-        $actions = $request->request->get($this->getParameter('index_actions') , null);
-        $keys = $request->request->get($this->getParameter('index_keys') , null);
+        $isAjax = $request->isXmlHttpRequest();
+
+        if ($isAjax) {
+            $choices = $request->request->get('data');
+            $token = $request->request->get('token');
+
+            if (!$this->isCsrfTokenValid('multiselect', $token)) {
+                throw new AccessDeniedException('The CSRF token is invalid.');
+            }
+
+            try {
+                $this->getEntityManager()->deleteAll(Section::class ,$choices);
+            } catch (\Exception $e) {
+                return new Response($this->get('translator')->trans('section.delete.fail'), 200);
+            }
             
-        if(!is_null($keys) && $actions === $this->getParameter('index_delete')){
-            $this->getEntityManager()->deleteAll(section::class ,$keys);
-            $this->flashSuccessMsg('section.delete.all.success');
-        }else{
-            $this->flashErrorMsg('section.delete.all.error');
+
+            return new Response($this->get('translator')->trans('section.delete.success'), 200);
         }
 
-        return $this->redirectToRoute('division_index');
+        return new Response('Bad Request', 400);
     }
 
     /**
-     * Deletes a section entity.
+     * get section Entity Manager Service.
      *
-     * @Route("/{id}", name="section_delete")
-     * @Method("DELETE")
+     * @return API\Services\EntityManager
+     *
+     * @throws \NotFoundException
      */
-    public function deleteAction(Request $request, Section $section)
+    protected function getSectionEntityManager()
     {
-        $form = $this->createDeleteForm($section)->handleRequest($request);
-
-        if ($form->isSubmitted() && $form->isValid()) {
-            $this->getEntityManager()->delete($section);
-            $this->flashSuccessMsg('section.delete.one.success');
+        if (!$this->has('sms.datatable.section')){
+           throw $this->createNotFoundException('Service Not Found');
         }
-
-        return $this->redirectToRoute('section_index');
-    }
-
-    /**
-     * Creates a form to delete a section entity.
-     *
-     * @param Section $section The section entity
-     *
-     * @return \Symfony\Component\Form\Form The form
-     */
-    private function createDeleteForm(Section $section)
-    {
-        return $this->createFormBuilder()
-            ->setAction($this->generateUrl('section_delete', array('id' => $section->getId())))
-            ->setMethod('DELETE')
-            ->getForm()
-        ;
+        return $this->get('sms.datatable.section');
     }
 }

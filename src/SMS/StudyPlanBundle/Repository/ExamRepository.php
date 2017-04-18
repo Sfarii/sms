@@ -3,6 +3,7 @@
 namespace SMS\StudyPlanBundle\Repository;
 
 use Doctrine\ORM\EntityRepository;
+use SMS\StudyPlanBundle\Entity\Session;
 
 /**
  * ExamRepository
@@ -12,4 +13,40 @@ use Doctrine\ORM\EntityRepository;
  */
 class ExamRepository extends EntityRepository
 {
+
+	/**
+     * Get Exam By Course
+     *
+     * @param integer $course
+     * @return array
+     */
+	public function findByCourse($course)
+	{
+		return $this->createQueryBuilder('exam')
+				->join('exam.course', 'course')
+				->andWhere('course.id = :course')
+				->setParameter('course', $course)
+				->getQuery()
+				->getResult();
+	}
+	/**
+     * Get Exam By StartDate And EndDate
+     *
+     * @param \DateTime $startDate
+     * @param \DateTime $endDate
+     * @return array
+     */
+	public function findByStartDateAndEndDate($startDate , $endDate)
+	{
+		return $this->createQueryBuilder('exam')
+				->select('exam.examName as title , exam.id as id')
+				->addSelect(sprintf("(SELECT MIN(s1.startTime) FROM %s as s1  WHERE s1 MEMBER OF exam.sessions ORDER BY s1.startTime ASC) AS startTime", Session::class))
+				->addSelect(sprintf("(SELECT MAX(s2.endTime) FROM %s as s2  WHERE s2 MEMBER OF exam.sessions ORDER BY s2.endTime ASC ) AS endTime" , Session::class))
+				->addSelect("DATE_FORMAT(exam.dateExam ,'%Y-%m-%d') as date")
+				->where('exam.dateExam BETWEEN :startDate AND :endDate')
+   			->setParameter('startDate', $startDate->format('Y-m-d'))
+   			->setParameter('endDate', $endDate->format('Y-m-d'))
+				->getQuery()
+				->getResult();
+	}
 }

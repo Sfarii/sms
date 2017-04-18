@@ -1,0 +1,12 @@
+{% extends 'layout/base_header_double_height.html.twig' %}
+
+
+{% block body %}
+    {% include 'layout/note_form_layout.html.twig' with {'form': form , 'form_name' : 'note.new.title'} %}
+{% endblock %}
+
+{% block javascripts %}
+    {{ parent() }}
+	<!-- page specific plugins -->
+    {% include 'filter/note_filter.html.twig' %}
+{% endblock %}
