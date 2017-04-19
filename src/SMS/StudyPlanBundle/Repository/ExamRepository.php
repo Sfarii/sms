@@ -36,16 +36,18 @@ class ExamRepository extends EntityRepository
      * @param \DateTime $endDate
      * @return array
      */
-	public function findByStartDateAndEndDate($startDate , $endDate)
+	public function findByStartDateAndEndDate($startDate , $endDate, $section)
 	{
 		return $this->createQueryBuilder('exam')
-				->select('exam.examName as title , exam.id as id')
-				->addSelect(sprintf("(SELECT MIN(s1.startTime) FROM %s as s1  WHERE s1 MEMBER OF exam.sessions ORDER BY s1.startTime ASC) AS startTime", Session::class))
-				->addSelect(sprintf("(SELECT MAX(s2.endTime) FROM %s as s2  WHERE s2 MEMBER OF exam.sessions ORDER BY s2.endTime ASC ) AS endTime" , Session::class))
+				->select("exam.examName as title ,course.coefficient, course.courseName, typeExam.typeExamName  , DATE_FORMAT(exam.startTime ,'%H:%m') as startTime , DATE_FORMAT(exam.endTime ,'%H:%m') as endTime")
 				->addSelect("DATE_FORMAT(exam.dateExam ,'%Y-%m-%d') as date")
+				->join('exam.course', 'course')
+				->join('exam.typeExam', 'typeExam')
 				->where('exam.dateExam BETWEEN :startDate AND :endDate')
+				->andWhere(':section MEMBER OF exam.section')
    			->setParameter('startDate', $startDate->format('Y-m-d'))
    			->setParameter('endDate', $endDate->format('Y-m-d'))
+				->setParameter('section',  $section)
 				->getQuery()
 				->getResult();
 	}

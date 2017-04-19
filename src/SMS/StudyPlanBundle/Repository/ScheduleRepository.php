@@ -61,28 +61,4 @@ class ScheduleRepository extends EntityRepository
                 ->getQuery()
                 ->getResult();
     }
-
-		/**
-     * Get Schedule By Professor And By Division
-     *
-     * @param SMS\UserBundle\Entity\Exam $professor
-     * @param SMS\EstablishmentBundle\Entity\Division $division
-     * @return array
-     */
-    public function findByProfessor($professor, $division)
-    {
-        return $this->createQueryBuilder('schedule')
-                ->select("schedule.day ,course.courseName as courseName , course.coefficient as coefficient , CONCAT(professor.firstName , professor.lastName) as name ,professor.id, division.id ")
-                ->addSelect(sprintf("(SELECT GROUP_CONCAT(session.id SEPARATOR ', ' ) FROM %s as session  WHERE session MEMBER OF schedule.sessions ) AS sessionIDS", Session::class))
-                ->join('schedule.professor', 'professor')
-                ->join('schedule.course', 'course')
-                ->join('course.division', 'division')
-                ->having('professor.id = :professor')
-                ->andHaving('division.id = :division')
-                ->groupBy('schedule.day , schedule.course ,  sessionIDS')
-                ->setParameter('professor', $professor->getId())
-                ->setParameter('division', $division->getId())
-                ->getQuery()
-                ->getResult();
-    }
 }

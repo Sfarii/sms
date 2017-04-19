@@ -3,7 +3,7 @@
 namespace SMS\StudyPlanBundle\Entity;
 
 use Doctrine\ORM\Mapping as ORM;
-
+use Symfony\Component\Validator\Constraints as Assert;
 
 /**
  * Course
@@ -27,6 +27,9 @@ class Course
      * @var string
      *
      * @ORM\Column(name="courseName", type="string", length=150)
+     * @Assert\NotBlank()
+     * @Assert\Length(min = 2, max = 99)
+     * @Assert\Regex(pattern="/^[a-z0-9 .\-]+$/i" ,match=true)
      */
     private $courseName;
 
@@ -34,6 +37,11 @@ class Course
      * @var float
      *
      * @ORM\Column(name="coefficient", type="float")
+     * @Assert\NotBlank()
+     * @Assert\Range(
+     *      min = 0,
+     *      max = 150)
+     * @Assert\Regex("(\d+(?:,\d+)?)")
      */
     private $coefficient;
 
@@ -41,13 +49,15 @@ class Course
      * Many Courses have One Division.
      * @ORM\ManyToOne(targetEntity="SMS\EstablishmentBundle\Entity\Division",fetch="EXTRA_LAZY")
      * @ORM\JoinColumn(name="division_id", referencedColumnName="id")
+     * @Assert\NotBlank()
      */
     private $division;
 
     /**
      * Many Courses have One Grade.
-     * @ORM\ManyToOne(targetEntity="SMS\EstablishmentBundle\Entity\Grade",fetch="EXTRA_LAZY")
+     * @ORM\ManyToOne(targetEntity="SMS\EstablishmentBundle\Entity\Grade" , inversedBy="courses",fetch="EXTRA_LAZY")
      * @ORM\JoinColumn(name="grade_id", referencedColumnName="id")
+     * @Assert\NotBlank()
      */
     private $grade;
 

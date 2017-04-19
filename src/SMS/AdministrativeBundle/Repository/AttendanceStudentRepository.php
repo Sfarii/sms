@@ -12,7 +12,7 @@ class AttendanceStudentRepository extends \Doctrine\ORM\EntityRepository
 {
     /**
      * Get Attendance By Date and Session and User
-     *
+     *œ
      * @param date $date
      * @param Session $session
      * @param Student $student
@@ -78,4 +78,31 @@ class AttendanceStudentRepository extends \Doctrine\ORM\EntityRepository
 							      ->getQuery()
 							      ->getResult();
     }
+
+    /**
+     * Get Attendance By Date and Session and User
+     *
+     * @param SMS\UserBundle\Entity\Student $student
+     * @param SMS\EstablishmentBundle\Entity\Division $division
+     * @return array
+     */
+    public function findByStudentGroupByCourse($student, $division)
+    {
+        return $this->createQueryBuilder('attendance')
+										->select("attendance.status as name,course.courseName, count(attendance.id) as value , student.id , division.id")
+										->join('attendance.student', 'student')
+                    ->join('attendance.session', 'session')
+                    ->join('session.schedules', 'schedules')
+                    ->join('schedules.course', 'course')
+                    ->join('course.division', 'division')
+										->having('student.id = :student')
+                    ->andHaving('division.id = :division')
+										->setParameter('student', $student->getId())
+                    ->setParameter('division', $division->getId())
+		                ->groupBy('name , student')
+							      ->getQuery()
+							      ->getResult();
+    }
+
+
 }

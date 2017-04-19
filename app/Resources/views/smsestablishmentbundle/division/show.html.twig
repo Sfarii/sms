@@ -11,13 +11,13 @@
 </a>
 {% endblock %}
 
-{% block title_page %} 
+{% block title_page %}
  {{ 'division.show.title'|trans }}
 {% endblock %}
 
 {% block body %}
     <div class="uk-grid uk-grid-medium" data-uk-grid-margin>
-        
+
         <div class="uk-width-xLarge-8-10  uk-width-large-7-10">
             <div class="md-card">
                 <div class="md-card-toolbar">
@@ -35,7 +35,7 @@
                     </li>
                         <li>
                             <div class="md-list-content">
-                            <span class="md-list-heading uk-text-large">{{ division.name }}</span>
+                            <span class="md-list-heading uk-text-large">{{ division.divisionName }}</span>
                         </div>
                         <span class="uk-text-small uk-text-muted uk-display-block"> {{'division.field.name'|trans }}</span>
                     </li>
@@ -115,7 +115,7 @@
                 <div class="mb-content">
                     <p>{{ 'delete.message'|trans({'%item%' : 'division.item'|trans }) }}</p>
                 </div>
-                
+
                 <div class="mb-footer">
                     <div class="uk-float-right">
                         <div class="md-btn-group">
@@ -127,7 +127,7 @@
                             <button type="reset" class="md-btn md-btn-default md-btn-medium md-btn-wave-light waves-effect waves-button waves-light mb-control-close" >{{ 'delete.no'|trans }}</button>
                             {{ form_end(delete_form) }}
                         </div>
-                        
+
                     </div>
                 </div>
             </div>

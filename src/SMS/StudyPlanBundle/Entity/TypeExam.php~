@@ -3,6 +3,7 @@
 namespace SMS\StudyPlanBundle\Entity;
 
 use Doctrine\ORM\Mapping as ORM;
+use Symfony\Component\Validator\Constraints as Assert;
 
 /**
  * TypeExam
@@ -19,12 +20,15 @@ class TypeExam
      * @ORM\Id
      * @ORM\GeneratedValue(strategy="AUTO")
      */
-    private $id;
+    public $id;
 
     /**
      * @var string
      *
      * @ORM\Column(name="type_exam_name", type="string", length=150)
+     * @Assert\NotBlank()
+     * @Assert\Length(min = 2, max = 149)
+     * @Assert\Regex(pattern="/^[a-z0-9 .\-]+$/i" ,match=true)
      */
     private $typeExamName;
 

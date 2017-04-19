@@ -91,12 +91,7 @@
 
             <script src="{{ asset('bundles/fosjsrouting/js/router.js') }}"></script>
             <script src="{{ path('fos_js_routing_js', {'callback': 'fos.Router.setData'}) }}"></script>
-            <script type="text/javascript">
-                $spinner = "{{ asset('assets/img/spinners/spinner.gif') }}";
-                //altair_helpers.content_preloader_show('regular');
-            </script>
         {% endblock %}
-
         {% block audio %}
             <audio id="audio-alert" src="{{ asset('assets/audio/alert.mp3')}}" preload="auto"></audio>
             <audio id="audio-fail" src="{{ asset('assets/audio/fail.mp3')}}" preload="auto"></audio>

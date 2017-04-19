@@ -91,7 +91,8 @@ class StudentSpaceController extends Controller
         $form = $this->createForm(DivisionListType::class)->handleRequest($request);
 
         if ($form->isSubmitted() && $form->isValid() && $form->get('send')->isClicked()) {
-            $result = $this->getUserSapaceManager()->getAttendanceOfStudent($this->getUser(), $form->get('division')->getData());
+            //$result = $this->getUserSapaceManager()->getAttendanceOfStudent($this->getUser(), $form->get('division')->getData());
+            $result = $this->getUserSapaceManager()->getAttendanceOfStudentByCourses($this->getUser() ,$form->get('division')->getData());
             $result['form'] = $form->createView();
             return $result;
         }
@@ -108,12 +109,11 @@ class StudentSpaceController extends Controller
     public function examDateJSONAction(Request $request)
     {
         $startDate = new \DateTime(date('Y-m-d', $request->query->get('start')));
-
         $endDate = new \DateTime(date('Y-m-d', $request->query->get('end')));
 
         $examDate = $this->getDoctrine()
                         ->getRepository(Exam::class)
-                        ->findByStartDateAndEndDate($startDate, $endDate);
+                        ->findByStartDateAndEndDate($startDate, $endDate, $this->getUser()->getSection());
 
 
         $response = new JsonResponse();

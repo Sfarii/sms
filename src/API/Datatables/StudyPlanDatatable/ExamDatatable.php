@@ -67,6 +67,9 @@ class ExamDatatable extends AbstractDatatableView
                     ),
                 )
             ))
+            ->add('examName', 'column', array(
+                'title' => $this->translator->trans('exam.field.examName'),
+            ))
             ->add('factor', 'column', array(
                 'title' => $this->translator->trans('exam.field.factor'),
             ))
@@ -74,21 +77,18 @@ class ExamDatatable extends AbstractDatatableView
                 'title' => $this->translator->trans('exam.field.dateExam'),
                 'date_format' => "DD/MM/YYYY"
             ))
-            ->add('typeExam.typeExamName', 'column', array(
-                'title' => $this->translator->trans('typeexam.field.typeExamName'),
+            ->add('startTime', 'datetime', array(
+                'title' => $this->translator->trans('exam.field.startTime'),
+                'date_format' => "HH:mm"
             ))
-            ->add('sessions.sessionName', 'array', array(
-                'title' => $this->translator->trans('session.field.sessionName'),
-                'data' => 'sessions[, ].sessionName',
-                'orderable' => false,
-            ))
-            ->add('course.courseName', 'column', array(
-                'title' => $this->translator->trans('course.field.courseName'),
+            ->add('endTime', 'datetime', array(
+                'title' => $this->translator->trans('exam.field.endTime'),
+                'date_format' => "HH:mm"
             ))
             ->add('user.username', 'column', array(
                 'title' => $this->translator->trans('author.creator'),
             ))
-            
+
             ->add(null, 'action', array(
                 'title' => $this->translator->trans('datatables.actions.title'),
                 'actions' => array(

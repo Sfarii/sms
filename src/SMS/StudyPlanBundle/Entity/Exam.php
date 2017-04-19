@@ -63,15 +63,34 @@ class Exam
     private $typeExam;
 
     /**
-     * Many Exams have Many Sessions.
-     * @ORM\ManyToMany(targetEntity="Session" ,fetch="EXTRA_LAZY")
-     * @ORM\JoinTable(name="exams_sessions",
+     * @var \DateTime
+     *
+     * @ORM\Column(name="startTime", type="time")
+     * @Assert\NotBlank()
+     * @Assert\Time()
+     */
+    private $startTime;
+
+    /**
+     * @var \DateTime
+     *
+     * @ORM\Column(name="endTime", type="time")
+     * @Assert\NotBlank()
+     * @Assert\Expression(expression="this.getStartTime() < value")
+     * @Assert\Time()
+     */
+    private $endTime;
+
+    /**
+     * Many Exams have Many Section.
+     * @ORM\ManyToMany(targetEntity="SMS\EstablishmentBundle\Entity\Section" ,fetch="EXTRA_LAZY")
+     * @ORM\JoinTable(name="exams_section",
      *      joinColumns={@ORM\JoinColumn(name="exam_id", referencedColumnName="id")},
-     *      inverseJoinColumns={@ORM\JoinColumn(name="session_id", referencedColumnName="id")}
+     *      inverseJoinColumns={@ORM\JoinColumn(name="section_id", referencedColumnName="id")}
      *      )
      * @Assert\NotBlank()
      */
-    private $sessions;
+    private $section;
 
     /**
      * Many Exams have One Course.
@@ -103,7 +122,7 @@ class Exam
 
     /**
      * @var datetime $updated
-     * 
+     *
      * @ORM\Column(type="datetime", nullable = true)
      */
     protected $updated;
@@ -125,7 +144,7 @@ class Exam
     /**
      * Get id
      *
-     * @return integer 
+     * @return integer
      */
     public function getId()
     {
@@ -148,7 +167,7 @@ class Exam
     /**
      * Get factor
      *
-     * @return float 
+     * @return float
      */
     public function getFactor()
     {
@@ -171,7 +190,7 @@ class Exam
     /**
      * Get dateExam
      *
-     * @return \DateTime 
+     * @return \DateTime
      */
     public function getDateExam()
     {
@@ -183,7 +202,7 @@ class Exam
     public function __construct()
     {
         $this->notes = new \Doctrine\Common\Collections\ArrayCollection();
-        $this->sessions = new \Doctrine\Common\Collections\ArrayCollection();
+        $this->section = new \Doctrine\Common\Collections\ArrayCollection();
     }
 
     /**
@@ -202,7 +221,7 @@ class Exam
     /**
      * Get created
      *
-     * @return \DateTime 
+     * @return \DateTime
      */
     public function getCreated()
     {
@@ -225,7 +244,7 @@ class Exam
     /**
      * Get updated
      *
-     * @return \DateTime 
+     * @return \DateTime
      */
     public function getUpdated()
     {
@@ -248,7 +267,7 @@ class Exam
     /**
      * Get typeExam
      *
-     * @return \SMS\StudyPlanBundle\Entity\TypeExam 
+     * @return \SMS\StudyPlanBundle\Entity\TypeExam
      */
     public function getTypeExam()
     {
@@ -271,7 +290,7 @@ class Exam
     /**
      * Get course
      *
-     * @return \SMS\StudyPlanBundle\Entity\Course 
+     * @return \SMS\StudyPlanBundle\Entity\Course
      */
     public function getCourse()
     {
@@ -304,7 +323,7 @@ class Exam
     /**
      * Get notes
      *
-     * @return \Doctrine\Common\Collections\Collection 
+     * @return \Doctrine\Common\Collections\Collection
      */
     public function getNotes()
     {
@@ -327,7 +346,7 @@ class Exam
     /**
      * Get user
      *
-     * @return \SMS\UserBundle\Entity\User 
+     * @return \SMS\UserBundle\Entity\User
      */
     public function getUser()
     {
@@ -350,7 +369,7 @@ class Exam
     /**
      * Get examName
      *
-     * @return string 
+     * @return string
      */
     public function getExamName()
     {
@@ -358,35 +377,84 @@ class Exam
     }
 
     /**
-     * Add sessions
+     * Set startTime
      *
-     * @param \SMS\StudyPlanBundle\Entity\Session $sessions
+     * @param \DateTime $startTime
+     *
      * @return Exam
      */
-    public function addSession(\SMS\StudyPlanBundle\Entity\Session $sessions)
+    public function setStartTime($startTime)
     {
-        $this->sessions[] = $sessions;
+        $this->startTime = $startTime;
 
         return $this;
     }
 
     /**
-     * Remove sessions
+     * Get startTime
      *
-     * @param \SMS\StudyPlanBundle\Entity\Session $sessions
+     * @return \DateTime
      */
-    public function removeSession(\SMS\StudyPlanBundle\Entity\Session $sessions)
+    public function getStartTime()
     {
-        $this->sessions->removeElement($sessions);
+        return $this->startTime;
     }
 
     /**
-     * Get sessions
+     * Set endTime
      *
-     * @return \Doctrine\Common\Collections\Collection 
+     * @param \DateTime $endTime
+     *
+     * @return Exam
      */
-    public function getSessions()
+    public function setEndTime($endTime)
     {
-        return $this->sessions;
+        $this->endTime = $endTime;
+
+        return $this;
+    }
+
+    /**
+     * Get endTime
+     *
+     * @return \DateTime
+     */
+    public function getEndTime()
+    {
+        return $this->endTime;
+    }
+
+    /**
+     * Add section
+     *
+     * @param \SMS\EstablishmentBundle\Entity\Section $section
+     *
+     * @return Exam
+     */
+    public function addSection(\SMS\EstablishmentBundle\Entity\Section $section)
+    {
+        $this->section[] = $section;
+
+        return $this;
+    }
+
+    /**
+     * Remove section
+     *
+     * @param \SMS\EstablishmentBundle\Entity\Section $section
+     */
+    public function removeSection(\SMS\EstablishmentBundle\Entity\Section $section)
+    {
+        $this->section->removeElement($section);
+    }
+
+    /**
+     * Get section
+     *
+     * @return \Doctrine\Common\Collections\Collection
+     */
+    public function getSection()
+    {
+        return $this->section;
     }
 }

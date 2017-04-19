@@ -1,65 +1,100 @@
 {% extends 'layout/base.html.twig' %}
 
 {% block title_page %}
-    {{ 'student.mark.title'|trans }}
+  {{ 'student.mark.title'|trans }}
 {% endblock %}
 
 {% block stylesheets %}
-    <!-- fullcalendar -->
-    <link rel="stylesheet" href="{{ asset('assets/plugins/fullcalendar/css/fullcalendar.min.css')}}">
-    {{ parent() }}
+  <!-- fullcalendar -->
+  <link rel="stylesheet" href="{{ asset('assets/plugins/fullcalendar/css/fullcalendar.min.css')}}">
+  {{ parent() }}
 
 {% endblock %}
 
 {% block body %}
-    <div class="md-card">
-        <div class="md-card-content">
-            <div id="calendar_selectable"></div>
-        </div>
+  <div class="md-card md-card-hover md-card-overlay no-bottom">
+    <div class="md-card-content">
+      <div id="calendar_selectable"></div>
     </div>
-    <div class="uk-modal" id="modal_full">
-        <div class="uk-modal-dialog">
-            <button type="button" class="uk-modal-close uk-close"></button>
-            <div class="uk-modal-header">
-                <h3 class="uk-modal-title">Headline <i class="material-icons" data-uk-tooltip="{pos:'top'}" title="headline tooltip">&#xE8FD;</i></h3>
-            </div>
-            <p>
-              <ul class="md-list">
-                  <li>
-                      <div class="md-list-content">
-                          <span class="md-list-heading">Heading</span>
-                          <span class="uk-text-small uk-text-muted">Similique enim soluta officiis a ut totam.</span>
-                      </div>
-                  </li>
-                  <li>
-                      <div class="md-list-content">
-                          <span class="md-list-heading">Heading</span>
-                          <span class="uk-text-small uk-text-muted">Explicabo assumenda veniam ea cupiditate quasi cumque veniam aut aut adipisci.</span>
-                      </div>
-                  </li>
-                  <li>
-                      <div class="md-list-content">
-                          <span class="md-list-heading">Heading</span>
-                          <span class="uk-text-small uk-text-muted">Ipsa odit vitae et cumque unde est.</span>
-                      </div>
-                  </li>
-                  <li>
-                      <div class="md-list-content">
-                          <span class="md-list-heading">Heading</span>
-                          <span class="uk-text-small uk-text-muted">Ipsa odit vitae et cumque unde est.</span>
-                      </div>
-                  </li>
-              </ul>
-            </p>
-        </div>
-    </div>
-{% endblock %}
+    <div class="md-card-overlay-content no-top">
+      <div class="uk-clearfix md-card-overlay-header">
+        <i class="md-icon md-icon material-icons md-card-overlay-toggler"></i>
+      </div>
+      <p class="truncate-text">
+        <div class="uk-grid uk-margin-medium-top uk-margin-large-bottom" data-uk-grid-margin>
+          <div class="uk-width-large-1-2">
+            <ul class="md-list md-list-addon">
+              <li>
+                <div class="md-list-addon-element">
+                  <i class="md-list-addon-icon material-icons">&#xE616;</i>
+                </div>
+                <div class="md-list-content">
+                  <span class="md-list-heading" id="event-title"></span>
+                  <span class="uk-text-small uk-text-muted">{{ 'exam.field.examName'|trans }}</span>
+                </div>
+              </li>
+              <li>
+                <div class="md-list-addon-element">
+                  <i class="md-list-addon-icon material-icons">&#xE8DF;</i>
+                </div>
+                <div class="md-list-content">
+                  <span class="md-list-heading" id="date"></span>
+                  <span class="uk-text-small uk-text-muted">{{ 'exam.field.date'|trans }}</span>
+                </div>
+              </li>
+              <li>
+                <div class="md-list-addon-element">
+                  <i class="md-list-addon-icon material-icons">&#xE425;</i>
+                </div>
+                <div class="md-list-content">
+                  <span class="md-list-heading" id="start-time"></span>
+                  <span class="uk-text-small uk-text-muted">{{'exam.field.startTime'|trans }}</span>
+                </div>
+              </li>
+            </ul>
+          </div>
+          <div class="uk-width-large-1-2">
+            <ul class="md-list md-list-addon">
+              <li>
+                <div class="md-list-addon-element">
+                  <i class="md-list-addon-icon material-icons">&#xE426;</i>
+                </div>
+                <div class="md-list-content">
+                  <span class="md-list-heading" id="end-time"></span>
+                  <span class="uk-text-small uk-text-muted">{{'exam.field.endTime'|trans }}</span>
+                </div>
+              </li>
+              <li>
+                <div class="md-list-addon-element">
+                  <i class="md-list-addon-icon material-icons">&#xE14F;</i>
+                </div>
+                <div class="md-list-content">
+                  <span class="md-list-heading" id="type-exam-name"></span>
+                  <span class="uk-text-small uk-text-muted">{{'typeexam.field.typeExamName'|trans }}</span>
+                </div>
+              </li>
 
-{% block javascripts %}
+              <li>
+                <div class="md-list-addon-element">
+                  <i class="md-list-addon-icon material-icons">&#xE865;</i>
+                </div>
+                <div class="md-list-content">
+                  <span class="md-list-heading" id="course-name"></span>
+                  <span class="uk-text-small uk-text-muted">{{'course.field.courseName'|trans }}</span>
+                </div>
+              </li>
+            </ul>
+          </div>
+        </p>
+      </div>
+    </div>
+  {% endblock %}
+
+  {% block javascripts %}
     {{ parent() }}
     <!-- Jquery UI -->
     <!-- fullcalendar -->
     <script src="{{ asset('assets/plugins/fullcalendar/js/fullcalendar.min.js')}}"></script>
     <!--  calendar functions -->
     <script src="{{ asset('assets/js/custom/plugins_fullcalendar.min.js')}}"></script>
-{% endblock %}
+  {% endblock %}

@@ -3,6 +3,7 @@
 namespace API\Services;
 
 use SMS\StudyPlanBundle\Entity\Schedule;
+use SMS\StudyPlanBundle\Entity\Course;
 use SMS\StudyPlanBundle\Entity\Session;
 use SMS\AdministrativeBundle\Entity\AttendanceStudent;
 
@@ -219,7 +220,7 @@ class UserSpaceManager
             array_push($result,array("day" => $day ,"sessions" =>$resultSession));
         }
         $attendanceStats = $attendanceRepository->findStatsByStudent($student, $division->getStartDate() , $division->getEndDate());
-        
+
         return array("attendances" => $result , "sessions" => $sessions , "stats" => $this->echartsPieFormat( $attendanceStats));
     }
 
@@ -248,5 +249,41 @@ class UserSpaceManager
           array_push($resultSession, (array) $resultattendance);
       }
       return $resultSession;
+    }
+
+    /**
+    * @param Student $student
+    * @param String $scheduleClassName
+    * @param String $sessionClassName
+    *
+    * @return array
+    */
+    public function getAttendanceOfStudentByCourses($student ,$division)
+    {
+      // get All the Course by the garde of the student
+      $courses = $this->_em->getRepository(Course::class)
+                              ->findByGradeAndDivision($student->getSection()->getGrade()->getId(),$division->getId());
+        // get attendance by the section of the student
+        $attendanceRepository = $this->_em->getRepository(AttendanceStudent::class);
+        $attendances = $attendanceRepository->findByStudentGroupByCourse($student, $division);
+
+        $result = array();
+        foreach ($courses as $course) {
+          $resultattendance = array();
+          $attendance = array_filter($attendances, function($value) use (&$course) { return strcasecmp($value['courseName'],$course->getCourseName()) == 0; });
+          // test if the selected session existe in the attendance
+          $resultattendance["courseName"] = $course->getCourseName();
+          if (!empty($resultattendance)){
+              $resultattendance["status"] =$this->echartsPieFormat( $attendance);
+              $resultattendance["empty"] = false;
+          }else{
+              $resultattendance["empty"] = true;
+          }
+            // push the result into the array $course
+            array_push($result,$resultattendance );
+        }
+        $attendanceStats = $attendanceRepository->findStatsByStudent($student, $division->getStartDate() , $division->getEndDate());
+
+        return array("attendances" => $result , "stats" => $this->echartsPieFormat( $attendanceStats));
     }
 }

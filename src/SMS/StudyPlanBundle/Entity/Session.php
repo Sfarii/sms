@@ -61,21 +61,21 @@ class Session
     /**
      * Many Sessions have Many Schedules .
      * @ORM\ManyToMany(targetEntity="Schedule", mappedBy="sessions" , fetch="EXTRA_LAZY")
-     * 
+     *
      */
     private $schedules;
 
     /**
      * Get id
      *
-     * @return integer 
+     * @return integer
      */
     public function getId()
     {
         return $this->id;
     }
 
-    
+
 
     /**
      * Set sessionName
@@ -93,7 +93,7 @@ class Session
     /**
      * Get sessionName
      *
-     * @return string 
+     * @return string
      */
     public function getSessionName()
     {
@@ -116,7 +116,7 @@ class Session
     /**
      * Get startTime
      *
-     * @return \DateTime 
+     * @return \DateTime
      */
     public function getStartTime()
     {
@@ -139,7 +139,7 @@ class Session
     /**
      * Get endTime
      *
-     * @return \DateTime 
+     * @return \DateTime
      */
     public function getEndTime()
     {
@@ -162,10 +162,51 @@ class Session
     /**
      * Get user
      *
-     * @return \SMS\UserBundle\Entity\User 
+     * @return \SMS\UserBundle\Entity\User
      */
     public function getUser()
     {
         return $this->user;
+    }
+    /**
+     * Constructor
+     */
+    public function __construct()
+    {
+        $this->schedules = new \Doctrine\Common\Collections\ArrayCollection();
+    }
+
+    /**
+     * Add schedule
+     *
+     * @param \SMS\StudyPlanBundle\Entity\Schedule $schedule
+     *
+     * @return Session
+     */
+    public function addSchedule(\SMS\StudyPlanBundle\Entity\Schedule $schedule)
+    {
+        $this->schedules[] = $schedule;
+
+        return $this;
+    }
+
+    /**
+     * Remove schedule
+     *
+     * @param \SMS\StudyPlanBundle\Entity\Schedule $schedule
+     */
+    public function removeSchedule(\SMS\StudyPlanBundle\Entity\Schedule $schedule)
+    {
+        $this->schedules->removeElement($schedule);
+    }
+
+    /**
+     * Get schedules
+     *
+     * @return \Doctrine\Common\Collections\Collection
+     */
+    public function getSchedules()
+    {
+        return $this->schedules;
     }
 }

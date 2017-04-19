@@ -18,13 +18,30 @@ echarts_table_pie = {
                   this_data = $($this).data('values');
               var $myChart = echarts.init($this);
               option = {
-                  title: {
-                      show: false,
-                  },
-
+                title: {
+                    text: this_title,
+                    textStyle: {
+                        color: '#444'
+                    }
+                },
                   tooltip: {
                       trigger: 'item',
-                      formatter: "{d}%"
+                      formatter: "{c} : {d}%"
+                  },
+                  toolbox: {
+                      show: true,
+                      feature: {
+                          saveAsImage: {
+                              title: ' ',
+                              show: true
+                          }
+                      }
+                  },
+                  legend: {
+                      orient: 'vertical',
+                      x: 'left',
+                      y: 'bottom',
+                      data: jQuery.map( this_data, function( n, i ) {return ( n.name );})
                   },
                   series: [{
                       name: this_title,

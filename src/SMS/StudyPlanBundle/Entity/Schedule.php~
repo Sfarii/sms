@@ -4,6 +4,8 @@ namespace SMS\StudyPlanBundle\Entity;
 
 use Doctrine\ORM\Mapping as ORM;
 use Symfony\Component\Validator\Constraints as Assert;
+use Symfony\Bridge\Doctrine\Validator\Constraints\UniqueEntity;
+
 /**
  * Schedule
  *
@@ -31,9 +33,10 @@ class Schedule
     private $section;
 
     /**
-     * Many Schedules have One Day.
-     * @ORM\ManyToOne(targetEntity="Day",fetch="EXTRA_LAZY")
-     * @ORM\JoinColumn(name="day_id", referencedColumnName="id")
+     * @var string
+     *
+     * @ORM\Column(name="day", type="string", length=150)
+     * @Assert\Choice({"sunday", "monday", "tuesday","wednesday", "thursday", "friday","saturday"})
      * @Assert\NotBlank()
      */
     private $day;
@@ -86,8 +89,6 @@ class Schedule
      */
     private $updated;
 
-    private $grade;
-
 
     /**
      * Constructor
@@ -109,7 +110,6 @@ class Schedule
             $this->setCreated(new \DateTime('now'));
         }
     }
-
 
     /**
      * Get id
@@ -193,10 +193,10 @@ class Schedule
     /**
      * Set day
      *
-     * @param \SMS\StudyPlanBundle\Entity\Day $day
+     * @param String $day
      * @return Schedule
      */
-    public function setDay(\SMS\StudyPlanBundle\Entity\Day $day = null)
+    public function setDay($day)
     {
         $this->day = $day;
 
