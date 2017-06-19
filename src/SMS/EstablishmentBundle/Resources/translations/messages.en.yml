@@ -1,0 +1,100 @@
+action:
+    delete: Delete   # FIXME
+
+author:
+    created: Created   # FIXME
+    creator: Author   # FIXME
+    info: Author Info  # FIXME
+    updated: Updated   # FIXME
+
+division:
+    delete:
+        fail: Could not delete from the specified divisions   # FIXME
+        success: The specified divisions successfully deleted  # FIXME
+    add:
+        success: Division successfully added    # FIXME
+    edit:
+        success: Division successfully edited   # FIXME
+    edit:
+        title: Edit Division   # FIXME
+
+    field:
+        divisionName: Division Name   # FIXME
+        endDate: End Date   # FIXME
+        establishment: Establishment   # FIXME
+        name: Division Name   # FIXME
+        startDate: Start Date   # FIXME
+
+    list:
+        title: Division Lists   # FIXME
+
+    new:
+        title: New Division   # FIXME
+
+    show:
+        detail: Division Detail   # FIXME
+        title: Division Info   # FIXME
+
+establishment:
+    delete:
+        fail: Could not delete from the specified establishments   # FIXME
+        success: The specified establishments successfully deleted  # FIXME
+    add:
+        success: Establishment successfully added    # FIXME
+    edit:
+        success: Establishment successfully edited   # FIXME
+        title: Edit Establishment   # FIXME
+
+    field:
+        address: Address   # FIXME
+        email: Email   # FIXME
+        establishmentName: Establishment Name   # FIXME
+        phone: Phone   # FIXME
+
+    list:
+        title: Establishment Lists   # FIXME
+
+    show:
+        detail: Establishment Detail   # FIXME
+        title: Establishment Info   # FIXME
+    new:
+        title: new Establishment   # FIXME
+grade:
+    delete:
+        fail: Could not delete from the specified grades   # FIXME
+        success: The specified grades successfully deleted  # FIXME
+    add:
+        success: Grade successfully added    # FIXME
+    edit:
+        success: Grade successfully edited   # FIXME
+        title: Edit Grade   # FIXME
+
+    field:
+        gradeCode: Grade Code   # FIXME
+        gradeName: Grade Name   # FIXME
+
+    list:
+        title: Grade Lists   # FIXME
+
+    new:
+        title: new Grade   # FIXME
+
+section:
+    delete:
+        fail: Could not delete from the specified sections   # FIXME
+        success: The specified sections successfully deleted  # FIXME
+    add:
+        success: Section successfully added    # FIXME
+    edit:
+        success: Section successfully edited   # FIXME
+        title: Edit Section   # FIXME
+
+    field:
+        grade: Grade   # FIXME
+        sectionName: Section Name   # FIXME
+
+    list:
+        title: Section Lists   # FIXME
+
+    new:
+        title: New Section   # FIXME

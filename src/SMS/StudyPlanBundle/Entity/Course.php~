@@ -83,10 +83,17 @@ class Course
 
     /**
      * @var datetime $updated
-     * 
+     *
      * @ORM\Column(type="datetime", nullable = true)
      */
     protected $updated;
+
+    /**
+     * One establishment has Many Courses.
+     * @ORM\ManyToOne(targetEntity="SMS\EstablishmentBundle\Entity\Establishment" ,fetch="EXTRA_LAZY")
+     * @ORM\JoinColumn(name="establishment_id", referencedColumnName="id")
+     */
+    private $establishment;
 
      /**
      * @ORM\PrePersist
@@ -104,7 +111,7 @@ class Course
     /**
      * Get id
      *
-     * @return integer 
+     * @return integer
      */
     public function getId()
     {
@@ -127,7 +134,7 @@ class Course
     /**
      * Get courseName
      *
-     * @return string 
+     * @return string
      */
     public function getCourseName()
     {
@@ -150,7 +157,7 @@ class Course
     /**
      * Get coefficient
      *
-     * @return float 
+     * @return float
      */
     public function getCoefficient()
     {
@@ -180,7 +187,7 @@ class Course
     /**
      * Get created
      *
-     * @return \DateTime 
+     * @return \DateTime
      */
     public function getCreated()
     {
@@ -203,7 +210,7 @@ class Course
     /**
      * Get updated
      *
-     * @return \DateTime 
+     * @return \DateTime
      */
     public function getUpdated()
     {
@@ -226,7 +233,7 @@ class Course
     /**
      * Get division
      *
-     * @return \SMS\EstablishmentBundle\Entity\Division 
+     * @return \SMS\EstablishmentBundle\Entity\Division
      */
     public function getDivision()
     {
@@ -249,7 +256,7 @@ class Course
     /**
      * Get grade
      *
-     * @return \SMS\EstablishmentBundle\Entity\Grade 
+     * @return \SMS\EstablishmentBundle\Entity\Grade
      */
     public function getGrade()
     {
@@ -282,7 +289,7 @@ class Course
     /**
      * Get exams
      *
-     * @return \Doctrine\Common\Collections\Collection 
+     * @return \Doctrine\Common\Collections\Collection
      */
     public function getExams()
     {
@@ -305,7 +312,7 @@ class Course
     /**
      * Get user
      *
-     * @return \SMS\UserBundle\Entity\User 
+     * @return \SMS\UserBundle\Entity\User
      */
     public function getUser()
     {

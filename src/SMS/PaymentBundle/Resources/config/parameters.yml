@@ -1,0 +1,16 @@
+parameters:
+  payment_datatable: SMS\PaymentBundle\PaymentDatatable\PaymentDatatable
+  payment_type_datatable: SMS\PaymentBundle\PaymentDatatable\PaymentTypeDatatable
+  registration_datatable: SMS\PaymentBundle\PaymentDatatable\RegistrationDatatable
+  registration_type_datatable: SMS\PaymentBundle\PaymentDatatable\RegistrationTypeDatatable
+  payment_form: SMS\PaymentBundle\Form\PaymentType
+  registration_form: SMS\PaymentBundle\Form\RegistrationType
+  #Dependency Injection class
+  payment_type_class: SMS\PaymentBundle\Entity\PaymentType
+  section_class: SMS\EstablishmentBundle\Entity\Section
+  registration_type_class: SMS\PaymentBundle\Entity\RegistrationType
+  #Dependency Injection class
+  student_class: SMS\UserBundle\Entity\Student
+  grade_class: SMS\EstablishmentBundle\Entity\Grade
+  section_class: SMS\EstablishmentBundle\Entity\Section
+  establishment_class: SMS\EstablishmentBundle\Entity\Establishment

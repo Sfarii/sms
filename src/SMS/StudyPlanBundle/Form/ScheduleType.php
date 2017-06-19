@@ -20,6 +20,11 @@ use SMS\EstablishmentBundle\Entity\Grade;
 use SMS\EstablishmentBundle\Entity\Section;
 use SMS\UserBundle\Entity\Professor;
 
+
+use API\Form\Type\HiddenEntityType;
+use Doctrine\ORM\EntityRepository;
+use SMS\EstablishmentBundle\Entity\Establishment;
+
 use API\Form\Type\DayType;
 use API\Form\EventSubscriber\GradeSectionCourseFilterListener;
 
@@ -39,14 +44,15 @@ class ScheduleType extends AbstractType
     {
         $this->em = $em;
     }
-    
+
     /**
      * {@inheritdoc}
      */
     public function buildForm(FormBuilderInterface $builder, array $options)
     {
-        
-        $builder->addEventSubscriber(new GradeSectionCourseFilterListener($this->em))
+        $establishment = $options['establishment'];
+
+        $builder->addEventSubscriber(new GradeSectionCourseFilterListener($this->em , $establishment))
                 ->add('day' , DayType::class , array(
                     'placeholder'   => 'schedule.field.day',
                     'label'         => 'schedule.field.day')
@@ -56,18 +62,33 @@ class ScheduleType extends AbstractType
                     'property'      => 'sessionName',
                     'placeholder'   => 'schedule.field.session',
                     'multiple'      => true,
+                    'query_builder' => function (EntityRepository $er) use ($establishment) {
+                        return $er->createQueryBuilder('sessions')
+                                  ->join('sessions.establishment', 'establishment')
+                                  ->andWhere('establishment.id = :establishment')
+                                  ->setParameter('establishment', $establishment->getId());
+                    },
                     'label'         => 'schedule.field.session')
                 )
                 ->add('professor' , EntityType::class , array(
                     'class'         => Professor::class,
-                    'property'      => 'firstName',
+                    'query_builder' => function (EntityRepository $er) use ($establishment) {
+                        return $er->createQueryBuilder('professor')
+                                  ->join('professor.establishment', 'establishment')
+                                  ->andWhere('establishment.id = :establishment')
+                                  ->setParameter('establishment', $establishment->getId());
+                    },
                     'placeholder'   => 'schedule.field.professor',
                     'label'         => 'schedule.field.professor'
                     )
                 )
+                ->add('establishment', HiddenEntityType::class, array(
+                    'class' => Establishment::class,
+                    'data' =>  $establishment, // Field value by default
+                ))
                 ->add('save', SubmitType::class);
     }
-   
+
     /**
      * {@inheritdoc}
      */
@@ -76,6 +97,7 @@ class ScheduleType extends AbstractType
         $resolver->setDefaults(array(
             'data_class' => Schedule::class,
         ));
+        $resolver->setRequired('establishment');
     }
 
     /**

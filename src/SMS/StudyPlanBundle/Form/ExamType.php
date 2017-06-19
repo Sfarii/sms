@@ -12,39 +12,42 @@ use Symfony\Bridge\Doctrine\Form\Type\EntityType;
 use Symfony\Component\Form\Extension\Core\Type\SubmitType;
 use SMS\StudyPlanBundle\Entity\Exam;
 use SMS\StudyPlanBundle\Entity\TypeExam;
+use SMS\StudyPlanBundle\Entity\Course;
 use SMS\StudyPlanBundle\Entity\Session;
+use SMS\EstablishmentBundle\Entity\Section;
 use Symfony\Component\Form\Extension\Core\Type\TimeType;
-use API\Form\EventSubscriber\GradeSectionsCourseFilterListener;
+use API\Form\EventSubscriber\GradeSectionCourseFilterListener;
+use API\Form\Type\HiddenEntityType;
+use Doctrine\ORM\EntityRepository;
+use SMS\EstablishmentBundle\Entity\Establishment;
 
 class ExamType extends AbstractType
 {
-    /**
-     * @var EntityManager
-     */
-    protected $em;
-
-    /**
-     * Constructor
-     *
-     * @param EntityManager $em
-     */
-    function __construct(EntityManager $em)
-    {
-        $this->em = $em;
-    }
-
     /**
      * {@inheritdoc}
      */
     public function buildForm(FormBuilderInterface $builder, array $options)
     {
+        $establishment = $options['establishment'];
+        $course = $options['course'];
+
         $builder
-            ->addEventSubscriber(new GradeSectionsCourseFilterListener($this->em))
+            ->add('section' , EntityType::class , array(
+                    'class'         => Section::class,
+                    'property'      => 'sectionName',
+                    'query_builder' => function (EntityRepository $er) use ($course) {
+                        return $er->createQueryBuilder('section')
+                                  ->join('section.grade', 'grade')
+                                  ->andWhere('grade.id = :grade')
+                                  ->setParameter('grade', $course->getGrade()->getId());
+                    },
+                    'multiple' => true,
+                    'placeholder'   => 'exam.field.section',
+                    'label'         => 'exam.field.section',
+                    )
+                )
             ->add('examName' ,TextType::class , array(
                 'label' => 'exam.field.examName')
-            )
-            ->add('factor' ,TextType::class , array(
-                'label' => 'exam.field.factor')
             )
             ->add('dateExam', DateType::class, array(
                 'widget' => 'single_text',
@@ -71,8 +74,14 @@ class ExamType extends AbstractType
                 'placeholder'=> 'exam.field.typeExam',
                 'label' => 'exam.field.typeExam')
             )
-
-
+            ->add('establishment', HiddenEntityType::class, array(
+                'class' => Establishment::class,
+                'data' =>  $establishment, // Field value by default
+            ))
+            ->add('course', HiddenEntityType::class, array(
+                'class' => Course::class,
+                'data' =>  $course, // Field value by default
+            ))
             ->add('save', SubmitType::class);
 
     }
@@ -85,6 +94,8 @@ class ExamType extends AbstractType
         $resolver->setDefaults(array(
             'data_class' => Exam::class
         ));
+        $resolver->setRequired('establishment');
+        $resolver->setRequired('course');
     }
 
     /**

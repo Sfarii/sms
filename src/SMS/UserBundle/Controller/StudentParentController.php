@@ -27,7 +27,7 @@ class StudentParentController extends BaseController
      *
      * @Route("/", name="studentparent_index")
      * @Method("GET")
-     * @Template("smsuserbundle/studentparent/index.html.twig")
+     * @Template("SMSUserBundle:studentparent:index.html.twig")
      */
     public function indexAction(Request $request)
     {
@@ -51,6 +51,16 @@ class StudentParentController extends BaseController
 
         $query = $this->getDataTableQuery()->getQueryFrom($studentParent);
 
+        $user = $this->getUser();
+        $function = function($qb) use ($user)
+        {
+            $qb->join('parent.establishment', 'establishment')
+                ->andWhere('establishment.id = :establishment')
+        				->setParameter('establishment', $user->getEstablishment()->getId());
+        };
+
+        $query->addWhereAll($function);
+
         return $query->getResponse();
     }
 
@@ -60,7 +70,7 @@ class StudentParentController extends BaseController
      *
      * @Route("/new", name="studentparent_new")
      * @Method({"GET", "POST"})
-     * @Template("smsuserbundle/studentparent/new.html.twig")
+     * @Template("SMSUserBundle:studentparent:new.html.twig")
      */
     public function newAction(Request $request)
     {
@@ -85,7 +95,7 @@ class StudentParentController extends BaseController
      *
      * @Route("/{id}", name="studentparent_show", options={"expose"=true})
      * @Method("GET")
-     * @Template("smsuserbundle/studentparent/show.html.twig")
+     * @Template("SMSUserBundle:studentparent:show.html.twig")
      */
     public function showAction(StudentParent $studentParent)
     {
@@ -102,7 +112,7 @@ class StudentParentController extends BaseController
      *
      * @Route("/{id}/edit", name="studentparent_edit", options={"expose"=true})
      * @Method({"GET", "POST"})
-     * @Template("smsuserbundle/studentparent/edit.html.twig")
+     * @Template("SMSUserBundle:studentparent:edit.html.twig")
      */
     public function editAction(Request $request, StudentParent $studentParent)
     {
@@ -111,12 +121,14 @@ class StudentParentController extends BaseController
         if ($editForm->isSubmitted() && $editForm->isValid() && $editForm->get('save')->isClicked()) {
             $this->getEntityManager()->update($studentParent);
             $this->flashSuccessMsg('studentParent.edit.success');
-            return $this->redirectToRoute('studentparent_index');
+            if ($studentParent->getId() !== $this->getUser()->getId()){
+              return $this->redirectToRoute('studentparent_index');
+            }
         }
 
         return array(
             'user' => $studentParent,
-            'edit_form' => $editForm->createView(),
+            'form' => $editForm->createView(),
         );
     }
 

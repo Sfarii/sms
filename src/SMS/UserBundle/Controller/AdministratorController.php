@@ -3,6 +3,7 @@
 namespace SMS\UserBundle\Controller;
 
 use SMS\UserBundle\Entity\Administrator;
+use SMS\UserBundle\Entity\Manager;
 use SMS\UserBundle\Form\AdministratorType;
 use API\BaseController\BaseController;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\Method;
@@ -27,7 +28,7 @@ class AdministratorController extends BaseController
      *
      * @Route("/", name="administrator_index")
      * @Method("GET")
-     * @Template("smsuserbundle/administrator/index.html.twig")
+     * @Template("SMSUserBundle:administrator:index.html.twig")
      */
     public function indexAction(Request $request)
     {
@@ -51,6 +52,18 @@ class AdministratorController extends BaseController
 
         $query = $this->getDataTableQuery()->getQueryFrom($administrator);
 
+        if (!$this->getUser() instanceof Manager){
+          $user = $this->getUser();
+          $function = function($qb) use ($user)
+          {
+              $qb->join('administrator.establishment', 'establishment')
+                  ->andWhere('establishment.id = :establishment')
+          				->setParameter('establishment', $user->getEstablishment()->getId());
+          };
+
+          $query->addWhereAll($function);
+        }
+
         return $query->getResponse();
     }
 
@@ -59,7 +72,7 @@ class AdministratorController extends BaseController
      *
      * @Route("/new", name="administrator_new")
      * @Method({"GET", "POST"})
-     * @Template("smsuserbundle/administrator/new.html.twig")
+     * @Template("SMSUserBundle:administrator:new.html.twig")
      */
     public function newAction(Request $request)
     {
@@ -84,7 +97,7 @@ class AdministratorController extends BaseController
      *
      * @Route("/{id}", name="administrator_show", options={"expose"=true})
      * @Method("GET")
-     * @Template("smsuserbundle/administrator/show.html.twig")
+     * @Template("SMSUserBundle:administrator:show.html.twig")
      */
     public function showAction(Administrator $administrator)
     {
@@ -101,7 +114,7 @@ class AdministratorController extends BaseController
      *
      * @Route("/{id}/edit", name="administrator_edit", options={"expose"=true})
      * @Method({"GET", "POST"})
-     * @Template("smsuserbundle/administrator/edit.html.twig")
+     * @Template("SMSUserBundle:administrator:edit.html.twig")
      */
     public function editAction(Request $request, Administrator $administrator)
     {
@@ -110,12 +123,14 @@ class AdministratorController extends BaseController
         if ($editForm->isSubmitted() && $editForm->isValid() && $editForm->get('save')->isClicked()) {
             $this->getEntityManager()->update($administrator);
             $this->flashSuccessMsg('administrator.edit.success');
-            return $this->redirectToRoute('administrator_index');
+            if ($administrator->getId() !== $this->getUser()->getId()){
+              return $this->redirectToRoute('administrator_index');
+            }
         }
 
         return array(
             'user' => $administrator,
-            'edit_form' => $editForm->createView(),
+            'form' => $editForm->createView(),
         );
     }
 

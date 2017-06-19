@@ -24,7 +24,7 @@ class Administrator extends User
      * @Assert\NotBlank(groups= {"Registration" , "SimpleRegistration" , "Edit"}),
      * @Assert\Regex(pattern="/^[a-z0-9 .\-]+$/i" ,match=true , groups= {"Registration" , "SimpleRegistration" , "Edit"})
      * @Assert\Length(min = 2, max = 40 , groups= {"Registration" , "SimpleRegistration" , "Edit"})
-     * 
+     *
      */
     private $firstName;
 
@@ -82,20 +82,10 @@ class Administrator extends User
      */
     private $address;
 
-    
-    /**
-     * constructor.
-     */
-    public function __construct()
-    {
-        parent::__construct();
-        $this->roles = array(self::ROLE_ADMIN);
-    }
-
     /**
      * Get id
      *
-     * @return integer 
+     * @return integer
      */
     public function getId()
     {
@@ -118,7 +108,7 @@ class Administrator extends User
     /**
      * Get firstName
      *
-     * @return string 
+     * @return string
      */
     public function getFirstName()
     {
@@ -141,7 +131,7 @@ class Administrator extends User
     /**
      * Get lastName
      *
-     * @return string 
+     * @return string
      */
     public function getLastName()
     {
@@ -164,7 +154,7 @@ class Administrator extends User
     /**
      * Get gender
      *
-     * @return string 
+     * @return string
      */
     public function getGender()
     {
@@ -187,7 +177,7 @@ class Administrator extends User
     /**
      * Get phone
      *
-     * @return string 
+     * @return string
      */
     public function getPhone()
     {
@@ -210,7 +200,7 @@ class Administrator extends User
     /**
      * Get address
      *
-     * @return string 
+     * @return string
      */
     public function getAddress()
     {

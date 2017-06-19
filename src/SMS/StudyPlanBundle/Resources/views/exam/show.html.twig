@@ -1,0 +1,168 @@
+{% extends 'layout/base.html.twig' %}
+
+{% block heading_actions %}
+  <a href="{{ path('exam_index') }}">
+    <i class="md-icon material-icons">&#xE5C4;</i>
+  </a>
+  <a href="{{ path('course_new') }}">
+    <i class="md-icon material-icons">&#xE5C8;</i>
+  </a>
+{% endblock %}
+
+{% block sticky_button %}
+  <a class="md-fab md-fab-primary" href="{{ path('exam_edit', { 'id': exam.id }) }}">
+    <i class="material-icons">&#xE254;</i>
+  </a>
+{% endblock %}
+
+{% block title_page %}
+  {{ 'exam.show.title'|trans }}
+{% endblock %}
+
+{% block body %}
+  <div class="uk-grid uk-grid-medium" data-uk-grid-margin>
+
+    <div class="uk-width-xLarge-8-10  uk-width-large-7-10">
+      <div class="md-card">
+        <div class="md-card-toolbar">
+          <h3 class="md-card-toolbar-heading-text">
+            {{ 'exam.show.detail'|trans }}
+          </h3>
+        </div>
+        <div class="md-card-content">
+
+          <div class="uk-grid uk-margin-small-top uk-margin-large-bottom" data-uk-grid-margin>
+            <div class="uk-width-1-2">
+              <ul class="md-list">
+
+                <li>
+                  <div class="md-list-content">
+                    <span class="md-list-heading uk-text-large">{{ exam.examName }}</span>
+                  </div>
+                  <span class="uk-text-small uk-text-muted uk-display-block">
+                    {{'exam.field.examName'|trans }}</span>
+                </li>
+
+                <li>
+                  <div class="md-list-content">
+                    <span class="md-list-heading uk-text-large">
+                      {% if exam.dateExam %}{{ exam.dateExam|date('Y-m-d') }}{% endif %}
+                    </span>
+                  </div>
+                  <span class="uk-text-small uk-text-muted uk-display-block">
+                    {{'exam.field.dateExam'|trans }}</span>
+                </li>
+                <li>
+                  <div class="md-list-content">
+                    <span class="md-list-heading uk-text-large">{{ exam.startTime|date('H:i:s') }}</span>
+                  </div>
+                  <span class="uk-text-small uk-text-muted uk-display-block">
+                    {{'exam.field.startTime'|trans }}</span>
+                </li>
+              </ul>
+            </div>
+            <div class="uk-width-1-2">
+              <ul class="md-list">
+
+                <li>
+                  <div class="md-list-content">
+                    <span class="md-list-heading uk-text-large">{{ exam.course.division.divisionName }}</span>
+                  </div>
+                  <span class="uk-text-small uk-text-muted uk-display-block">
+                    {{'exam.field.division'|trans }}</span>
+                </li>
+
+                <li>
+                  <div class="md-list-content">
+                    <span class="md-list-heading uk-text-large">{{ exam.course.courseName }}</span>
+                  </div>
+                  <span class="uk-text-small uk-text-muted uk-display-block">
+                    {{'exam.field.course'|trans }}</span>
+                </li>
+                <li>
+                  <div class="md-list-content">
+                    <span class="md-list-heading uk-text-large">{{ exam.endTime|date('H:i:s') }}</span>
+                  </div>
+                  <span class="uk-text-small uk-text-muted uk-display-block">
+                    {{'exam.field.endTime'|trans }}</span>
+                </li>
+              </ul>
+            </div>
+
+          </div>
+        </div>
+      </div>
+      <div class="md-card">
+        <div class="md-card-toolbar">
+          <h3 class="md-card-toolbar-heading-text">
+            {{ 'exam.field.sections'|trans }}
+          </h3>
+        </div>
+        <div class="md-card-content">
+          <div class="uk-overflow-container">
+            <table class="uk-table">
+              <thead>
+                <tr>
+                  <th class="uk-text-center">{{ "section.field.sessionName"|trans }}</th>
+                  <th class="uk-text-center">{{ "section.field.grade"|trans }}</th>
+                </tr>
+              </thead>
+              <tbody>
+                {% for section in exam.section %}
+                  <tr>
+                    <td class="uk-text-center">{{ section.sectionName }}</td>
+                    <td class="uk-text-center">{{ section.grade.gradeName }}</td>
+                  </tr>
+                {% endfor %}
+              </tbody>
+            </table>
+          </div>
+        </div>
+      </div>
+    </div>
+    <div class="uk-width-xLarge-2-10 uk-width-large-3-10">
+      <div class="md-card">
+        <div class="md-card-toolbar">
+          <h3 class="md-card-toolbar-heading-text">
+            {{ 'author.info'|trans }}
+          </h3>
+        </div>
+        <div class="md-card-content">
+          <ul class="md-list md-list-addon">
+            <li>
+              <div class="md-list-addon-element">
+                <i class="md-list-addon-icon material-icons">&#xE7FD;</i>
+              </div>
+              <div class="md-list-content">
+                <span class="md-list-heading">{{ exam.user.username }}</span>
+                <span class="uk-text-small uk-text-muted">{{ 'author.creator'|trans }}</span>
+              </div>
+            </li>
+            <li>
+              <div class="md-list-addon-element">
+                <i class="md-list-addon-icon material-icons">&#xE8DF;</i>
+              </div>
+              <div class="md-list-content">
+                <span class="md-list-heading">
+                  {% if exam.created %}{{ exam.created|date('d M Y') }}{% endif %}
+                </span>
+                <span class="uk-text-small uk-text-muted">{{ 'author.updated'|trans }}</span>
+              </div>
+            </li>
+            <li>
+              <div class="md-list-addon-element">
+                <i class="md-list-addon-icon material-icons">&#xE8B5;</i>
+              </div>
+              <div class="md-list-content">
+                <span class="md-list-heading">
+                  {% if exam.created %}{{ exam.created|date('d M Y') }}{% endif %}
+                </span>
+                <span class="uk-text-small uk-text-muted">{{ 'author.created'|trans }}</span>
+              </div>
+            </li>
+          </ul>
+        </div>
+      </div>
+    </div>
+  </div>
+{% endblock %}

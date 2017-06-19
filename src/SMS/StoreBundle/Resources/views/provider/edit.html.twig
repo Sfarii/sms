@@ -1,0 +1,76 @@
+{% extends 'layout/base_header_double_height.html.twig' %}
+
+{% block body %}
+  <div class="uk-width-medium-8-10 uk-container-center">
+    <div class="md-card md-card-single">
+      <div class="md-card-toolbar">
+        <a href="{{ path('provider_index') }}">
+          <span class="md-icon md-card-fullscreen-deactivate material-icons uk-float-left">&#xE5C4;</span>
+        </a>
+        <h3 class="md-card-toolbar-heading-text large uk-margin-small-left">
+          {{ 'provider.edit.title'|trans }}
+        </h3>
+      </div>
+      <div class="md-card-content">
+        <div class="uk-margin-small-top">
+          {{ form_start(form) }}
+					<div class="uk-grid uk-margin-small-top uk-margin-medium-bottom" data-uk-grid-margin>
+            <div class="uk-width-1-2">
+							<div class="uk-form-row uk-input-group">
+                <span class="uk-input-group-addon">
+                  <i class="md-list-addon-icon material-icons md-24">&#xE8CE;</i>
+                </span>
+                <label class="uk-form-label">{{ form_label(form.socialReason) }}</label>
+                {{ form_widget(form.socialReason)}}
+                <div class="parsley-errors-list filled uk-text-danger">
+                  {{ form_errors(form.socialReason) }}
+                </div>
+              </div>
+
+							<div class="uk-form-row uk-input-group">
+								<span class="uk-input-group-addon">
+									<i class="md-list-addon-icon material-icons md-24">&#xE0CD;</i>
+								</span>
+								<label class="uk-form-label">{{ form_label(form.phone) }}</label>
+								{{ form_widget(form.phone)}}
+								<div class="parsley-errors-list filled uk-text-danger">
+									{{ form_errors(form.phone) }}
+								</div>
+							</div>
+							<div class="uk-form-row uk-input-group">
+								<span class="uk-input-group-addon">
+									<i class="md-list-addon-icon material-icons md-24">&#xE55F;</i>
+								</span>
+								<label class="uk-form-label">{{ form_label(form.address) }}</label>
+								{{ form_widget(form.address)}}
+								<div class="parsley-errors-list filled uk-text-danger">
+									{{ form_errors(form.address) }}
+								</div>
+							</div>
+            </div>
+            <div class="uk-width-1-2">
+							<div class="uk-form-row">
+								<label class="uk-form-label">{{ form_label(form.fax) }}</label>
+								{{ form_widget(form.fax)}}
+								<div class="parsley-errors-list filled uk-text-danger">
+									{{ form_errors(form.fax) }}
+								</div>
+							</div>
+							<div class="uk-form-row ">
+								<label class="uk-form-label">{{ form_label(form.email) }}</label>
+								{{ form_widget(form.email)}}
+								<div class="parsley-errors-list filled uk-text-danger">
+									{{ form_errors(form.email) }}
+								</div>
+							</div>
+            </div>
+
+					</div>
+          {{ form_widget(form) }}
+
+          {{ form_end(form) }}
+        </div>
+      </div>
+    </div>
+  </div>
+{% endblock %}

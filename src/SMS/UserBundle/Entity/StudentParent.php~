@@ -3,21 +3,26 @@
 namespace SMS\UserBundle\Entity;
 
 use Doctrine\ORM\Mapping as ORM;
+use Symfony\Component\Validator\Constraints as Assert;
+use Vich\UploaderBundle\Mapping\Annotation as Vich;
 
 /**
  * Parent
- *
+ * @Vich\Uploadable
  * @ORM\Table(name="parent")
  * @ORM\Entity(repositoryClass="SMS\UserBundle\Repository\ParentRepository")
  */
 class StudentParent extends User
 {
-    
+
 
     /**
      * @var string
      *
      * @ORM\Column(name="fatherName", type="string", length=50)
+     * @Assert\NotBlank(groups= {"Registration" , "SimpleRegistration" , "Edit"})
+     * @Assert\Regex(pattern="/^[a-z0-9 .\-]+$/i" ,match=true , groups= {"Registration" , "SimpleRegistration" , "Edit"})
+     * @Assert\Length(min = 2, max = 40 , groups= {"Registration" , "SimpleRegistration" , "Edit"})
      */
     private $fatherName;
 
@@ -25,6 +30,10 @@ class StudentParent extends User
      * @var string
      *
      * @ORM\Column(name="motherName", type="string", length=50)
+     *
+     * @Assert\NotBlank(groups= {"Registration" , "SimpleRegistration" , "Edit"})
+     * @Assert\Regex(pattern="/^[a-z0-9 .\-]+$/i" ,match=true , groups= {"Registration" , "SimpleRegistration" , "Edit"})
+     * @Assert\Length(min = 2, max = 40 , groups= {"Registration" , "SimpleRegistration" , "Edit"})
      */
     private $motherName;
 
@@ -32,13 +41,19 @@ class StudentParent extends User
      * @var string
      *
      * @ORM\Column(name="familyName", type="string", length=50)
+     * @Assert\NotBlank(groups= {"Registration" , "SimpleRegistration" , "Edit"})
+     * @Assert\Regex(pattern="/^[a-z0-9 .\-]+$/i" ,match=true , groups= {"Registration" , "SimpleRegistration" , "Edit"})
+     * @Assert\Length(min = 2, max = 40 , groups= {"Registration" , "SimpleRegistration" , "Edit"})
      */
     private $familyName;
 
     /**
      * @var string
      *
-     * @ORM\Column(name="fatherProfession", type="string", length=50)
+     * @ORM\Column(name="fatherProfession", type="string", length=100)
+     * @Assert\NotBlank(groups= {"Registration" , "SimpleRegistration" , "Edit"}),
+     * @Assert\Regex(pattern="/^[a-z0-9 .\-]+$/i" ,match=true , groups= {"Registration" , "SimpleRegistration" , "Edit"})
+     * @Assert\Length(min = 2, max = 100 , groups= {"Registration" , "SimpleRegistration" , "Edit"})
      */
     private $fatherProfession;
 
@@ -46,6 +61,9 @@ class StudentParent extends User
      * @var string
      *
      * @ORM\Column(name="motherProfession", type="string", length=100)
+     * @Assert\NotBlank(groups= {"Registration" , "SimpleRegistration" , "Edit"}),
+     * @Assert\Regex(pattern="/\d/",match=false , groups= {"Registration" , "SimpleRegistration" , "Edit"}),
+     * @Assert\Length(min = 2, max = 100 , groups= {"Registration" , "SimpleRegistration" , "Edit"})
      */
     private $motherProfession;
 
@@ -53,6 +71,13 @@ class StudentParent extends User
      * @var string
      *
      * @ORM\Column(name="address", type="string", length=150)
+     * @Assert\NotBlank(groups= {"Registration" , "SimpleRegistration" , "Edit"})
+     * @Assert\Length(
+     *   min = 2,
+     *   max = 150,
+     *   groups= {"Registration" , "SimpleRegistration" , "Edit"}
+     * )
+     * @Assert\Regex(pattern="/^[a-z0-9 .\-]+$/i" ,match=true , groups= {"Registration" , "SimpleRegistration" , "Edit"})
      */
     private $address;
 
@@ -60,6 +85,13 @@ class StudentParent extends User
      * @var string
      *
      * @ORM\Column(name="phone", type="string", length=20)
+     * @Assert\Regex( pattern="/\d/", groups= {"Registration" , "SimpleRegistration" , "Edit"})
+     * @Assert\NotBlank(groups= {"Registration" , "SimpleRegistration" , "Edit"}),
+     * @Assert\Length(
+     *    min = 8,
+     *    max = 20,
+     *    groups= {"Registration" , "SimpleRegistration" , "Edit"}
+     * )
      */
     private $phone;
 
@@ -69,11 +101,19 @@ class StudentParent extends User
      */
     private $students;
 
+    /**
+     * constructor.
+     */
+    public function __construct()
+    {
+        parent::__construct();
+        $this->roles = array(self::ROLE_PARENT);
+    }
 
     /**
      * Get id
      *
-     * @return integer 
+     * @return integer
      */
     public function getId()
     {
@@ -96,7 +136,7 @@ class StudentParent extends User
     /**
      * Get fatherName
      *
-     * @return string 
+     * @return string
      */
     public function getFatherName()
     {
@@ -119,7 +159,7 @@ class StudentParent extends User
     /**
      * Get motherName
      *
-     * @return string 
+     * @return string
      */
     public function getMotherName()
     {
@@ -142,7 +182,7 @@ class StudentParent extends User
     /**
      * Get familyName
      *
-     * @return string 
+     * @return string
      */
     public function getFamilyName()
     {
@@ -165,7 +205,7 @@ class StudentParent extends User
     /**
      * Get fatherProfession
      *
-     * @return string 
+     * @return string
      */
     public function getFatherProfession()
     {
@@ -188,7 +228,7 @@ class StudentParent extends User
     /**
      * Get motherProfession
      *
-     * @return string 
+     * @return string
      */
     public function getMotherProfession()
     {
@@ -211,7 +251,7 @@ class StudentParent extends User
     /**
      * Get address
      *
-     * @return string 
+     * @return string
      */
     public function getAddress()
     {
@@ -234,7 +274,7 @@ class StudentParent extends User
     /**
      * Get phone
      *
-     * @return string 
+     * @return string
      */
     public function getPhone()
     {
@@ -267,7 +307,7 @@ class StudentParent extends User
     /**
      * Get students
      *
-     * @return \Doctrine\Common\Collections\Collection 
+     * @return \Doctrine\Common\Collections\Collection
      */
     public function getStudents()
     {
@@ -290,7 +330,7 @@ class StudentParent extends User
     /**
      * Get created
      *
-     * @return \DateTime 
+     * @return \DateTime
      */
     public function getCreated()
     {
@@ -313,10 +353,18 @@ class StudentParent extends User
     /**
      * Get updated
      *
-     * @return \DateTime 
+     * @return \DateTime
      */
     public function getUpdated()
     {
         return $this->updated;
+    }
+
+    /**
+     * @return string
+     */
+    public function __toString()
+    {
+        return sprintf("%s %s",$this->getFatherName(),$this->getFamilyName());
     }
 }

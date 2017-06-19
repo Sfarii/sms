@@ -13,6 +13,13 @@ use SMS\EstablishmentBundle\Entity\Division;
 use SMS\EstablishmentBundle\Entity\Section;
 use SMS\StudyPlanBundle\Entity\Course;
 
+/**
+ * Class GradeSectionsCourseFilterListener
+ *
+ * @author Rami Sfari <rami2sfari@gmail.com>
+ * @copyright Copyright (c) 2017, SMS
+ * @package API\Form\EventSubscriber
+ */
 class GradeSectionsCourseFilterListener implements EventSubscriberInterface
 {
 

@@ -4123,7 +4123,7 @@ select.uk-form-width-mini {
 .uk-icon-cog:before {
   content: "\f013";
 }
-.uk-icon-trash-o:before {
+.&#xE872;-o:before {
   content: "\f014";
 }
 .uk-icon-home:before {
@@ -5511,7 +5511,7 @@ select.uk-form-width-mini {
 .uk-icon-bell-slash-o:before {
   content: "\f1f7";
 }
-.uk-icon-trash:before {
+.&#xE872;:before {
   content: "\f1f8";
 }
 .uk-icon-copyright:before {

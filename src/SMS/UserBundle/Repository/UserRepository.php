@@ -3,6 +3,7 @@
 namespace SMS\UserBundle\Repository;
 
 use SMS\UserBundle\Entity\User;
+use SMS\UserBundle\Entity\Student;
 use Doctrine\ORM\EntityRepository;
 use SMS\UserBundle\Repository\BaseUserRepositoryInterface;
 
@@ -34,6 +35,15 @@ class UserRepository extends EntityRepository implements UserRepositoryInterface
     {
         // would use findOneBy() but Symfony expects a Countable object
         return $this->_em->getRepository(User::class)->findBy($criteria);
+    }
+
+    public function getAllStudents()
+    {
+      return $this->_em->createQueryBuilder()
+                  ->select('count(u.id)')
+                  ->from(Student::class,'s')
+                  ->getQuery()
+                  ->getSingleScalarResult();
     }
 
     /**

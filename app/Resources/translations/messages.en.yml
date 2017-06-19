@@ -5,17 +5,16 @@ header:
   logout: Logout
   profile_setting: Settings
 #message box
-delete:
-  name: Delete %item%
-  message: Are you sure you want to delete this %item%?
-  yes_: "yes"
-  no_: "no"
+delete: Delete
 #author
 author:
-    created: "created"
-    updated: "updated"
-    creator: "creator"
+    created: "Created"
+    updated: "Updated"
+    creator: "Author"
+file:
+  upload_file: choose file
 #menu
+
 menu:
   users:
     title: User Managment
@@ -23,6 +22,27 @@ menu:
     parentstudent: Parent
     professor: Professor
     adminstrator: Adminstrator
+    manager: Manager
+  store:
+    title: Store
+    product: Product
+    product_type: Product Type
+  provider:
+    title: Provider
+  store_managment:
+    title: Store Management
+    delivery: B.L
+    order: B.C
+    order_managment: Order User
+    inovice: Inovice
+  payment:
+    title: Payment
+    payment: Payment
+    paymentType: payment Type
+  registration:
+    title: Registration
+    registration: Registration
+    registrationtype: Registration Type
   establishment:
     title: Establishment
     division: Division
@@ -30,6 +50,7 @@ menu:
     section: Section
   course: Course
   schedule:
+    show_schedule: Schedule
     title: Schedule
     student: Student Schedule
     professor: Professor Schedule
@@ -38,17 +59,28 @@ menu:
     session: Session Managment
     day: Day Managment
   exam:
+    show_exam: Exam Date
+    show_note: Note
     title: Exam/Note
     note: Note Managment
     exam: Exam Managment
     examType: Exam Type Managment
   administration:
+    show_sanction: Sanction
+    show_attendance: Attendance
     title: Administration
     sanction: Sanction
     attendance: Attendance
     attendance_professor: Attendance Professor
     attendance_student: Attendance Student
   dashbord: Dashbord
+  slider: Slider
+  feature: Feature
+  pricing:
+    title: Pricing
+    pricing: Pricing Table
+    pricing_feature: Pricing Feature
+  school_testimonial: Testimonial
 #action
 action:
   name: Action
@@ -80,6 +112,14 @@ administrator:
         title: Edit administrator
 author:
     info: author information
+orderprovider:
+  new:
+    title: Add Order To Provider
+  field:
+    quantity: Quantity
+    product: Product
+    select_product: Select a product
+    provider: Select Provider
 #student
 student:
     show:
@@ -101,6 +141,8 @@ student:
 schedule_view:
     schedule:
         professor: Professor
+        course: Course Name
+        section : Section Name
         coefficient: Coefficient
 note_view:
     mark:
@@ -168,14 +210,16 @@ user:
     empty: Empty field
     enabled: User active
     role: User Role
+    show_username_password: Auto username and password
   show:
     contact_info: Contact info
     parent_info: Parent info
     general_info: General info
 #gender
 gender:
-    female: female
-    male: male
+    female: Female
+    male: Male
+    other: Other
 # login
 login:
   submit: Sign In
@@ -193,11 +237,11 @@ reset:
   email:
     not_found : The email account that you tried to reach does not exist.
     title: Reset Password
-    footer: Texhnolyze Solution © 2017 All Rights Reserved
+    footer: © Copyright Texhnolyze Solution All Rights Reserved
     button: Reset Your password
     subject: Hi, %name%
     message : You recently requested to reset your password for your Dev corporation Account. Click the button to reset it.
-    note : "Note: If you did not request , please ignore this email or reply to let us know ."
+    note : "Note: If you did not request , please ignore this email ."
 
 # registration
 registration:
@@ -209,12 +253,12 @@ registration:
     flash:
         user_created: 'The user has been created successfully.'
     email:
-        subject: Welcome %name% to your SMS account!
-        title: Welcome to your SMS account!
-        footer: Texhnolyze Solution © 2017 All Rights Reserved
-        button: Access to your account
+        subject: Hi, %name%
+        title: Welcome To SMS
+        footer: © Copyright Texhnolyze Solution All Rights Reserved
+        button: LogIn
         message : |
-                    You have been register under System Managment School.
+                    You have been register under School Management Software.
         username: |
                     Username : %username%
         password: |
@@ -247,3 +291,10 @@ attendance:
   present: Present
   absent: Absent
   exclude: Exclude
+product:
+  field:
+    status: Status
+    image: Image
+productType:
+  field:
+    productTypeName: product Type

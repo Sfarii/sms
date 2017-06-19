@@ -1,64 +1,72 @@
 <div class="md-card">
-    <div class="md-card-content">
-        <div class="uk-overflow-container">
-            <table class="uk-table uk-table-nowrap uk-table-align-vertical">
-            <thead>
-                <tr>
-                    <th class="uk-width-1-10"></th>
-                    {% for typeExam in typeExams %}
-                        <th class="uk-text-center md-bg-grey-100">
-                            <h4 class="heading_d uk-margin-small-bottom">
-                                {{ typeExam.typeExamName }}
-                            </h4>
-                        </th>
+  <div class="md-card-content">
+    <div class="uk-overflow-container">
+      <table class="uk-table uk-table-nowrap uk-table-align-vertical">
+        <thead>
+          <tr>
+            <th class="uk-width-1-10"></th>
+            <th class="uk-width-1-10 border-table-left border-table-right uk-text-center md-bg-grey-100">
+              <h4 class="heading_d uk-margin-small-bottom">
+                {{ "note_view.mark.coefficient"|trans }}
+              </h4>
+            </th>
+            {% for typeExam in typeExams %}
+              <th class="uk-width-1-10  uk-text-center md-bg-grey-100">
+                <h4 class="heading_d uk-margin-small-bottom">
+                  {{ typeExam.typeExamName }}
+                </h4>
+              </th>
+            {% endfor %}
+            <th class="uk-width-1-10 border-table-left border-table-right uk-text-center md-bg-grey-100">
+              <h4 class="heading_d uk-margin-small-bottom">
+                {{ "note_view.mark.total"|trans }}
+              </h4>
+            </th>
+          </tr>
+        </thead>
+        <tbody>
+          {% for mark in marks %}
+            <tr>
+              <td class="uk-text-large md-bg-grey-100 uk-text-center border-table">
+                {{mark.courseName }}
+              </td>
+              <td data-coefficient="{{mark.coefficient }}" class=" uk-text-center border-table">
+                {{mark.coefficient }}
+              </td>
+              {% for typeExam in mark.typeExams %}
+                <td class="uk-text-center">
+                  {% if typeExam.exams is empty %}
+                    <p class=" uk-text-bold">--</p>
+                  {% else %}
+                    {% for exam in typeExam.exams %}
+                      <p class="uk-margin-remove">
+                        {% if exam.mark %}
+                          {{ exam.mark }}
+                        {% else %}
+                          <p class=" uk-text-bold">--</p>
+                        {% endif %}
+                      </p>
                     {% endfor %}
-                </tr>
-            </thead>
-            <tbody>
-                {% for mark in marks %}
-                    <tr>
-                        <td class="uk-text-large md-bg-grey-100 uk-text-center border-table">
-                            {{mark.courseName }}
-                            <p class="uk-margin-remove">
-                                <span class="uk-text-muted">
-                                    {{ "note_view.mark.coefficient"|trans }} :
-                                </span>
-                                {{mark.coefficient }}
-                            </p>
-                         </td>
-                        {% for typeExam in mark.typeExams %}
-                            <td class="uk-text-center border-table">
-                            {% for exam in typeExam.exams %}
-
-                                {% if exam.empty == true %}
-                                    <p class=" uk-text-bold">--</p>
-                                {% else %}
-                                    <h4 class="heading_c uk-margin-small-bottom">
-                                        {{ exam.examName }}
-                                    </h4>
-                                    <p class="uk-margin-remove">
-                                        <span class="uk-text-muted">        
-                                            {{ "note_view.mark.factor"|trans }} :
-                                        </span>
-                                        {{ exam.factor }}
-                                    </p>
-                                    <p class="uk-margin-remove">
-                                        <span class="uk-text-muted">          
-                                            {{ "note_view.mark.mark"|trans }} :
-                                        </span>   
-                                        {% if exam.mark %}
-                                            {{ exam.mark }}
-                                        {% else %}
-                                            <i class="material-icons">&#xE033;</i>
-                                        {% endif %}
-                                    </p>       
-                                {% endif %}
-                            {% endfor %} 
-                            </td>
-                        {% endfor %} 
-                    </tr>
-                {% endfor %}
-            </tbody>
-        </table>
+                  </td>
+                {% endif %}
+              {% endfor %}
+              <td class="uk-text-center border-table-left border-table-right">
+                <p class=" uk-text-bold">--</p>
+              </td>
+            </tr>
+          {% endfor %}
+        </tbody>
+        <tfoot>
+          <tr >
+            <th class="uk-text-large uk-text-center ">
+            </th>
+            <th data-coefficient-result class="uk-text-center md-bg-grey-100 border-table"></th>
+            <th colspan="{{ typeExams|length }}" class="uk-width-1-10"></th>
+            <th class="uk-text-center md-bg-grey-100 border-table-left border-table-right">
+              <p class=" uk-text-bold">--</p>
+            </th>
+          </tr>
+        </tfoot>
+      </table>
     </div>
-</div>
+  </div>

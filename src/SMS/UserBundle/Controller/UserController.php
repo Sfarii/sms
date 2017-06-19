@@ -10,10 +10,6 @@ use Symfony\Component\Security\Core\Exception\AccessDeniedException;
 use SMS\UserBundle\Entity\UserInterface;
 use API\BaseController\BaseController;
 use SMS\UserBundle\Entity\User;
-use SMS\UserBundle\Entity\Student;
-use SMS\UserBundle\Entity\Professor;
-use SMS\UserBundle\Entity\Administrator;
-use SMS\UserBundle\Entity\StudentParent;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
 
@@ -27,45 +23,27 @@ class UserController extends BaseController
      * @Route("/profile" , name="user_profile")
      * @Method("GET")
      */
-    public function indexAction()
+    public function profileAction()
     {
-    	$user = $this->getUser();
-        if (!is_null($user) && $user instanceof Student) {
-            return $this->redirectToRoute('student_show',array('id' =>$user->getId()));
+        if (!$this->getUser() instanceof User){
+          throw new AccessDeniedException('This user does not have access to this section.');
         }
-        else if (!is_null($user) && $user instanceof Professor) {
-            return $this->redirectToRoute('professor_show',array('id' =>$user->getId()));
-        }
-        else if (!is_null($user) && $user instanceof StudentParent) {
-            return $this->redirectToRoute('studentparent_show',array('id' =>$user->getId()));
-        }
-        else if (!is_null($user) && $user instanceof Administrator) {
-            return $this->redirectToRoute('administrator_show',array('id' =>$user->getId()));
-        }
-        throw new AccessDeniedException('This user does not have access to this section.');
+        $className = substr( strtolower(get_class($this->getUser())) , strrpos(get_class($this->getUser()), '\\') + 1);
+        return $this->redirectToRoute(sprintf('%s_show' , $className), array('id' =>$this->getUser()->getId()));
     }
 
     /**
      * @Route("/setting" , name="user_setting")
      * @Method("GET")
-     * @Template("smsuserbundle/user/profile/setting.html.twig")
+     * @Template("SMSUserBundle:user/profile/setting.html.twig")
      */
     public function settingAction()
     {
-    	$user = $this->getUser();
-        if (!is_object($user) || !$user instanceof Student) {
-            return $this->redirectToRoute('student_edit',array('id' =>$user->getId()));
-        }
-        else if (!is_object($user) || !$user instanceof Professor) {
-            return $this->redirectToRoute('professor_edit',array('id' =>$user->getId()));
-        }
-        else if (!is_object($user) || !$user instanceof StudentParent) {
-            return $this->redirectToRoute('studentparent_edit',array('id' =>$user->getId()));
-        }
-        else if (!is_object($user) || !$user instanceof Administrator) {
-            return $this->redirectToRoute('administrator_edit',array('id' =>$user->getId()));
-        }
-        return array('user' => $user);
+      if (!$this->getUser() instanceof User){
+        throw new AccessDeniedException('This user does not have access to this section.');
+      }
+      $className = substr( strtolower(get_class($this->getUser())) , strrpos(get_class($this->getUser()), '\\') + 1);
+      return $this->redirectToRoute(sprintf('%s_edit' , $className), array('id' =>$this->getUser()->getId()));
     }
 
     /**
@@ -91,11 +69,11 @@ class UserController extends BaseController
             }
 
             try {
-                $this->getEntityManager()->deleteAll(User::class ,$choices);
+                $this->getEntityManager()->deleteAll(User::class, $choices);
             } catch (\Exception $e) {
                 return new Response($this->get('translator')->trans('user.delete.fail'), 200);
             }
-            
+
 
             return new Response($this->get('translator')->trans('user.delete.success'), 200);
         }
@@ -126,11 +104,11 @@ class UserController extends BaseController
             }
 
             try {
-                $this->getEntityManager()->ActivateAll(User::class ,$choices);
+                $this->getEntityManager()->ActivateAll(User::class, $choices);
             } catch (\Exception $e) {
                 return new Response($this->get('translator')->trans('user.delete.fail'), 200);
             }
-            
+
 
             return new Response($this->get('translator')->trans('user.delete.success'), 200);
         }

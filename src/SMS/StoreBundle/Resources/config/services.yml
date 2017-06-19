@@ -1,0 +1,20 @@
+services:
+  #StoreDatatable
+  sms.datatable.delivery:
+      class: SMS\StoreBundle\StoreDatatable\DeliveryDatatable
+      parent: sg_datatables.datatable.abstract
+  sms.datatable.orderProvider:
+      class: SMS\StoreBundle\StoreDatatable\OrderProviderDatatable
+      parent: sg_datatables.datatable.abstract
+  sms.datatable.orderUser:
+      class: SMS\StoreBundle\StoreDatatable\OrderUserDatatable
+      parent: sg_datatables.datatable.abstract
+  sms.datatable.product:
+      class: SMS\StoreBundle\StoreDatatable\ProductDatatable
+      parent: sg_datatables.datatable.abstract
+  sms.datatable.productType:
+      class: SMS\StoreBundle\StoreDatatable\ProductTypeDatatable
+      parent: sg_datatables.datatable.abstract
+  sms.datatable.provider:
+      class: SMS\StoreBundle\StoreDatatable\ProviderDatatable
+      parent: sg_datatables.datatable.abstract

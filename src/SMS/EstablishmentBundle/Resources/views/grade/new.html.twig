@@ -1,0 +1,45 @@
+{% extends 'layout/base_header_double_height.html.twig' %}
+
+{% block body %}
+
+	<div class="uk-width-medium-8-10 uk-container-center">
+    <div class="md-card md-card-single">
+      <div class="md-card-toolbar">
+        <a href="{{ path('grade_index') }}">
+          <span class="md-icon md-card-fullscreen-deactivate material-icons uk-float-left">&#xE5C4;</span>
+        </a>
+        <h3 class="md-card-toolbar-heading-text large uk-margin-small-left">
+          {{ 'grade.new.title'|trans }}
+        </h3>
+      </div>
+      <div class="md-card-content">
+        <div class="uk-margin-small-top">
+          {{ form_start(form) }}
+          <div class="uk-form-row uk-input-group">
+            <span class="uk-input-group-addon">
+              <i class="md-list-addon-icon material-icons md-24">&#xE8CE;</i>
+            </span>
+            <label class="uk-form-label">{{ form_label(form.gradeName) }}</label>
+            {{ form_widget(form.gradeName)}}
+            <div class="parsley-errors-list filled uk-text-danger">
+              {{ form_errors(form.gradeName) }}
+            </div>
+          </div>
+					<div class="uk-form-row uk-input-group">
+            <span class="uk-input-group-addon">
+              <i class="md-list-addon-icon material-icons md-24">&#xE8CE;</i>
+            </span>
+            <label class="uk-form-label">{{ form_label(form.gradeCode) }}</label>
+            {{ form_widget(form.gradeCode)}}
+            <div class="parsley-errors-list filled uk-text-danger">
+              {{ form_errors(form.gradeCode) }}
+            </div>
+          </div>
+            {{ form_widget(form) }}
+
+            {{ form_end(form) }}
+          </div>
+        </div>
+      </div>
+    </div>
+{% endblock %}

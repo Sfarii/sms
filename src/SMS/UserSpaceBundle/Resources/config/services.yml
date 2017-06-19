@@ -1,4 +1,15 @@
 services:
-#    sms_user_space.example:
-#        class: SMS\UserSpaceBundle\Example
-#        arguments: ["@service_id", "plain_value", "%parameter%"]
+  #UserSpaceDatatable
+  sms.datatable.sanction_student:
+      class: SMS\UserSpaceBundle\UserSpaceDatatable\SanctionStudentDatatable
+      parent: sg_datatables.datatable.abstract
+  sms.datatable.sanction_parent:
+      class: SMS\UserSpaceBundle\UserSpaceDatatable\SanctionParentDatatable
+      parent: sg_datatables.datatable.abstract
+  #form    
+  sms.form.type.parentspace.division_student:
+      class: SMS\UserSpaceBundle\Form\StudentAndDivisionListType
+      arguments:
+          - '@security.context'
+      tags:
+          - { name: form.type }

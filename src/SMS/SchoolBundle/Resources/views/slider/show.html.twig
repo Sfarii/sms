@@ -1,0 +1,104 @@
+{% extends 'layout/base.html.twig' %}
+
+{% block heading_actions %}
+    <a href="{{ path('slider_index') }}"><i class="md-icon material-icons">&#xE5C4;</i></a>
+    <a><i class="md-icon material-icons">&#xE5C8;</i></a>
+{% endblock %}
+
+{% block sticky_button %}
+  <a class="md-fab md-fab-primary" href="{{ path('slider_edit', { 'id': slider.id }) }}">
+    <i class="material-icons">&#xE254;</i>
+  </a>
+{% endblock %}
+
+{% block title_page %}
+  {{ 'slider.show.title'|trans }}
+{% endblock %}
+
+{% block body %}
+  <div class="uk-grid uk-grid-medium" data-uk-grid-margin>
+    <div class="uk-width-xLarge-4-10 uk-width-large-4-10">
+      <div class="md-card">
+        <div class="md-card-toolbar">
+          <h3 class="md-card-toolbar-heading-text">
+            {{ 'slider.show.photo'|trans }}
+          </h3>
+        </div>
+        <div class="md-card-content">
+          <div class="uk-margin-bottom uk-text-center">
+            <img src="{{ vich_uploader_asset(slider, 'imageFile') }}" alt="{{ slider.imageName }}" class="img_large"/>
+          </div>
+        </div>
+      </div>
+    </div>
+    <div class="uk-width-xLarge-6-10 uk-width-large-6-10">
+      <div class="md-card">
+        <div class="md-card-toolbar">
+          <h3 class="md-card-toolbar-heading-text">
+            {{ 'slider.show.detail'|trans }}
+          </h3>
+        </div>
+        <div class="md-card-content">
+          <ul class="md-list">
+            <li>
+              <div class="md-list-content">
+                <span class="md-list-heading uk-text-large">{{ slider.title }}</span>
+              </div>
+              <span class="uk-text-small uk-text-muted uk-display-block">
+                {{'slider.field.title'|trans }}</span>
+            </li>
+            <li>
+              <div class="md-list-content">
+                <span class="md-list-heading uk-text-large">{{ slider.subtitle }}</span>
+              </div>
+              <span class="uk-text-small uk-text-muted uk-display-block">
+                {{'slider.field.subtitle'|trans }}</span>
+            </li>
+          </ul>
+        </div>
+      </div>
+      <div class="md-card">
+        <div class="md-card-toolbar">
+          <h3 class="md-card-toolbar-heading-text">
+            {{ 'author.info'|trans }}
+          </h3>
+        </div>
+        <div class="md-card-content">
+          <ul class="md-list md-list-addon">
+            <li>
+              <div class="md-list-addon-element">
+                <i class="md-list-addon-icon material-icons">&#xE7FD;</i>
+              </div>
+              <div class="md-list-content">
+                <span class="md-list-heading">{{ slider.user.username }}</span>
+                <span class="uk-text-small uk-text-muted">{{ 'author.creator'|trans }}</span>
+              </div>
+            </li>
+            <li>
+              <div class="md-list-addon-element">
+                <i class="md-list-addon-icon material-icons">&#xE8DF;</i>
+              </div>
+              <div class="md-list-content">
+                <span class="md-list-heading">
+                  {% if slider.created %}{{ slider.created|date('d M Y') }}{% endif %}
+                </span>
+                <span class="uk-text-small uk-text-muted">{{ 'author.updated'|trans }}</span>
+              </div>
+            </li>
+            <li>
+              <div class="md-list-addon-element">
+                <i class="md-list-addon-icon material-icons">&#xE8B5;</i>
+              </div>
+              <div class="md-list-content">
+                <span class="md-list-heading">
+                  {% if slider.created %}{{ slider.created|date('d M Y') }}{% endif %}
+                </span>
+                <span class="uk-text-small uk-text-muted">{{ 'author.created'|trans }}</span>
+              </div>
+            </li>
+          </ul>
+        </div>
+      </div>
+    </div>
+  </div>
+{% endblock %}

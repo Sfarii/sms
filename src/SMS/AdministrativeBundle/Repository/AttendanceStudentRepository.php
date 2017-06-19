@@ -2,6 +2,8 @@
 
 namespace SMS\AdministrativeBundle\Repository;
 
+use SMS\StudyPlanBundle\Entity\Schedule;
+
 /**
  * AttendanceStudentRepository
  *
@@ -18,17 +20,19 @@ class AttendanceStudentRepository extends \Doctrine\ORM\EntityRepository
      * @param Student $student
      * @return array
      */
-    public function findByDateAndSessionAndUser($date, $session, $user)
+    public function findByDateAndSessionAndSection($date, $session, $section)
     {
         return $this->createQueryBuilder('attendance')
+                ->select("GROUP_CONCAT(attendance.id SEPARATOR ', ' ) as attendance_ids")
                 ->join('attendance.session', 'session')
                 ->join('attendance.student', 'student')
+                ->join('student.section', 'section')
                 ->where("attendance.date = :date")
                 ->andWhere('session.id = :session')
-                ->andWhere('student.id = :student')
+                ->andWhere('section.id = :section')
                 ->setParameter('date', $date, \Doctrine\DBAL\Types\Type::DATE)
-                ->setParameter('student', $user->getId())
-                ->setParameter('session', $session->getId())
+                ->setParameter('section', $section)
+                ->setParameter('session', $session)
                 ->getQuery()
                 ->getOneOrNullResult();
     }
@@ -40,21 +44,21 @@ class AttendanceStudentRepository extends \Doctrine\ORM\EntityRepository
      * @param SMS\EstablishmentBundle\Entity\Division $division
      * @return array
      */
-    public function findByStudent($student, $startDate , $endDate)
+    public function findByStudent($student, $startDate, $endDate)
     {
         return $this->createQueryBuilder('attendance')
-										->select("attendance.status as name, count(attendance.id) as value , student.id ,attendance.date , session.id as sessionId")
-							      ->addSelect("DATE_FORMAT(attendance.date ,'%W') as day")
-										->join('attendance.session', 'session')
-										->join('attendance.student', 'student')
-										->having('student.id = :student')
-										->andHaving('attendance.date BETWEEN :startDate AND :endDate')
-						   			->setParameter('startDate', $startDate->format('Y-m-d'))
-						   			->setParameter('endDate', $endDate->format('Y-m-d'))
-										->setParameter('student', $student->getId())
-		                ->groupBy('name , day , attendance.session , student')
-							      ->getQuery()
-							      ->getResult();
+                    ->select("attendance.status as name, count(attendance.id) as value , student.id ,attendance.date , session.id as sessionId")
+                    ->addSelect("DATE_FORMAT(attendance.date ,'%W') as day")
+                    ->join('attendance.session', 'session')
+                    ->join('attendance.student', 'student')
+                    ->having('student.id = :student')
+                    ->andHaving('attendance.date BETWEEN :startDate AND :endDate')
+                    ->setParameter('startDate', $startDate->format('Y-m-d'))
+                    ->setParameter('endDate', $endDate->format('Y-m-d'))
+                    ->setParameter('student', $student->getId())
+                    ->groupBy('name , day , attendance.session , student')
+                    ->getQuery()
+                    ->getResult();
     }
 
     /**
@@ -64,19 +68,42 @@ class AttendanceStudentRepository extends \Doctrine\ORM\EntityRepository
      * @param SMS\EstablishmentBundle\Entity\Division $division
      * @return array
      */
-    public function findStatsByStudent($student, $startDate , $endDate)
+    public function findStatsByStudent($student, $division)
     {
         return $this->createQueryBuilder('attendance')
-										->select("attendance.status as name, count(attendance.id) as value , student.id , attendance.date")
-										->join('attendance.student', 'student')
-										->having('student.id = :student')
-										->andHaving('attendance.date BETWEEN :startDate AND :endDate')
-						   			->setParameter('startDate', $startDate->format('Y-m-d'))
-						   			->setParameter('endDate', $endDate->format('Y-m-d'))
-										->setParameter('student', $student->getId())
-		                ->groupBy('name , student')
-							      ->getQuery()
-							      ->getResult();
+                    ->select("attendance.status as name, count(attendance.id) as value , student.id , attendance.date")
+                    ->join('attendance.student', 'student')
+                    ->having('student.id = :student')
+                    ->andHaving('attendance.date BETWEEN :startDate AND :endDate')
+                    ->setParameter('startDate', $division->getStartDate()->format('Y-m-d'))
+                    ->setParameter('endDate', $division->getEndDate()->format('Y-m-d'))
+                    ->setParameter('student', $student->getId())
+                    ->groupBy('name , student.id')
+                    ->getQuery()
+                    ->getResult();
+    }
+
+    /**
+     * Get Attendance By Date and Session and User
+     *
+     * @param SMS\UserBundle\Entity\Student $student
+     * @param SMS\EstablishmentBundle\Entity\Division $division
+     * @return array
+     */
+    public function findStatsBySection($section, $division)
+    {
+        return $this->createQueryBuilder('attendance')
+                  ->select("attendance.status as name, count(attendance.id) as value , section.id , attendance.date")
+                  ->join('attendance.student', 'student')
+                  ->join('student.section', 'section')
+                  ->having('section.id = :section')
+                  ->andHaving('attendance.date BETWEEN :startDate AND :endDate')
+                  ->setParameter('startDate', $division->getStartDate()->format('Y-m-d'))
+                  ->setParameter('endDate', $division->getEndDate()->format('Y-m-d'))
+                  ->setParameter('section', $section->getId())
+                  ->groupBy('name , section.id')
+                  ->getQuery()
+                  ->getResult();
     }
 
     /**
@@ -88,21 +115,39 @@ class AttendanceStudentRepository extends \Doctrine\ORM\EntityRepository
      */
     public function findByStudentGroupByCourse($student, $division)
     {
-        return $this->createQueryBuilder('attendance')
-										->select("attendance.status as name,course.courseName, count(attendance.id) as value , student.id , division.id")
-										->join('attendance.student', 'student')
+        /*return $this->createQueryBuilder('attendance')
+                                        ->select("attendance.status as name ,course.courseName, count(attendance.id) as value , student.id , division.id , LOWER(DATE_FORMAT(attendance.date ,'%W')) as A_day , LOWER(schedules.day) as day ")
+                    ->join('attendance.student', 'student')
                     ->join('attendance.session', 'session')
                     ->join('session.schedules', 'schedules')
                     ->join('schedules.course', 'course')
                     ->join('course.division', 'division')
-										->having('student.id = :student')
+                                        ->having('student.id = :student')
                     ->andHaving('division.id = :division')
-										->setParameter('student', $student->getId())
+                    ->andHaving('day = A_day')
+                                        ->setParameter('student', $student->getId())
                     ->setParameter('division', $division->getId())
-		                ->groupBy('name , student')
-							      ->getQuery()
-							      ->getResult();
+                        ->groupBy('name , student.id')
+                                  ->getQuery()
+                                  ->getResult();*/
+      $courseQuery = $this->_em->createQueryBuilder()
+                              ->select('course.courseName')
+                              ->from(Schedule::class, ' s')
+                              ->join('s.course', 'course')
+                              ->where('attendance.session MEMBER OF s.sessions')
+                              ->andWhere('s.day = day')
+                              ->getDQL();
+        return $this->createQueryBuilder('attendance')
+                    ->select("attendance.status as name, count(attendance.id) as value ,attendance.date , student.id ,LOWER(DATE_FORMAT(attendance.date ,'%W')) as day ")
+                    ->addSelect(sprintf("( %s ) as courseName",$courseQuery))
+                    ->join('attendance.student', 'student')
+                    ->having('student.id = :student')
+                    ->andHaving('attendance.date BETWEEN :startDate AND :endDate')
+                    ->setParameter('startDate', $division->getStartDate()->format('Y-m-d'))
+                    ->setParameter('endDate', $division->getEndDate()->format('Y-m-d'))
+                    ->setParameter('student', $student->getId())
+                    ->groupBy('name , student.id')
+                    ->getQuery()
+                    ->getResult();
     }
-
-
 }

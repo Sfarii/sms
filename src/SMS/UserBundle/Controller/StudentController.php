@@ -27,7 +27,7 @@ class StudentController extends BaseController
      *
      * @Route("/", name="student_index")
      * @Method("GET")
-     * @Template("smsuserbundle/student/index.html.twig")
+     * @Template("SMSUserBundle:student:index.html.twig")
      */
     public function indexAction(Request $request)
     {
@@ -51,6 +51,16 @@ class StudentController extends BaseController
 
         $query = $this->getDataTableQuery()->getQueryFrom($student);
 
+        $user = $this->getUser();
+        $function = function($qb) use ($user)
+        {
+            $qb->join('student.establishment', 'establishment')
+                ->andWhere('establishment.id = :establishment')
+        				->setParameter('establishment', $user->getEstablishment()->getId());
+        };
+
+        $query->addWhereAll($function);
+
         return $query->getResponse();
     }
 
@@ -60,12 +70,14 @@ class StudentController extends BaseController
      *
      * @Route("/new", name="student_new")
      * @Method({"GET", "POST"})
-     * @Template("smsuserbundle/student/new.html.twig")
+     * @Template("SMSUserBundle:student:new.html.twig")
      */
     public function newAction(Request $request)
     {
         $student = new Student();
-        $form = $this->createForm(StudentType::class, $student);
+        $form = $this->createForm(StudentType::class, $student, array(
+            'establishment' => $this->getUser()->getEstablishment()
+        ));
         $form->handleRequest($request);
 
         if ($form->isSubmitted() && $form->isValid() && $form->get('save')->isClicked()) {
@@ -85,7 +97,7 @@ class StudentController extends BaseController
      *
      * @Route("/{id}", name="student_show", options={"expose"=true})
      * @Method("GET")
-     * @Template("smsuserbundle/student/show.html.twig")
+     * @Template("SMSUserBundle:student:show.html.twig")
      */
     public function showAction(Student $student)
     {
@@ -102,21 +114,25 @@ class StudentController extends BaseController
      *
      * @Route("/{id}/edit", name="student_edit", options={"expose"=true})
      * @Method({"GET", "POST"})
-     * @Template("smsuserbundle/student/edit.html.twig")
+     * @Template("SMSUserBundle:student:edit.html.twig")
      */
     public function editAction(Request $request, Student $student)
     {
 
-        $editForm = $this->createForm(StudentType::class, $student)->handleRequest($request);
+        $editForm = $this->createForm(StudentType::class, $student, array(
+                              'establishment' => $this->getUser()->getEstablishment()
+                          ))->handleRequest($request);
         if ($editForm->isSubmitted() && $editForm->isValid() && $editForm->get('save')->isClicked()) {
             $this->getEntityManager()->update($student);
             $this->flashSuccessMsg('student.edit.success');
-            return $this->redirectToRoute('student_index');
+            if ($student->getId() !== $this->getUser()->getId()){
+              return $this->redirectToRoute('student_index');
+            }
         }
 
         return array(
             'user' => $student,
-            'edit_form' => $editForm->createView(),
+            'form' => $editForm->createView(),
         );
     }
 

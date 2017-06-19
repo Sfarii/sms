@@ -10,6 +10,8 @@ use Symfony\Component\Form\Extension\Core\Type\DateType;
 use Symfony\Bridge\Doctrine\Form\Type\EntityType;
 use Symfony\Component\Form\Extension\Core\Type\SubmitType;
 use SMS\EstablishmentBundle\Entity\Division;
+use API\Form\Type\HiddenEntityType;
+use SMS\EstablishmentBundle\Entity\Establishment;
 
 class DivisionType extends AbstractType
 {
@@ -18,6 +20,8 @@ class DivisionType extends AbstractType
      */
     public function buildForm(FormBuilderInterface $builder, array $options)
     {
+        $establishment = $options['establishment'];
+
         $builder
                 ->add('divisionName' ,TextType::class , array(
                     'label' => 'division.field.divisionName')
@@ -34,10 +38,14 @@ class DivisionType extends AbstractType
                     'label' => 'division.field.endDate' ,
                     'attr' => [ 'data-uk-datepicker'=> "{format:'YYYY-MM-DD'}"],
                 ))
+                ->add('establishment', HiddenEntityType::class, array(
+                    'class' => Establishment::class,
+                    'data' =>  $establishment, // Field value by default
+                    ))
                 ->add('save', SubmitType::class);
 
     }
-    
+
     /**
      * {@inheritdoc}
      */
@@ -46,6 +54,7 @@ class DivisionType extends AbstractType
         $resolver->setDefaults(array(
             'data_class' => Division::class
         ));
+        $resolver->setRequired('establishment');
     }
 
     /**

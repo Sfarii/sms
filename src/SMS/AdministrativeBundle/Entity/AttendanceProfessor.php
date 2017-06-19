@@ -25,7 +25,7 @@ class AttendanceProfessor
     /**
      * @var bool
      *
-     * @ORM\Column(name="status", type="boolean", nullable=true)
+     * @ORM\Column(name="status", type="string", length=200, nullable=true)
      */
     private $status;
 
@@ -62,7 +62,7 @@ class AttendanceProfessor
 
     /**
      * @var \DateTime $updated
-     * 
+     *
      * @ORM\Column(type="datetime", nullable = true)
      */
     protected $updated;

@@ -11,6 +11,7 @@ use Symfony\Bridge\Doctrine\Form\Type\EntityType;
 use Symfony\Component\Form\Extension\Core\Type\SubmitType;
 use SMS\EstablishmentBundle\Entity\Division;
 use Doctrine\ORM\EntityManager;
+use Doctrine\ORM\EntityRepository;
 use API\Form\EventSubscriber\GradeSectionFilterListener;
 use Symfony\Component\Validator\Constraints\NotBlank;
 
@@ -36,11 +37,19 @@ class ScheduleStudentFilterType extends AbstractType
      */
     public function buildForm(FormBuilderInterface $builder, array $options)
     {
+        $establishment = $options['establishment'];
+
         $builder
-            ->addEventSubscriber(new GradeSectionFilterListener($this->em))
+            ->addEventSubscriber(new GradeSectionFilterListener($this->em , $establishment))
             ->add('division' , EntityType::class , array(
                 'class' => Division::class,
                 'property' => 'divisionName',
+                'query_builder' => function (EntityRepository $er) use ($establishment) {
+                    return $er->createQueryBuilder('division')
+                              ->join('division.establishment', 'establishment')
+                              ->andWhere('establishment.id = :establishment')
+                              ->setParameter('establishment', $establishment->getId());
+                },
                 'placeholder'=> 'filter.field.division',
                 'constraints'   => [new NotBlank()],
                 'label' => 'filter.field.division',
@@ -53,7 +62,7 @@ class ScheduleStudentFilterType extends AbstractType
                 ));
 
     }
-    
+
     /**
      * {@inheritdoc}
      */
@@ -62,6 +71,7 @@ class ScheduleStudentFilterType extends AbstractType
         $resolver->setDefaults(array(
             'allow_extra_fields' => true
         ));
+        $resolver->setRequired('establishment');
     }
 
     /**

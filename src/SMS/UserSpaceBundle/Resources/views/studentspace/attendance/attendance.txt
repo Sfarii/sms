@@ -1,0 +1,46 @@
+<!--<div id="attendance" class="md-card">
+  <div class="md-card-content">
+    <div class="uk-overflow-container">
+      <table class="uk-table uk-table-hover uk-table-nowrap uk-table-align-vertical">
+        <thead>
+          <tr>
+            <th class="uk-width-1-10"></th>
+            {# for session in sessions %}
+              <th class="border-table uk-text-nowrap uk-text-center md-bg-grey-100">
+                <h4 class="heading_d uk-margin-small-bottom">
+                  {#{session.sessionName }}
+                </h4>
+                <p class="uk-margin-remove">
+                  <i class="material-icons">&#xE425;</i>
+                  {#{ session.startTime|date('H:m') }}
+                  <i class="material-icons">&#xE5C8;</i>
+                  {#{ session.endTime|date('H:m') }}
+                </p>
+              </th>
+            {# endfor %}
+          </tr>
+        </thead>
+        <tbody>
+          {# for attendance in attendances %}
+            <tr>
+              <td class="uk-text-large uk-text-nowrap uk-text-capitalize md-bg-grey-100 uk-text-center">
+                {#attendance.day|trans }}
+              </td>
+              {# for session in attendance.sessions %}
+                {# if session.empty == true %}
+                  <td class="uk-text-center uk-text-bold border-table">
+                    --
+                  </td>
+                {# else %}
+                  <td class="uk-text-center uk-text-bold border-table">
+                    <div data-echarts-table data-title="Yes We Can" style="height: 150px;" data-values='{#{ session.status|json_encode|raw }}'></div>
+                  </td>
+                {# endif %}
+              {# endfor %}
+            </tr>
+          {# endfor %}
+        </tbody>
+      </table>
+    </div>
+  </div>
+</div>-->

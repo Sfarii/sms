@@ -18,14 +18,18 @@ class SessionRepository extends EntityRepository
      *
      * @return array
      */
-	public function findAllByStartTime()
+	public function findAllByStartTime($establishment)
 	{
 		return $this->createQueryBuilder('session')
+					->select('partial session.{id,sessionName,startTime,endTime}')
+					->join('session.establishment', 'establishment')
+					->andWhere('establishment.id = :establishment')
+					->setParameter('establishment', $establishment)
 					->orderBy('session.startTime',"asc")
 					->getQuery()
 					->getResult();
 	}
-	
+
 	/**
      * Get Session By Section And Date
      *
@@ -34,18 +38,21 @@ class SessionRepository extends EntityRepository
      * @param integer $division
      * @return array
      */
-	public function findBySectionAndDateAndDivision($section , $day ,$division)
+	public function findBySectionAndDateAndDivision($section , $day ,$division, $establishment)
 	{
 		return $this->createQueryBuilder('session')
 				->join('session.schedules', 'schedule')
+				->join('session.establishment', 'establishment')
 				->join('schedule.course', 'course')
 				->join('course.division', 'division')
 				->join('schedule.section', 'section')
 				->Where('section.id = :section')
 				->andWhere('schedule.day = :day')
+				->andWhere('establishment.id = :establishment')
 				->andWhere('division.id = :division')
 				->setParameter('day', $day)
 				->setParameter('section', $section)
+				->setParameter('establishment', $establishment)
 				->setParameter('division', $division)
 				->getQuery()
 				->getResult();
@@ -59,17 +66,20 @@ class SessionRepository extends EntityRepository
      * @param integer $division
      * @return array
      */
-	public function findByProfessorAndDateAndDivision($professor , $day ,$division)
+	public function findByProfessorAndDateAndDivision($professor , $day ,$division , $establishment)
 	{
 		return $this->createQueryBuilder('session')
 				->join('session.schedules', 'schedule')
 				->join('schedule.course', 'course')
+				->join('session.establishment', 'establishment')
 				->join('course.division', 'division')
 				->join('schedule.professor', 'professor')
 				->Where('professor.id = :professor')
 				->andWhere('schedule.day = :day')
+				->andWhere('establishment.id = :establishment')
 				->andWhere('division.id = :division')
 				->setParameter('day', $day)
+				->setParameter('establishment', $establishment)
 				->setParameter('professor', $professor)
 				->setParameter('division', $division)
 				->getQuery()

@@ -28,7 +28,7 @@ class TypeExamController extends BaseController
      *
      * @Route("/", name="typeexam_index")
      * @Method("GET")
-     * @Template("smsstudyplanbundle/typeexam/index.html.twig")
+     * @Template("SMSStudyPlanBundle:typeexam:index.html.twig")
      */
     public function indexAction()
     {
@@ -50,6 +50,16 @@ class TypeExamController extends BaseController
 
         $query = $this->getDataTableQuery()->getQueryFrom($typeExams);
 
+        $user = $this->getUser();
+        $function = function($qb) use ($user)
+        {
+            $qb->join('type_exam.establishment', 'establishment')
+                ->andWhere('establishment.id = :establishment')
+        				->setParameter('establishment', $user->getEstablishment()->getId());
+        };
+
+        $query->addWhereAll($function);
+
         return $query->getResponse();
     }
     /**
@@ -57,12 +67,12 @@ class TypeExamController extends BaseController
      *
      * @Route("/new", name="typeexam_new", options={"expose"=true})
      * @Method({"GET", "POST"})
-     * @Template("smsstudyplanbundle/typeexam/new.html.twig")
+     * @Template("SMSStudyPlanBundle:typeexam:new.html.twig")
      */
     public function newAction(Request $request)
     {
         $typeExam = new Typeexam();
-        $form = $this->createForm(TypeExamType::class, $typeExam);
+        $form = $this->createForm(TypeExamType::class, $typeExam, array('establishment' => $this->getUser()->getEstablishment()));
         $form->handleRequest($request);
 
         if ($form->isSubmitted() && $form->isValid() && $form->get('save')->isClicked()) {
@@ -87,7 +97,7 @@ class TypeExamController extends BaseController
     {
         $deleteForm = $this->createDeleteForm($typeExam);
 
-        return $this->render('smsstudyplanbundle/typeexam/show.html.twig', array(
+        return $this->render('SMSStudyPlanBundle:typeexam:show.html.twig', array(
             'typeExam' => $typeExam,
             'delete_form' => $deleteForm->createView(),
         ));
@@ -98,11 +108,11 @@ class TypeExamController extends BaseController
      *
      * @Route("/{id}/edit", name="typeexam_edit", options={"expose"=true})
      * @Method({"GET", "POST"})
-     * @Template("smsstudyplanbundle/typeexam/edit.html.twig")
+     * @Template("SMSStudyPlanBundle:typeexam:edit.html.twig")
      */
     public function editAction(Request $request, TypeExam $typeExam)
     {
-        $editForm = $this->createForm(TypeExamType::class, $typeExam)->handleRequest($request);
+        $editForm = $this->createForm(TypeExamType::class, $typeExam, array('establishment' => $this->getUser()->getEstablishment()))->handleRequest($request);
         if ($editForm->isSubmitted() && $editForm->isValid() && $editForm->get('save')->isClicked()) {
             $this->getEntityManager()->update($typeExam);
             $this->flashSuccessMsg('typeExam.edit.success');
@@ -111,7 +121,7 @@ class TypeExamController extends BaseController
 
         return array(
             'typeExam' => $typeExam,
-            'edit_form' => $editForm->createView(),
+            'form' => $editForm->createView(),
         );
     }
 
@@ -142,7 +152,7 @@ class TypeExamController extends BaseController
             } catch (\Exception $e) {
                 return new Response($this->get('translator')->trans('typeExam.delete.fail'), 200);
             }
-            
+
 
             return new Response($this->get('translator')->trans('typeExam.delete.success'), 200);
         }

@@ -1,17 +1,22 @@
+sms_store:
+    resource: "@SMSStoreBundle/Controller/"
+    type:     annotation
+    prefix:   /
+
+sms_payment:
+    resource: "@SMSPaymentBundle/Controller/"
+    type:     annotation
+    prefix:   /
+
+sms_school:
+    resource: "@SMSSchoolBundle/Controller/"
+    type:     annotation
+    prefix:   /
+
 sms_user_space:
     resource: "@SMSUserSpaceBundle/Controller/"
     type:     annotation
     prefix:   /
-
-datatables:
-    resource: "@DatatablesBundle/Controller/"
-    type:     annotation
-    prefix:   /
-
-JMSTranslationBundle_ui:
-    resource: "@JMSTranslationBundle/Controller/"
-    type:     annotation
-    prefix:   /_trans
 
 sms_administrative:
     resource: "@SMSAdministrativeBundle/Controller/"
@@ -39,3 +44,13 @@ sg_datatables_bundle:
 
 fos_js_routing:
     resource: "@FOSJsRoutingBundle/Resources/config/routing/routing.xml"
+
+datatables:
+    resource: "@DatatablesBundle/Controller/"
+    type:     annotation
+    prefix:   /
+
+JMSTranslationBundle_ui:
+    resource: "@JMSTranslationBundle/Controller/"
+    type:     annotation
+    prefix:   /_trans

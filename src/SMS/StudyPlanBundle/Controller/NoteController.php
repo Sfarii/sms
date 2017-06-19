@@ -3,6 +3,7 @@
 namespace SMS\StudyPlanBundle\Controller;
 
 use SMS\StudyPlanBundle\Entity\Note;
+use SMS\StudyPlanBundle\Entity\Exam;
 use SMS\StudyPlanBundle\Form\NoteType;
 use API\BaseController\BaseController;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\Method;
@@ -26,26 +27,15 @@ class NoteController extends BaseController
     /**
      * Creates a new note entity.
      *
-     * @Route("/new", name="note_index", options={"expose"=true})
+     * @Route("/new/{id}", name="note_new", options={"expose"=true})
      * @Method({"GET", "POST"})
-     * @Template("smsstudyplanbundle/note/new.html.twig")
+     * @Template("SMSStudyPlanBundle:note:new.html.twig")
      */
-    public function newAction(Request $request)
+    public function newAction(Request $request , Exam $exam)
     {
-        $form = $this->createForm(NoteType::class)->handleRequest($request);
-
-        if ($form->isSubmitted() && $form->isValid() && $form->get('save')->isClicked()) {
-            $notes = $this->getEntityManager()->addNote($form , $this->getUser());
-            // set the array of IDS in the session
-            $session = $this->getRequest()->getSession();
-            $session->set("notes", $notes);
-            
-            return $this->forward('SMSStudyPlanBundle:Note:index');
-        }
-
-        return array(
-            'form' => $form->createView(),
-        );
+        $notes = $this->getEntityManager()->addNote($exam , $this->getUser());
+        $this->getRequest()->getSession()->set("exam" , $exam->getId());
+        return $this->redirectToRoute('note_index' , array("id" => $exam->getId()));
     }
 
     /**
@@ -58,62 +48,47 @@ class NoteController extends BaseController
     public function indexResultsAction()
     {
         $session = $this->getRequest()->getSession();
-        
-        if (!$session->has("notes")){
-            throw $this->createNotFoundException('Object Not Found');
+
+        if (!$session->has("exam")){
+            return $this->redirectToRoute('exam_index');
         }
 
+        $exam = $session->get("exam");
         $notes = $this->getDataTableNoteEntityManager();
         $notes->buildDatatable();
 
         $query = $this->getDataTableQuery()->getQueryFrom($notes);
 
-        
-        $function = function($qb) use ($session)
+
+        $function = function($qb) use ($exam)
         {
-            $qb->andWhere("note.id IN (:p)");
-            $qb->setParameter('p', $session->get("notes"));
+            $qb->join('note.exam', 'exam');
+            $qb->andWhere("exam.id = :id ");
+            $qb->setParameter('id', $exam);
         };
 
         $query->addWhereAll($function);
-
         return $query->getResponse();
-    }
-
-    /**
-     * clear session.
-     *
-     * @Route("/clear", name="clear_results" , options={"expose"=true})
-     * @Method("DELETE")
-     * @return Response
-     */
-    public function clearAction()
-    {
-        $session = $this->getRequest()->getSession();
-        
-        if ($session->has("notes")){
-            $session->clear();
-        }
-
-        return $this->redirectToRoute('note_index');
     }
 
     /**
      * add/Edit Student note .
      *
-     * @Route("/add_edit_notes")
+     * @Route("/add_edit_notes/{id}" , name="note_index")
      * @Method("GET")
-     * @Template("smsstudyplanbundle/note/index.html.twig")
+     * @Template("SMSStudyPlanBundle:note:index.html.twig")
      */
-    public function indexAction()
+    public function indexAction(Exam $exam)
     {
-        $session = $this->getRequest()->getSession();
-        if (!$session->has("notes")){
-            return $this->redirectToRoute('note_index');
-        }
-
         $notes = $this->getDataTableNoteEntityManager();
         $notes->buildDatatable();
+
+        $session = $this->getRequest()->getSession();
+
+        if (!$session->has("exam")){
+            throw $this->createNotFoundException('Object Not Found');
+        }
+
 
         return array('notes' => $notes);
     }

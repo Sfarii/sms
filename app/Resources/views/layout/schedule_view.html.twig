@@ -12,9 +12,9 @@
                             </h4>
                             <p class="uk-margin-remove">
                                 <i class="material-icons">&#xE425;</i>
-                                {{ session.startTime|date('H:m') }} 
+                                {{ session.startTime|date('H:i:s') }}
                                 <i class="material-icons">&#xE5C8;</i>
-                                {{ session.endTime|date('H:m') }}
+                                {{ session.endTime|date('H:i:s') }}
                             </p>
                         </th>
                     {% endfor %}
@@ -23,7 +23,7 @@
             <tbody>
                 {% for schedule in schedules %}
                     <tr>
-                        <td class="uk-text-large uk-text-capitalize md-bg-grey-100 uk-text-center">
+                        <td class="uk-text-large border-table uk-text-capitalize uk-text-center">
                             {{schedule.day|trans }}
                          </td>
                         {% for session in schedule.sessions %}
@@ -50,8 +50,8 @@
                                     </p>
                                 </td>
                             {% endif %}
-                            
-                        {% endfor %} 
+
+                        {% endfor %}
                     </tr>
                 {% endfor %}
             </tbody>

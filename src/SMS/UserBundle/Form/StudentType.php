@@ -17,31 +17,42 @@ use SMS\EstablishmentBundle\Entity\Section;
 use Vich\UploaderBundle\Form\Type\VichImageType;
 use API\Form\Type\GenderType;
 use Symfony\Component\Form\Extension\Core\Type\CheckboxType;
-use API\Form\EventSubscriber\AddUsernamePasswordFieldListener;
+use API\Form\EventSubscriber\UsersListener;
+use Doctrine\ORM\EntityRepository;
 use API\Form\EventSubscriber\GradeSectionFilterListener;
+use Symfony\Component\Security\Core\Authentication\Token\Storage\TokenStorageInterface;
 
 class StudentType extends AbstractType
 {
-    /**
-     * @var EntityManager
-     */
-    protected $em;
 
-    /**
-     * Constructor
-     *
-     * @param EntityManager $em
-     */
-    function __construct(EntityManager $em)
-    {
-        $this->em = $em;
-    }
+  /**
+   * @var TokenStorageInterface
+   */
+  private $tokenStorage;
+
+  /**
+   * @var EntityManager
+   */
+  protected $em;
+
+  /**
+   * Constructor
+   *
+   * @param EntityManager $em
+   */
+  function __construct(TokenStorageInterface $tokenStorage ,EntityManager $em)
+  {
+      $this->tokenStorage = $tokenStorage;
+      $this->em = $em;
+  }
 
     /**
      * {@inheritdoc}
      */
     public function buildForm(FormBuilderInterface $builder, array $options)
     {
+        $establishment = $options['establishment'];
+
         $builder
             ->add('imageFile',  VichImageType::class, array(
                     'allow_delete' => false, // not mandatory, default is true
@@ -66,10 +77,15 @@ class StudentType extends AbstractType
             ))
             ->add('email' ,TextType::class , array(
                 'label' => 'user.field.email')
-            )  
+            )
             ->add('studentParent' , EntityType::class , array(
                 'class' => StudentParent::class,
-                'property' => 'fatherName',
+                'query_builder' => function (EntityRepository $er) use ($establishment) {
+                    return $er->createQueryBuilder('studentParent')
+                              ->join('studentParent.establishment', 'establishment')
+                              ->andWhere('establishment.id = :establishment')
+                              ->setParameter('establishment', $establishment->getId());
+                },
                 'label' => 'student.field.studentParent',
                 'placeholder' => 'student.field.studentParent')
             )
@@ -78,15 +94,15 @@ class StudentType extends AbstractType
                 'mapped' => false
                 )
             )
-            ->addEventSubscriber(new GradeSectionFilterListener($this->em)) 
-            ->addEventSubscriber(new AddUsernamePasswordFieldListener())  
+            ->addEventSubscriber(new GradeSectionFilterListener($this->em , $establishment))
+            ->addEventSubscriber(new UsersListener($this->tokenStorage))
             ->add('save', SubmitType::class ,array(
                 'validation_groups' => "SimpleRegistration",
                 'label' => 'md-fab'
             ));
 
     }
-    
+
     /**
      * {@inheritdoc}
      */
@@ -96,6 +112,8 @@ class StudentType extends AbstractType
             'data_class' => Student::class,
             'allow_extra_fields' => true
         ));
+
+        $resolver->setRequired('establishment');
     }
 
     /**

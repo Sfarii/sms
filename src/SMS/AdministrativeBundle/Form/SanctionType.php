@@ -13,7 +13,7 @@ use Symfony\Component\Form\Extension\Core\Type\SubmitType;
 use SMS\AdministrativeBundle\Entity\Sanction;
 use SMS\UserBundle\Entity\Student;
 use Doctrine\ORM\EntityManager;
-use API\Form\EventSubscriber\GradeSectionStudentFilterListener;
+use SMS\AdministrativeBundle\Form\EventSubscriber\GradeSectionStudentFilterListener;
 
 class SanctionType extends AbstractType
 {
@@ -23,13 +23,23 @@ class SanctionType extends AbstractType
     protected $em;
 
     /**
+     * @var String Class Names
+     */
+    protected $studentClass;
+    protected $gradeClass;
+    protected $sectionClass;
+
+    /**
      * Constructor
      *
      * @param EntityManager $em
      */
-    function __construct(EntityManager $em)
+    function __construct(EntityManager $em , $studentClass , $gradeClass , $sectionClass)
     {
         $this->em = $em;
+        $this->gradeClass = $gradeClass;
+        $this->sectionClass = $sectionClass;
+        $this->studentClass = $studentClass;
     }
 
     /**
@@ -37,8 +47,9 @@ class SanctionType extends AbstractType
      */
     public function buildForm(FormBuilderInterface $builder, array $options)
     {
+        $establishment = $options['establishment'];
         $builder
-            ->addEventSubscriber(new GradeSectionStudentFilterListener($this->em))
+            ->addEventSubscriber(new GradeSectionStudentFilterListener($this->em ,$this->studentClass , $this->gradeClass , $this->sectionClass , $establishment))
             ->add('punishment' ,TextType::class , array(
                 'label' => 'sanction.field.punishment')
             )
@@ -48,7 +59,7 @@ class SanctionType extends AbstractType
             ->add('save', SubmitType::class);
 
     }
-    
+
     /**
      * {@inheritdoc}
      */
@@ -57,6 +68,7 @@ class SanctionType extends AbstractType
         $resolver->setDefaults(array(
             'data_class' => Sanction::class
         ));
+        $resolver->setRequired('establishment');
     }
 
     /**

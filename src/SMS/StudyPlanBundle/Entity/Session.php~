@@ -52,7 +52,7 @@ class Session
     private $endTime;
 
     /**
-     * One User has Many Divivsions.
+     * One User has Many Sessions.
      * @ORM\ManyToOne(targetEntity="SMS\UserBundle\Entity\User" ,fetch="EXTRA_LAZY")
      * @ORM\JoinColumn(name="user_id", referencedColumnName="id")
      */
@@ -64,6 +64,13 @@ class Session
      *
      */
     private $schedules;
+
+    /**
+     * One establishment has Many Sessions.
+     * @ORM\ManyToOne(targetEntity="SMS\EstablishmentBundle\Entity\Establishment" ,fetch="EXTRA_LAZY")
+     * @ORM\JoinColumn(name="establishment_id", referencedColumnName="id")
+     */
+    private $establishment;
 
     /**
      * Get id

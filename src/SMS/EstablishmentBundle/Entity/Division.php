@@ -9,7 +9,7 @@ use Symfony\Bridge\Doctrine\Validator\Constraints\UniqueEntity;
 /**
  * Division
  * @ORM\HasLifecycleCallbacks
- * @UniqueEntity("divisionName")
+ * @UniqueEntity(fields={"divisionName", "establishment"})
  * @ORM\Table(name="division")
  * @ORM\Entity(repositoryClass="SMS\EstablishmentBundle\Repository\DivisionRepository")
  */
@@ -27,7 +27,7 @@ class Division
     /**
      * @var string
      *
-     * @ORM\Column(name="division_name", type="string", length=100, unique=true)
+     * @ORM\Column(name="division_name", type="string", length=100)
      * @Assert\NotBlank()
      * @Assert\Length(min = 2, max = 99)
      * @Assert\Regex(pattern="/^[a-z0-9 .\-]+$/i" ,match=true)
@@ -62,7 +62,7 @@ class Division
 
     /**
      * @var datetime $updated
-     * 
+     *
      * @ORM\Column(type="datetime", nullable = true)
      */
     protected $updated;
@@ -73,7 +73,14 @@ class Division
      * @ORM\JoinColumn(name="user_id", referencedColumnName="id")
      */
     private $user;
-    
+
+    /**
+     * One establishment has Many Divivsions.
+     * @ORM\ManyToOne(targetEntity="SMS\EstablishmentBundle\Entity\Establishment" ,fetch="EXTRA_LAZY")
+     * @ORM\JoinColumn(name="establishment_id", referencedColumnName="id")
+     */
+    private $establishment;
+
 
      /**
      * @ORM\PrePersist
@@ -88,11 +95,11 @@ class Division
         }
     }
 
-    
+
     /**
      * Get id
      *
-     * @return integer 
+     * @return integer
      */
     public function getId()
     {
@@ -115,7 +122,7 @@ class Division
     /**
      * Get divisionName
      *
-     * @return string 
+     * @return string
      */
     public function getDivisionName()
     {
@@ -138,7 +145,7 @@ class Division
     /**
      * Get startDate
      *
-     * @return \DateTime 
+     * @return \DateTime
      */
     public function getStartDate()
     {
@@ -161,7 +168,7 @@ class Division
     /**
      * Get endDate
      *
-     * @return \DateTime 
+     * @return \DateTime
      */
     public function getEndDate()
     {
@@ -184,7 +191,7 @@ class Division
     /**
      * Get created
      *
-     * @return \DateTime 
+     * @return \DateTime
      */
     public function getCreated()
     {
@@ -207,7 +214,7 @@ class Division
     /**
      * Get updated
      *
-     * @return \DateTime 
+     * @return \DateTime
      */
     public function getUpdated()
     {
@@ -230,10 +237,42 @@ class Division
     /**
      * Get user
      *
-     * @return \SMS\UserBundle\Entity\User 
+     * @return \SMS\UserBundle\Entity\User
      */
     public function getUser()
     {
         return $this->user;
+    }
+
+    /**
+     * @return string
+     */
+    public function __toString()
+    {
+        return sprintf("%s",$this->divisionName);
+    }
+
+    /**
+     * Set establishment
+     *
+     * @param \SMS\EstablishmentBundle\Entity\Establishment $establishment
+     *
+     * @return Division
+     */
+    public function setEstablishment(\SMS\EstablishmentBundle\Entity\Establishment $establishment = null)
+    {
+        $this->establishment = $establishment;
+
+        return $this;
+    }
+
+    /**
+     * Get establishment
+     *
+     * @return \SMS\EstablishmentBundle\Entity\Establishment
+     */
+    public function getEstablishment()
+    {
+        return $this->establishment;
     }
 }

@@ -13,44 +13,59 @@ use Symfony\Component\Form\Extension\Core\Type\SubmitType;
 use SMS\UserBundle\Entity\StudentParent;
 use Vich\UploaderBundle\Form\Type\VichImageType;
 use Symfony\Component\Form\Extension\Core\Type\CheckboxType;
-use API\Form\EventSubscriber\AddUsernamePasswordFieldListener;
+use API\Form\EventSubscriber\UsersListener;
+use Symfony\Component\Security\Core\Authentication\Token\Storage\TokenStorageInterface;
 
 class StudentParentType extends AbstractType
 {
+    /**
+   * @var TokenStorageInterface
+   */
+  private $tokenStorage;
+
+  /**
+   * Constructor
+   *
+   * @param EntityManager $em
+   */
+  public function __construct(TokenStorageInterface $tokenStorage)
+  {
+      $this->tokenStorage = $tokenStorage;
+  }
     /**
      * {@inheritdoc}
      */
     public function buildForm(FormBuilderInterface $builder, array $options)
     {
         $builder
-            ->add('imageFile',  VichImageType::class, array(
+            ->add('imageFile', VichImageType::class, array(
                     'allow_delete' => false, // not mandatory, default is true
                     'download_link' => false, // not mandatory, default is true
                     'label' => false ,
                     'attr' => [ 'form.grid'=> "none"])
                 )
-            ->add('fatherName' ,TextType::class , array(
+            ->add('fatherName', TextType::class, array(
                 'label' => 'studentparent.field.fatherName')
             )
-            ->add('motherName' ,TextType::class , array(
+            ->add('motherName', TextType::class, array(
                 'label' => 'studentparent.field.motherName')
             )
-            ->add('familyName' ,TextType::class , array(
+            ->add('familyName', TextType::class, array(
                 'label' => 'studentparent.field.familyName')
             )
-            ->add('fatherProfession' ,TextType::class , array(
+            ->add('fatherProfession', TextType::class, array(
                 'label' => 'studentparent.field.fatherProfession')
             )
-            ->add('motherProfession' ,TextType::class , array(
+            ->add('motherProfession', TextType::class, array(
                 'label' => 'studentparent.field.motherProfession')
             )
-            ->add('address' ,TextType::class , array(
+            ->add('address', TextType::class, array(
                 'label' => 'studentparent.field.address')
             )
-            ->add('phone' ,TextType::class , array(
+            ->add('phone', TextType::class, array(
                 'label' => 'studentparent.field.phone')
             )
-            ->add('email' ,TextType::class , array(
+            ->add('email', TextType::class, array(
                 'label' => 'user.field.email')
             )
             ->add('show_username_password', CheckboxType::class, array(
@@ -58,14 +73,13 @@ class StudentParentType extends AbstractType
                 'mapped' => false
                 )
             )
-            ->addEventSubscriber(new AddUsernamePasswordFieldListener())
-            ->add('save', SubmitType::class ,array(
+            ->addEventSubscriber(new UsersListener($this->tokenStorage))
+            ->add('save', SubmitType::class, array(
                 'validation_groups' => "SimpleRegistration",
                 'label' => 'md-fab'
             ));
-
     }
-    
+
     /**
      * {@inheritdoc}
      */
@@ -84,6 +98,4 @@ class StudentParentType extends AbstractType
     {
         return 'sms_userbundle_studentparent';
     }
-
-
 }

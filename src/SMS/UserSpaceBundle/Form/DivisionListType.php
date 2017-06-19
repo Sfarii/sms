@@ -21,7 +21,6 @@ class DivisionListType extends AbstractType
         $builder
             ->add('division' , EntityType::class , array(
                 'class' => Division::class,
-                'property' => 'divisionName',
                 'placeholder'=> 'filter.field.division',
                 'label' => 'filter.field.division')
             )
@@ -31,7 +30,7 @@ class DivisionListType extends AbstractType
                 ));
 
     }
-    
+
     /**
      * {@inheritdoc}
      */

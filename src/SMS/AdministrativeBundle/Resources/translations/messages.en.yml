@@ -1,0 +1,114 @@
+action:
+    delete: Delete
+    edit: Edit
+    help: Help
+    picture: Picture   # FIXME
+    print: Print
+
+attendance:
+    action:
+        close: Close   # FIXME
+        new: Adding an Attendance   # FIXME
+
+    field:
+        date: Date
+        select_status: Select an status   # FIXME
+
+    list:
+        title: Attendance list
+
+attendance_professor:
+    field:
+        date: Date   # FIXME
+        firstName: Professor First Name   # FIXME
+        lastName: Professor Last Name   # FIXME
+        sessionName: Professor Session Name   # FIXME
+        status: Status   # FIXME
+
+attendance_student:
+    field:
+        date: Date  # FIXME
+        fatherName:  Father Name   # FIXME
+        firstName:  First Name   # FIXME
+        lastName:  Last Name   # FIXME
+        sectionName: Section Name   # FIXME
+        sessionName: Session Name   # FIXME
+        status: Status   # FIXME
+
+attendanceprofessor:
+    add:
+      success: Attendance Professor added successfully
+    check:
+      data: Please check the form carefully for errors!
+    list:
+        title: Attendance Professor List
+
+    new:
+        title: Adding an Attendance Professor
+attendancestudent:
+    add:
+      success: Attendance Student added successfully
+    check:
+      data: Please check the form carefully for errors!
+    list:
+        title: Attendance Student List
+
+    new:
+        title: Adding an Attendance Student
+author:
+    created: Created
+    creator: Author
+    info: Author information
+    updated: Updated
+
+filter:
+    field:
+        all: All
+        division: Division
+        send: send   # FIXME
+
+sanction:
+    delete:
+        fail: Could not delete from the specified sanctions
+        success: The specified sanctions successfully deleted
+
+    edit:
+        title: Edit Sanction
+
+    field:
+        cause: Cause
+        grade: Grade
+        punishment: Punishment
+        section: Section
+        student: Student
+        user_firstName: First Name   # FIXME
+        user_lastName: Last Name   # FIXME
+        user_sectionName: Section Name   # FIXME
+
+    list:
+        title: Sanction Lists
+
+    new:
+        title: Adding an Sanction
+
+    show:
+        detail: Sanction Details
+        title: Sanction
+
+schedule:
+    field:
+        division: Select Division ..  # FIXME
+        grade: Select Grade ..  # FIXME
+        professor: Select Professor .. # FIXME
+        section: Select Section .. # FIXME
+    professor:
+        title: Professors Schedules  # FIXME
+
+    student:
+        title: Students Schedules  # FIXME
+
+schedule_view:
+    schedule:
+        course: Course Name   # FIXME
+        professor: Professor Name   # FIXME
+        section: Section Name   # FIXME

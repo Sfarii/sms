@@ -17,10 +17,10 @@ use Vich\UploaderBundle\Mapping\Annotation as Vich;
  * @ORM\HasLifecycleCallbacks
  * @Vich\Uploadable
  * @ORM\DiscriminatorColumn(name="discr", type="string")
- * @ORM\DiscriminatorMap({ "user" = "User" ,"student_parent" = "StudentParent" , "student" = "Student" , "professor" = "Professor" , "administrator" = "Administrator"})
+ * @ORM\DiscriminatorMap({ "user" = "User" , "manager" = "Manager" ,"student_parent" = "StudentParent" , "student" = "Student" , "professor" = "Professor" , "administrator" = "Administrator"})
  *
  * @author Rami Sfari <rami2sfari@gmail.com>
- * @copyright Copyright (c) 2016, SNS
+ * @copyright Copyright (c) 2016, SMS
  */
 
  class User implements UserInterface
@@ -116,7 +116,7 @@ use Vich\UploaderBundle\Mapping\Annotation as Vich;
 
     /**
      * NOTE: This is not a mapped field of entity metadata, just a simple property.
-     * 
+     *
      * @Vich\UploadableField(mapping="user_image", fileNameProperty="imageName")
      * @Assert\File(
      *     maxSize="1M",
@@ -149,10 +149,24 @@ use Vich\UploaderBundle\Mapping\Annotation as Vich;
 
     /**
      * @var datetime $updated
-     * 
+     *
      * @ORM\Column(type="datetime", nullable = true)
      */
     protected $updated;
+
+    /**
+    * One User Create Many Users.
+    * @ORM\ManyToOne(targetEntity="User")
+    * @ORM\JoinColumn(name="user_id", referencedColumnName="id")
+    */
+   private $creator;
+
+   /**
+    * One establishment has Many Users.
+    * @ORM\ManyToOne(targetEntity="SMS\EstablishmentBundle\Entity\Establishment" ,fetch="EXTRA_LAZY")
+    * @ORM\JoinColumn(name="establishment_id", referencedColumnName="id")
+    */
+   private $establishment;
 
     /**
      * User constructor.
@@ -160,6 +174,7 @@ use Vich\UploaderBundle\Mapping\Annotation as Vich;
     public function __construct()
     {
         $this->enabled = true;
+        $this->roles = array();
     }
 
      /**
@@ -174,7 +189,7 @@ use Vich\UploaderBundle\Mapping\Annotation as Vich;
             $this->setCreated(new \DateTime('now'));
         }
     }
-    
+
     /**
      * {@inheritdoc}
      */
@@ -303,7 +318,7 @@ use Vich\UploaderBundle\Mapping\Annotation as Vich;
     {
         return $this->confirmationToken;
     }
-    
+
     /**
      * {@inheritdoc}
      */
@@ -341,7 +356,7 @@ use Vich\UploaderBundle\Mapping\Annotation as Vich;
     {
         return $this->hasRole(static::ROLE_SUPER_ADMIN);
     }
-    
+
     /**
      * {@inheritdoc}
      */
@@ -453,7 +468,7 @@ use Vich\UploaderBundle\Mapping\Annotation as Vich;
         $this->passwordRequestedAt = $date;
         return $this;
     }
-    
+
     /**
      * {@inheritdoc}
      */
@@ -554,7 +569,7 @@ use Vich\UploaderBundle\Mapping\Annotation as Vich;
             // otherwise the event listeners won't be called and the file is lost
             $this->updatedAt = new \DateTimeImmutable();
         }
-        
+
         return $this;
     }
 
@@ -572,7 +587,7 @@ use Vich\UploaderBundle\Mapping\Annotation as Vich;
     public function setImageName($imageName)
     {
         $this->imageName = $imageName;
-        
+
         return $this;
     }
 
@@ -644,5 +659,53 @@ use Vich\UploaderBundle\Mapping\Annotation as Vich;
     public function __toString()
     {
         return (string) $this->getUsername();
+    }
+
+    /**
+     * Set creator
+     *
+     * @param \SMS\UserBundle\Entity\User $creator
+     *
+     * @return User
+     */
+    public function setCreator(\SMS\UserBundle\Entity\User $creator = null)
+    {
+        $this->creator = $creator;
+
+        return $this;
+    }
+
+    /**
+     * Get creator
+     *
+     * @return \SMS\UserBundle\Entity\User
+     */
+    public function getCreator()
+    {
+        return $this->creator;
+    }
+
+    /**
+     * Set establishment
+     *
+     * @param \SMS\EstablishmentBundle\Entity\Establishment $establishment
+     *
+     * @return User
+     */
+    public function setEstablishment(\SMS\EstablishmentBundle\Entity\Establishment $establishment = null)
+    {
+        $this->establishment = $establishment;
+
+        return $this;
+    }
+
+    /**
+     * Get establishment
+     *
+     * @return \SMS\EstablishmentBundle\Entity\Establishment
+     */
+    public function getEstablishment()
+    {
+        return $this->establishment;
     }
 }

@@ -8,8 +8,7 @@ use Symfony\Bridge\Doctrine\Validator\Constraints\UniqueEntity;
 
 /**
  * Grade
- * @UniqueEntity("gradeName")
- * @UniqueEntity("gradeCode")
+ * @UniqueEntity(fields={"gradeName", "establishment"})
  * @ORM\Table(name="grade")
  * @ORM\Entity(repositoryClass="SMS\EstablishmentBundle\Repository\GradeRepository")
  */
@@ -64,9 +63,16 @@ class Grade
     private $courses;
 
     /**
+     * One establishment has Many Grades.
+     * @ORM\ManyToOne(targetEntity="SMS\EstablishmentBundle\Entity\Establishment" ,fetch="EXTRA_LAZY")
+     * @ORM\JoinColumn(name="establishment_id", referencedColumnName="id")
+     */
+    private $establishment;
+
+    /**
      * Get id
      *
-     * @return integer 
+     * @return integer
      */
     public function getId()
     {
@@ -89,7 +95,7 @@ class Grade
     /**
      * Get gradeName
      *
-     * @return string 
+     * @return string
      */
     public function getGradeName()
     {
@@ -129,7 +135,7 @@ class Grade
     /**
      * Get sections
      *
-     * @return \Doctrine\Common\Collections\Collection 
+     * @return \Doctrine\Common\Collections\Collection
      */
     public function getSections()
     {
@@ -152,19 +158,20 @@ class Grade
     /**
      * Get user
      *
-     * @return \SMS\UserBundle\Entity\User 
+     * @return \SMS\UserBundle\Entity\User
      */
     public function getUser()
     {
         return $this->user;
     }
 
+
     /**
      * @return string
      */
     public function __toString()
     {
-        return (string) $this->getGradeName();
+        return sprintf("%s",$this->getGradeName());
     }
 
     /**
@@ -224,4 +231,29 @@ class Grade
     {
         return $this->courses;
     }
+
+    /**
+     * Set establishment
+     *
+     * @param \SMS\EstablishmentBundle\Entity\Establishment $establishment
+     *
+     * @return Grade
+     */
+    public function setEstablishment(\SMS\EstablishmentBundle\Entity\Establishment $establishment = null)
+    {
+        $this->establishment = $establishment;
+
+        return $this;
+    }
+
+    /**
+     * Get establishment
+     *
+     * @return \SMS\EstablishmentBundle\Entity\Establishment
+     */
+    public function getEstablishment()
+    {
+        return $this->establishment;
+    }
+
 }

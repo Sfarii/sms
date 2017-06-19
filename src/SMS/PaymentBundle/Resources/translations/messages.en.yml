@@ -1,0 +1,132 @@
+action:
+    delete: Delete   # FIXME
+
+author:
+    created: Created   # FIXME
+    creator: Author   # FIXME
+    info: Author Information   # FIXME
+    updated: Updated   # FIXME
+
+payment:
+    delete:
+        fail: Could not delete from the specified payments   # FIXME
+        success: The specified payments successfully deleted   # FIXME
+    add:
+        success: Payment successfully added    # FIXME
+    edit:
+        success: Payment successfully edited   # FIXME
+    edit:
+        title: Edit Payment   # FIXME
+
+    field:
+        credit: Credit   # FIXME
+        month: Month   # FIXME
+        paymentType: Payment Type   # FIXME
+        price: Price   # FIXME
+        student: Student   # FIXME
+        student.firstName: Student First Name   # FIXME
+        student.lastName: Student Last Name
+
+    list:
+        title: Payment Lists   # FIXME
+
+    new:
+        title: Adding an Payment   # FIXME
+
+    show:
+        detail: Payment Detail   # FIXME
+        title: Payment Information   # FIXME
+
+    unit: Dinar   # FIXME
+
+paymentType:
+    delete:
+        fail: Could not delete from the specified payments Types  # FIXME
+        success: The specified payments Types successfully deleted    # FIXME
+    add:
+        success: Payment Type successfully added    # FIXME
+    edit:
+        success: Payment Type successfully edited   # FIXME
+    field:
+        TypePaymentName:  Payment Type Name   # FIXME
+
+paymenttype:
+    edit:
+        title: Edit Payment Type   # FIXME
+
+    field:
+        TypePaymentName: Payment Type Name   # FIXME
+        price: Price   # FIXME
+
+    list:
+        title: Payment Type Lists   # FIXME
+
+    new:
+        title: Adding an Payment Type   # FIXME
+
+    show:
+        detail: Payment Type Detail   # FIXME
+        title: Payment Type information   # FIXME
+
+registration:
+    delete:
+        fail: Could not delete from the specified Registration   # FIXME
+        success: The specified Registrations successfully deleted   # FIXME
+    add:
+        success: Registration successfully added    # FIXME
+    edit:
+        success: Registration successfully edited   # FIXME
+    edit:
+        title: Edit Registration   # FIXME
+
+    field:
+        registered: Registered   # FIXME
+        registrationType: Registration Type   # FIXME
+        student: Student   # FIXME
+        student.firstName: Student First Name   # FIXME
+        student.lastName: Student Last Name
+
+    list:
+        title: Registration Lists   # FIXME
+
+    new:
+        title: Adding an Registration   # FIXME
+
+    registered:
+        false_label: registered   # FIXME
+        true_label: not registered   # FIXME
+
+    show:
+        detail: Registration Detail   # FIXME
+        title: Registration Information   # FIXME
+
+registrationType:
+    delete:
+        fail: Could not delete from the specified Registration Types   # FIXME
+        success: The specified Registrations Types successfully deleted   # FIXME
+    add:
+        success: Registration Type successfully added    # FIXME
+    edit:
+        success: Registration Type successfully edited   # FIXME
+    field:
+        registrationFee: Registration Fee   # FIXME
+        registrationTypeName: Registration Type Name   # FIXME
+        student: Student   # FIXME
+
+registrationtype:
+    edit:
+        title: Registration Type Edit  # FIXME
+
+    field:
+        registrationFee: Registration Fee   # FIXME
+        registrationTypeName: Registration Type Name   # FIXME
+
+    list:
+        title: Registration Type Lists   # FIXME
+
+    new:
+        title: Adding an Registration Type   # FIXME
+
+    show:
+        detail: Registration Type Detail   # FIXME
+        title: Registration Type Information   # FIXME

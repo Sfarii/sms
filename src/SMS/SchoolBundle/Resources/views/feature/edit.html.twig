@@ -1,0 +1,7 @@
+{% extends 'layout/base_header_double_height.html.twig' %}
+
+{% block body %}
+
+	{% include 'layout/form_layout.html.twig' with {'form': edit_form , 'form_name' : 'feature.edit.title' , 'index_url': path('feature_index')} %}
+
+{% endblock %}

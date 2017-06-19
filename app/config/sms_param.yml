@@ -1,0 +1,40 @@
+parameters:
+    flash_msg_success: '_msg_success'
+    flash_msg_error: '_msg_error'
+    tokenLifetime: 21600
+    app_name: 'SMS v0.1'
+    Establishment: EstablishmentEntity
+    # mailer
+    mailer_transport: smtp
+    mailer_host: 127.0.0.1
+    mailer_user:     ramisfari22@gmail.com
+    mailer_password:
+    payment_template: email/payment.html.twig
+    # attendance status
+    attendance:
+        Retard  : Retard
+        Present : Present
+        Absent  : Absent
+        Exclude : Exclude
+    # days
+    days:
+      monday: day.monday
+      tuesday: day.tuesday
+      wednesday: day.wednesday
+      thursday: day.thursday
+      friday: day.friday
+      saturday: day.saturday
+      sunday: day.sunday
+    months:
+      01: month.january
+      02: month.february
+      03: month.march
+      04: month.april
+      05: month.may
+      06: month.june
+      07: month.july
+      08: month.august
+      09: month.september
+      10: month.october
+      11: month.november
+      12: month.december

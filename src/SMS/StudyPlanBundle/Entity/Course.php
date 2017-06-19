@@ -4,6 +4,7 @@ namespace SMS\StudyPlanBundle\Entity;
 
 use Doctrine\ORM\Mapping as ORM;
 use Symfony\Component\Validator\Constraints as Assert;
+use Symfony\Bridge\Doctrine\Validator\Constraints\UniqueEntity;
 
 /**
  * Course
@@ -11,6 +12,7 @@ use Symfony\Component\Validator\Constraints as Assert;
  * @ORM\Table(name="course")
  * @ORM\Entity(repositoryClass="SMS\StudyPlanBundle\Repository\CourseRepository")
  * @ORM\HasLifecycleCallbacks
+ * @UniqueEntity(fields={"courseName", "grade" , "division" , "establishment"})
  */
 class Course
 {
@@ -83,10 +85,17 @@ class Course
 
     /**
      * @var datetime $updated
-     * 
+     *
      * @ORM\Column(type="datetime", nullable = true)
      */
     protected $updated;
+
+    /**
+     * One establishment has Many Courses.
+     * @ORM\ManyToOne(targetEntity="SMS\EstablishmentBundle\Entity\Establishment" ,fetch="EXTRA_LAZY")
+     * @ORM\JoinColumn(name="establishment_id", referencedColumnName="id")
+     */
+    private $establishment;
 
      /**
      * @ORM\PrePersist
@@ -104,7 +113,7 @@ class Course
     /**
      * Get id
      *
-     * @return integer 
+     * @return integer
      */
     public function getId()
     {
@@ -127,7 +136,7 @@ class Course
     /**
      * Get courseName
      *
-     * @return string 
+     * @return string
      */
     public function getCourseName()
     {
@@ -150,7 +159,7 @@ class Course
     /**
      * Get coefficient
      *
-     * @return float 
+     * @return float
      */
     public function getCoefficient()
     {
@@ -180,7 +189,7 @@ class Course
     /**
      * Get created
      *
-     * @return \DateTime 
+     * @return \DateTime
      */
     public function getCreated()
     {
@@ -203,7 +212,7 @@ class Course
     /**
      * Get updated
      *
-     * @return \DateTime 
+     * @return \DateTime
      */
     public function getUpdated()
     {
@@ -226,7 +235,7 @@ class Course
     /**
      * Get division
      *
-     * @return \SMS\EstablishmentBundle\Entity\Division 
+     * @return \SMS\EstablishmentBundle\Entity\Division
      */
     public function getDivision()
     {
@@ -249,7 +258,7 @@ class Course
     /**
      * Get grade
      *
-     * @return \SMS\EstablishmentBundle\Entity\Grade 
+     * @return \SMS\EstablishmentBundle\Entity\Grade
      */
     public function getGrade()
     {
@@ -282,7 +291,7 @@ class Course
     /**
      * Get exams
      *
-     * @return \Doctrine\Common\Collections\Collection 
+     * @return \Doctrine\Common\Collections\Collection
      */
     public function getExams()
     {
@@ -305,10 +314,34 @@ class Course
     /**
      * Get user
      *
-     * @return \SMS\UserBundle\Entity\User 
+     * @return \SMS\UserBundle\Entity\User
      */
     public function getUser()
     {
         return $this->user;
+    }
+
+    /**
+     * Set establishment
+     *
+     * @param \SMS\EstablishmentBundle\Entity\Establishment $establishment
+     *
+     * @return Course
+     */
+    public function setEstablishment(\SMS\EstablishmentBundle\Entity\Establishment $establishment = null)
+    {
+        $this->establishment = $establishment;
+
+        return $this;
+    }
+
+    /**
+     * Get establishment
+     *
+     * @return \SMS\EstablishmentBundle\Entity\Establishment
+     */
+    public function getEstablishment()
+    {
+        return $this->establishment;
     }
 }

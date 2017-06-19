@@ -30,7 +30,7 @@
         {% endif %}
         {% if column.visible %}
             "visible": true,
-            "className": "{{ column.class|default('uk-text-center') }}",
+            "className": "{{ column.class }}",
         {% else %}
             "visible": false,
             "className": "never {{ column.class }}",

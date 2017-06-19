@@ -28,7 +28,7 @@ class SessionController extends BaseController
      *
      * @Route("/", name="session_index")
      * @Method("GET")
-     * @Template("smsstudyplanbundle/session/index.html.twig")
+     * @Template("SMSStudyPlanBundle:session:index.html.twig")
      */
     public function indexAction()
     {
@@ -49,7 +49,15 @@ class SessionController extends BaseController
         $sessions->buildDatatable();
 
         $query = $this->getDataTableQuery()->getQueryFrom($sessions);
+        $user = $this->getUser();
+        $function = function($qb) use ($user)
+        {
+            $qb->join('session.establishment', 'establishment')
+                ->andWhere('establishment.id = :establishment')
+        				->setParameter('establishment', $user->getEstablishment()->getId());
+        };
 
+        $query->addWhereAll($function);
         return $query->getResponse();
     }
     /**
@@ -57,12 +65,12 @@ class SessionController extends BaseController
      *
      * @Route("/new", name="session_new", options={"expose"=true})
      * @Method({"GET", "POST"})
-     * @Template("smsstudyplanbundle/session/new.html.twig")
+     * @Template("SMSStudyPlanBundle:session:new.html.twig")
      */
     public function newAction(Request $request)
     {
         $session = new Session();
-        $form = $this->createForm(SessionType::class, $session);
+        $form = $this->createForm(SessionType::class, $session, array('establishment' => $this->getUser()->getEstablishment()));
         $form->handleRequest($request);
 
         if ($form->isSubmitted() && $form->isValid() && $form->get('save')->isClicked()) {
@@ -87,7 +95,7 @@ class SessionController extends BaseController
     {
         $deleteForm = $this->createDeleteForm($session);
 
-        return $this->render('smsstudyplanbundle/session/show.html.twig', array(
+        return $this->render('SMSStudyPlanBundle:session:show.html.twig', array(
             'session' => $session,
             'delete_form' => $deleteForm->createView(),
         ));
@@ -98,11 +106,11 @@ class SessionController extends BaseController
      *
      * @Route("/{id}/edit", name="session_edit", options={"expose"=true})
      * @Method({"GET", "POST"})
-     * @Template("smsstudyplanbundle/session/edit.html.twig")
+     * @Template("SMSStudyPlanBundle:session:edit.html.twig")
      */
     public function editAction(Request $request, Session $session)
     {
-        $editForm = $this->createForm(SessionType::class, $session)->handleRequest($request);
+        $editForm = $this->createForm(SessionType::class, $session, array('establishment' => $this->getUser()->getEstablishment()))->handleRequest($request);
         if ($editForm->isSubmitted() && $editForm->isValid() && $editForm->get('save')->isClicked()) {
             $this->getEntityManager()->update($session);
             $this->flashSuccessMsg('session.edit.success');
@@ -111,7 +119,7 @@ class SessionController extends BaseController
 
         return array(
             'session' => $session,
-            'edit_form' => $editForm->createView(),
+            'form' => $editForm->createView(),
         );
     }
 
@@ -142,7 +150,7 @@ class SessionController extends BaseController
             } catch (\Exception $e) {
                 return new Response($this->get('translator')->trans('session.delete.fail'), 200);
             }
-            
+
 
             return new Response($this->get('translator')->trans('session.delete.success'), 200);
         }

@@ -10,6 +10,8 @@ use Symfony\Component\Form\Extension\Core\Type\TimeType;
 use Symfony\Bridge\Doctrine\Form\Type\EntityType;
 use Symfony\Component\Form\Extension\Core\Type\SubmitType;
 use SMS\StudyPlanBundle\Entity\Session;
+use API\Form\Type\HiddenEntityType;
+use SMS\EstablishmentBundle\Entity\Establishment;
 
 
 class SessionType extends AbstractType
@@ -19,6 +21,8 @@ class SessionType extends AbstractType
      */
     public function buildForm(FormBuilderInterface $builder, array $options)
     {
+        $establishment = $options['establishment'];
+
         $builder
             ->add('sessionName' ,TextType::class , array(
                 'label' => 'session.field.sessionName')
@@ -35,10 +39,14 @@ class SessionType extends AbstractType
                 'label' => 'session.field.endTime' ,
                 'attr' => [ 'data-uk-timepicker'=> ""],
             ))
+            ->add('establishment', HiddenEntityType::class, array(
+                'class' => Establishment::class,
+                'data' =>  $establishment, // Field value by default
+            ))
             ->add('save', SubmitType::class);
 
     }
-    
+
     /**
      * {@inheritdoc}
      */
@@ -47,6 +55,7 @@ class SessionType extends AbstractType
         $resolver->setDefaults(array(
             'data_class' => Session::class
         ));
+        $resolver->setRequired('establishment');
     }
 
     /**

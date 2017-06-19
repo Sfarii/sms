@@ -2,116 +2,138 @@
 <!--[if lte IE 9]> <html class="lte-ie9" lang="en"> <![endif]-->
 <!--[if gt IE 9]><!-->
 <html lang="en">
-    <!--<![endif]-->
+  <!--<![endif]-->
 
-    <head>
-        <meta charset="UTF-8">
-        <meta name="viewport" content="initial-scale=1.0,maximum-scale=1.0,user-scalable=no">
-        <meta http-equiv="X-UA-Compatible" content="IE=edge">
-        <!-- Remove Tap Highlight on Windows Phone IE -->
-        <meta name="msapplication-tap-highlight" content="no"/>
+  <head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="initial-scale=1.0,maximum-scale=1.0,user-scalable=no">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <!-- Remove Tap Highlight on Windows Phone IE -->
+    <meta name="msapplication-tap-highlight" content="no"/>
 
-        <link rel="icon" type="image/png" href="{{ asset('assets/img/favicon-16x16.png')}}" sizes="16x16">
-        <link rel="icon" type="image/png" href="{{ asset('assets/img/favicon-32x32.png')}}" sizes="32x32">
+    <link rel="icon" type="image/png" href="{{ asset('assets/img/favicon-16x16.png')}}" sizes="16x16">
+    <link rel="icon" type="image/png" href="{{ asset('assets/img/favicon-32x32.png')}}" sizes="32x32">
 
-        <title>{{ app_name }}</title>
+    <meta name="description" content="School Management System software automates the life cycle of a student from admission to pass-out, maintains academic records, facilitates collaboration, allows schools to collect fees, conduct exams and print report cards.">
+        <meta name="keywords" content="material design, SMS">
+        <meta name="author" content="Rami Sfari">
+    <title>{{ app_name }}</title>
 
-        {% block stylesheets %}
-            <!-- uikit -->
-            <link rel="stylesheet" href="{{ asset('assets/css/uikit.almost-flat.min.css') }}" media="all">
-            <!-- flag icons -->
-            <link rel="stylesheet" href="{{ asset('assets/icons/flags/flags.min.css') }}" media="all">
-            <!-- altair admin -->
-            <link rel="stylesheet" href="{{ asset('assets/css/main.min.css') }}" media="all">
-            <!-- themes -->
-            <link rel="stylesheet" href="{{ asset('assets/css/themes/themes_combined.min.css') }}" media="all">
+    {% block stylesheets %}
+      <!-- uikit -->
+      <link rel="stylesheet" href="{{ asset('assets/css/uikit.almost-flat.min.css') }}" media="all">
+      <!-- flag icons -->
+      <link rel="stylesheet" href="{{ asset('assets/icons/flags/flags.min.css') }}" media="all">
+      <!-- altair admin -->
+      <link rel="stylesheet" href="{{ asset('assets/css/main.min.css') }}" media="all">
+      <!-- themes -->
+      <link rel="stylesheet" href="{{ asset('assets/css/themes/themes_combined.min.css') }}" media="all">
 
-            <!-- matchMedia polyfill for testing media queries in JS -->
-            <!--[if lte IE 9]> <script type="text/javascript" src="bower_components/matchMedia/matchMedia.js"></script> <script type="text/javascript" src="bower_components/matchMedia/matchMedia.addListener.js"></script> <link rel="stylesheet" href="assets/css/ie.css" media="all"> <![endif]-->
-        {% endblock %}
-        {% block head_javascripts %}
-            <!-- common functions -->
-            <script src="{{ asset('assets/js/common.min.js')}}"></script>
-            <!-- page specific plugins -->
-            <!-- datatables -->
-            <script src="{{ asset('assets/plugins/datatables/js/jquery.dataTables.min.js')}}"></script>
-            <script src="{{ asset('bundles/fosjsrouting/js/router.js') }}"></script>
-            <script src="{{ path('fos_js_routing_js', {'callback': 'fos.Router.setData'}) }}"></script>
-        {% endblock %}
-    </head>
-    <body class="sidebar_main_open sidebar_main_swipe">
+      <!-- matchMedia polyfill for testing media queries in JS -->
+      <!--[if lte IE 9]> <script type="text/javascript" src="bower_components/matchMedia/matchMedia.js"></script> <script type="text/javascript" src="bower_components/matchMedia/matchMedia.addListener.js"></script> <link rel="stylesheet" href="assets/css/ie.css" media="all"> <![endif]-->
+    {% endblock %}
+    {% block head_javascripts %}
+      <!-- common functions -->
+      <script src="{{ asset('assets/js/common.min.js')}}"></script>
+      <!-- page specific plugins -->
+      <!-- datatables -->
+      <script src="{{ asset('assets/plugins/datatables/js/jquery.dataTables.min.js')}}"></script>
+      <script src="{{ asset('bundles/fosjsrouting/js/router.js') }}"></script>
+      <script src="{{ path('fos_js_routing_js', {'callback': 'fos.Router.setData'}) }}"></script>
+    {% endblock %}
+  </head>
+  <body class="sidebar_main_open sidebar_main_swipe">
 
-        <!-- main header -->
-        {% include 'layout/header.html.twig' %}
-        <!-- main header end -->
+    <!-- main header -->
+    {% include 'layout/header.html.twig' %}
+    <!-- main header end -->
 
-        <!-- main sidebar -->
-        {% include 'layout/sidebar_main.html.twig' %}
-        <!-- main sidebar end -->
-        <div id="page_content">
-            <div id="page_heading" data-uk-sticky="{ top: 48, media: 960 }">
-                <div class="heading_actions">
-                    {% block heading_actions %}{% endblock %}
-                </div>
-                <h1 id="product_edit_name">
-                    {% block title_page %}{% endblock %}
-                </h1>
-                <span class="uk-text-muted uk-text-upper uk-text-small" id="product_edit_sn">
-                    {% block sub_title_page %}
-                        <a href="">dashbord</a>
-                    {% endblock %}
-                </span>
-            </div>
-            <div id="page_content_inner">
-
-                {% block body %}{% endblock %}
-            </div>
+    <!-- main sidebar -->
+    {% include 'layout/sidebar_main.html.twig' %}
+    <!-- main sidebar end -->
+    <div id="page_content">
+      <div id="page_heading" data-uk-sticky="{ top: 48, media: 960 }">
+        <div class="heading_actions">
+          {% block heading_actions %}{% endblock %}
         </div>
+        <h1 id="product_edit_name">
+          {% block title_page %}{% endblock %}
+        </h1>
+        <span class="uk-text-muted uk-text-upper uk-text-small" id="product_edit_sn">
+          {% block sub_title_page %}
+            <a href="">dashbord</a>
+          {% endblock %}
+        </span>
+      </div>
+      <div id="page_content_inner">
+        {% block body %}{% endblock %}
+      </div>
+    </div>
 
-        <div class="md-fab-wrapper">
-            {% block sticky_button %}{% endblock %}
-        </div>
-        <!-- main sidebar -->
-        {% include 'layout/sidebar.html.twig' %}
-        <!-- main sidebar end -->
-        {% block javascripts %}
+    <div class="md-fab-wrapper">
+      {% block sticky_button %}{% endblock %}
+    </div>
+    <!-- main sidebar -->
+    {% include 'layout/sidebar.html.twig' %}
 
-            <!-- uikit functions -->
-            <script src="{{ asset('assets/js/uikit_custom.min.js')}}"></script>
-            <!-- altair common functions/helpers -->
-            <script src="{{ asset('assets/js/altair_admin_common.min.js')}}"></script>
-            <!-- sms Web Socket-->
-            <script src='{{ asset(' assets/websocket/autobahn.min.js')}}'></script>
-            <script src='{{ asset(' assets/websocket/gos_web_socket_client.js')}}'></script>
-            <!-- sms router js -->
+    <!-- main sidebar end -->
+    {% block javascripts %}
+      <!-- google web fonts -->
+      <script>
+          WebFontConfig = {
+              google: {
+                  families: [
+                      'Source+Code+Pro:400,700:latin',
+                      'Roboto:400,300,500,700,400italic:latin'
+                  ]
+              }
+          };
+          (function() {
+              var wf = document.createElement('script');
+              wf.src = ('https:' == document.location.protocol ? 'https' : 'http') +
+              '://ajax.googleapis.com/ajax/libs/webfont/1/webfont.js';
+              wf.type = 'text/javascript';
+              wf.async = 'true';
+              var s = document.getElementsByTagName('script')[0];
+              s.parentNode.insertBefore(wf, s);
+          })();
+      </script>
+      <!-- uikit functions -->
+      <script src="{{ asset('assets/js/uikit_custom.min.js')}}"></script>
+      <!-- altair common functions/helpers -->
+      <script src="{{ asset('assets/js/altair_admin_common.min.js')}}"></script>
+      <!-- sms Web Socket
+      <script src='{{ asset(' assets/websocket/autobahn.min.js')}}'></script>
+      <script src='{{ asset(' assets/websocket/gos_web_socket_client.js')}}'></script>-->
+      <!-- sms router js -->
 
-            <!-- datatables custom integration -->
-            <script src="{{ asset('assets/js/custom/datatables/datatables.uikit.min.js')}}"></script>
-            <script src="{{ asset('assets/js/uikit_custom_dataTable.js')}}"></script>
+      <!-- datatables custom integration -->
+      <script src="{{ asset('assets/js/custom/datatables/datatables.uikit.min.js')}}"></script>
+      <script src="{{ asset('assets/js/uikit_custom_dataTable.js')}}"></script>
 
-            <script src="{{ asset('bundles/fosjsrouting/js/router.js') }}"></script>
-            <script src="{{ path('fos_js_routing_js', {'callback': 'fos.Router.setData'}) }}"></script>
-        {% endblock %}
-        {% block audio %}
-            <audio id="audio-alert" src="{{ asset('assets/audio/alert.mp3')}}" preload="auto"></audio>
-            <audio id="audio-fail" src="{{ asset('assets/audio/fail.mp3')}}" preload="auto"></audio>
-        {% endblock %}
+      <script src="{{ asset('bundles/fosjsrouting/js/router.js') }}"></script>
+      <script src="{{ path('fos_js_routing_js', {'callback': 'fos.Router.setData'}) }}"></script>
+    {% endblock %}
+    {% block audio %}
+      <audio id="audio-alert" src="{{ asset('assets/audio/alert.mp3')}}" preload="auto"></audio>
+      <audio id="audio-fail" src="{{ asset('assets/audio/fail.mp3')}}" preload="auto"></audio>
+    {% endblock %}
 
-        <!-- main flash success message -->
-        {% for flash_message in app.session.flashbag.get(msg_success) %}
-            <script type="text/javascript">
-                UIkit.notify({message: "<a href='#' class='notify-action'><span class='uk-icon-times'></span></a>{{ flash_message }}", status: "success", timeout: 1000, group: null, pos: 'top-right'});
-            </script>
+    <!-- main flash success message -->
+    {% for flash_message in app.session.flashbag.get(msg_success) %}
+      <script type="text/javascript">
+        UIkit.notify({message: "<a href='#' class='notify-action'><span class='uk-icon-times'></span></a>{{ flash_message }}", status: "success", timeout: 0, group: null, pos: 'top-right'});
+      </script>
 
-        {% endfor %}
-        <!-- main flash success message end -->
+    {% endfor %}
+    <!-- main flash success message end -->
 
-        <!-- main flash success message -->
-        {% for flash_message in app.session.flashbag.get(msg_danger) %}
-            <script type="text/javascript">
-                UIkit.notify({message: "<a href='#' class='notify-action'><span class='uk-icon-times'></span></a>{{ flash_message }}", status: "error", timeout: 1000, group: null, pos: 'top-right'});
-            </script>
-        {% endfor %}
-        <!-- main flash success message end -->
-    </body>
+    <!-- main flash success message -->
+    {% for flash_message in app.session.flashbag.get(msg_danger) %}
+      <script type="text/javascript">
+        UIkit.notify({message: "<a href='#' class='notify-action'><span class='uk-icon-times'></span></a>{{ flash_message }}", status: "error", timeout: 0, group: null, pos: 'top-right'});
+      </script>
+    {% endfor %}
+    <!-- main flash success message end -->
+  </body>
 </html>

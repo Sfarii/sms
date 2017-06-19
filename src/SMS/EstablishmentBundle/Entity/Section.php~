@@ -4,11 +4,12 @@ namespace SMS\EstablishmentBundle\Entity;
 
 use Doctrine\ORM\Mapping as ORM;
 use Symfony\Component\Validator\Constraints as Assert;
-
+use Symfony\Bridge\Doctrine\Validator\Constraints\UniqueEntity;
 /**
  * Section
  * @ORM\HasLifecycleCallbacks
  * @ORM\Table(name="section")
+ * @UniqueEntity("sectionName")
  * @ORM\Entity(repositoryClass="SMS\EstablishmentBundle\Repository\SectionRepository")
  */
 class Section
@@ -25,7 +26,7 @@ class Section
     /**
      * @var string
      *
-     * @ORM\Column(name="sectionName", type="string", length=50)
+     * @ORM\Column(name="sectionName", type="string", length=50, unique=true)
      * @Assert\NotBlank()
      * @Assert\Length(min = 2, max = 49)
      * @Assert\Regex(pattern="/^[a-z0-9 .\-]+$/i" ,match=true)
@@ -49,7 +50,7 @@ class Section
 
     /**
      * @var datetime $updated
-     * 
+     *
      * @ORM\Column(type="datetime", nullable = true)
      */
     protected $updated;
@@ -60,6 +61,19 @@ class Section
      * @ORM\JoinColumn(name="user_id", referencedColumnName="id")
      */
     private $user;
+
+    /**
+    * One Section has Many Students.
+    * @ORM\OneToMany(targetEntity="SMS\UserBundle\Entity\Student", mappedBy="section" ,fetch="EXTRA_LAZY")
+    */
+    private $students;
+
+    /**
+     * One establishment has Many Sections.
+     * @ORM\ManyToOne(targetEntity="SMS\EstablishmentBundle\Entity\Establishment" ,fetch="EXTRA_LAZY")
+     * @ORM\JoinColumn(name="establishment_id", referencedColumnName="id")
+     */
+    private $establishment;
 
      /**
      * @ORM\PrePersist
@@ -78,7 +92,7 @@ class Section
     /**
      * Get id
      *
-     * @return integer 
+     * @return integer
      */
     public function getId()
     {
@@ -101,7 +115,7 @@ class Section
     /**
      * Get sectionName
      *
-     * @return string 
+     * @return string
      */
     public function getsectionName()
     {
@@ -124,7 +138,7 @@ class Section
     /**
      * Get created
      *
-     * @return \DateTime 
+     * @return \DateTime
      */
     public function getCreated()
     {
@@ -147,7 +161,7 @@ class Section
     /**
      * Get updated
      *
-     * @return \DateTime 
+     * @return \DateTime
      */
     public function getUpdated()
     {
@@ -170,7 +184,7 @@ class Section
     /**
      * Get grade
      *
-     * @return \SMS\EstablishmentBundle\Entity\Grade 
+     * @return \SMS\EstablishmentBundle\Entity\Grade
      */
     public function getGrade()
     {
@@ -193,10 +207,51 @@ class Section
     /**
      * Get user
      *
-     * @return \SMS\UserBundle\Entity\User 
+     * @return \SMS\UserBundle\Entity\User
      */
     public function getUser()
     {
         return $this->user;
+    }
+    /**
+     * Constructor
+     */
+    public function __construct()
+    {
+        $this->students = new \Doctrine\Common\Collections\ArrayCollection();
+    }
+
+    /**
+     * Add student
+     *
+     * @param \SMS\UserBundle\Entity\Student $student
+     *
+     * @return Section
+     */
+    public function addStudent(\SMS\UserBundle\Entity\Student $student)
+    {
+        $this->students[] = $student;
+
+        return $this;
+    }
+
+    /**
+     * Remove student
+     *
+     * @param \SMS\UserBundle\Entity\Student $student
+     */
+    public function removeStudent(\SMS\UserBundle\Entity\Student $student)
+    {
+        $this->students->removeElement($student);
+    }
+
+    /**
+     * Get students
+     *
+     * @return \Doctrine\Common\Collections\Collection
+     */
+    public function getStudents()
+    {
+        return $this->students;
     }
 }

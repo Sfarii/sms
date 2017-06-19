@@ -18,7 +18,7 @@ class AttendanceProfessorRepository extends \Doctrine\ORM\EntityRepository
      * @param Student $professor
      * @return array
      */
-	public function findByDateAndSessionAndUser($attendance)
+	public function findByDateAndSessionAndUser($professor , $date , $session)
 	{
 		return $this->createQueryBuilder('attendance')
 				->join('attendance.session', 'session')
@@ -26,9 +26,9 @@ class AttendanceProfessorRepository extends \Doctrine\ORM\EntityRepository
 				->where("attendance.date = :date")
 				->andWhere('session.id = :session')
 				->andWhere('professor.id = :professor')
-				->setParameter('date', $attendance->getDate(), \Doctrine\DBAL\Types\Type::DATE)
-				->setParameter('professor', $attendance->getProfessor()->getId())
-				->setParameter('session', $attendance->getSession()->getId())
+				->setParameter('date', $date, \Doctrine\DBAL\Types\Type::DATE)
+				->setParameter('professor', $professor->getId())
+				->setParameter('session', $session->getId())
 				->getQuery()
             	->getOneOrNullResult();
 	}

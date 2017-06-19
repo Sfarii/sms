@@ -1,4 +1,4 @@
-<?php 
+<?php
 
 namespace API\Form\Type;
 
@@ -21,8 +21,7 @@ class RoleType extends AbstractType
     {
         //die(var_dump($this->getExistingRoles()));
         $resolver->setDefaults(array(
-            'choices' => $this->getExistingRoles(),
-            'multiple' => true,
+            'choices'       => $this->getExistingRoles(),
         ));
     }
 
@@ -40,7 +39,7 @@ class RoleType extends AbstractType
     }
 
     /**
-     * @return string
+     * @inheritdoc
      */
     public function getParent()
     {

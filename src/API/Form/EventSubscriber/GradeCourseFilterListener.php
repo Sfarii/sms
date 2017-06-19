@@ -12,6 +12,13 @@ use SMS\EstablishmentBundle\Entity\Grade;
 use SMS\EstablishmentBundle\Entity\Division;
 use SMS\StudyPlanBundle\Entity\Course;
 
+/**
+ * Class GradeCourseFilterListener
+ *
+ * @author Rami Sfari <rami2sfari@gmail.com>
+ * @copyright Copyright (c) 2017, SMS
+ * @package API\Form\EventSubscriber
+ */
 class GradeCourseFilterListener implements EventSubscriberInterface
 {
 
@@ -46,7 +53,7 @@ class GradeCourseFilterListener implements EventSubscriberInterface
      * @return Void
      */
     public function addElements(FormInterface $form, Grade $grade = null , Division $division = null) {
-        
+
         // Add the grade element
         $form->add('grade' , EntityType::class , array(
                     'data'          => $grade,
@@ -57,7 +64,7 @@ class GradeCourseFilterListener implements EventSubscriberInterface
                     'label'         => 'course.field.grade',
                     'attr'          => [ 'class'=> 'gradeField'])
         );
-        
+
         // Add the grade element
         $form->add('division' , EntityType::class , array(
                     'data'       => $division,
@@ -68,7 +75,7 @@ class GradeCourseFilterListener implements EventSubscriberInterface
                     'label'         => 'filter.field.division',
                     'attr'          => [ 'class'=> 'divisionField'])
         );
-        
+
         $courses = array();
         if ($grade && $division) {
             // Fetch the course from specified grade
@@ -83,7 +90,7 @@ class GradeCourseFilterListener implements EventSubscriberInterface
                     'label' => 'filter.field.course',
                     'attr'          => [ 'class'=> 'courseField'])
                 );
-        
+
     }
 
     /**

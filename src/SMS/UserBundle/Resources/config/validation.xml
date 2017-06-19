@@ -5,7 +5,7 @@
         http://symfony.com/schema/dic/constraint-mapping/constraint-mapping-1.0.xsd">
 
     <class name="SMS\UserBundle\Entity\User">
-        
+
         <constraint name="Symfony\Bridge\Doctrine\Validator\Constraints\UniqueEntity">
             <option name="fields">username</option>
             <option name="repositoryMethod">findByUniqueCriteria</option>
@@ -50,14 +50,6 @@
             </constraint>
         </property>
 
-        <property name="roles">
-            <constraint name="NotBlank">
-                <option name="groups">
-                    <value>Edit</value>
-                </option>
-            </constraint>
-        </property>
-
         <property name="email">
             <constraint name="NotBlank">
                 <option name="groups">
@@ -66,7 +58,7 @@
                     <value>SimpleRegistration</value>
                 </option>
             </constraint>
-            
+
             <constraint name="Length">
                 <option name="min">2</option>
                 <option name="max">180</option>
@@ -95,7 +87,7 @@
             </constraint>
             <constraint name="Length">
                 <option name="min">2</option>
-                <option name="max">4096</option>
+                <option name="max">60</option>
                 <option name="groups">
                     <value>Registration</value>
                     <value>Profile</value>

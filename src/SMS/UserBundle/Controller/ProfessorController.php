@@ -27,7 +27,7 @@ class ProfessorController extends BaseController
      *
      * @Route("/", name="professor_index")
      * @Method("GET")
-     * @Template("smsuserbundle/professor/index.html.twig")
+     * @Template("SMSUserBundle:professor:index.html.twig")
      */
     public function indexAction()
     {
@@ -51,6 +51,16 @@ class ProfessorController extends BaseController
 
         $query = $this->getDataTableQuery()->getQueryFrom($professor);
 
+        $user = $this->getUser();
+        $function = function($qb) use ($user)
+        {
+            $qb->join('professor.establishment', 'establishment')
+                ->andWhere('establishment.id = :establishment')
+        				->setParameter('establishment', $user->getEstablishment()->getId());
+        };
+
+        $query->addWhereAll($function);
+
         return $query->getResponse();
     }
 
@@ -59,7 +69,7 @@ class ProfessorController extends BaseController
      *
      * @Route("/new", name="professor_new")
      * @Method({"GET", "POST"})
-     * @Template("smsuserbundle/professor/new.html.twig")
+     * @Template("SMSUserBundle:professor:new.html.twig")
      */
     public function newAction(Request $request)
     {
@@ -84,7 +94,7 @@ class ProfessorController extends BaseController
      *
      * @Route("/{id}", name="professor_show", options={"expose"=true})
      * @Method("GET")
-     * @Template("smsuserbundle/professor/show.html.twig")
+     * @Template("SMSUserBundle:professor:show.html.twig")
      */
     public function showAction(Professor $professor)
     {
@@ -101,7 +111,7 @@ class ProfessorController extends BaseController
      *
      * @Route("/{id}/edit", name="professor_edit", options={"expose"=true})
      * @Method({"GET", "POST"})
-     * @Template("smsuserbundle/professor/edit.html.twig")
+     * @Template("SMSUserBundle:professor:edit.html.twig")
      */
     public function editAction(Request $request, Professor $professor)
     {
@@ -110,12 +120,14 @@ class ProfessorController extends BaseController
         if ($editForm->isSubmitted() && $editForm->isValid() && $editForm->get('save')->isClicked()) {
             $this->getEntityManager()->update($professor);
             $this->flashSuccessMsg('professor.edit.success');
-            return $this->redirectToRoute('professor_index');
+            if ($professor->getId() !== $this->getUser()->getId()){
+              return $this->redirectToRoute('professor_index');
+            }
         }
 
         return array(
             'user' => $professor,
-            'edit_form' => $editForm->createView(),
+            'form' => $editForm->createView(),
         );
     }
 

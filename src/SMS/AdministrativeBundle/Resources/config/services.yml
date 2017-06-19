@@ -1,4 +1,56 @@
 services:
-#    sms_administrative.example:
-#        class: SMS\AdministrativeBundle\Example
-#        arguments: ["@service_id", "plain_value", "%parameter%"]
+  #Datatable
+  sms.administration.entity_manager:
+      class: %entity_manager%
+      arguments: ["@doctrine.orm.entity_Manager" ]
+      calls:
+          - [ setDays , ["%days%"]]
+          - [ setAttendanceStudent , ["%attendance_student_class%"]]
+          - [ setAttendanceProfessor , ["%attendance_professor_class%"]]
+          - [ setSectionClass , ["%section_class%"]]
+          - [ setSessionClass , ["%session_class%"]]
+          - [ setScheduleClass , ["%schedule_class%"]]
+          - [ setStudentClass , ["%student_class%"]]
+          - [ setProfessorClass , , ["%professor_class%"]]
+  sms.datatable.attendance_student:
+      class: %attendance_student_datatable%
+      parent: sg_datatables.datatable.abstract
+  sms.datatable.attendance:
+      class: %attendance_datatable%
+      parent: sg_datatables.datatable.abstract
+      calls:
+          - [ setSectionClass , ["%section_class%"]]
+          - [ setSessionClass , ["%session_class%"]]
+          - [ setStatus , ["%attendance%"]]
+  sms.datatable.attendance_professor:
+      class: %attendance_professor_datatable%
+      parent: sg_datatables.datatable.abstract
+      calls:
+          - [ setSessionClass , ["%session_class%"]]
+          - [ setStatus , ["%attendance_default%"]]
+  sms.datatable.sanction:
+      class: %sanction_datatable%
+      parent: sg_datatables.datatable.abstract
+      calls:
+          - [ setSectionClass , ["%section_class%"]]
+  sms.form.type.sanction:
+      class: %sanction_form%
+      arguments: ['@doctrine.orm.entity_Manager' , %student_class% , %grade_class% , %section_class% ]
+      tags:
+          - { name: form.type }
+  sms.form.type.attendance.professor:
+      class: %attendance_professor_form%
+      arguments: ['@doctrine.orm.entity_Manager' , %division_class% , %professor_class% ]
+      tags:
+          - { name: form.type }
+  sms.form.type.attendance.student:
+      class: %attendance_student_form%
+      arguments: ['@doctrine.orm.entity_Manager' , %grade_class% , %section_class%, %division_class% ]
+      tags:
+          - { name: form.type }
+  sms.form.type.status:
+      class: %status_form%
+      arguments:
+          - %attendance_default%
+      tags:
+          - { name: form.type }

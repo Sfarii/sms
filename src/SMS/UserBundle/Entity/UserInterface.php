@@ -11,11 +11,13 @@ use Symfony\Component\Security\Core\User\AdvancedUserInterface;
 
 interface UserInterface extends AdvancedUserInterface , \Serializable
 {
+    const ROLE_DEFAULT = 'ROLE_USER';
     const ROLE_STUDENT = 'ROLE_STUDENT';
     const ROLE_PARENT = 'ROLE_PARENT';
     const ROLE_PROFESSOR = 'ROLE_PROFESSOR';
     const ROLE_ADMIN = 'ROLE_ADMIN';
     const ROLE_SUPER_ADMIN = 'ROLE_SUPER_ADMIN';
+    const ROLE_MANAGER = 'ROLE_MANAGER';
 
     /**
      * Returns the user unique id.
@@ -109,7 +111,7 @@ interface UserInterface extends AdvancedUserInterface , \Serializable
     /**
      * Get updatedAt
      *
-     * @return \DateTime 
+     * @return \DateTime
      */
     public function getUpdatedAt();
 
@@ -124,7 +126,7 @@ interface UserInterface extends AdvancedUserInterface , \Serializable
     /**
      * Get created
      *
-     * @return \DateTime 
+     * @return \DateTime
      */
     public function getCreated();
 
@@ -139,7 +141,7 @@ interface UserInterface extends AdvancedUserInterface , \Serializable
     /**
      * Get updated
      *
-     * @return \DateTime 
+     * @return \DateTime
      */
     public function getUpdated();
 
@@ -185,7 +187,7 @@ interface UserInterface extends AdvancedUserInterface , \Serializable
     /**
      * Get enabled
      *
-     * @return boolean 
+     * @return boolean
      */
     public function getEnabled();
 
@@ -291,5 +293,14 @@ interface UserInterface extends AdvancedUserInterface , \Serializable
      * @return self
      */
     public function removeRole($role);
-    
+
+    /**
+     * get all the role of the user.
+     *
+     * @param string $role
+     *
+     * @return self
+     */
+    public function getRoles();
+
 }

@@ -1,0 +1,164 @@
+{% extends 'layout/base.html.twig' %}
+
+{% block heading_actions %}
+  <a href="{{ path('schedule_index') }}">
+    <i class="md-icon material-icons">&#xE5C4;</i>
+  </a>
+  <a href="{{ path('schedule_new') }}">
+    <i class="md-icon material-icons">&#xE5C8;</i>
+  </a>
+{% endblock %}
+
+{% block sticky_button %}
+  <a class="md-fab md-fab-primary" href="{{ path('schedule_edit', { 'id': schedule.id }) }}">
+    <i class="material-icons">&#xE254;</i>
+  </a>
+{% endblock %}
+
+{% block title_page %}
+  {{ 'schedule.show.title'|trans }}
+{% endblock %}
+
+{% block body %}
+  <div class="uk-grid uk-grid-medium" data-uk-grid-margin>
+
+    <div class="uk-width-xLarge-8-10  uk-width-large-7-10">
+      <div class="md-card">
+        <div class="md-card-toolbar">
+          <h3 class="md-card-toolbar-heading-text">
+            {{ 'schedule.show.detail'|trans }}
+          </h3>
+        </div>
+        <div class="md-card-content">
+          <div class="uk-grid uk-margin-small-top uk-margin-large-bottom" data-uk-grid-margin>
+            <div class="uk-width-1-2">
+              <ul class="md-list">
+                <li>
+                  <div class="md-list-content">
+                    <span class="md-list-heading uk-text-large">{{ schedule.section.grade.gradeName }}</span>
+                  </div>
+                  <span class="uk-text-small uk-text-muted uk-display-block">
+                    {{'schedule.field.grade'|trans }}</span>
+                </li>
+                <li>
+                  <div class="md-list-content">
+                    <span class="md-list-heading uk-text-large">{{ schedule.section.sectionName }}</span>
+                  </div>
+                  <span class="uk-text-small uk-text-muted uk-display-block">
+                    {{'schedule.field.section'|trans }}</span>
+                </li>
+                <li>
+                  <div class="md-list-content">
+                    <span class="md-list-heading uk-text-large">{{ schedule.course.division.divisionName }}</span>
+                  </div>
+                  <span class="uk-text-small uk-text-muted uk-display-block">
+                    {{'schedule.field.division'|trans }}</span>
+                </li>
+              </ul>
+            </div>
+            <div class="uk-width-1-2">
+              <ul class="md-list">
+                <li>
+                  <div class="md-list-content">
+                    <span class="md-list-heading uk-text-large">{{ schedule.course.courseName }}</span>
+                  </div>
+                  <span class="uk-text-small uk-text-muted uk-display-block">
+                    {{'schedule.field.course'|trans }}</span>
+                </li>
+                <li>
+                  <div class="md-list-content">
+                    <span class="md-list-heading uk-text-large">{{ schedule.professor }}</span>
+                  </div>
+                  <span class="uk-text-small uk-text-muted uk-display-block">
+                    {{'schedule.field.professor'|trans }}</span>
+                </li>
+
+                <li>
+                  <div class="md-list-content">
+                    <span class="md-list-heading uk-text-large">{{ schedule.day }}</span>
+                  </div>
+                  <span class="uk-text-small uk-text-muted uk-display-block">
+                    {{'schedule.field.day'|trans }}</span>
+                </li>
+              </ul>
+            </div>
+          </div>
+
+        </div>
+      </div>
+      <div class="md-card">
+        <div class="md-card-toolbar">
+          <h3 class="md-card-toolbar-heading-text">
+            {{ 'schedule.field.sessions'|trans }}
+          </h3>
+        </div>
+        <div class="md-card-content">
+          <div class="uk-overflow-container">
+            <table class="uk-table">
+              <thead>
+                <tr>
+                  <th class="uk-text-center">{{ "session.field.sessionName"|trans }}</th>
+                  <th class="uk-text-center">{{ "session.field.startTime"|trans }}</th>
+                  <th class="uk-text-center">{{ "session.field.endTime"|trans }}</th>
+                </tr>
+              </thead>
+              <tbody>
+                {% for session  in  schedule.sessions %}
+                <tr>
+                  <td class="uk-text-center">{{ session.sessionName }}</td>
+                  <td class="uk-text-center">{{ session.startTime|date('H:i:s') }}</td>
+                  <td class="uk-text-center">{{ session.endTime|date('H:i:s') }}</td>
+                </tr>
+                {% endfor %}
+              </tbody>
+            </table>
+          </div>
+        </div>
+      </div>
+    </div>
+    <div class="uk-width-xLarge-2-10 uk-width-large-3-10">
+      <div class="md-card">
+        <div class="md-card-toolbar">
+          <h3 class="md-card-toolbar-heading-text">
+            {{ 'author.info'|trans }}
+          </h3>
+        </div>
+        <div class="md-card-content">
+          <ul class="md-list md-list-addon">
+            <li>
+              <div class="md-list-addon-element">
+                <i class="md-list-addon-icon material-icons">&#xE7FD;</i>
+              </div>
+              <div class="md-list-content">
+                <span class="md-list-heading">{{ schedule.user.username }}</span>
+                <span class="uk-text-small uk-text-muted">{{ 'author.creator'|trans }}</span>
+              </div>
+            </li>
+            <li>
+              <div class="md-list-addon-element">
+                <i class="md-list-addon-icon material-icons">&#xE8DF;</i>
+              </div>
+              <div class="md-list-content">
+                <span class="md-list-heading">
+                  {% if schedule.created %}{{ schedule.created|date('d M Y') }}{% endif %}
+                </span>
+                <span class="uk-text-small uk-text-muted">{{ 'author.updated'|trans }}</span>
+              </div>
+            </li>
+            <li>
+              <div class="md-list-addon-element">
+                <i class="md-list-addon-icon material-icons">&#xE8B5;</i>
+              </div>
+              <div class="md-list-content">
+                <span class="md-list-heading">
+                  {% if schedule.created %}{{ schedule.created|date('d M Y') }}{% endif %}
+                </span>
+                <span class="uk-text-small uk-text-muted">{{ 'author.created'|trans }}</span>
+              </div>
+            </li>
+          </ul>
+        </div>
+      </div>
+    </div>
+  </div>
+{% endblock %}

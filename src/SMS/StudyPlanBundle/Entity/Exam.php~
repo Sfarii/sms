@@ -33,17 +33,7 @@ class Exam
      */
     private $examName;
 
-    /**
-     * @var float
-     *
-     * @ORM\Column(name="factor", type="float")
-     * @Assert\NotBlank()
-     * @Assert\Range(
-     *      min = 0,
-     *      max = 150)
-     * @Assert\Regex("(\d+(?:,\d+)?)")
-     */
-    private $factor;
+
 
     /**
      * @var \DateTime
@@ -127,6 +117,13 @@ class Exam
      */
     protected $updated;
 
+    /**
+     * One establishment has Many Exams.
+     * @ORM\ManyToOne(targetEntity="SMS\EstablishmentBundle\Entity\Establishment" ,fetch="EXTRA_LAZY")
+     * @ORM\JoinColumn(name="establishment_id", referencedColumnName="id")
+     */
+    private $establishment;
+
      /**
      * @ORM\PrePersist
      * @ORM\PreUpdate
@@ -151,28 +148,6 @@ class Exam
         return $this->id;
     }
 
-    /**
-     * Set factor
-     *
-     * @param float $factor
-     * @return Exam
-     */
-    public function setFactor($factor)
-    {
-        $this->factor = $factor;
-
-        return $this;
-    }
-
-    /**
-     * Get factor
-     *
-     * @return float
-     */
-    public function getFactor()
-    {
-        return $this->factor;
-    }
 
     /**
      * Set dateExam
@@ -422,5 +397,39 @@ class Exam
     public function getEndTime()
     {
         return $this->endTime;
+    }
+
+    /**
+     * Add section
+     *
+     * @param \SMS\EstablishmentBundle\Entity\Section $section
+     *
+     * @return Exam
+     */
+    public function addSection(\SMS\EstablishmentBundle\Entity\Section $section)
+    {
+        $this->section[] = $section;
+
+        return $this;
+    }
+
+    /**
+     * Remove section
+     *
+     * @param \SMS\EstablishmentBundle\Entity\Section $section
+     */
+    public function removeSection(\SMS\EstablishmentBundle\Entity\Section $section)
+    {
+        $this->section->removeElement($section);
+    }
+
+    /**
+     * Get section
+     *
+     * @return \Doctrine\Common\Collections\Collection
+     */
+    public function getSection()
+    {
+        return $this->section;
     }
 }

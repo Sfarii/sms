@@ -1,0 +1,60 @@
+{% extends 'layout/base_header_double_height.html.twig' %}
+
+{% block body %}
+
+	<div class="uk-width-medium-8-10 uk-container-center">
+    <div class="md-card md-card-single">
+      <div class="md-card-toolbar">
+        <a href="{{ path('division_index') }}">
+          <span class="md-icon md-card-fullscreen-deactivate material-icons uk-float-left">&#xE5C4;</span>
+        </a>
+        <h3 class="md-card-toolbar-heading-text large uk-margin-small-left">
+          {{ 'division.new.title'|trans }}
+        </h3>
+      </div>
+      <div class="md-card-content">
+        <div class="uk-margin-small-top">
+          {{ form_start(form) }}
+          <div class="uk-form-row uk-input-group">
+            <span class="uk-input-group-addon">
+              <i class="md-list-addon-icon material-icons md-24">&#xE8CE;</i>
+            </span>
+            <label class="uk-form-label">{{ form_label(form.divisionName) }}</label>
+            {{ form_widget(form.divisionName)}}
+            <div class="parsley-errors-list filled uk-text-danger">
+              {{ form_errors(form.divisionName) }}
+            </div>
+          </div>
+          <div class="uk-grid uk-margin-medium-top uk-margin-large-bottom" data-uk-grid-margin>
+            <div class="uk-width-1-2">
+              <div class="uk-form-row uk-input-group">
+                <span class="uk-input-group-addon">
+                  <i class="md-list-addon-icon material-icons md-24">&#xE916;</i>
+                </span>
+                <label class="uk-form-label">{{ form_label(form.startDate) }}</label>
+                {{ form_widget(form.startDate)}}
+                <div class="parsley-errors-list filled uk-text-danger">
+                  {{ form_errors(form.startDate) }}
+                </div>
+              </div>
+            </div>
+            <div class="uk-width-1-2">
+              <div class="uk-form-row uk-input-group">
+                <span class="uk-input-group-addon">
+                  <i class="md-list-addon-icon material-icons md-24">&#xE916;</i>
+                </span>
+                <label class="uk-form-label">{{ form_label(form.endDate) }}</label>
+                {{ form_widget(form.endDate)}}
+                <div class="parsley-errors-list filled uk-text-danger">
+                  {{ form_errors(form.endDate) }}
+                </div>
+              </div>
+            </div>
+            {{ form_widget(form) }}
+
+            {{ form_end(form) }}
+          </div>
+        </div>
+      </div>
+    </div>
+{% endblock %}

@@ -15,7 +15,16 @@ use SMS\StudyPlanBundle\Entity\Session;
 use Symfony\Component\Validator\Constraints\NotBlank;
 use Symfony\Component\Validator\Constraints\Date;
 use SMS\EstablishmentBundle\Entity\Division;
+use Doctrine\ORM\EntityRepository;
+use SMS\EstablishmentBundle\Entity\Establishment;
 
+/**
+ * Class ProfessorAttendanceFilterListener
+ *
+ * @author Rami Sfari <rami2sfari@gmail.com>
+ * @copyright Copyright (c) 2017, SMS
+ * @package API\Form\EventSubscriber
+ */
 class ProfessorAttendanceFilterListener implements EventSubscriberInterface
 {
 
@@ -25,13 +34,19 @@ class ProfessorAttendanceFilterListener implements EventSubscriberInterface
     protected $em;
 
     /**
+     * @var EntityManager
+     */
+    protected $establishment;
+
+    /**
      * Constructor
      *
      * @param EntityManager $em
      */
-    function __construct(EntityManager $em)
+    function __construct(EntityManager $em , Establishment $establishment )
     {
         $this->em = $em;
+        $this->establishment = $establishment;
     }
 
     public static function getSubscribedEvents()
@@ -55,13 +70,21 @@ class ProfessorAttendanceFilterListener implements EventSubscriberInterface
         $status = $form->get('status');
         $form->remove('save');
         $form->remove('status');
+        $establishment = $this->establishment ;
         // Add the division element
         $form->add('division' , EntityType::class , array(
                     'data'       => $division,
                     'class'         => Division::class,
+                    'query_builder' => function (EntityRepository $er) use ($establishment) {
+                        return $er->createQueryBuilder('division')
+                                  ->join('division.establishment', 'establishment')
+                                  ->andWhere('establishment.id = :establishment')
+                                  ->setParameter('establishment', $establishment->getId());
+                    },
                     'property'      => 'divisionName',
                     'placeholder'   => 'filter.field.division',
                     'mapped'        => false,
+                    'constraints'   => [new NotBlank()],
                     'label'         => 'filter.field.division',
                     'attr'          => [ 'class'=> 'divisionField'])
         );
@@ -70,6 +93,12 @@ class ProfessorAttendanceFilterListener implements EventSubscriberInterface
                     'class'         => Professor::class,
                     'placeholder'   => 'filter.field.professor',
                     'label'         => 'filter.field.professor',
+                    'query_builder' => function (EntityRepository $er) use ($establishment) {
+                        return $er->createQueryBuilder('professor')
+                                  ->join('professor.establishment', 'establishment')
+                                  ->andWhere('establishment.id = :establishment')
+                                  ->setParameter('establishment', $establishment->getId());
+                    },
                     'data'          => $professor,
                     'constraints'   => [new NotBlank()],
                     'attr'          => [ 'class'=> 'professorField']
@@ -84,7 +113,7 @@ class ProfessorAttendanceFilterListener implements EventSubscriberInterface
                 'constraints'   => [new NotBlank() , new Date()],
                 'attr'          => [ 'class'=> 'dateField' , 'data-uk-datepicker'=> "{format:'YYYY-MM-DD'}"])
             );
-        
+
         // Session are empty, unless we actually supplied a date
         $sessions = array();
         if ($date && $professor && $division) {
@@ -93,7 +122,7 @@ class ProfessorAttendanceFilterListener implements EventSubscriberInterface
             $day = mb_convert_case(date("l", $timestamp), MB_CASE_LOWER , "UTF-8");
             // Fetch the session from specified date
             $repo = $this->em->getRepository(Session::class);
-            $sessions = $repo->findByProfessorAndDateAndDivision( $professor,$day,$division);
+            $sessions = $repo->findByProfessorAndDateAndDivision( $professor,$day,$division, $establishment);
         }
         // Add the Session element
         $form->add('session' , EntityType::class , array(

@@ -33,17 +33,7 @@ class Exam
      */
     private $examName;
 
-    /**
-     * @var float
-     *
-     * @ORM\Column(name="factor", type="float")
-     * @Assert\NotBlank()
-     * @Assert\Range(
-     *      min = 0,
-     *      max = 150)
-     * @Assert\Regex("(\d+(?:,\d+)?)")
-     */
-    private $factor;
+
 
     /**
      * @var \DateTime
@@ -127,6 +117,13 @@ class Exam
      */
     protected $updated;
 
+    /**
+     * One establishment has Many Exams.
+     * @ORM\ManyToOne(targetEntity="SMS\EstablishmentBundle\Entity\Establishment" ,fetch="EXTRA_LAZY")
+     * @ORM\JoinColumn(name="establishment_id", referencedColumnName="id")
+     */
+    private $establishment;
+
      /**
      * @ORM\PrePersist
      * @ORM\PreUpdate
@@ -151,28 +148,6 @@ class Exam
         return $this->id;
     }
 
-    /**
-     * Set factor
-     *
-     * @param float $factor
-     * @return Exam
-     */
-    public function setFactor($factor)
-    {
-        $this->factor = $factor;
-
-        return $this;
-    }
-
-    /**
-     * Get factor
-     *
-     * @return float
-     */
-    public function getFactor()
-    {
-        return $this->factor;
-    }
 
     /**
      * Set dateExam
@@ -456,5 +431,29 @@ class Exam
     public function getSection()
     {
         return $this->section;
+    }
+
+    /**
+     * Set establishment
+     *
+     * @param \SMS\EstablishmentBundle\Entity\Establishment $establishment
+     *
+     * @return Exam
+     */
+    public function setEstablishment(\SMS\EstablishmentBundle\Entity\Establishment $establishment = null)
+    {
+        $this->establishment = $establishment;
+
+        return $this;
+    }
+
+    /**
+     * Get establishment
+     *
+     * @return \SMS\EstablishmentBundle\Entity\Establishment
+     */
+    public function getEstablishment()
+    {
+        return $this->establishment;
     }
 }

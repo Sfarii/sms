@@ -28,15 +28,29 @@ class Mailer
     */
     private $_email;
 
-	/**
-	* @param Doctrine\ORM\EntityManager $em
-	*/
-	public function __construct($mailer , $templating)
+    /**
+    * @var String
+    */
+    private $_paymentTemplate;
+
+
+  	/**
+  	* @param Doctrine\ORM\EntityManager $em
+  	*/
+  	public function __construct($mailer , $templating)
     {
         $this->_mailer = $mailer;
         $this->_templating = $templating;
     }
-    
+
+    /**
+    * @param String $paymentTemplate
+    */
+    public function setPaymentTemplate($paymentTemplate)
+    {
+        $this->_paymentTemplate = $paymentTemplate;
+    }
+
     public function sendResettingEmail($user)
     {
         $message = \Swift_Message::newInstance()
@@ -53,6 +67,38 @@ class Mailer
         $this->_mailer->send($message);
     }
 
+    public function sendPaymentEmail($user , $payment)
+    {
+        $message = \Swift_Message::newInstance()
+        //->setSubject('Resetting Password')
+        ->setFrom($this->_email)
+        ->setTo($user->getEmail())
+        ->setBody(
+            $this->_templating->render(
+                $this->_paymentTemplate,
+                array('user' => $user , 'payment' => $payment )
+            )
+        , 'text/html')
+        ;
+        $this->_mailer->send($message);
+    }
+
+    public function sendRegistrationEmailWithPassword($user)
+    {
+        $message = \Swift_Message::newInstance()
+        //->setSubject('Resetting Password')
+        ->setFrom($this->_email)
+        ->setTo($user->getEmail())
+        ->setBody(
+            $this->_templating->render(
+                'smsuserbundle/user/registration/emailV2.html.twig',
+                array('user' => $user )
+            )
+        , 'text/html')
+        ;
+        $this->_mailer->send($message);
+    }
+
     public function sendRegistrationEmail($user)
     {
         $message = \Swift_Message::newInstance()
@@ -61,7 +107,7 @@ class Mailer
         ->setTo($user->getEmail())
         ->setBody(
             $this->_templating->render(
-                'smsuserbundle/user/registration/email.html.twig',
+                'smsuserbundle/user/registration/emailV1.html.twig',
                 array('user' => $user )
             )
         , 'text/html')
@@ -75,4 +121,3 @@ class Mailer
     }
 
 }
-

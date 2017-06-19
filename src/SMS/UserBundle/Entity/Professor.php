@@ -14,7 +14,7 @@ use Vich\UploaderBundle\Mapping\Annotation as Vich;
  */
 class Professor extends User
 {
-    
+
 
     /**
      * @var string
@@ -103,18 +103,9 @@ class Professor extends User
     private $schedules;
 
     /**
-     * constructor.
-     */
-    public function __construct()
-    {
-        parent::__construct();
-        $this->roles = array(self::ROLE_PROFESSOR);
-    }
-
-    /**
      * Get id
      *
-     * @return integer 
+     * @return integer
      */
     public function getId()
     {
@@ -137,7 +128,7 @@ class Professor extends User
     /**
      * Get firstName
      *
-     * @return string 
+     * @return string
      */
     public function getFirstName()
     {
@@ -160,7 +151,7 @@ class Professor extends User
     /**
      * Get lastName
      *
-     * @return string 
+     * @return string
      */
     public function getLastName()
     {
@@ -183,7 +174,7 @@ class Professor extends User
     /**
      * Get gender
      *
-     * @return string 
+     * @return string
      */
     public function getGender()
     {
@@ -206,7 +197,7 @@ class Professor extends User
     /**
      * Get birthday
      *
-     * @return \DateTime 
+     * @return \DateTime
      */
     public function getBirthday()
     {
@@ -229,7 +220,7 @@ class Professor extends User
     /**
      * Get phone
      *
-     * @return string 
+     * @return string
      */
     public function getPhone()
     {
@@ -252,7 +243,7 @@ class Professor extends User
     /**
      * Get address
      *
-     * @return string 
+     * @return string
      */
     public function getAddress()
     {
@@ -275,7 +266,7 @@ class Professor extends User
     /**
      * Get grade
      *
-     * @return string 
+     * @return string
      */
     public function getGrade()
     {
@@ -308,7 +299,7 @@ class Professor extends User
     /**
      * Get schedules
      *
-     * @return \Doctrine\Common\Collections\Collection 
+     * @return \Doctrine\Common\Collections\Collection
      */
     public function getSchedules()
     {
@@ -331,7 +322,7 @@ class Professor extends User
     /**
      * Get created
      *
-     * @return \DateTime 
+     * @return \DateTime
      */
     public function getCreated()
     {
@@ -354,7 +345,7 @@ class Professor extends User
     /**
      * Get updated
      *
-     * @return \DateTime 
+     * @return \DateTime
      */
     public function getUpdated()
     {
@@ -366,6 +357,6 @@ class Professor extends User
      */
     public function __toString()
     {
-        return sprintf("%s %s",$this->getFirstName(),$this->getLastName());
+        return sprintf("%s  %s",$this->getFirstName(),$this->getLastName());
     }
 }

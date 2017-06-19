@@ -1,4 +1,38 @@
 services:
-#    sms_user.example:
-#        class: SMS\UserBundle\Example
-#        arguments: ["@service_id", "plain_value", "%parameter%"]
+  #UserDatatable
+  sms.datatable.manager:
+      class: SMS\UserBundle\UserDatatable\ManagerDatatable
+      parent: sg_datatables.datatable.abstract
+  sms.datatable.administrator:
+      class: SMS\UserBundle\UserDatatable\AdministratorDatatable
+      parent: sg_datatables.datatable.abstract
+  sms.datatable.professor:
+      class: SMS\UserBundle\UserDatatable\ProfessorDatatable
+      parent: sg_datatables.datatable.abstract
+  sms.datatable.student:
+      class: SMS\UserBundle\UserDatatable\StudentDatatable
+      parent: sg_datatables.datatable.abstract
+  sms.datatable.student_parent:
+      class: SMS\UserBundle\UserDatatable\StudentParentDatatable
+      parent: sg_datatables.datatable.abstract
+  #form
+  sms.form.student_parent:
+      class: SMS\UserBundle\Form\StudentParentType
+      arguments: ['@security.token_storage']
+      tags:
+          - { name: form.type }
+  sms.form.administrator:
+      class: SMS\UserBundle\Form\AdministratorType
+      arguments: ['@security.token_storage']
+      tags:
+          - { name: form.type }
+  sms.form.professor:
+      class: SMS\UserBundle\Form\ProfessorType
+      arguments: ['@security.token_storage']
+      tags:
+          - { name: form.type }
+  sms.form.student:
+      class: SMS\UserBundle\Form\StudentType
+      arguments: ['@security.token_storage' , "@doctrine.orm.entity_Manager"]
+      tags:
+          - { name: form.type }

@@ -27,7 +27,7 @@ class GradeController extends BaseController
      * Lists all grade entities.
      *
      * @Route("/", name="grade_index")
-     * @Template("smsestablishmentbundle/grade/index.html.twig")
+     * @Template("SMSEstablishmentBundle:grade:index.html.twig")
      */
     public function indexAction(Request $request)
     {
@@ -50,6 +50,15 @@ class GradeController extends BaseController
 
         $query = $this->getDataTableQuery()->getQueryFrom($grade);
 
+        $user = $this->getUser();
+        $function = function($qb) use ($user)
+        {
+            $qb->join('grade.establishment', 'establishment')
+                ->andWhere('establishment.id = :establishment')
+        				->setParameter('establishment', $user->getEstablishment()->getId());
+        };
+
+        $query->addWhereAll($function);
         return $query->getResponse();
 
     }
@@ -81,7 +90,7 @@ class GradeController extends BaseController
             } catch (\Exception $e) {
                 return new Response($this->get('translator')->trans('grade.delete.fail'), 200);
             }
-            
+
 
             return new Response($this->get('translator')->trans('grade.delete.success'), 200);
         }
@@ -94,12 +103,12 @@ class GradeController extends BaseController
      *
      * @Route("/new", name="grade_new")
      * @Method({"GET", "POST"})
-     * @Template("smsestablishmentbundle/grade/new.html.twig")
+     * @Template("SMSEstablishmentBundle:grade:new.html.twig")
      */
     public function newAction(Request $request)
     {
         $grade = new Grade();
-        $form = $this->createForm(GradeType::class, $grade);
+        $form = $this->createForm(GradeType::class, $grade, array('establishment' => $this->getUser()->getEstablishment()));
         $form->handleRequest($request);
 
         if ($form->isSubmitted() && $form->isValid() && $form->get('save')->isClicked()) {
@@ -119,12 +128,12 @@ class GradeController extends BaseController
      *
      * @Route("/{id}/edit", name="grade_edit" , options={"expose"=true})
      * @Method({"GET", "POST"})
-     * @Template("smsestablishmentbundle/grade/edit.html.twig")
+     * @Template("SMSEstablishmentBundle:grade:edit.html.twig")
      */
     public function editAction(Request $request, Grade $grade)
     {
 
-        $editForm = $this->createForm(GradeType::class, $grade)->handleRequest($request);
+        $editForm = $this->createForm(GradeType::class, $grade, array('establishment' => $this->getUser()->getEstablishment()))->handleRequest($request);
         if ($editForm->isSubmitted() && $editForm->isValid() && $editForm->get('save')->isClicked()) {
             $this->getEntityManager()->update($grade);
             $this->flashSuccessMsg('grade.edit.success');
@@ -133,7 +142,7 @@ class GradeController extends BaseController
 
         return  array(
             'grade' => $grade,
-            'edit_form' => $editForm->createView(),
+            'form' => $editForm->createView(),
         );
     }
 

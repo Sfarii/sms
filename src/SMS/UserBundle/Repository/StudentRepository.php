@@ -22,17 +22,20 @@ class StudentRepository extends EntityRepository
     }
 
     /**
-     * Get Student By Section
+     * Get Student By Section And establishment
      *
      * @param integer $section
      * @return array
      */
-	public function findBySection($section)
+	public function findBySectionAndEstablishment($section,$establishment)
 	{
 		return $this->createQueryBuilder('student')
 				->join('student.section', 'section')
+				->join('student.establishment', 'establishment')
 				->andWhere('section.id = :section')
 				->setParameter('section', $section)
+				->andWhere('establishment.id = :establishment')
+				->setParameter('establishment', $establishment)
 				->getQuery()
 				->getResult();
 	}

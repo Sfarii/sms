@@ -14,10 +14,27 @@ use Symfony\Component\Form\Extension\Core\Type\SubmitType;
 use SMS\UserBundle\Entity\Administrator;
 use Vich\UploaderBundle\Form\Type\VichImageType;
 use API\Form\Type\GenderType;
-use API\Form\EventSubscriber\AddUsernamePasswordFieldListener;
+use API\Form\EventSubscriber\UsersListener;
+use Symfony\Component\Security\Core\Authentication\Token\Storage\TokenStorageInterface;
 
 class AdministratorType extends AbstractType
 {
+
+  /**
+   * @var TokenStorageInterface
+   */
+  private $tokenStorage;
+
+  /**
+   * Constructor
+   *
+   * @param EntityManager $em
+   */
+  function __construct(TokenStorageInterface $tokenStorage)
+  {
+      $this->tokenStorage = $tokenStorage;
+  }
+
     /**
      * {@inheritdoc}
      */
@@ -52,15 +69,15 @@ class AdministratorType extends AbstractType
                 'mapped' => false
                 )
             )
-            ->addEventSubscriber(new AddUsernamePasswordFieldListener())
-            
+            ->addEventSubscriber(new UsersListener($this->tokenStorage))
+
             ->add('save', SubmitType::class ,array(
                 'validation_groups' => "SimpleRegistration",
                 'label' => 'md-fab'
             ));
 
     }
-    
+
     /**
      * {@inheritdoc}
      */

@@ -1,0 +1,31 @@
+services:
+  #PaymentDatatable
+  sms.datatable.payment:
+      class: %payment_datatable%
+      parent: sg_datatables.datatable.abstract
+      calls:
+          - [ setSectionClass , ["%section_class%"]]
+          - [ setPaymentTypeClass , ["%payment_type_class%"]]
+          - [ setMonth , ["%months%"]]
+  sms.datatable.paymentType:
+      class: %payment_type_datatable%
+      parent: sg_datatables.datatable.abstract
+  sms.datatable.registration:
+      class: %registration_datatable%
+      parent: sg_datatables.datatable.abstract
+      calls:
+          - [ setSectionClass , ["%section_class%"]]
+          - [ setRegistrationTypeClass , ["%registration_type_class%"]]
+  sms.datatable.registrationType:
+      class: %registration_type_datatable%
+      parent: sg_datatables.datatable.abstract
+  sms.form.type.payment:
+      class: %payment_form%
+      arguments: ['@doctrine.orm.entity_Manager' , %student_class% , %grade_class% , %section_class% , %establishment_class% ]
+      tags:
+          - { name: form.type }
+  sms.form.type.registration:
+      class: %registration_form%
+      arguments: ['@doctrine.orm.entity_Manager' , %student_class% , %grade_class% , %section_class% , %establishment_class% ]
+      tags:
+          - { name: form.type }

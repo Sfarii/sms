@@ -1,0 +1,22 @@
+{% extends 'layout/base_header_double_height.html.twig' %}
+{% block stylesheets %}
+	{{ parent() }}
+	<!-- additional styles for plugins -->
+    <!-- dropify -->
+    <link rel="stylesheet" href="{{ asset('assets/skins/dropify/css/dropify.css')}}">
+{% endblock %}
+{% block body %}
+
+	{% include 'layout/form_layout.html.twig' with {'form': form , 'form_name' : 'schooltestimonial.new.title' , 'index_url': path('schooltestimonial_index')} %}
+
+{% endblock %}
+{% block javascripts %}
+	{{ parent() }}
+	<!-- page specific plugins -->
+    <!-- file input -->
+		<script src="{{ asset('assets/plugins/dropify/dist/js/dropify.min.js')}}"></script>
+    <script>
+		$(function(){
+			$(".dropify").dropify({messages:{"default":"{{ 'file.upload_file'|trans }}",replace:"{{ 'file.upload_file'|trans }}",remove:"{{ 'delete'|trans }}"}});
+		});</script>
+{% endblock %}

@@ -31,7 +31,7 @@ class ScheduleController extends BaseController
      *
      * @Route("/", name="schedule_index")
      * @Method("GET")
-     * @Template("smsstudyplanbundle/schedule/index.html.twig")
+     * @Template("SMSStudyPlanBundle:schedule:index.html.twig")
      */
     public function indexAction()
     {
@@ -46,12 +46,12 @@ class ScheduleController extends BaseController
      *
      * @Route("/schedule_student", name="schedule_student_index")
      * @Method({"GET", "POST"})
-     * @Template("smsstudyplanbundle/schedule/student.html.twig")
+     * @Template("SMSStudyPlanBundle:schedule:student.html.twig")
      */
     public function scheduleStudentAction(Request $request)
     {
-        $form = $this->createForm(ScheduleStudentFilterType::class)->handleRequest($request);
-        
+        $form = $this->createForm(ScheduleStudentFilterType::class, null, array('establishment' => $this->getUser()->getEstablishment()))->handleRequest($request);
+
         if ($form->isSubmitted() && $form->isValid()) {
             $userSpace = $this->getUserSapaceManager();
             $division = $form->get('division')->getData();
@@ -62,19 +62,19 @@ class ScheduleController extends BaseController
         }
 
         return array('form' => $form->createView());
-    } 
+    }
 
     /**
      * Lists all schedule by Professor entities.
      *
      * @Route("/schedule_professor", name="schedule_professor_index")
      * @Method({"GET", "POST"})
-     * @Template("smsstudyplanbundle/schedule/professor.html.twig")
+     * @Template("SMSStudyPlanBundle:schedule:professor.html.twig")
      */
     public function scheduleProfessorAction(Request $request)
     {
-        $form = $this->createForm(ScheduleProfessorFilterType::class)->handleRequest($request);
-        
+        $form = $this->createForm(ScheduleProfessorFilterType::class,null, array('establishment' => $this->getUser()->getEstablishment()))->handleRequest($request);
+
         if ($form->isSubmitted() && $form->isValid() && $form->get('save')->isClicked()) {
             $userSpace = $this->getUserSapaceManager();
             $division = $form->get('division')->getData();
@@ -85,7 +85,7 @@ class ScheduleController extends BaseController
         }
 
         return array('form' => $form->createView());
-    } 
+    }
 
     /**
      * Lists all schedule entities.
@@ -108,12 +108,12 @@ class ScheduleController extends BaseController
      *
      * @Route("/new", name="schedule_new", options={"expose"=true})
      * @Method({"GET", "POST"})
-     * @Template("smsstudyplanbundle/schedule/new.html.twig")
+     * @Template("SMSStudyPlanBundle:schedule:new.html.twig")
      */
     public function newAction(Request $request)
     {
         $schedule = new Schedule();
-        $form = $this->createForm(ScheduleType::class, $schedule);
+        $form = $this->createForm(ScheduleType::class, $schedule, array('establishment' => $this->getUser()->getEstablishment()));
         $form->handleRequest($request);
 
         if ($form->isSubmitted() && $form->isValid() && $form->get('save')->isClicked()) {
@@ -138,7 +138,7 @@ class ScheduleController extends BaseController
     {
         $deleteForm = $this->createDeleteForm($schedule);
 
-        return $this->render('smsstudyplanbundle/schedule/show.html.twig', array(
+        return $this->render('SMSStudyPlanBundle:schedule:show.html.twig', array(
             'schedule' => $schedule,
             'delete_form' => $deleteForm->createView(),
         ));
@@ -149,11 +149,11 @@ class ScheduleController extends BaseController
      *
      * @Route("/{id}/edit", name="schedule_edit", options={"expose"=true})
      * @Method({"GET", "POST"})
-     * @Template("smsstudyplanbundle/schedule/edit.html.twig")
+     * @Template("SMSStudyPlanBundle:schedule:edit.html.twig")
      */
     public function editAction(Request $request, Schedule $schedule)
     {
-        $editForm = $this->createForm(ScheduleType::class, $schedule)->handleRequest($request);
+        $editForm = $this->createForm(ScheduleType::class, $schedule, array('establishment' => $this->getUser()->getEstablishment()))->handleRequest($request);
         if ($editForm->isSubmitted() && $editForm->isValid() && $editForm->get('save')->isClicked()) {
             $this->getEntityManager()->update($schedule);
             $this->flashSuccessMsg('schedule.edit.success');
@@ -162,7 +162,7 @@ class ScheduleController extends BaseController
 
         return array(
             'schedule' => $schedule,
-            'edit_form' => $editForm->createView(),
+            'form' => $editForm->createView(),
         );
     }
 
@@ -193,7 +193,7 @@ class ScheduleController extends BaseController
             } catch (\Exception $e) {
                 return new Response($this->get('translator')->trans('schedule.delete.fail'), 200);
             }
-            
+
 
             return new Response($this->get('translator')->trans('schedule.delete.success'), 200);
         }

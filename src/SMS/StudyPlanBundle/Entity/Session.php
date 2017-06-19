@@ -4,12 +4,15 @@ namespace SMS\StudyPlanBundle\Entity;
 
 use Doctrine\ORM\Mapping as ORM;
 use Symfony\Component\Validator\Constraints as Assert;
+use Symfony\Bridge\Doctrine\Validator\Constraints\UniqueEntity;
 
 /**
  * Session
  *
  * @ORM\Table(name="session")
  * @ORM\Entity(repositoryClass="SMS\StudyPlanBundle\Repository\SessionRepository")
+ * @UniqueEntity(fields={"sessionName" , "establishment"})
+ * @ORM\HasLifecycleCallbacks
  */
 class Session
 {
@@ -52,11 +55,25 @@ class Session
     private $endTime;
 
     /**
-     * One User has Many Divivsions.
+     * One User has Many Sessions.
      * @ORM\ManyToOne(targetEntity="SMS\UserBundle\Entity\User" ,fetch="EXTRA_LAZY")
      * @ORM\JoinColumn(name="user_id", referencedColumnName="id")
      */
     private $user;
+
+    /**
+     * @var datetime $created
+     *
+     * @ORM\Column(type="datetime")
+     */
+    protected $created;
+
+    /**
+     * @var datetime $updated
+     *
+     * @ORM\Column(type="datetime", nullable = true)
+     */
+    protected $updated;
 
     /**
      * Many Sessions have Many Schedules .
@@ -64,6 +81,13 @@ class Session
      *
      */
     private $schedules;
+
+    /**
+     * One establishment has Many Sessions.
+     * @ORM\ManyToOne(targetEntity="SMS\EstablishmentBundle\Entity\Establishment" ,fetch="EXTRA_LAZY")
+     * @ORM\JoinColumn(name="establishment_id", referencedColumnName="id")
+     */
+    private $establishment;
 
     /**
      * Get id
@@ -74,8 +98,6 @@ class Session
     {
         return $this->id;
     }
-
-
 
     /**
      * Set sessionName
@@ -89,6 +111,19 @@ class Session
 
         return $this;
     }
+
+    /**
+    * @ORM\PrePersist
+    * @ORM\PreUpdate
+    */
+   public function updatedTimestamps()
+   {
+       $this->setUpdated(new \DateTime('now'));
+
+       if ($this->getCreated() == null) {
+           $this->setCreated(new \DateTime('now'));
+       }
+   }
 
     /**
      * Get sessionName
@@ -208,5 +243,75 @@ class Session
     public function getSchedules()
     {
         return $this->schedules;
+    }
+
+    /**
+     * Set created
+     *
+     * @param \DateTime $created
+     * @return Course
+     */
+    public function setCreated($created)
+    {
+        $this->created = $created;
+
+        return $this;
+    }
+
+    /**
+     * Get created
+     *
+     * @return \DateTime
+     */
+    public function getCreated()
+    {
+        return $this->created;
+    }
+
+    /**
+     * Set updated
+     *
+     * @param \DateTime $updated
+     * @return Course
+     */
+    public function setUpdated($updated)
+    {
+        $this->updated = $updated;
+
+        return $this;
+    }
+
+    /**
+     * Get updated
+     *
+     * @return \DateTime
+     */
+    public function getUpdated()
+    {
+        return $this->updated;
+    }
+
+    /**
+     * Set establishment
+     *
+     * @param \SMS\EstablishmentBundle\Entity\Establishment $establishment
+     *
+     * @return Session
+     */
+    public function setEstablishment(\SMS\EstablishmentBundle\Entity\Establishment $establishment = null)
+    {
+        $this->establishment = $establishment;
+
+        return $this;
+    }
+
+    /**
+     * Get establishment
+     *
+     * @return \SMS\EstablishmentBundle\Entity\Establishment
+     */
+    public function getEstablishment()
+    {
+        return $this->establishment;
     }
 }

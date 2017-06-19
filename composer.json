@@ -2,7 +2,7 @@
     "name": "SMS System Managment School",
     "license": "MIT",
     "type": "project",
-    "description": "The \"System Managment School\" distribution",
+    "description": "School Management System software automates the life cycle of a student from admission to pass-out, maintains academic records, facilitates collaboration, allows schools to collect fees, conduct exams and print report cards.",
     "autoload": {
         "psr-4": {
             "": "src/"

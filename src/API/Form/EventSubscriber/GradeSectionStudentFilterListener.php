@@ -11,8 +11,17 @@ use Doctrine\ORM\EntityManager;
 use SMS\EstablishmentBundle\Entity\Grade;
 use SMS\EstablishmentBundle\Entity\Section;
 use SMS\UserBundle\Entity\Student;
+use Doctrine\ORM\EntityRepository;
+use SMS\EstablishmentBundle\Entity\Establishment;
 use Symfony\Component\Validator\Constraints\NotBlank;
 
+/**
+ * Class GradeSectionStudentFilterListener
+ *
+ * @author Rami Sfari <rami2sfari@gmail.com>
+ * @copyright Copyright (c) 2017, SMS
+ * @package API\Form\EventSubscriber
+ */
 class GradeSectionStudentFilterListener implements EventSubscriberInterface
 {
 
@@ -22,13 +31,19 @@ class GradeSectionStudentFilterListener implements EventSubscriberInterface
     protected $em;
 
     /**
+     * @var Establishment
+     */
+    protected $establishment;
+
+    /**
      * Constructor
      *
      * @param EntityManager $em
      */
-    function __construct(EntityManager $em)
+    function __construct(EntityManager $em , Establishment $establishment )
     {
         $this->em = $em;
+        $this->establishment = $establishment;
     }
 
     public static function getSubscribedEvents()
@@ -46,47 +61,53 @@ class GradeSectionStudentFilterListener implements EventSubscriberInterface
      * @param Grade $grade
      * @return Void
      */
-    public function addElements(FormInterface $form, Grade $grade = null , Section $section = null) {
-        
+    public function addElements(FormInterface $form, Grade $grade = null , Section $section = null , $type = "add") {
+
+        $establishment = $this->establishment ;
         // Add the grade element
         $form->add('grade' , EntityType::class , array(
                     'data'          => $grade,
                     'class'         => Grade::class,
+                    'query_builder' => function (EntityRepository $er) use ($establishment) {
+                        return $er->createQueryBuilder('grade')
+                                  ->join('grade.establishment', 'establishment')
+                                  ->andWhere('establishment.id = :establishment')
+                                  ->setParameter('establishment', $establishment->getId());
+                    },
                     'property'      => 'gradeName',
-                    'placeholder'   => 'filter.field.grade',
+                    'placeholder'   => 'course.field.grade',
                     'mapped'        => false,
                     'constraints'   => [new NotBlank()],
-                    'label'         => 'filter.field.grade',
+                    'label'         => 'course.field.grade',
                     'attr'          => [ 'class'=> 'gradeField'])
         );
-        
-        // Section are empty, unless we actually supplied a grade
-        $sections = array();
-        if ($grade) {
-            // Fetch the section from specified grade
-            $sections = $this->em->getRepository(Section::class)->findByGrade($grade);
-        }
-        $students = array();
-        if ($section){
-             // Fetch the student from specified grade
-            $students = $this->em->getRepository(Student::class)->findBySection($section);
-            $sections = $section;
-        }
-
-        // Add the Section element
+          // Add the Section element
         $form->add('section' , EntityType::class , array(
-                    'data'          => $sections,
+                    'data'       => $section,
                     'class'         => Section::class,
                     'property'      => 'sectionName',
-                    'placeholder'   => 'filter.field.section',
-                    'label'         => 'filter.field.section',
-                    'mapped'        => false,
+                    'query_builder' => function (EntityRepository $er) use ($establishment , $grade) {
+                        return $er->createQueryBuilder('section')
+                                  ->join('section.grade', 'grade')
+                                  ->andWhere('grade.id = :grade')
+                                  ->setParameter('grade', $grade)
+                                  ->join('section.establishment', 'establishment')
+                                  ->andWhere('establishment.id = :establishment')
+                                  ->setParameter('establishment', $establishment->getId());
+                    },
+                    'placeholder'   => 'schedule.field.section',
+                    'label'         => 'schedule.field.section',
                     'constraints'   => [new NotBlank()],
+                    'mapped'        => false,
                     'attr'          => [ 'class'=> 'sectionField']
                     )
                 );
+        $students = array();
+        if ($section){
+             // Fetch the student from specified grade
+            $students = $this->em->getRepository(Student::class)->findBySectionAndEstablishment($section , $establishment);
 
-        
+        }
         // Add the Student element
         $form->add('student' , EntityType::class , array(
                     'class'         => Student::class,
@@ -119,7 +140,7 @@ class GradeSectionStudentFilterListener implements EventSubscriberInterface
         $grade = $data->getStudent() ? $data->getStudent()->getSection()->getGrade() : null;
 
         $section = $data->getStudent() ? $data->getStudent()->getSection() : null;
-        $this->addElements($form, $grade , $section);
+        $this->addElements($form, $grade , $section , "edit");
     }
 
 }

@@ -1,4 +1,51 @@
 services:
-#    sms_study_plan.example:
-#        class: SMS\StudyPlanBundle\Example
-#        arguments: ["@service_id", "plain_value", "%parameter%"]
+  #StudyPlanDatatable
+  sms.datatable.section_manager:
+      class: SMS\StudyPlanBundle\StudyPlanDatatable\SectionManagerDatatable
+      parent: sg_datatables.datatable.abstract
+  sms.datatable.session:
+      class: SMS\StudyPlanBundle\StudyPlanDatatable\SessionDatatable
+      parent: sg_datatables.datatable.abstract
+  sms.datatable.session:
+      class: SMS\StudyPlanBundle\StudyPlanDatatable\SessionDatatable
+      parent: sg_datatables.datatable.abstract
+  sms.datatable.course:
+      class: SMS\StudyPlanBundle\StudyPlanDatatable\CourseDatatable
+      parent: sg_datatables.datatable.abstract
+  sms.datatable.exam:
+      class: SMS\StudyPlanBundle\StudyPlanDatatable\ExamDatatable
+      parent: sg_datatables.datatable.abstract
+  sms.datatable.note:
+      class: SMS\StudyPlanBundle\StudyPlanDatatable\NoteDatatable
+      parent: sg_datatables.datatable.abstract
+  sms.datatable.type_exam:
+      class: SMS\StudyPlanBundle\StudyPlanDatatable\TypeExamDatatable
+      parent: sg_datatables.datatable.abstract
+  sms.datatable.schedule:
+      class: SMS\StudyPlanBundle\StudyPlanDatatable\ScheduleDatatable
+      parent: sg_datatables.datatable.abstract
+  #form
+  sms.form.type.schedule:
+      class: SMS\StudyPlanBundle\Form\ScheduleType
+      arguments:
+          - '@doctrine.orm.entity_Manager'
+      tags:
+          - { name: form.type }
+  sms.form.type.schedule_student:
+      class: SMS\StudyPlanBundle\Form\ScheduleStudentFilterType
+      arguments:
+          - '@doctrine.orm.entity_Manager'
+      tags:
+          - { name: form.type }
+  sms.form.type.exam:
+      class: SMS\StudyPlanBundle\Form\ExamType
+      arguments:
+          - '@doctrine.orm.entity_Manager'
+      tags:
+          - { name: form.type }
+  sms.form.type.note:
+      class: SMS\StudyPlanBundle\Form\NoteType
+      arguments:
+          - '@doctrine.orm.entity_Manager'
+      tags:
+          - { name: form.type }

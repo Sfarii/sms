@@ -4,9 +4,12 @@ namespace SMS\EstablishmentBundle\Entity;
 
 use Doctrine\ORM\Mapping as ORM;
 use Symfony\Component\Validator\Constraints as Assert;
+use Symfony\Bridge\Doctrine\Validator\Constraints\UniqueEntity;
 
 /**
  * Grade
+ * @UniqueEntity("gradeName")
+ * @UniqueEntity("gradeCode")
  * @ORM\Table(name="grade")
  * @ORM\Entity(repositoryClass="SMS\EstablishmentBundle\Repository\GradeRepository")
  */
@@ -24,7 +27,7 @@ class Grade
     /**
      * @var string
      *
-     * @ORM\Column(name="grade_name", type="string", length=50)
+     * @ORM\Column(name="grade_name", type="string", length=50 , unique=true)
      * @Assert\NotBlank()
      * @Assert\Length(min = 2, max = 49)
      * @Assert\Regex(pattern="/^[a-z0-9 .\-]+$/i" ,match=true)
@@ -34,7 +37,7 @@ class Grade
     /**
      * @var string
      *
-     * @ORM\Column(name="grade_code", type="string", length=50)
+     * @ORM\Column(name="grade_code", type="string", length=50 , unique=true)
      * @Assert\NotBlank()
      * @Assert\Length(min = 2, max = 49)
      * @Assert\Regex(pattern="/^[a-z0-9 .\-]+$/i" ,match=true)
@@ -61,9 +64,16 @@ class Grade
     private $courses;
 
     /**
+     * One establishment has Many Grades.
+     * @ORM\ManyToOne(targetEntity="SMS\EstablishmentBundle\Entity\Establishment" ,fetch="EXTRA_LAZY")
+     * @ORM\JoinColumn(name="establishment_id", referencedColumnName="id")
+     */
+    private $establishment;
+
+    /**
      * Get id
      *
-     * @return integer 
+     * @return integer
      */
     public function getId()
     {
@@ -86,7 +96,7 @@ class Grade
     /**
      * Get gradeName
      *
-     * @return string 
+     * @return string
      */
     public function getGradeName()
     {
@@ -126,7 +136,7 @@ class Grade
     /**
      * Get sections
      *
-     * @return \Doctrine\Common\Collections\Collection 
+     * @return \Doctrine\Common\Collections\Collection
      */
     public function getSections()
     {
@@ -149,7 +159,7 @@ class Grade
     /**
      * Get user
      *
-     * @return \SMS\UserBundle\Entity\User 
+     * @return \SMS\UserBundle\Entity\User
      */
     public function getUser()
     {
@@ -162,5 +172,63 @@ class Grade
     public function __toString()
     {
         return (string) $this->getGradeName();
+    }
+
+    /**
+     * Set gradeCode
+     *
+     * @param string $gradeCode
+     *
+     * @return Grade
+     */
+    public function setGradeCode($gradeCode)
+    {
+        $this->gradeCode = $gradeCode;
+
+        return $this;
+    }
+
+    /**
+     * Get gradeCode
+     *
+     * @return string
+     */
+    public function getGradeCode()
+    {
+        return $this->gradeCode;
+    }
+
+    /**
+     * Add course
+     *
+     * @param \SMS\StudyPlanBundle\Entity\Course $course
+     *
+     * @return Grade
+     */
+    public function addCourse(\SMS\StudyPlanBundle\Entity\Course $course)
+    {
+        $this->courses[] = $course;
+
+        return $this;
+    }
+
+    /**
+     * Remove course
+     *
+     * @param \SMS\StudyPlanBundle\Entity\Course $course
+     */
+    public function removeCourse(\SMS\StudyPlanBundle\Entity\Course $course)
+    {
+        $this->courses->removeElement($course);
+    }
+
+    /**
+     * Get courses
+     *
+     * @return \Doctrine\Common\Collections\Collection
+     */
+    public function getCourses()
+    {
+        return $this->courses;
     }
 }

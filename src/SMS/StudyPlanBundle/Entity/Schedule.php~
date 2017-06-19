@@ -35,7 +35,7 @@ class Schedule
     /**
      * @var string
      *
-     * @ORM\Column(name="day", type="string", length=150)
+     * @ORM\Column(name="day", type="string", length=50)
      * @Assert\Choice({"sunday", "monday", "tuesday","wednesday", "thursday", "friday","saturday"})
      * @Assert\NotBlank()
      */
@@ -84,10 +84,17 @@ class Schedule
 
     /**
      * @var datetime $updated
-     * 
+     *
      * @ORM\Column(type="datetime", nullable = true)
      */
     private $updated;
+
+    /**
+     * One establishment has Many Schedules.
+     * @ORM\ManyToOne(targetEntity="SMS\EstablishmentBundle\Entity\Establishment" ,fetch="EXTRA_LAZY")
+     * @ORM\JoinColumn(name="establishment_id", referencedColumnName="id")
+     */
+    private $establishment;
 
 
     /**
@@ -114,7 +121,7 @@ class Schedule
     /**
      * Get id
      *
-     * @return integer 
+     * @return integer
      */
     public function getId()
     {
@@ -137,7 +144,7 @@ class Schedule
     /**
      * Get created
      *
-     * @return \DateTime 
+     * @return \DateTime
      */
     public function getCreated()
     {
@@ -160,7 +167,7 @@ class Schedule
     /**
      * Get updated
      *
-     * @return \DateTime 
+     * @return \DateTime
      */
     public function getUpdated()
     {
@@ -183,7 +190,7 @@ class Schedule
     /**
      * Get section
      *
-     * @return \SMS\EstablishmentBundle\Entity\Section 
+     * @return \SMS\EstablishmentBundle\Entity\Section
      */
     public function getSection()
     {
@@ -206,7 +213,7 @@ class Schedule
     /**
      * Get day
      *
-     * @return \SMS\StudyPlanBundle\Entity\Day 
+     * @return \SMS\StudyPlanBundle\Entity\Day
      */
     public function getDay()
     {
@@ -229,7 +236,7 @@ class Schedule
     /**
      * Get course
      *
-     * @return \SMS\StudyPlanBundle\Entity\Course 
+     * @return \SMS\StudyPlanBundle\Entity\Course
      */
     public function getCourse()
     {
@@ -252,7 +259,7 @@ class Schedule
     /**
      * Get professor
      *
-     * @return \SMS\UserBundle\Entity\Professor 
+     * @return \SMS\UserBundle\Entity\Professor
      */
     public function getProfessor()
     {
@@ -275,7 +282,7 @@ class Schedule
     /**
      * Get user
      *
-     * @return \SMS\UserBundle\Entity\User 
+     * @return \SMS\UserBundle\Entity\User
      */
     public function getUser()
     {
@@ -308,7 +315,7 @@ class Schedule
     /**
      * Get sessions
      *
-     * @return \Doctrine\Common\Collections\Collection 
+     * @return \Doctrine\Common\Collections\Collection
      */
     public function getSessions()
     {
@@ -331,7 +338,7 @@ class Schedule
     /**
      * Get grade
      *
-     * @return \SMS\EstablishmentBundle\Entity\Grade 
+     * @return \SMS\EstablishmentBundle\Entity\Grade
      */
     public function getGrade()
     {

@@ -2,6 +2,7 @@
 
 namespace API\Form\EventSubscriber;
 
+use API\Form\Type\StatusType;
 use Symfony\Component\EventDispatcher\EventSubscriberInterface;
 use Symfony\Component\Form\FormEvent;
 use Symfony\Component\Form\FormEvents;
@@ -15,7 +16,16 @@ use SMS\StudyPlanBundle\Entity\Session;
 use Symfony\Component\Validator\Constraints\NotBlank;
 use Symfony\Component\Validator\Constraints\Date;
 use SMS\EstablishmentBundle\Entity\Division;
+use Doctrine\ORM\EntityRepository;
+use SMS\EstablishmentBundle\Entity\Establishment;
 
+/**
+ * Class StudentAttendanceFilterListener
+ *
+ * @author Rami Sfari <rami2sfari@gmail.com>
+ * @copyright Copyright (c) 2017, SMS
+ * @package API\Form\EventSubscriber
+ */
 class StudentAttendanceFilterListener implements EventSubscriberInterface
 {
 
@@ -25,13 +35,19 @@ class StudentAttendanceFilterListener implements EventSubscriberInterface
     protected $em;
 
     /**
+     * @var EntityManager
+     */
+    protected $establishment;
+
+    /**
      * Constructor
      *
      * @param EntityManager $em
      */
-    function __construct(EntityManager $em)
+    function __construct(EntityManager $em , Establishment $establishment )
     {
         $this->em = $em;
+        $this->establishment = $establishment;
     }
 
     public static function getSubscribedEvents()
@@ -49,25 +65,40 @@ class StudentAttendanceFilterListener implements EventSubscriberInterface
      * @param Grade $grade
      * @return Void
      */
-    public function addElements(FormInterface $form, Grade $grade = null , Section $section = null , $date = null,Division $division = null) {
+    public function addElements(FormInterface $form, Grade $grade = null, Section $section = null, $date = null, Division $division = null)
+    {
         // Remove the submit button, we will place this at the end of the form later
         $submit = $form->get('save');
         $form->remove('save');
+        $establishment = $this->establishment ;
         // Add the division element
-        $form->add('division' , EntityType::class , array(
+        $form->add('division', EntityType::class, array(
                     'data'       => $division,
                     'class'         => Division::class,
+                    'query_builder' => function (EntityRepository $er) use ($establishment) {
+                        return $er->createQueryBuilder('division')
+                                  ->join('division.establishment', 'establishment')
+                                  ->andWhere('establishment.id = :establishment')
+                                  ->setParameter('establishment', $establishment->getId());
+                    },
                     'property'      => 'divisionName',
                     'placeholder'   => 'filter.field.division',
                     'mapped'        => false,
+                    'constraints'   => [new NotBlank()],
                     'label'         => 'filter.field.division',
                     'attr'          => [ 'class'=> 'divisionField'])
         );
         // Add the grade element
 
-        $form->add('grade' , EntityType::class , array(
+        $form->add('grade', EntityType::class, array(
                     'data'          => $grade,
                     'class'         => Grade::class,
+                    'query_builder' => function (EntityRepository $er) use ($establishment) {
+                        return $er->createQueryBuilder('grade')
+                                  ->join('grade.establishment', 'establishment')
+                                  ->andWhere('establishment.id = :establishment')
+                                  ->setParameter('establishment', $establishment->getId());
+                    },
                     'property'      => 'gradeName',
                     'placeholder'   => 'filter.field.grade',
                     'mapped'        => false,
@@ -75,7 +106,7 @@ class StudentAttendanceFilterListener implements EventSubscriberInterface
                     'label'         => 'filter.field.grade',
                     'attr'          => [ 'class'=> 'gradeField'])
         );
-        
+
         // Section are empty, unless we actually supplied a grade
         $sections = array();
         if ($grade) {
@@ -84,7 +115,7 @@ class StudentAttendanceFilterListener implements EventSubscriberInterface
             $sections = $repo->findByGrade($grade);
         }
         // Add the Section element
-        $form->add('section' , EntityType::class , array(
+        $form->add('section', EntityType::class, array(
                     'class'         => Section::class,
                     'property'      => 'sectionName',
                     'placeholder'   => 'filter.field.section',
@@ -96,27 +127,33 @@ class StudentAttendanceFilterListener implements EventSubscriberInterface
                     )
                 );
 
+        // Add the default status element
+        $form->add('status', StatusType::class , array(
+              'placeholder'   => 'attendance.field.default_status',
+              'constraints'   => [new NotBlank()],
+              'mapped'        => false,
+              'label'         => 'attendance.field.default_status')
+        );
         // Add the date element
-        $form->add('date' ,DateType::class , array(
+        $form->add('date', DateType::class, array(
                 'label' => 'attendance.field.date',
                 'widget' => 'single_text',
                 'html5' => false,
                 'constraints'   => [new NotBlank() , new Date()],
                 'attr' => [ 'class'=> 'dateField' , 'data-uk-datepicker'=> "{format:'YYYY-MM-DD'}"])
             );
-        
         // Session are empty, unless we actually supplied a date
         $sessions = array();
         if ($date && $section && $division) {
             // Get the day from the date object
             $timestamp = strtotime($date);
-            $day = mb_convert_case(date("l", $timestamp), MB_CASE_LOWER , "UTF-8");
+            $day = mb_convert_case(date("l", $timestamp), MB_CASE_LOWER, "UTF-8");
             // Fetch the session from specified date
             $repo = $this->em->getRepository(Session::class);
-            $sessions = $repo->findBySectionAndDateAndDivision($section,$day,$division);
+            $sessions = $repo->findBySectionAndDateAndDivision($section, $day, $division , $establishment);
         }
         // Add the Session element
-        $form->add('session' , EntityType::class , array(
+        $form->add('session', EntityType::class, array(
                     'class'         => Session::class,
                     'property'      => 'sessionName',
                     'placeholder'   => 'filter.field.session',
@@ -134,7 +171,8 @@ class StudentAttendanceFilterListener implements EventSubscriberInterface
     /**
      * {@inheritdoc}
      */
-    public function onPreSubmit(FormEvent $event) {
+    public function onPreSubmit(FormEvent $event)
+    {
         $form = $event->getForm();
         $data = $event->getData();
         // Note that the data is not yet hydrated into the entity.
@@ -147,10 +185,10 @@ class StudentAttendanceFilterListener implements EventSubscriberInterface
     /**
      * {@inheritdoc}
      */
-    public function onPreSetData(FormEvent $event) {
+    public function onPreSetData(FormEvent $event)
+    {
         $data = $event->getData();
         $form = $event->getForm();
         $this->addElements($form);
     }
-
 }

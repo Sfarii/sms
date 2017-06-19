@@ -1,0 +1,17 @@
+services:
+  #SchoolDataTable
+  sms.datatable.feature:
+      class: SMS\SchoolBundle\SchoolDatatable\FeatureDatatable
+      parent: sg_datatables.datatable.abstract
+  sms.datatable.pricing:
+      class: SMS\SchoolBundle\SchoolDatatable\PricingDatatable
+      parent: sg_datatables.datatable.abstract
+  sms.datatable.pricingFeature:
+      class: SMS\SchoolBundle\SchoolDatatable\PricingFeatureDatatable
+      parent: sg_datatables.datatable.abstract
+  sms.datatable.slider:
+      class: SMS\SchoolBundle\SchoolDatatable\SliderDatatable
+      parent: sg_datatables.datatable.abstract
+  sms.datatable.schoolTestimonial:
+      class: SMS\SchoolBundle\SchoolDatatable\SchoolTestimonialDatatable
+      parent: sg_datatables.datatable.abstract

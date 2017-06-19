@@ -60,13 +60,13 @@ class Sanction
 
     /**
      * @var datetime $updated
-     * 
+     *
      * @ORM\Column(type="datetime", nullable = true)
      */
     protected $updated;
 
     /**
-     * One User has Many Divivsions.
+     * One User has Many Sanctions.
      * @ORM\ManyToOne(targetEntity="SMS\UserBundle\Entity\User" ,fetch="EXTRA_LAZY")
      * @ORM\JoinColumn(name="user_id", referencedColumnName="id")
      */
@@ -89,7 +89,7 @@ class Sanction
     /**
      * Get id
      *
-     * @return integer 
+     * @return integer
      */
     public function getId()
     {
@@ -112,7 +112,7 @@ class Sanction
     /**
      * Get punishment
      *
-     * @return string 
+     * @return string
      */
     public function getPunishment()
     {
@@ -135,7 +135,7 @@ class Sanction
     /**
      * Get cause
      *
-     * @return string 
+     * @return string
      */
     public function getCause()
     {

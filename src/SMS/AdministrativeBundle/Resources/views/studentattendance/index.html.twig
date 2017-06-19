@@ -1,0 +1,50 @@
+{% extends 'layout/base.html.twig' %}
+
+{% block stylesheets %}
+	{{ parent() }}
+	<!-- page specific plugins -->
+	<link rel="stylesheet" href="{{ asset('assets/plugins/bootstrap/css/bootstrap.min.css')}}">
+    <link rel="stylesheet" href="{{ asset('assets/plugins/editable/css/bootstrap-editable.css')}}">
+
+{% endblock %}
+{% block sub_title_page %}
+	<p class="uk-text-bold uk-margin-small-top">
+		<i class="uk-input-group-icon uk-icon-calendar"></i> {{attendance_date|date("d/m/Y")}}
+	</p>
+{% endblock %}
+{% block heading_actions %}
+<a  data-uk-tooltip="{pos:'bottom'}" title="{{'action.help'|trans }}" id="tour" href="#">
+	<i class="md-icon material-icons">&#xE887;</i>
+</a>
+<a href="#" data-uk-tooltip="{pos:'bottom'}" title="{{'action.print'|trans }}">
+	<i class="md-icon material-icons">&#xE8AD;</i>
+</a>
+{% endblock %}
+
+{% block sticky_button %}
+<a class="md-fab md-fab-primary" href="{{ url('attendance_student_new') }}" id="back" >
+	<i class="material-icons">&#xE879;</i>
+</a>
+{% endblock %}
+
+{% block head_javascripts %}
+	{{ parent() }}
+	<!-- page specific plugins -->
+    <!--  form file input functions -->
+    <script src="{{ asset('assets/plugins/bootstrap/js/bootstrap.min.js')}}"></script>
+    <script src="{{ asset('assets/plugins/editable/js/bootstrap-editable.min.js')}}"></script>
+
+
+{% endblock %}
+
+{% block title_page %}
+ {{ 'attendance.list.title'|trans }}
+{% endblock %}
+
+{% block body %}
+    <div class="md-card uk-margin-medium-bottom">
+        <div class="md-card-content">
+            {{ datatable_render(attendances) }}
+        </div>
+    </div>
+{% endblock %}

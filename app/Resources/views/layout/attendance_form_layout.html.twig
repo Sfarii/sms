@@ -1,4 +1,3 @@
-{{ form_start(form) }}
 <div class="uk-width-medium-8-10 uk-container-center">
     <div class="md-card md-card-single">
         <div class="md-card-toolbar">
@@ -8,16 +7,10 @@
         </div>
         <div class="md-card-content">
             <div class="uk-margin-large-bottom">
-
-                {% if form.status is defined %}
-                    <div class="uk-form-row">
-                        {{ form_widget(form.status) }}
-                        {{ form_label(form.status) }}
-                    </div>
-                {% endif %}
+              {{ form_start(form) }}
                 {{ form_widget(form) }}
+              {{ form_end(form) }}
             </div>
         </div>
     </div>
 </div>
-{{ form_end(form) }}

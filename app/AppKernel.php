@@ -30,6 +30,9 @@ class AppKernel extends Kernel
             new Knp\Bundle\MenuBundle\KnpMenuBundle(),
             new JMS\TranslationBundle\JMSTranslationBundle(),
             new SMS\UserSpaceBundle\SMSUserSpaceBundle(),
+            new SMS\SchoolBundle\SMSSchoolBundle(),
+            new SMS\PaymentBundle\SMSPaymentBundle(),
+            new SMS\StoreBundle\SMSStoreBundle(),
         );
 
         if (in_array($this->getEnvironment(), array('dev', 'test'), true)) {

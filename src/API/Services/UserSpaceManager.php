@@ -5,6 +5,8 @@ namespace API\Services;
 use SMS\StudyPlanBundle\Entity\Schedule;
 use SMS\StudyPlanBundle\Entity\Course;
 use SMS\StudyPlanBundle\Entity\Session;
+use SMS\StudyPlanBundle\Entity\TypeExam;
+use SMS\StudyPlanBundle\Entity\Note;
 use SMS\AdministrativeBundle\Entity\AttendanceStudent;
 
 /**
@@ -118,7 +120,6 @@ class UserSpaceManager
         $result = array();
         foreach ($this->_days as $key => $day) {
             $resultSession = $this->getAllScheduleByDay($schedules,$key,$sessions);
-
             // push the result into the array
             array_push($result,array("day" => $day ,"sessions" =>$resultSession));
         }
@@ -146,12 +147,14 @@ class UserSpaceManager
     *
     * @return array
     */
-    public function getNotes($student ,$division, $CourseClassName, $noteClassName, $typeExamClassName){
+    public function getNotes($student ,$division){
         // get All the type Exams
-        $typeExams = $this->_em->getRepository($typeExamClassName)->findAll();
+        $typeExams = $this->_em->getRepository(TypeExam::class)->getTypeExamAll();
         // get All the Course by the garde of the student
-        $courses = $this->_em->getRepository($CourseClassName)
+        $courses = $this->_em->getRepository(Course::class)
                                 ->findByGradeAndDivision($student->getSection()->getGrade()->getId(),$division->getId());
+        $marks = $this->_em->getRepository(Course::class)
+                          ->findByStudent($student,$division);
         // init the result value
         $result = array();
         // fetch All the Course
@@ -159,43 +162,15 @@ class UserSpaceManager
             $resultTypeExam = array();
             // fetch All the type Exams
             foreach ($typeExams as $typeExam) {
-                $resultExam = array();
-                // fetch All the Exams
-                foreach ($course->getExams() as $exam) {
-                    $resultMark = array();
-                    // test if type exam and exam have the same id
-                    if ($exam->getTypeExam()->getId() === $typeExam->getId() ){
-                        // fetch the mark from the mark table
-                        $mark = $this->_em->getRepository($noteClassName)
-                                                ->findByExamAndStudent($exam , $student);
-                        //create the mark table that hold the data
-                        $resultMark["empty"] = false;
-                        $resultMark["examName"] = $exam->getExamName();
-                        $resultMark["factor"] = $exam->getFactor();
-                        $resultMark["date"] = $exam->getDateExam();
+                $resultMark = array_filter($marks, function($value) use ($course, &$typeExam) { return strcasecmp($value['courseName'],$course->getCourseName()) == 0 && strcmp($typeExam['typeExamName'],$value['typeExamName']) == 0;});
 
-                        if (is_null($mark)){
-                            $resultMark["mark"] = null;
-                        }else{
-                            $resultMark["mark"] = $mark->getMark();
-                        }
-                    }
-                    // test if the mark table is empty
-                    if (!empty($resultMark)){
-                        array_push($resultExam, $resultMark);
-                    }
-                }
-                // test if there is no exam match the type
-                if (empty($resultExam)){
-                    $resultMark["empty"] = true;
-                    array_push($resultExam, $resultMark);
-                }
                 // push the result into the array
-                array_push($resultTypeExam, array( "exams" => $resultExam ));
+                array_push($resultTypeExam, array( "exams" => $resultMark ));
             }
             // push the result into the array
             array_push($result,array("courseName" => $course->getCourseName() , "coefficient" => $course->getCoefficient() ,"typeExams" => $resultTypeExam));
         }
+        //die(var_dump($result));
         return array("marks" => $result , "typeExams" => $typeExams);
     }
 
@@ -266,14 +241,13 @@ class UserSpaceManager
         // get attendance by the section of the student
         $attendanceRepository = $this->_em->getRepository(AttendanceStudent::class);
         $attendances = $attendanceRepository->findByStudentGroupByCourse($student, $division);
-
         $result = array();
         foreach ($courses as $course) {
           $resultattendance = array();
           $attendance = array_filter($attendances, function($value) use (&$course) { return strcasecmp($value['courseName'],$course->getCourseName()) == 0; });
           // test if the selected session existe in the attendance
           $resultattendance["courseName"] = $course->getCourseName();
-          if (!empty($resultattendance)){
+          if (!empty($this->echartsPieFormat( $attendance))){
               $resultattendance["status"] =$this->echartsPieFormat( $attendance);
               $resultattendance["empty"] = false;
           }else{
@@ -282,8 +256,11 @@ class UserSpaceManager
             // push the result into the array $course
             array_push($result,$resultattendance );
         }
-        $attendanceStats = $attendanceRepository->findStatsByStudent($student, $division->getStartDate() , $division->getEndDate());
+        // get Absence by Student
+        $attendanceStats = $attendanceRepository->findStatsByStudent($student, $division);
+        // get Absence By Section
+        $attendanceSectionStats = $attendanceRepository->findStatsBySection($student->getSection(), $division);
 
-        return array("attendances" => $result , "stats" => $this->echartsPieFormat( $attendanceStats));
+        return array("attendances" => $result , "stats" => $this->echartsPieFormat( $attendanceStats) , "sectionStats" => $this->echartsPieFormat( $attendanceSectionStats));
     }
 }

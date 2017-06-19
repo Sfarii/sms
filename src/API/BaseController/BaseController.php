@@ -12,7 +12,7 @@ use Symfony\Bundle\FrameworkBundle\Controller\Controller;
 
 class BaseController extends Controller
 {
-    
+
 	/**
      * Adds a flash success message to the current session.
      *
@@ -76,6 +76,21 @@ class BaseController extends Controller
            throw $this->createNotFoundException('Service Not Found');
         }
         return $this->get('sms.user_space');
+    }
+
+    /**
+     * get Store Manager Service.
+     *
+     * @return API\Services\StoreManager
+     *
+     * @throws \NotFoundException
+     */
+    protected function getStoreManager()
+    {
+        if (!$this->has('sms.store_manager')){
+           throw $this->createNotFoundException('Service Not Found');
+        }
+        return $this->get('sms.store_manager');
     }
 
     /**

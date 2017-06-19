@@ -4,7 +4,8 @@ namespace SMS\AdministrativeBundle\Controller;
 
 use SMS\AdministrativeBundle\Entity\AttendanceStudent;
 use SMS\AdministrativeBundle\Form\StudentAttendanceType;
-use API\BaseController\BaseController;
+use SMS\AdministrativeBundle\Form\ScheduleStudentFilterType;
+use SMS\AdministrativeBundle\BaseController\BaseController;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\Method;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\Route;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\Template;
@@ -24,37 +25,116 @@ use Symfony\Component\HttpFoundation\Response;
 class AttendanceStudentController extends BaseController
 {
     /**
+     * Lists all schedule by Student entities.
+     *
+     * @Route("/attendance_student", name="attendance_student_index")
+     * @Method({"GET", "POST"})
+     * @Template("SMSAdministrativeBundle:studentattendance:student.html.twig")
+     */
+    public function scheduleStudentAction(Request $request)
+    {
+        $form = $this->createForm(ScheduleStudentFilterType::class, null, array('establishment' => $this->getUser()->getEstablishment()))->handleRequest($request);
+
+        if ($form->isSubmitted() && $form->isValid()) {
+            $result = $this->getEntityManager()->getSchedule($form->get('section')->getData(),$form->get('division')->getData() , $this->getUser()->getEstablishment());
+            $result['form'] = $form->createView();
+            $result['division'] = $form->get('division')->getData();
+            $result['status'] = $this->getParameter("attendance");
+            return $result;
+        }
+
+        return array('form' => $form->createView());
+    }
+
+    /**
+     * Lists all attendanceProfessor entities.
+     *
+     * @Route("/", name="attendance_student_new")
+     * @Method("GET")
+     * @Template("SMSAdministrativeBundle:studentattendance:attendance.html.twig")
+     */
+    public function indexStudentAction()
+    {
+        $attendance = $this->getAttendanceStudentEntityManager();
+        $attendance->buildDatatable();
+
+        return array('attendance' => $attendance);
+    }
+
+    /**
+     * Lists all attendance Professor entities.
+     *
+     * @Route("/results", name="attendancestudent_results")
+     * @Method("GET")
+     * @return Response
+     */
+    public function indexStudentResultsAction()
+    {
+        $attendance = $this->getAttendanceStudentEntityManager();
+        $attendance->buildDatatable();
+
+        $query = $this->getDataTableQuery()->getQueryFrom($attendance);
+
+        return $query->getResponse();
+    }
+
+    /**
+     * Creates a new attendance entity.
+     *
+     * @Route("/new_attendance_student", name="attendance_student_add", options={"expose"=true})
+     * @Method("POST")
+     */
+    public function newAttendanceStudentAction(Request $request)
+    {
+        $data = array("section" => $request->request->get('attendance_section', NULL),
+                      "session" => $request->request->get('attendance_session', NULL),
+                      "date"    => $request->request->get('attendance_date', NULL),
+                      "division"=> $request->request->get('attendance_division', NULL),
+                      "status"  => $request->request->get('attendance_status', NULL));
+        if ($this->getEntityManager()->validateStudentAttendance($data , $this->getUser())){
+          $ids = $this->getEntityManager()->addStudentAttendance($data, $this->getUser());
+          // set the array of IDS in the session
+          $session = $this->getRequest()->getSession();
+          $session->set("attendance_student", $ids);
+          $session->set("attendance_date", $data["date"]);
+          $this->flashSuccessMsg('attendancestudent.add.success');
+          return $this->redirectToRoute('attendance_index');
+        }
+        $this->flashErrorMsg('attendancestudent.check.data');
+        return $this->redirectToRoute('attendance_student_index');
+    }
+
+    /**
      * Lists all attendance entities.
      *
-     * @Route("/", name="attendance_index")
+     * @Route("/attendance_section", name="attendance_index")
      * @Method("GET")
-     * @Template("smsadministrativebundle/attendance/index.html.twig")
+     * @Template("SMSAdministrativeBundle:studentattendance:index.html.twig")
      */
     public function indexAction()
     {
         $session = $this->getRequest()->getSession();
-        
-        if (!$session->has("attendance_student")){
+        if (!$session->has("attendance_student") || !$session->has("attendance_date")){
             throw $this->createNotFoundException('Object Not Found');
         }
 
         $attendances = $this->getAttendanceEntityManager();
         $attendances->buildDatatable();
 
-        return array('attendances' => $attendances);
+        return array('attendances' => $attendances , 'attendance_date' => new \DateTime($session->get("attendance_date")));
     }
 
      /**
      * Lists all attendance entities.
      *
-     * @Route("/results", name="attendance_results")
+     * @Route("/attendance_section/results", name="attendance_results")
      * @Method("GET")
      * @return Response
      */
     public function indexResultsAction()
     {
         $session = $this->getRequest()->getSession();
-        
+
         if (!$session->has("attendance_student")){
             throw $this->createNotFoundException('Object Not Found');
         }
@@ -75,27 +155,19 @@ class AttendanceStudentController extends BaseController
     }
 
     /**
-     * Creates a new attendance entity.
+     * Get attendance Entity Manager Service.
      *
-     * @Route("/new_attendance_student", name="attendance_student_new", options={"expose"=true})
-     * @Method({"GET", "POST"})
-     * @Template("smsadministrativebundle/attendance/new.html.twig")
+     * @return API\Services\EntityManager
+     *
+     * @throws \NotFoundException
      */
-    public function newAttendanceStudentAction(Request $request)
+    protected function getAttendanceEntityManager()
     {
-        $form = $this->createForm(StudentAttendanceType::class);
-        $form->handleRequest($request);
-
-        if ($form->isSubmitted() && $form->isValid() && $form->get('save')->isClicked()) {
-            $ids = $this->getEntityManager()->addStudentAttendance($form , $this->getUser());
-            // set the array of IDS in the session
-            $session = $this->getRequest()->getSession();
-            $session->set("attendance_student", $ids);
-            
-            return $this->forward('SMSAdministrativeBundle:AttendanceStudent:index');
+        if (!$this->has('sms.datatable.attendance_student')){
+           throw $this->createNotFoundException('Service Not Found');
         }
 
-        return array('form' => $form->createView());
+        return $this->get('sms.datatable.attendance_student');
     }
 
     /**
@@ -105,7 +177,7 @@ class AttendanceStudentController extends BaseController
      *
      * @throws \NotFoundException
      */
-    protected function getAttendanceEntityManager()
+    protected function getAttendanceStudentEntityManager()
     {
         if (!$this->has('sms.datatable.attendance')){
            throw $this->createNotFoundException('Service Not Found');

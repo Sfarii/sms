@@ -32,7 +32,7 @@ class StudentSpaceController extends Controller
      *
      * @Route("/schedule", name="schedule_student_space")
      * @Method({"GET", "POST"})
-     * @Template("studentspace/schedule/index.html.twig")
+     * @Template("SMSUserSpaceBundle:studentspace/schedule:index.html.twig")
      */
     public function scheduleAction(Request $request)
     {
@@ -52,7 +52,7 @@ class StudentSpaceController extends Controller
      *
      * @Route("/note", name="note_student_space")
      * @Method({"GET", "POST"})
-     * @Template("studentspace/note/index.html.twig")
+     * @Template("SMSUserSpaceBundle:studentspace/note:index.html.twig")
      */
     public function noteAction(Request $request)
     {
@@ -60,7 +60,7 @@ class StudentSpaceController extends Controller
         $division = $form->get('division')->getData();
         if ($form->isSubmitted() && !is_null($division) && $form->isValid() && $form->get('send')->isClicked()) {
             $userSpace = $this->getUserSapaceManager();
-            $result = $userSpace->getNotes($this->getUser(), $division, Course::class, Note::class, TypeExam::class);
+            $result = $userSpace->getNotes($this->getUser(), $division);
             $result['form'] = $form->createView();
             return $result;
         }
@@ -73,7 +73,7 @@ class StudentSpaceController extends Controller
      *
      * @Route("/exam", name="exam_date_student_space")
      * @Method("GET")
-     * @Template("studentspace/exam/index.html.twig")
+     * @Template("SMSUserSpaceBundle:studentspace/exam:index.html.twig")
      */
     public function examDateAction(Request $request)
     {
@@ -84,7 +84,7 @@ class StudentSpaceController extends Controller
      *
      * @Route("/attendance", name="attendance_student_space")
      * @Method({"GET", "POST"})
-     * @Template("studentspace/attendance/index.html.twig")
+     * @Template("SMSUserSpaceBundle:studentspace/attendance:index.html.twig")
      */
     public function attendanceAction(Request $request)
     {
@@ -104,7 +104,6 @@ class StudentSpaceController extends Controller
      *
      * @Route("/json_exam", name="exam_date_json_student_space" , options={"expose"=true})
      * @Method("GET")
-     * @Template("studentspace/exam/index.html.twig")
      */
     public function examDateJSONAction(Request $request)
     {
@@ -113,11 +112,67 @@ class StudentSpaceController extends Controller
 
         $examDate = $this->getDoctrine()
                         ->getRepository(Exam::class)
-                        ->findByStartDateAndEndDate($startDate, $endDate, $this->getUser()->getSection());
+                        ->findByStartDateAndEndDateBySection($startDate, $endDate, $this->getUser()->getSection());
 
 
         $response = new JsonResponse();
         $response->setData($examDate);
         return $response;
+    }
+
+    /**
+     * Lists all sanction entities.
+     *
+     * @Route("/", name="sanction_student_index")
+     * @Method("GET")
+     * @Template("SMSUserSpaceBundle:studentspace/sanction:index.html.twig")
+     */
+    public function indexAction()
+    {
+        $sanctions = $this->getSanctionEntityManager();
+        $sanctions->buildDatatable();
+
+        return array('sanctions' => $sanctions);
+    }
+
+    /**
+     * Lists all sanction entities.
+     *
+     * @Route("/results", name="sanction_student_results")
+     * @Method("GET")
+     * @return Response
+     */
+    public function indexResultsAction()
+    {
+        $sanctions = $this->getSanctionEntityManager();
+        $sanctions->buildDatatable();
+
+        $query = $this->getDataTableQuery()->getQueryFrom($sanctions);
+        $student = $this->getUser();
+        $function = function($qb) use (&$student)
+        {
+            $qb->andWhere("student.id = :p");
+            $qb->setParameter('p', $student->getId());
+        };
+
+        $query->addWhereAll($function);
+
+        return $query->getResponse();
+    }
+
+    /**
+     * Get sanction Entity Manager Service.
+     *
+     * @return API\Services\EntityManager
+     *
+     * @throws \NotFoundException
+     */
+    protected function getSanctionEntityManager()
+    {
+        if (!$this->has('sms.datatable.sanction_student')){
+           throw $this->createNotFoundException('Service Not Found');
+        }
+
+        return $this->get('sms.datatable.sanction_student');
     }
 }

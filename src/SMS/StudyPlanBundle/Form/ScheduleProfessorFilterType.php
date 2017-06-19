@@ -12,6 +12,7 @@ use Symfony\Component\Form\Extension\Core\Type\SubmitType;
 use SMS\EstablishmentBundle\Entity\Division;
 use SMS\UserBundle\Entity\Professor;
 use Doctrine\ORM\EntityManager;
+use Doctrine\ORM\EntityRepository;
 use API\Form\EventSubscriber\GradeSectionFilterListener;
 use Symfony\Component\Validator\Constraints\NotBlank;
 
@@ -22,21 +23,35 @@ class ScheduleProfessorFilterType extends AbstractType
      */
     public function buildForm(FormBuilderInterface $builder, array $options)
     {
+        $establishment = $options['establishment'];
+
         $builder
             ->add('division' , EntityType::class , array(
                 'class' => Division::class,
                 'property' => 'divisionName',
+                'query_builder' => function (EntityRepository $er) use ($establishment) {
+                    return $er->createQueryBuilder('division')
+                              ->join('division.establishment', 'establishment')
+                              ->andWhere('establishment.id = :establishment')
+                              ->setParameter('establishment', $establishment->getId());
+                },
                 'placeholder'=> 'filter.field.division',
                 'constraints'   => [new NotBlank()],
                 'label' => 'filter.field.division')
             )
             ->add('professor' , EntityType::class , array(
                     'class'         => Professor::class,
+                    'query_builder' => function (EntityRepository $er) use ($establishment) {
+                        return $er->createQueryBuilder('professor')
+                                  ->join('professor.establishment', 'establishment')
+                                  ->andWhere('establishment.id = :establishment')
+                                  ->setParameter('establishment', $establishment->getId());
+                    },
                     'placeholder'   => 'filter.field.professor',
                     'label'         => 'filter.field.professor',
                     'constraints'   => [new NotBlank()],
                     'attr'          => [ 'class'=> 'professorField'])
-                
+
             )
             ->add('save', SubmitType::class ,array(
                     'label' => 'filter.field.send',
@@ -44,7 +59,7 @@ class ScheduleProfessorFilterType extends AbstractType
                 ));
 
     }
-    
+
     /**
      * {@inheritdoc}
      */
@@ -53,6 +68,7 @@ class ScheduleProfessorFilterType extends AbstractType
         $resolver->setDefaults(array(
             'allow_extra_fields' => true
         ));
+        $resolver->setRequired('establishment');
     }
 
     /**

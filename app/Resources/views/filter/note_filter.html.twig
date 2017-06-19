@@ -103,7 +103,7 @@ $(function() {
 		}
 	  if ($('.courseField').length > 0)
 		return;
-	
+
 	  // ... retrieve the corresponding form.
 	  var $form = $(this).closest('form');
 	  var $course = $('.courseField');
@@ -126,6 +126,10 @@ $(function() {
 	      $('.studentField').parent(".uk-form-row").empty().append(
 	        // ... with the returned one from the AJAX response.
 	        $(html).find('.studentField').parent()
+	      );
+				$('.examField').parent(".uk-form-row").empty().append(
+	        // ... with the returned one from the AJAX response.
+	        $(html).find('.examField').parent()
 	      );
 	      altair_forms.init();
 	      // Position field now displays the appropriate positions.

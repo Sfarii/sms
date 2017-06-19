@@ -1,0 +1,35 @@
+parameters:
+  attendance_datatable: SMS\AdministrativeBundle\Datatable\AttendanceDatatable
+  attendance_student_datatable: SMS\AdministrativeBundle\Datatable\AttendanceStudentDatatable
+  attendance_professor_datatable: SMS\AdministrativeBundle\Datatable\AttendanceProfessorDatatable
+  sanction_datatable: SMS\AdministrativeBundle\Datatable\SanctionDatatable
+  attendance_professor_form: SMS\AdministrativeBundle\Form\ScheduleProfessorFilterType
+  attendance_student_form: SMS\AdministrativeBundle\Form\ScheduleStudentFilterType
+  sanction_form: SMS\AdministrativeBundle\Form\SanctionType
+  status_form: SMS\AdministrativeBundle\Form\Type\StatusType
+  entity_Manager: SMS\AdministrativeBundle\Model\AdministrationManager
+  #Dependency Injection class
+  division_class: SMS\EstablishmentBundle\Entity\Division
+  student_class: SMS\UserBundle\Entity\Student
+  grade_class: SMS\EstablishmentBundle\Entity\Grade
+  section_class: SMS\EstablishmentBundle\Entity\Section
+  professor_class: SMS\UserBundle\Entity\Professor
+  section_class: SMS\EstablishmentBundle\Entity\Section
+  professor_class: SMS\UserBundle\Entity\Professor
+  attendance_professor_class: SMS\AdministrativeBundle\Entity\AttendanceProfessor
+  attendance_student_class: SMS\AdministrativeBundle\Entity\AttendanceStudent
+  schedule_class: SMS\StudyPlanBundle\Entity\Schedule
+  session_class: SMS\StudyPlanBundle\Entity\Session
+  # parameters
+  attendance_default:
+    Retard  : Retard
+    Present : Present
+    Absent  : Absent
+  days:
+    monday: monday
+    tuesday: tuesday
+    wednesday: wednesday
+    thursday: thursday
+    friday: friday
+    saturday: saturday
+    sunday: sunday

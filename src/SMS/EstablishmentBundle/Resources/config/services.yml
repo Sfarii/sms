@@ -1,7 +1,14 @@
 services:
-    sms.datatable.grade:
-        class: SMS\EstablishmentBundle\Datatables\GradeDatatable
-        parent: sg_datatables.datatable.abstract
-    sms.datatable.section:
-        class: SMS\EstablishmentBundle\Datatables\SectionDatatable
-        parent: sg_datatables.datatable.abstract
+  #EstablishmentDatatable
+  sms.datatable.grade:
+      class: SMS\EstablishmentBundle\EstablishmentDatatable\GradeDatatable
+      parent: sg_datatables.datatable.abstract
+  sms.datatable.section:
+      class: SMS\EstablishmentBundle\EstablishmentDatatable\SectionDatatable
+      parent: sg_datatables.datatable.abstract
+  sms.datatable.division:
+      class: SMS\EstablishmentBundle\EstablishmentDatatable\DivisionDatatable
+      parent: sg_datatables.datatable.abstract
+  sms.datatable.establishment:
+      class: SMS\EstablishmentBundle\EstablishmentDatatable\EstablishmentDatatable
+      parent: sg_datatables.datatable.abstract

@@ -28,7 +28,7 @@ class SectionController extends BaseController
      *
      * @Route("/", name="section_index")
      * @Method("GET")
-     * @Template("smsestablishmentbundle/section/index.html.twig")
+     * @Template("SMSEstablishmentBundle:section:index.html.twig")
      */
     public function indexAction(Request $request)
     {
@@ -50,6 +50,16 @@ class SectionController extends BaseController
 
         $query = $this->getDataTableQuery()->getQueryFrom($section);
 
+        $user = $this->getUser();
+        $function = function($qb) use ($user)
+        {
+            $qb->join('section.establishment', 'establishment')
+                ->andWhere('establishment.id = :establishment')
+        				->setParameter('establishment', $user->getEstablishment()->getId());
+        };
+
+        $query->addWhereAll($function);
+
         return $query->getResponse();
     }
 
@@ -58,12 +68,14 @@ class SectionController extends BaseController
      *
      * @Route("/new", name="section_new")
      * @Method({"GET", "POST"})
-     * @Template("smsestablishmentbundle/section/new.html.twig")
+     * @Template("SMSEstablishmentBundle:section:new.html.twig")
      */
     public function newAction(Request $request)
     {
         $section = new Section();
-        $form = $this->createForm(SectionType::class, $section);
+        $form = $this->createForm(SectionType::class, $section , array(
+            'establishment' => $this->getUser()->getEstablishment()
+        ));
         $form->handleRequest($request);
 
         if ($form->isSubmitted() && $form->isValid() && $form->get('save')->isClicked()) {
@@ -83,12 +95,13 @@ class SectionController extends BaseController
      *
      * @Route("/{id}/edit", name="section_edit", options={"expose"=true})
      * @Method({"GET", "POST"})
-     * @Template("smsestablishmentbundle/section/edit.html.twig")
+     * @Template("SMSEstablishmentBundle:section:edit.html.twig")
      */
     public function editAction(Request $request, Section $section)
     {
 
-        $editForm = $this->createForm(SectionType::class, $section)->handleRequest($request);
+        $editForm = $this->createForm(SectionType::class, $section , array('establishment' => $this->getUser()->getEstablishment()))
+                          ->handleRequest($request);
         if ($editForm->isSubmitted() && $editForm->isValid() && $editForm->get('save')->isClicked()) {
             $this->getEntityManager()->update($section);
             $this->flashSuccessMsg('section.edit.success');
@@ -97,7 +110,7 @@ class SectionController extends BaseController
 
         return  array(
             'section' => $section,
-            'edit_form' => $editForm->createView(),
+            'form' => $editForm->createView(),
         );
     }
 
@@ -128,7 +141,7 @@ class SectionController extends BaseController
             } catch (\Exception $e) {
                 return new Response($this->get('translator')->trans('section.delete.fail'), 200);
             }
-            
+
 
             return new Response($this->get('translator')->trans('section.delete.success'), 200);
         }

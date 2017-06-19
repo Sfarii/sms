@@ -4,10 +4,11 @@ namespace SMS\AdministrativeBundle\Controller;
 
 use SMS\AdministrativeBundle\Entity\Sanction;
 use SMS\AdministrativeBundle\Form\SanctionType;
-use API\BaseController\BaseController;
+use SMS\AdministrativeBundle\BaseController\BaseController;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\Method;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\Route;
-use Sensio\Bundle\FrameworkExtraBundle\Configuration\Template;use Symfony\Component\HttpFoundation\Request;
+use Sensio\Bundle\FrameworkExtraBundle\Configuration\Template;
+use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
 
 /**
@@ -27,7 +28,7 @@ class SanctionController extends BaseController
      *
      * @Route("/", name="sanction_index")
      * @Method("GET")
-     * @Template("smsadministrativebundle/sanction/index.html.twig")
+     * @Template("SMSAdministrativeBundle:sanction:index.html.twig")
      */
     public function indexAction()
     {
@@ -35,7 +36,8 @@ class SanctionController extends BaseController
         $sanctions->buildDatatable();
 
         return array('sanctions' => $sanctions);
-    } /**
+    }
+    /**
      * Lists all sanction entities.
      *
      * @Route("/results", name="sanction_results")
@@ -48,7 +50,16 @@ class SanctionController extends BaseController
         $sanctions->buildDatatable();
 
         $query = $this->getDataTableQuery()->getQueryFrom($sanctions);
+        $user = $this->getUser();
+        $function = function($qb) use ($user)
+        {
+            $qb
+                ->join('student.establishment', 'establishment')
+                ->andWhere('establishment.id = :establishment')
+        				->setParameter('establishment', $user->getEstablishment()->getId());
+        };
 
+        $query->addWhereAll($function);
         return $query->getResponse();
     }
     /**
@@ -56,12 +67,12 @@ class SanctionController extends BaseController
      *
      * @Route("/new", name="sanction_new", options={"expose"=true})
      * @Method({"GET", "POST"})
-     * @Template("smsadministrativebundle/sanction/new.html.twig")
+     * @Template("SMSAdministrativeBundle:sanction:new.html.twig")
      */
     public function newAction(Request $request)
     {
         $sanction = new Sanction();
-        $form = $this->createForm(SanctionType::class, $sanction);
+        $form = $this->createForm(SanctionType::class, $sanction, array('establishment' => $this->getUser()->getEstablishment()));
         $form->handleRequest($request);
 
         if ($form->isSubmitted() && $form->isValid() && $form->get('save')->isClicked()) {
@@ -86,7 +97,7 @@ class SanctionController extends BaseController
     {
         $deleteForm = $this->createDeleteForm($sanction);
 
-        return $this->render('smsadministrativebundle/sanction/show.html.twig', array(
+        return $this->render('SMSAdministrativeBundle:sanction:show.html.twig', array(
             'sanction' => $sanction,
             'delete_form' => $deleteForm->createView(),
         ));
@@ -97,11 +108,11 @@ class SanctionController extends BaseController
      *
      * @Route("/{id}/edit", name="sanction_edit", options={"expose"=true})
      * @Method({"GET", "POST"})
-     * @Template("smsadministrativebundle/sanction/edit.html.twig")
+     * @Template("SMSAdministrativeBundle:sanction/edit.html.twig")
      */
     public function editAction(Request $request, Sanction $sanction)
     {
-        $editForm = $this->createForm(SanctionType::class, $sanction)->handleRequest($request);
+        $editForm = $this->createForm(SanctionType::class, $sanction, array('establishment' => $this->getUser()->getEstablishment()))->handleRequest($request);
         if ($editForm->isSubmitted() && $editForm->isValid() && $editForm->get('save')->isClicked()) {
             $this->getEntityManager()->update($sanction);
             $this->flashSuccessMsg('sanction.edit.success');
@@ -110,7 +121,7 @@ class SanctionController extends BaseController
 
         return array(
             'sanction' => $sanction,
-            'edit_form' => $editForm->createView(),
+            'form' => $editForm->createView(),
         );
     }
 
@@ -141,7 +152,7 @@ class SanctionController extends BaseController
             } catch (\Exception $e) {
                 return new Response($this->get('translator')->trans('sanction.delete.fail'), 200);
             }
-            
+
 
             return new Response($this->get('translator')->trans('sanction.delete.success'), 200);
         }
@@ -197,4 +208,5 @@ class SanctionController extends BaseController
         }
 
         return $this->get('sms.datatable.sanction');
-    }}
+    }
+}

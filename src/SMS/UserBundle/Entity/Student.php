@@ -17,7 +17,7 @@ class Student extends User
     /**
      * @var string
      *
-     * @ORM\Column(name="recordeNumber", type="string", length=150, unique=true)
+     * @ORM\Column(name="recordeNumber", type="string", length=150, unique=true , nullable=true)
      */
     private $recordeNumber;
 
@@ -46,7 +46,7 @@ class Student extends User
      *
      * @ORM\Column(name="gender", type="string", length=30)
      * @Assert\Choice(choices = {"gender.male", "gender.female", "gender.other"} , groups= {"Registration" , "SimpleRegistration" , "Edit"})
-     * @Assert\NotBlank(groups= {"Registration" , "SimpleRegistration" , "Edit"}),
+     * @Assert\NotBlank(groups= {"Registration" , "SimpleRegistration" , "Edit"})
      */
     private $gender;
 
@@ -61,33 +61,24 @@ class Student extends User
 
     /**
      * Many Students have One Section.
-     * @ORM\ManyToOne(targetEntity="SMS\EstablishmentBundle\Entity\Section")
+     * @ORM\ManyToOne(targetEntity="SMS\EstablishmentBundle\Entity\Section", inversedBy="students" ,fetch="EXTRA_LAZY")
      * @ORM\JoinColumn(name="section_id", referencedColumnName="id")
-     * @Assert\NotBlank(groups= {"Edit"}),
+     * @Assert\NotBlank(groups= {"Edit"})
      */
     private $section;
 
     /**
      * Many Students have One Parent.
-     * @ORM\ManyToOne(targetEntity="StudentParent" , inversedBy="students")
+     * @ORM\ManyToOne(targetEntity="StudentParent" , inversedBy="students",fetch="EXTRA_LAZY")
      * @ORM\JoinColumn(name="student_parent_id", referencedColumnName="id")
-     * @Assert\NotBlank(groups= {"Registration" , "SimpleRegistration" , "Edit"}),
+     * @Assert\NotBlank(groups= {"Registration" , "SimpleRegistration" , "Edit"})
      */
     private $studentParent;
 
     /**
-     * constructor.
-     */
-    public function __construct()
-    {
-        parent::__construct();
-        $this->roles = array(self::ROLE_STUDENT);
-    }
-
-    /**
      * Get id
      *
-     * @return integer 
+     * @return integer
      */
     public function getId()
     {
@@ -110,7 +101,7 @@ class Student extends User
     /**
      * Get recordeNumber
      *
-     * @return string 
+     * @return string
      */
     public function getRecordeNumber()
     {
@@ -133,7 +124,7 @@ class Student extends User
     /**
      * Get firstName
      *
-     * @return string 
+     * @return string
      */
     public function getFirstName()
     {
@@ -156,7 +147,7 @@ class Student extends User
     /**
      * Get lastName
      *
-     * @return string 
+     * @return string
      */
     public function getLastName()
     {
@@ -179,7 +170,7 @@ class Student extends User
     /**
      * Get gender
      *
-     * @return string 
+     * @return string
      */
     public function getGender()
     {
@@ -202,7 +193,7 @@ class Student extends User
     /**
      * Get birthday
      *
-     * @return \DateTime 
+     * @return \DateTime
      */
     public function getBirthday()
     {
@@ -225,7 +216,7 @@ class Student extends User
     /**
      * Get section
      *
-     * @return \SMS\EstablishmentBundle\Entity\Section 
+     * @return \SMS\EstablishmentBundle\Entity\Section
      */
     public function getSection()
     {
@@ -248,7 +239,7 @@ class Student extends User
     /**
      * Get studentParent
      *
-     * @return \SMS\UserBundle\Entity\StudentParent 
+     * @return \SMS\UserBundle\Entity\StudentParent
      */
     public function getStudentParent()
     {
@@ -271,7 +262,7 @@ class Student extends User
     /**
      * Get created
      *
-     * @return \DateTime 
+     * @return \DateTime
      */
     public function getCreated()
     {
@@ -294,7 +285,7 @@ class Student extends User
     /**
      * Get updated
      *
-     * @return \DateTime 
+     * @return \DateTime
      */
     public function getUpdated()
     {

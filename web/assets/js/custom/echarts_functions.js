@@ -6,8 +6,9 @@ $(function() {
     // page onload functions
     echarts_pie.init();
     echarts_table_pie.init();
-    echarts_pie.circular_statistics();
+    
 });
+
 echarts_table_pie = {
   init: function() {
       var $elem = $("[data-echarts-table],.data-echarts-table");
@@ -46,7 +47,7 @@ echarts_table_pie = {
                   series: [{
                       name: this_title,
                       type:'pie',
-                      radius: '70%',
+                      radius : [10, 50],
                       center: ['50%', '50%'],
                       data: this_data,
                       label: {
@@ -77,18 +78,6 @@ echarts_table_pie = {
   }
 }
 echarts_pie = {
-    circular_statistics: function() {
-      var $elem = $('.epc_chart');
-      if ($elem.length) {
-        $elem.easyPieChart({
-            scaleColor: false,
-            trackColor: '#f5f5f5',
-            lineWidth: 5,
-            size: 110,
-            easing: bez_easing_swiftOut
-        });
-      }
-    },
     init: function() {
         var $elem = $("[data-echarts-pie],.data-echarts-pie");
         if ($elem.length) {
@@ -126,11 +115,11 @@ echarts_pie = {
                     },
                     series: [{
                         name: this_title,
-                        type: 'pie',
-                        radius: '60%',
-                        center: ['50%', '50%'],
                         data: this_data,
-                        roseType: 'angle',
+                        type:'pie',
+                        radius : [20, 100],
+                        center : ['50%', '50%'],
+                        roseType : 'radius',
                         label: {
                             normal: {
                                 textStyle: {
@@ -150,7 +139,6 @@ echarts_pie = {
                         },
                         itemStyle: {
                             normal: {
-                                shadowBlur: 10,
                                 shadowColor: 'rgba(0, 0, 0, 0.6)'
                             }
                         },

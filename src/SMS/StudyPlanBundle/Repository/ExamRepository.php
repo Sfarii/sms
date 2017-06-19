@@ -18,14 +18,18 @@ class ExamRepository extends EntityRepository
      * Get Exam By Course
      *
      * @param integer $course
+		 * @param integer $section
      * @return array
      */
-	public function findByCourse($course)
+	public function findByCourseAndSection($course , $section)
 	{
 		return $this->createQueryBuilder('exam')
 				->join('exam.course', 'course')
+				->join('exam.section', 'sections')
+				->where("sections.id = :section")
 				->andWhere('course.id = :course')
 				->setParameter('course', $course)
+				->setParameter('section', $section)
 				->getQuery()
 				->getResult();
 	}
@@ -36,7 +40,7 @@ class ExamRepository extends EntityRepository
      * @param \DateTime $endDate
      * @return array
      */
-	public function findByStartDateAndEndDate($startDate , $endDate, $section)
+	public function findByStartDateAndEndDateBySection($startDate , $endDate, $section)
 	{
 		return $this->createQueryBuilder('exam')
 				->select("exam.examName as title ,course.coefficient, course.courseName, typeExam.typeExamName  , DATE_FORMAT(exam.startTime ,'%H:%m') as startTime , DATE_FORMAT(exam.endTime ,'%H:%m') as endTime")
@@ -45,9 +49,35 @@ class ExamRepository extends EntityRepository
 				->join('exam.typeExam', 'typeExam')
 				->where('exam.dateExam BETWEEN :startDate AND :endDate')
 				->andWhere(':section MEMBER OF exam.section')
+				->setParameter('section',  $section)
    			->setParameter('startDate', $startDate->format('Y-m-d'))
    			->setParameter('endDate', $endDate->format('Y-m-d'))
-				->setParameter('section',  $section)
+				->getQuery()
+				->getResult();
+	}
+
+	/**
+     * Get Exam By StartDate And EndDate
+     *
+     * @param \DateTime $startDate
+     * @param \DateTime $endDate
+     * @return array
+     */
+	public function findByStartDateAndEndDateByStudents($startDate , $endDate, $student)
+	{
+		return $this->createQueryBuilder('exam')
+				->distinct()
+				->select("exam.examName as title ,course.coefficient, course.courseName, typeExam.typeExamName  , DATE_FORMAT(exam.startTime ,'%H:%m') as startTime , DATE_FORMAT(exam.endTime ,'%H:%m') as endTime")
+				->addSelect("DATE_FORMAT(exam.dateExam ,'%Y-%m-%d') as date")
+				->join('exam.course', 'course')
+				->join('exam.section', 'section')
+				->join('section.students', 'student')
+				->join('exam.typeExam', 'typeExam')
+				->where('exam.dateExam BETWEEN :startDate AND :endDate')
+				->andWhere('student IN (:student)')
+				->setParameter('student',  $student)
+   			->setParameter('startDate', $startDate->format('Y-m-d'))
+   			->setParameter('endDate', $endDate->format('Y-m-d'))
 				->getQuery()
 				->getResult();
 	}

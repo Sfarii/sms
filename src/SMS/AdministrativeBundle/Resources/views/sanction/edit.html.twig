@@ -1,0 +1,79 @@
+{% extends 'layout/base_header_double_height.html.twig' %}
+
+{% block body %}
+
+  <div class="uk-width-medium-8-10 uk-container-center">
+    <div class="md-card md-card-single">
+      <div class="md-card-toolbar">
+        <a href="{{ path('sanction_index') }}">
+          <span class="md-icon md-card-fullscreen-deactivate material-icons uk-float-left">&#xE5C4;</span>
+        </a>
+        <h3 class="md-card-toolbar-heading-text large uk-margin-small-left">
+          {{ 'sanction.edit.title'|trans }}
+        </h3>
+      </div>
+      <div class="md-card-content">
+        <div class="uk-margin-large-bottom">
+          {{ form_start(form) }}
+          <div class="uk-grid uk-margin-medium-bottom" data-uk-grid-margin>
+            <div class="uk-width-1-2">
+              <div class="uk-form-row">
+                <label class="uk-form-label">{{ form_label(form.grade) }}</label>
+                {{ form_widget(form.grade)}}
+                <div class="parsley-errors-list filled uk-text-danger">
+                  {{ form_errors(form.grade) }}
+                </div>
+              </div>
+
+            </div>
+            <div class="uk-width-1-2">
+              <div class="uk-form-row">
+                <label class="uk-form-label">{{ form_label(form.section) }}</label>
+                {{ form_widget(form.section)}}
+                <div class="parsley-errors-list filled uk-text-danger">
+                  {{ form_errors(form.section) }}
+                </div>
+              </div>
+            </div>
+          </div>
+          <div class="uk-form-row ">
+            <label class="uk-form-label">{{ form_label(form.student) }}</label>
+            {{ form_widget(form.student)}}
+            <div class="parsley-errors-list filled uk-text-danger">
+              {{ form_errors(form.student) }}
+            </div>
+          </div>
+					<div class="uk-form-row uk-input-group">
+            <span class="uk-input-group-addon">
+              <i class="md-list-addon-icon material-icons md-24">&#xE8CE;</i>
+            </span>
+            <label class="uk-form-label">{{ form_label(form.punishment) }}</label>
+            {{ form_widget(form.punishment)}}
+            <div class="parsley-errors-list filled uk-text-danger">
+              {{ form_errors(form.punishment) }}
+            </div>
+          </div>
+          <div class="uk-form-row uk-input-group">
+            <span class="uk-input-group-addon">
+              <i class="md-list-addon-icon material-icons md-24">&#xE165;</i>
+            </span>
+            <label class="uk-form-label">{{ form_label(form.cause) }}</label>
+            {{ form_widget(form.cause)}}
+            <div class="parsley-errors-list filled uk-text-danger">
+              {{ form_errors(form.cause) }}
+            </div>
+          </div>
+
+          {{ form_widget(form) }}
+
+          {{ form_end(form) }}
+        </div>
+      </div>
+    </div>
+  </div>
+{% endblock %}
+
+{% block javascripts %}
+  {{ parent() }}
+  {% include '@SMSAdministrative/sanction/filter.html.twig' %}
+{% endblock %}

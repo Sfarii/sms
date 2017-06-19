@@ -3,11 +3,14 @@
 namespace SMS\StudyPlanBundle\Controller;
 
 use SMS\StudyPlanBundle\Entity\Exam;
+use SMS\StudyPlanBundle\Entity\Course;
 use SMS\StudyPlanBundle\Form\ExamType;
+use SMS\StudyPlanBundle\Form\ExamEditType;
 use API\BaseController\BaseController;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\Method;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\Route;
-use Sensio\Bundle\FrameworkExtraBundle\Configuration\Template;use Symfony\Component\HttpFoundation\Request;
+use Sensio\Bundle\FrameworkExtraBundle\Configuration\Template;
+use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
 
 /**
@@ -27,7 +30,7 @@ class ExamController extends BaseController
      *
      * @Route("/", name="exam_index")
      * @Method("GET")
-     * @Template("smsstudyplanbundle/exam/index.html.twig")
+     * @Template("SMSStudyPlanBundle:exam:index.html.twig")
      */
     public function indexAction()
     {
@@ -54,14 +57,17 @@ class ExamController extends BaseController
     /**
      * Creates a new exam entity.
      *
-     * @Route("/new", name="exam_new", options={"expose"=true})
+     * @Route("/new/{id}", name="exam_new", options={"expose"=true} )
      * @Method({"GET", "POST"})
-     * @Template("smsstudyplanbundle/exam/new.html.twig")
+     * @Template("SMSStudyPlanBundle:exam:new.html.twig")
      */
-    public function newAction(Request $request)
+    public function newAction(Request $request, Course $course)
     {
         $exam = new Exam();
-        $form = $this->createForm(ExamType::class, $exam);
+        $form = $this->createForm(ExamType::class, $exam, array(
+                            'establishment' => $this->getUser()->getEstablishment(),
+                            'course' => $course
+                            ));
         $form->handleRequest($request);
 
         if ($form->isSubmitted() && $form->isValid() && $form->get('save')->isClicked()) {
@@ -86,7 +92,7 @@ class ExamController extends BaseController
     {
         $deleteForm = $this->createDeleteForm($exam);
 
-        return $this->render('smsstudyplanbundle/exam/show.html.twig', array(
+        return $this->render('SMSStudyPlanBundle:exam:show.html.twig', array(
             'exam' => $exam,
             'delete_form' => $deleteForm->createView(),
         ));
@@ -97,11 +103,14 @@ class ExamController extends BaseController
      *
      * @Route("/{id}/edit", name="exam_edit", options={"expose"=true})
      * @Method({"GET", "POST"})
-     * @Template("smsstudyplanbundle/exam/edit.html.twig")
+     * @Template("SMSStudyPlanBundle:exam:edit.html.twig")
      */
     public function editAction(Request $request, Exam $exam)
     {
-        $editForm = $this->createForm(ExamType::class, $exam)->handleRequest($request);
+        $editForm = $this->createForm(ExamType::class, $exam, array(
+                            'establishment' => $this->getUser()->getEstablishment(),
+                            'course' => $exam->getCourse()
+                            ))->handleRequest($request);
         if ($editForm->isSubmitted() && $editForm->isValid() && $editForm->get('save')->isClicked()) {
             $this->getEntityManager()->update($exam);
             $this->flashSuccessMsg('exam.edit.success');
@@ -110,7 +119,7 @@ class ExamController extends BaseController
 
         return array(
             'exam' => $exam,
-            'edit_form' => $editForm->createView(),
+            'form' => $editForm->createView(),
         );
     }
 
@@ -141,7 +150,7 @@ class ExamController extends BaseController
             } catch (\Exception $e) {
                 return new Response($this->get('translator')->trans('exam.delete.fail'), 200);
             }
-            
+
 
             return new Response($this->get('translator')->trans('exam.delete.success'), 200);
         }

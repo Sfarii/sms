@@ -1,0 +1,7 @@
+{% extends 'layout/base_header_double_height.html.twig' %}
+
+{% block body %}
+
+	{% include 'layout/form_layout.html.twig' with {'form': form , 'form_name' : 'invoice.new.title' , 'index_url': path('invoice_index')} %}
+
+{% endblock %}

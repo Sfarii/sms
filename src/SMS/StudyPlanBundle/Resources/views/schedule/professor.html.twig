@@ -1,0 +1,47 @@
+{% extends 'layout/base.html.twig' %}
+
+{% block title_page %}
+  {{ 'schedule.list.title'|trans }}
+{% endblock %}
+
+{% block heading_actions %}
+  <a href="" data-uk-tooltip="{pos:'bottom'}" title="{{ 'action.print'|trans }}">
+    <i class="material-icons">&#xE555;</i>
+  </a>
+  <a href="" data-uk-tooltip="{pos:'bottom'}" title="{{ 'action.picture'|trans }}">
+    <i class="material-icons">&#xE3B0;</i>
+  </a>
+{% endblock %}
+
+{% block body %}
+  <div class="filter md-card">
+    <div class="md-card-content">
+      {{ form_start(form) }}
+      <div class="uk-grid" data-uk-grid-margin>
+        <div class="uk-width-medium-4-10">
+          <div class="uk-form-row">
+            {{ form_widget(form.division)}}
+            <div class="parsley-errors-list filled uk-text-danger">
+              {{ form_errors(form.division) }}
+            </div>
+          </div>
+        </div>
+        <div class="uk-width-medium-4-10">
+          <div class="uk-form-row">
+            {{ form_widget(form.professor)}}
+            <div class="parsley-errors-list filled uk-text-danger">
+              {{ form_errors(form.professor) }}
+            </div>
+          </div>
+        </div>
+        <div class="uk-width-medium-2-10 uk-text-center uk-margin-small-top">
+          {{ form_widget(form.save)}}
+        </div>
+      </div>
+      {{ form_end(form) }}
+    </div>
+  </div>
+  {% if sessions is defined and schedules is defined %}
+    {% include 'layout/schedule_view.html.twig' with {'sessions': sessions, 'schedules': schedules} %}
+  {% endif %}
+{% endblock %}

@@ -11,7 +11,17 @@ use Doctrine\ORM\EntityManager;
 use SMS\EstablishmentBundle\Entity\Grade;
 use SMS\EstablishmentBundle\Entity\Section;
 use Symfony\Component\Validator\Constraints\NotBlank;
+use Doctrine\ORM\EntityRepository;
+use SMS\EstablishmentBundle\Entity\Establishment;
+use Symfony\Component\Security\Core\Authentication\Token\Storage\TokenStorageInterface;
 
+/**
+ * Class GradeSectionFilterListener
+ *
+ * @author Rami Sfari <rami2sfari@gmail.com>
+ * @copyright Copyright (c) 2017, SMS
+ * @package API\Form\EventSubscriber
+ */
 class GradeSectionFilterListener implements EventSubscriberInterface
 {
 
@@ -21,13 +31,19 @@ class GradeSectionFilterListener implements EventSubscriberInterface
     protected $em;
 
     /**
+     * @var EntityManager
+     */
+    protected $establishment;
+
+    /**
      * Constructor
      *
      * @param EntityManager $em
      */
-    function __construct(EntityManager $em)
+    function __construct(EntityManager $em , Establishment $establishment )
     {
         $this->em = $em;
+        $this->establishment = $establishment;
     }
 
     public static function getSubscribedEvents()
@@ -45,14 +61,21 @@ class GradeSectionFilterListener implements EventSubscriberInterface
      * @param Grade $grade
      * @return Void
      */
-    public function addElements(FormInterface $form, Grade $grade = null) {
+    public function addElements(FormInterface $form, Grade $grade = null ) {
         // Remove the submit button, we will place this at the end of the form later
         $submit = $form->get('save');
         $form->remove('save');
+        $establishment = $this->establishment ;
         // Add the grade element
         $form->add('grade' , EntityType::class , array(
                     'data'          => $grade,
                     'class'         => Grade::class,
+                    'query_builder' => function (EntityRepository $er) use ($establishment) {
+                        return $er->createQueryBuilder('grade')
+                                  ->join('grade.establishment', 'establishment')
+                                  ->andWhere('establishment.id = :establishment')
+                                  ->setParameter('establishment', $establishment->getId());
+                    },
                     'property'      => 'gradeName',
                     'placeholder'   => 'course.field.grade',
                     'mapped'        => false,
@@ -60,7 +83,7 @@ class GradeSectionFilterListener implements EventSubscriberInterface
                     'label'         => 'course.field.grade',
                     'attr'          => [ 'class'=> 'gradeField'])
         );
-        
+
         // Section are empty, unless we actually supplied a grade
         $sections = array();
         if ($grade) {

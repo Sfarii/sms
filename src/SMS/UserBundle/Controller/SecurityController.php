@@ -19,29 +19,29 @@ class SecurityController extends BaseController
     /**
      * @Route("/login", name="login")
      * @Method({"GET", "POST"})
-     * @Template("smsuserbundle/user/security/login.html.twig")
+     * @Template("SMSUserBundle:user/security:login.html.twig")
      */
     public function loginAction(Request $request)
-	{
-	    $authenticationUtils = $this->get('security.authentication_utils');
+    {
+        $authenticationUtils = $this->get('security.authentication_utils');
 
-	    // get the login error if there is one
-	    $error = $authenticationUtils->getLastAuthenticationError();
+        // get the login error if there is one
+        $error = $authenticationUtils->getLastAuthenticationError();
 
-	    // last username entered by the user
-	    $lastUsername = $authenticationUtils->getLastUsername();
+        // last username entered by the user
+        $lastUsername = $authenticationUtils->getLastUsername();
 
-	    return array(
-	        'last_username' => $lastUsername,
-	        'error'         => $error,
-	    );
-	}
+        return array(
+            'last_username' => $lastUsername,
+            'error'         => $error,
+        );
+    }
 
-	/**
+    /**
      * @Route("/logout", name="user_logout")
      */
-	public function logoutAction(Request $request)
-	{
-		throw new \LogicException('Unreachable code.');
-	}
+    public function logoutAction(Request $request)
+    {
+        throw new \LogicException('Unreachable code.');
+    }
 }

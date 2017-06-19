@@ -1,0 +1,23 @@
+{% extends 'layout/base.html.twig' %}
+
+{% block title_page %}
+    {{ 'student.schedule.title'|trans }}
+{% endblock %}
+
+{% block heading_actions %}
+    <a href="" data-uk-tooltip="{pos:'bottom'}" title="{{ 'action.print'|trans }}">
+        <i class="material-icons">&#xE555;</i>
+    </a>
+    <a href="" data-uk-tooltip="{pos:'bottom'}" title="{{ 'action.picture'|trans }}">
+        <i class="material-icons">&#xE3B0;</i>
+    </a>
+{% endblock %}
+
+{% block body %}
+    {% include 'layout/filter_form_layout.html.twig' with {'form': form , 'form_name' : 'student.schedule.title' } %}
+    {% if sessions is defined and schedules is defined %}
+      <div class="hierarchical_show uk-margin-medium-top" data-uk-grid-margin>
+        {% include 'layout/schedule_view.html.twig' with {'sessions': sessions , 'schedules' : schedules } %}
+      </div>
+    {% endif %}
+{% endblock %}

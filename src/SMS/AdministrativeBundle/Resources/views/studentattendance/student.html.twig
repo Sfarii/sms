@@ -1,0 +1,171 @@
+{% extends 'layout/base.html.twig' %}
+
+{% block title_page %}
+  {{ 'schedule.student.title'|trans }}
+{% endblock %}
+
+{% block heading_actions %}
+  <a href="" data-uk-tooltip="{pos:'bottom'}" title="{{ 'action.print'|trans }}">
+    <i class="material-icons">&#xE555;</i>
+  </a>
+  <a href="" data-uk-tooltip="{pos:'bottom'}" title="{{ 'action.picture'|trans }}">
+    <i class="material-icons">&#xE3B0;</i>
+  </a>
+{% endblock %}
+
+{% block body %}
+  <div class="filter md-card">
+    <div class="md-card-content">
+      {{ form_start(form) }}
+      <div class="uk-grid" data-uk-grid-margin>
+        <div class="uk-width-medium-3-10">
+          <div class="uk-form-row">
+            {{ form_widget(form.division)}}
+            <div class="parsley-errors-list filled uk-text-danger">
+              {{ form_errors(form.division) }}
+            </div>
+          </div>
+        </div>
+        <div class="uk-width-medium-3-10">
+          <div class="uk-form-row">
+            {{ form_widget(form.grade)}}
+            <div class="parsley-errors-list filled uk-text-danger">
+              {{ form_errors(form.grade) }}
+            </div>
+          </div>
+        </div>
+        <div class="uk-width-medium-3-10">
+          <div class="uk-form-row">
+            {{ form_widget(form.section)}}
+            <div class="parsley-errors-list filled uk-text-danger">
+              {{ form_errors(form.section) }}
+            </div>
+          </div>
+        </div>
+        <div class="uk-width-medium-1-10 uk-text-center uk-margin-small-top">
+          {{ form_widget(form.save)}}
+        </div>
+      </div>
+      {{ form_end(form) }}
+    </div>
+  </div>
+  <div id="schedules" class="uk-margin-medium-top">
+    {% if sessions is defined and schedules is defined %}
+      <div id="schedule" class="md-card">
+        <div class="md-card-content">
+          <div class="uk-overflow-container">
+            <table class="uk-table uk-table-hover uk-table-nowrap uk-table-align-vertical">
+              <thead>
+                <tr>
+                  <th class="uk-width-1-10"></th>
+                  {% for session in sessions %}
+                    <th class="border-table uk-text-center md-bg-grey-100">
+                      <h4 class="heading_d uk-margin-small-bottom">
+                        {{ session.sessionName }}
+                      </h4>
+                      <p class="uk-margin-remove">
+                        <i class="material-icons">&#xE425;</i>
+                        {{ session.startTime|date('H:i:s') }}
+                        <i class="material-icons">&#xE5C8;</i>
+                        {{ session.endTime|date('H:i:s') }}
+                      </p>
+                    </th>
+                  {% endfor %}
+                </tr>
+              </thead>
+              <tbody>
+                {% for schedule in schedules %}
+                  <tr >
+                    <td  class="uk-width-2-10 uk-text-bold border-table md-bg-grey-100">
+                      <h1 class="heading_a uk-text-large uk-text-capitalize " >
+                        {{ schedule.day|trans }}
+
+                      </h3>
+                    </td>
+                    {% for session in schedule.sessions %}
+                      {% if session.empty == true %}
+                        <td class="uk-text-center uk-text-bold border-table">
+                          --
+                        </td>
+                      {% else %}
+                        <td colspan="{{ session.colspan }}" class="border-table ">
+                          <ul class="md-list">
+                            <li>
+                              <div class="md-list-content">
+                                <span class="md-list-heading">{{ "schedule_view.schedule.course"|trans }}</span>
+                                <span class="uk-text-small uk-text-muted">{{ session.courseName }}</span>
+                              </div>
+                            </li>
+                            <li>
+                              <div class="md-list-content">
+                                <span class="md-list-heading">{{ "schedule_view.schedule.professor"|trans }}</span>
+                                <span class="uk-text-small uk-text-muted">{{ session.professor }}</span>
+                              </div>
+                            </li>
+                            <li>
+                              <div class="md-list-content">
+                                <a data-uk-modal="{target:'#modal_full'}">
+                                  <i class="md-24 material-icons">&#xE8D7;</i>
+                                </a>
+                              </div>
+                            </li>
+                          </ul>
+                          <div class="uk-modal" id="modal_full">
+                            <div class="uk-modal-dialog">
+                              <div class="uk-modal-header">
+                                <h3 class="uk-modal-title">{{ 'attendancestudent.new.title'|trans }}</h3>
+                              </div>
+                              <form action="{{ path("attendance_student_add") }}" method="post">
+                                <div class="uk-margin-bottom uk-margin-medium-top">
+                                  <div class="uk-input-group">
+                                    <span class="uk-input-group-addon">
+                                      <i class="uk-input-group-icon uk-icon-calendar"></i>
+                                    </span>
+                                    <label>{{ "attendance.field.date"|trans }}</label>
+                                    <input class="md-input" name="attendance_date" type="text" data-uk-datepicker="{format:'YYYY-MM-DD', minDate: '2017-08-01' }">
+                                  </div>
+                                </div>
+                                <div class="uk-margin-bottom">
+                                  <div class="uk-input-group">
+                                    <span class="uk-input-group-addon">
+                                      <i class="material-icons md-24">&#xE152;</i>
+                                    </span>
+                                    <select name="attendance_status" class="md-input status md-input-width-large">
+                                      <option value="" selected="selected">{{ 'attendance.field.select_status'|trans }}</option>
+                                      {% for key, val in status %}
+                                        <option value="{{key}}">
+                                          {{ val|trans }}
+                                        </option>
+                                      {% endfor %}
+                                    </select>
+                                  </div>
+                                </div>
+                                <input name="attendance_section" value="{{ session.sectionID }}" type="hidden"/>
+                                <input name="attendance_session" value="{{ session.sessionID }}" type="hidden"/>
+                                <input name="attendance_division" value="{{ division.id }}" type="hidden"/>
+                                <div class="uk-modal-footer uk-text-right">
+                                  <button type="button" class="md-btn md-btn-flat uk-modal-close">{{ "attendance.action.close"|trans }}</button>
+                                  <button type="submit" class="md-btn md-btn-flat md-btn-flat-primary">{{ "attendance.action.new"|trans }}</button>
+                                </div>
+                              </form>
+                            </div>
+                          </div>
+                        </td>
+                      {% endif %}
+
+                    {% endfor %}
+                  </tr>
+                {% endfor %}
+              </tbody>
+            </table>
+          </div>
+        </div>
+      </div>
+    {% endif %}
+  </div>
+{% endblock %}
+
+{% block javascripts %}
+  {{ parent() }}
+  {% include '@SMSAdministrative/studentattendance/filter.html.twig' %}
+{% endblock %}

@@ -21,23 +21,20 @@ class ResettingPasswordFormType extends AbstractType
         $builder
             ->add('plainPassword', RepeatedType::class, array(
                 'type' => PasswordType::class,
-                'first_options' => array('label' => 'user.new_password', 'constraints' => array(
-                                    new NotBlank() , 
-                                    new Length(array("min" => 8,"max" => 60))
-                )),
+                'first_options' => array('label' => 'user.new_password'),
                 'second_options' => array('label' => 'user.new_password_confirmation'),
                 'invalid_message' => 'user.password.mismatch'
-            ))  
+            ))
         ;
     }
 
     public function configureOptions(OptionsResolver $resolver)
     {
         $resolver->setDefaults(array(
-            'validation_groups' => array('ChangePassword'),
+            'validation_groups' => array('ResetPassword'),
         ));
     }
-    
+
     public function getName()
     {
         return 'resetting_form';

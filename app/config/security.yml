@@ -10,6 +10,7 @@ security:
         ROLE_PARENT: ROLE_PARENT
         ROLE_ADMIN: ROLE_ADMIN
         ROLE_PROFESSOR: ROLE_PROFESSOR
+        ROLE_MANAGER: ROLE_MANAGER
     # http://symfony.com/doc/current/security.html#b-configuring-how-users-are-loaded
     providers:
         our_db_provider:
@@ -22,7 +23,6 @@ security:
             security: false
         main:
             pattern:    ^/
-            http_basic: ~
             anonymous: ~
             provider: our_db_provider
             logout:
@@ -41,4 +41,3 @@ security:
                 default_target_path: user_profile
     access_control:
         - { path: ^/login, roles: IS_AUTHENTICATED_ANONYMOUSLY }
-        - { path: ^/admin, roles: ROLE_ADMIN }

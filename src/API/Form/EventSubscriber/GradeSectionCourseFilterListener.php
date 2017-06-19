@@ -10,9 +10,19 @@ use Symfony\Bridge\Doctrine\Form\Type\EntityType;
 use Doctrine\ORM\EntityManager;
 use SMS\EstablishmentBundle\Entity\Grade;
 use SMS\EstablishmentBundle\Entity\Division;
+use SMS\EstablishmentBundle\Entity\Establishment;
 use SMS\EstablishmentBundle\Entity\Section;
 use SMS\StudyPlanBundle\Entity\Course;
+use Doctrine\ORM\EntityRepository;
+use Symfony\Component\Validator\Constraints\NotBlank;
 
+/**
+ * Class GradeSectionCourseFilterListener
+ *
+ * @author Rami Sfari <rami2sfari@gmail.com>
+ * @copyright Copyright (c) 2017, SMS
+ * @package API\Form\EventSubscriber
+ */
 class GradeSectionCourseFilterListener implements EventSubscriberInterface
 {
 
@@ -22,13 +32,19 @@ class GradeSectionCourseFilterListener implements EventSubscriberInterface
     protected $em;
 
     /**
+     * @var EntityManager
+     */
+    protected $establishment;
+
+    /**
      * Constructor
      *
      * @param EntityManager $em
      */
-    function __construct(EntityManager $em)
+    function __construct(EntityManager $em , Establishment $establishment )
     {
         $this->em = $em;
+        $this->establishment = $establishment;
     }
 
     public static function getSubscribedEvents()
@@ -47,18 +63,25 @@ class GradeSectionCourseFilterListener implements EventSubscriberInterface
      * @return Void
      */
     public function addElements(FormInterface $form, Grade $grade = null , Division $division = null) {
-        
+
+        $establishment = $this->establishment ;
         // Add the grade element
         $form->add('grade' , EntityType::class , array(
                     'data'          => $grade,
                     'class'         => Grade::class,
+                    'query_builder' => function (EntityRepository $er) use ($establishment) {
+                        return $er->createQueryBuilder('grade')
+                                  ->join('grade.establishment', 'establishment')
+                                  ->andWhere('establishment.id = :establishment')
+                                  ->setParameter('establishment', $establishment->getId());
+                    },
                     'property'      => 'gradeName',
-                    'placeholder'   => 'filter.field.grade',
+                    'placeholder'   => 'course.field.grade',
                     'mapped'        => false,
-                    'label'         => 'filter.field.grade',
+                    'constraints'   => [new NotBlank()],
+                    'label'         => 'course.field.grade',
                     'attr'          => [ 'class'=> 'gradeField'])
         );
-        
         // Section are empty, unless we actually supplied a grade
         $sections = array();
         if ($grade) {
@@ -82,11 +105,17 @@ class GradeSectionCourseFilterListener implements EventSubscriberInterface
                     'class'         => Division::class,
                     'property'      => 'divisionName',
                     'placeholder'   => 'filter.field.division',
+                    'query_builder' => function (EntityRepository $er) use ($establishment) {
+                        return $er->createQueryBuilder('division')
+                                  ->join('division.establishment', 'establishment')
+                                  ->andWhere('establishment.id = :establishment')
+                                  ->setParameter('establishment', $establishment->getId());
+                    },
                     'mapped'        => false,
                     'label'         => 'filter.field.division',
                     'attr'          => [ 'class'=> 'divisionField'])
         );
-        
+
         $courses = array();
         if ($grade && $division) {
             // Fetch the course from specified grade
@@ -96,6 +125,12 @@ class GradeSectionCourseFilterListener implements EventSubscriberInterface
         $form->add('course' , EntityType::class , array(
                     'class' => Course::class,
                     'property' => 'courseName',
+                    'query_builder' => function (EntityRepository $er) use ($establishment) {
+                        return $er->createQueryBuilder('division')
+                                  ->join('division.establishment', 'establishment')
+                                  ->andWhere('establishment.id = :establishment')
+                                  ->setParameter('establishment', $establishment->getId());
+                    },
                     'choices'       => $courses,
                     'placeholder'=> 'filter.field.course',
                     'label' => 'filter.field.course',
@@ -123,8 +158,9 @@ class GradeSectionCourseFilterListener implements EventSubscriberInterface
         $form = $event->getForm();
         // We might have an empty data (when we insert a new data, for instance)
         $grade = $data->getSection() ? $data->getSection()->getGrade() : null;
+        $division = $data->getCourse() ? $data->getCourse()->getDivision() : null;
 
-        $this->addElements($form, $grade);
+        $this->addElements($form, $grade , $division);
     }
 
 }

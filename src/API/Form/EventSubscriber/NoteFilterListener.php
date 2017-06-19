@@ -16,6 +16,13 @@ use SMS\StudyPlanBundle\Entity\Course;
 use SMS\UserBundle\Entity\Student;
 use Symfony\Component\Validator\Constraints\NotBlank;
 
+/**
+ * Class NoteFilterListener
+ *
+ * @author Rami Sfari <rami2sfari@gmail.com>
+ * @copyright Copyright (c) 2017, SMS
+ * @package API\Form\EventSubscriber
+ */
 class NoteFilterListener implements EventSubscriberInterface
 {
 
@@ -53,7 +60,7 @@ class NoteFilterListener implements EventSubscriberInterface
         // Remove the submit button, we will place this at the end of the form later
         $submit = $form->get('save');
         $form->remove('save');
-        
+
         // Add the grade element
         $form->add('grade' , EntityType::class , array(
                     'data'          => $grade,
@@ -63,7 +70,7 @@ class NoteFilterListener implements EventSubscriberInterface
                     'label'         => 'course.field.grade',
                     'attr'          => [ 'class'=> 'gradeField'])
         );
-        
+
         // Section are empty, unless we actually supplied a grade
         $sections = array();
         $courses = array();
@@ -89,7 +96,6 @@ class NoteFilterListener implements EventSubscriberInterface
             $students = $this->em->getRepository(Student::class)->findBySection($section);
         }
         if ($by_student) {
-            
             // Add the student element
             $form->add('student' , EntityType::class , array(
                     'class'         => Student::class,
@@ -127,12 +133,12 @@ class NoteFilterListener implements EventSubscriberInterface
                     'constraints'   => [new NotBlank()],
                     'attr'          => [ 'class'=> 'courseField'])
                 );
-        
+
         // Section are empty, unless we actually supplied a Course
         $exams = array();
-        if ($course) {
+        if ($course && $section) {
             // Fetch the exam from specified examType
-            $exams = $this->em->getRepository(Exam::class)->findByCourse($course);
+            $exams = $this->em->getRepository(Exam::class)->findByCourseAndSection($course , $section);
         }
         // Add the Exam element
         $form->add('exam' , EntityType::class , array(
@@ -155,7 +161,6 @@ class NoteFilterListener implements EventSubscriberInterface
         $form = $event->getForm();
         $data = $event->getData();
         // Note that the data is not yet hydrated into the entity.
-
         $grade = $this->em->getRepository(grade::class)->find($data['grade']);
         $course = $this->em->getRepository(Course::class)->find($data['course']);
         $section = $this->em->getRepository(Section::class)->find($data['section']);

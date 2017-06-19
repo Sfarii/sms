@@ -3,6 +3,7 @@
 namespace SMS\AdministrativeBundle\Entity;
 
 use Doctrine\ORM\Mapping as ORM;
+use Symfony\Component\Validator\Constraints as Assert;
 
 /**
  * Sanction
@@ -25,14 +26,20 @@ class Sanction
     /**
      * @var string
      *
-     * @ORM\Column(name="name", type="string", length=200)
+     * @ORM\Column(name="punishment", type="string", length=200)
+     * @Assert\NotBlank()
+     * @Assert\Length(min = 2, max = 199)
+     * @Assert\Regex(pattern="/^[a-z0-9 .\-]+$/i" ,match=true)
      */
-    private $name;
+    private $punishment;
 
     /**
      * @var string
      *
      * @ORM\Column(name="cause", type="text")
+     * @Assert\NotBlank()
+     * @Assert\Length(min = 2, max = 600)
+     * @Assert\Regex(pattern="/^[a-z0-9 .\-]+$/i" ,match=true)
      */
     private $cause;
 
@@ -40,6 +47,7 @@ class Sanction
      * Many Sanctions have One Student.
      * @ORM\ManyToOne(targetEntity="SMS\UserBundle\Entity\Student")
      * @ORM\JoinColumn(name="student_id", referencedColumnName="id")
+     * @Assert\NotBlank()
      */
     private $student;
 
@@ -52,13 +60,13 @@ class Sanction
 
     /**
      * @var datetime $updated
-     * 
+     *
      * @ORM\Column(type="datetime", nullable = true)
      */
     protected $updated;
 
     /**
-     * One User has Many Divivsions.
+     * One User has Many Sanctions.
      * @ORM\ManyToOne(targetEntity="SMS\UserBundle\Entity\User" ,fetch="EXTRA_LAZY")
      * @ORM\JoinColumn(name="user_id", referencedColumnName="id")
      */
@@ -81,7 +89,7 @@ class Sanction
     /**
      * Get id
      *
-     * @return integer 
+     * @return integer
      */
     public function getId()
     {
@@ -89,26 +97,26 @@ class Sanction
     }
 
     /**
-     * Set name
+     * Set punishment
      *
-     * @param string $name
+     * @param string $punishment
      * @return Sanction
      */
-    public function setName($name)
+    public function setPunishment($punishment)
     {
-        $this->name = $name;
+        $this->punishment = $punishment;
 
         return $this;
     }
 
     /**
-     * Get name
+     * Get punishment
      *
-     * @return string 
+     * @return string
      */
-    public function getName()
+    public function getPunishment()
     {
-        return $this->name;
+        return $this->punishment;
     }
 
     /**
@@ -127,7 +135,7 @@ class Sanction
     /**
      * Get cause
      *
-     * @return string 
+     * @return string
      */
     public function getCause()
     {

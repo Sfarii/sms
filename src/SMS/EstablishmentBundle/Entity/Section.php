@@ -9,7 +9,7 @@ use Symfony\Bridge\Doctrine\Validator\Constraints\UniqueEntity;
  * Section
  * @ORM\HasLifecycleCallbacks
  * @ORM\Table(name="section")
- * @UniqueEntity("sectionName")
+ * @UniqueEntity(fields={"sectionName" , "grade" , "establishment"})
  * @ORM\Entity(repositoryClass="SMS\EstablishmentBundle\Repository\SectionRepository")
  */
 class Section
@@ -50,7 +50,7 @@ class Section
 
     /**
      * @var datetime $updated
-     * 
+     *
      * @ORM\Column(type="datetime", nullable = true)
      */
     protected $updated;
@@ -61,6 +61,19 @@ class Section
      * @ORM\JoinColumn(name="user_id", referencedColumnName="id")
      */
     private $user;
+
+    /**
+    * One Section has Many Students.
+    * @ORM\OneToMany(targetEntity="SMS\UserBundle\Entity\Student", mappedBy="section" ,fetch="EXTRA_LAZY")
+    */
+    private $students;
+
+    /**
+     * One establishment has Many Sections.
+     * @ORM\ManyToOne(targetEntity="SMS\EstablishmentBundle\Entity\Establishment" ,fetch="EXTRA_LAZY")
+     * @ORM\JoinColumn(name="establishment_id", referencedColumnName="id")
+     */
+    private $establishment;
 
      /**
      * @ORM\PrePersist
@@ -79,7 +92,7 @@ class Section
     /**
      * Get id
      *
-     * @return integer 
+     * @return integer
      */
     public function getId()
     {
@@ -102,7 +115,7 @@ class Section
     /**
      * Get sectionName
      *
-     * @return string 
+     * @return string
      */
     public function getsectionName()
     {
@@ -125,7 +138,7 @@ class Section
     /**
      * Get created
      *
-     * @return \DateTime 
+     * @return \DateTime
      */
     public function getCreated()
     {
@@ -148,7 +161,7 @@ class Section
     /**
      * Get updated
      *
-     * @return \DateTime 
+     * @return \DateTime
      */
     public function getUpdated()
     {
@@ -171,7 +184,7 @@ class Section
     /**
      * Get grade
      *
-     * @return \SMS\EstablishmentBundle\Entity\Grade 
+     * @return \SMS\EstablishmentBundle\Entity\Grade
      */
     public function getGrade()
     {
@@ -194,10 +207,83 @@ class Section
     /**
      * Get user
      *
-     * @return \SMS\UserBundle\Entity\User 
+     * @return \SMS\UserBundle\Entity\User
      */
     public function getUser()
     {
         return $this->user;
+    }
+    /**
+     * Constructor
+     */
+    public function __construct()
+    {
+        $this->students = new \Doctrine\Common\Collections\ArrayCollection();
+    }
+
+    /**
+     * Add student
+     *
+     * @param \SMS\UserBundle\Entity\Student $student
+     *
+     * @return Section
+     */
+    public function addStudent(\SMS\UserBundle\Entity\Student $student)
+    {
+        $this->students[] = $student;
+
+        return $this;
+    }
+
+    /**
+     * Remove student
+     *
+     * @param \SMS\UserBundle\Entity\Student $student
+     */
+    public function removeStudent(\SMS\UserBundle\Entity\Student $student)
+    {
+        $this->students->removeElement($student);
+    }
+
+    /**
+     * Get students
+     *
+     * @return \Doctrine\Common\Collections\Collection
+     */
+    public function getStudents()
+    {
+        return $this->students;
+    }
+
+    /**
+     * Set establishment
+     *
+     * @param \SMS\EstablishmentBundle\Entity\Establishment $establishment
+     *
+     * @return Section
+     */
+    public function setEstablishment(\SMS\EstablishmentBundle\Entity\Establishment $establishment = null)
+    {
+        $this->establishment = $establishment;
+
+        return $this;
+    }
+
+    /**
+     * Get establishment
+     *
+     * @return \SMS\EstablishmentBundle\Entity\Establishment
+     */
+    public function getEstablishment()
+    {
+        return $this->establishment;
+    }
+
+    /**
+     * @return string
+     */
+    public function __toString()
+    {
+        return sprintf("%s",$this->getsectionName());
     }
 }

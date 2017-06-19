@@ -1,0 +1,100 @@
+{% extends 'layout/base_header_double_height.html.twig' %}
+
+{% block body %}
+  <div class="uk-width-medium-8-10 uk-container-center">
+    <div class="md-card md-card-single">
+      <div class="md-card-toolbar">
+        <a href="{{ path('orderline_index') }}">
+          <span class="md-icon md-card-fullscreen-deactivate material-icons uk-float-left">&#xE5C4;</span>
+        </a>
+        <h3 class="md-card-toolbar-heading-text large uk-margin-small-left">
+          {{ 'orderline.new.title'|trans }}
+        </h3>
+      </div>
+      <div class="md-card-content">
+        {{ form_start(form) }}
+        <div class="uk-margin-small-top">
+          <div class="uk-grid" data-uk-grid-margin>
+            <div class="uk-width-1-2">
+              <div class="uk-form-row">
+                <label class="uk-form-label">{{ form_label(form.provider) }}</label>
+                {{ form_widget(form.provider)}}
+                <div class="parsley-errors-list filled uk-text-danger">
+                  {{ form_errors(form.provider) }}
+                </div>
+              </div>
+            </div>
+          </div>
+
+          <div class="uk-overflow-container uk-margin-medium-top">
+            <table class="uk-table">
+              <thead>
+                <tr>
+                  <th class="uk-text-nowrap uk-width-2-10">{{ 'action.name'|trans }}</th>
+                  <th class="uk-width-4-10 uk-text-nowrap">{{ 'orderline.field.product'|trans }}</th>
+                  <th class="uk-width-3-10 uk-text-nowrap">{{ 'orderline.field.quantity'|trans }}</th>
+
+                </tr>
+              </thead>
+              <tbody>
+                <tr>
+                  <td colspan="3" class="uk-padding-remove">
+                    <table class="uk-table" data-dynamic-fields="field_template_order_line"></table>
+                  </td>
+                </tr>
+              </tbody>
+            </table>
+            {% set a = "{" %}
+            {% set c = "counter" %}
+            {% set b = "}" %}
+            <script id="field_template_order_line" type="text/x-handlebars-template">
+              <tr class="form_section">
+                <td class="uk-text-left uk-text-middle uk-width-2-10">
+                  <a href="#" class="btnSectionClone" data-section-clone="#options_section">
+                    <i class="material-icons md-24">&#xE145;</i>
+                  </a>
+                </td>
+                <td class="uk-width-4-10">
+                    <div class="uk-input-group">
+                      <span class="uk-input-group-addon">
+                        <i class="material-icons md-24">&#xE854;</i>
+                      </span>
+                      <select data-md-selectize id="sms_storebundle_orderline_product" name="sms_storebundle_orderline[product{{ a }}{{ a }}{{ c }}{{ b }}{{ b }}]" class="md-input md-input-width-large" >
+                        <option value=""  selected="selected" >orderline.field.product</option>
+                        {% for productType in productTypes %}
+                          <optgroup label="{{productType.productTypeName}}">
+                            {% for product in productType.products %}
+                              <option value="{{product.id}}">{{product.productName}}</option>
+                            {% endfor %}
+                          </optgroup>
+                        {% endfor %}
+                      </select>
+                    </div>
+                </td>
+                <td class="uk-width-4-10">
+                  <div class="uk-input-group">
+                    <span class="uk-input-group-addon">
+                      <i class="uk-icon-cubes"></i>
+                    </span>
+                    <input class="md-input" type="text" id="sms_storebundle_orderline_quantity" name="sms_storebundle_orderline[quantity{{ a }}{{ a }}{{ c }}{{ b }}{{ b }}]" class="md-input md-input-width-small uk-text-right" />
+                    </div>
+                </td>
+              </tr>
+            </script>
+          </div>
+          {{ form_widget(form) }}
+
+          {{ form_end(form) }}
+        </div>
+      </div>
+    </div>
+  </div>
+{% endblock %}
+
+{% block javascripts %}
+  {{ parent() }}
+  <!-- page specific plugins -->
+  <!-- handlebars.js -->
+  <script src="{{ asset('assets/js/handlebars.min.js')}}"></script>
+  <script src="{{ asset('assets/js/handlebars_helpers.min.js')}}"></script>
+{% endblock %}

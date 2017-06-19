@@ -1,0 +1,16 @@
+{% extends "SMSUserBundle:user/layout.html.twig" %}
+
+{% block body %}  
+    <div class="md-card-content large-padding" >
+        <a href="{{ path ('login') }}" class="uk-position-top-right uk-close uk-margin-right uk-margin-top "></a>
+        <h2 class="heading_a uk-margin-large-bottom">{{ 'reset.title'|trans }}</h2>
+        {{ form_start(form ) }}
+            {{ form_widget(form) }}
+            <div class="uk-margin-small-top">
+                <button type="submit" class="md-btn md-btn-primary md-btn-block">
+                    {{ 'reset.submit'|trans }}
+                </button>
+            </div>
+        {{ form_end(form) }}
+    </div>
+{% endblock %}   

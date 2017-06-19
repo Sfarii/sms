@@ -1,0 +1,151 @@
+{% extends 'layout/base_no_header.html.twig' %}
+
+{% block sticky_button %}
+  <a class="md-fab md-fab-primary" href="{{ path('manager_edit', { 'id': manager.id }) }}">
+    <i class="material-icons">&#xE254;</i>
+  </a>
+{% endblock %}
+
+{% block title_page %}
+  {{ 'manager.show.title'|trans }}
+{% endblock %}
+
+{% block body %}
+  <div class="uk-grid" data-uk-grid-margin data-uk-grid-match id="user_profile">
+    <div class="uk-width-large-7-10">
+      <div class="md-card">
+        <div class="user_heading">
+          <div class="user_heading_avatar fileinput fileinput-new">
+            <div class="fileinput-new thumbnail">
+              {% if manager.imageName %}
+                <img src="{{ vich_uploader_asset(manager, 'imageFile') }}" alt="{{ manager.imageName }}"/>
+              {% else %}
+                <img src="{{ asset('assets/img/avatars/user@2x.png') }}" alt="user avatar"/>
+              {% endif %}
+            </div>
+          </div>
+          <div class="user_heading_content">
+            <h2 class="heading_b uk-margin-bottom">
+              <span class="uk-text-truncate">{{ manager.username }}</span>
+              <span class="sub-heading">{{ manager.firstName }}
+                {{ manager.lastName }}</span>
+            </h2>
+          </div>
+          <div class="md-fab-wrapper">
+            <a class="md-fab md-fab-small md-fab-success" href="{{ path('manager_index') }}">
+              <i class="material-icons">&#xE88A;</i>
+            </a>
+          </div>
+        </div>
+        <div class="user_content">
+          <h3 class="full_width_in_card heading_c">{{ 'user.show.general_info'|trans }}</h3>
+          <div class="uk-grid uk-margin-medium-top uk-margin-large-bottom" data-uk-grid-margin>
+            <div class="uk-width-large-1-2">
+              <ul class="md-list">
+                <li>
+                  <div class="md-list-content">
+                    <span class="md-list-heading uk-text-large">{{ manager.firstName }}</span>
+                    <span class="uk-text-small uk-text-muted uk-display-block">
+                      {{'manager.field.firstName'|trans }}</span>
+                  </div>
+                </li>
+              </ul>
+            </div>
+            <div class="uk-width-large-1-2">
+              <ul class="md-list">
+                <li>
+                  <div class="md-list-content">
+
+                    <span class="md-list-heading uk-text-large">{{ manager.lastName }}</span>
+                    <span class="uk-text-small uk-text-muted uk-display-block">
+                      {{'manager.field.lastName'|trans }}</span>
+                  </div>
+                </li>
+
+              </ul>
+            </div>
+
+          </div>
+          <h3 class="full_width_in_card heading_c">{{ 'user.show.contact_info'|trans }}</h3>
+          <div class="uk-grid uk-margin-medium-top uk-margin-large-bottom" data-uk-grid-margin>
+            <div class="uk-width-large-1-2">
+              <ul class="md-list md-list-addon">
+                <li>
+                  <div class="md-list-content">
+                    <div class="md-list-addon-element">
+                      <i class="md-list-addon-icon material-icons">&#xE0BE;</i>
+                    </div>
+                    <span class="md-list-heading uk-text-large">{{ manager.email }}</span>
+                    <span class="uk-text-small uk-text-muted uk-display-block">
+                      {{'user.field.email'|trans }}</span>
+                  </div>
+                </li>
+              </ul>
+            </div>
+            <div class="uk-width-large-1-2">
+              <ul class="md-list md-list-addon">
+                <li>
+                  <div class="md-list-content">
+                    <div class="md-list-addon-element">
+                      <i class="md-list-addon-icon material-icons">&#xE0CD;</i>
+                    </div>
+                    <span class="md-list-heading uk-text-large">{{ manager.phone }}
+                    </span>
+                    <span class="uk-text-small uk-text-muted uk-display-block">
+                      {{'manager.field.phone'|trans }}</span>
+                  </div>
+                </li>
+              </ul>
+            </div>
+
+            <div class="uk-width-large-1-1">
+              <ul class="md-list md-list-addon">
+                <li>
+                  <div class="md-list-content">
+                    <div class="md-list-addon-element">
+                      <i class="md-list-addon-icon material-icons">&#xE55F;</i>
+                    </div>
+
+                    <span class="md-list-heading uk-text-large">{{ manager.address }}</span>
+                    <span class="uk-text-small uk-text-muted uk-display-block">
+                      {{'manager.field.address'|trans }}</span>
+                  </div>
+                </li>
+              </ul>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+    <div class="uk-width-xLarge-2-10 uk-width-large-3-10">
+      <div class="md-card">
+        <div class="md-card-content">
+          <ul class="md-list md-list-addon">
+            <li>
+              <div class="md-list-addon-element">
+                <i class="md-list-addon-icon material-icons">&#xE8DF;</i>
+              </div>
+              <div class="md-list-content">
+                <span class="md-list-heading">
+                  {% if manager.created %}{{ manager.created|date('d M Y') }}{% endif %}
+                </span>
+                <span class="uk-text-small uk-text-muted">{{ 'author.created'|trans }}</span>
+              </div>
+            </li>
+            <li>
+              <div class="md-list-addon-element">
+                <i class="md-list-addon-icon material-icons">&#xE8B5;</i>
+              </div>
+              <div class="md-list-content">
+                <span class="md-list-heading">
+                  {% if manager.updated %}{{ manager.updated|date('d M Y') }}{% endif %}
+                </span>
+                <span class="uk-text-small uk-text-muted">{{ 'author.updated'|trans }}</span>
+              </div>
+            </li>
+          </ul>
+        </div>
+      </div>
+    </div>
+  </div>
+{% endblock %}

@@ -2,26 +2,28 @@
 
 namespace SMS\UserBundle\Entity;
 
+use Symfony\Component\Validator\Constraints as Assert;
 use Doctrine\ORM\Mapping as ORM;
+use Symfony\Bridge\Doctrine\Validator\Constraints\UniqueEntity;
 use Symfony\Component\HttpFoundation\File\File;
 use Vich\UploaderBundle\Mapping\Annotation as Vich;
 
 /**
  * User
- * 
+ *
  * @ORM\MappedSuperclass
  * @ORM\InheritanceType("JOINED")
  * @ORM\Entity(repositoryClass="SMS\UserBundle\Repository\UserRepository")
  * @ORM\HasLifecycleCallbacks
  * @Vich\Uploadable
  * @ORM\DiscriminatorColumn(name="discr", type="string")
- * @ORM\DiscriminatorMap({ "user" = "User" ,"student_parent" = "StudentParent" , "student" = "Student" , "professor" = "Professor" , "administrator" = "Administrator"})
+ * @ORM\DiscriminatorMap({ "user" = "User" , "manager" = "Manager" ,"student_parent" = "StudentParent" , "student" = "Student" , "professor" = "Professor" , "administrator" = "Administrator"})
  *
  * @author Rami Sfari <rami2sfari@gmail.com>
- * @copyright Copyright (c) 2016, SNS
+ * @copyright Copyright (c) 2016, SMS
  */
 
-abstract class User implements UserInterface
+ class User implements UserInterface
 {
     /**
      * @var int
@@ -33,7 +35,7 @@ abstract class User implements UserInterface
     protected $id;
 
     /**
-     * @var string
+     * @var String
      * @ORM\Column(name="username", type="string", length=128, unique=true)
      */
     protected $username;
@@ -114,20 +116,15 @@ abstract class User implements UserInterface
 
     /**
      * NOTE: This is not a mapped field of entity metadata, just a simple property.
-     * 
+     *
      * @Vich\UploadableField(mapping="user_image", fileNameProperty="imageName")
-     * 
+     * @Assert\File(
+     *     maxSize="1M",
+     *     mimeTypes={"image/png", "image/jpeg", "image/pjpeg"}
+     * )
      * @var File
      */
     protected $imageFile;
-    
-    /**
-    * NOTE: This is not a mapped field just a simple property.
-    *
-    * @var String
-    */
-
-    protected $show_username_password;
 
     /**
      * @ORM\Column(type="string", length=255 , nullable=true)
@@ -152,20 +149,46 @@ abstract class User implements UserInterface
 
     /**
      * @var datetime $updated
-     * 
+     *
      * @ORM\Column(type="datetime", nullable = true)
      */
     protected $updated;
+
+    /**
+    * One User Create Many Users.
+    * @ORM\ManyToOne(targetEntity="User")
+    * @ORM\JoinColumn(name="user_id", referencedColumnName="id")
+    */
+   private $creator;
+
+   /**
+    * One establishment has Many Users.
+    * @ORM\ManyToOne(targetEntity="SMS\EstablishmentBundle\Entity\Establishment" ,fetch="EXTRA_LAZY")
+    * @ORM\JoinColumn(name="establishment_id", referencedColumnName="id")
+    */
+   private $establishment;
 
     /**
      * User constructor.
      */
     public function __construct()
     {
-        $this->enabled = false;
-        $this->roles = array(self::ROLE_DEFAULT);
+        $this->enabled = true;
     }
-    
+
+     /**
+     * @ORM\PrePersist
+     * @ORM\PreUpdate
+     */
+    public function updatedTimestamps()
+    {
+        $this->setUpdated(new \DateTime('now'));
+
+        if ($this->getCreated() == null) {
+            $this->setCreated(new \DateTime('now'));
+        }
+    }
+
     /**
      * {@inheritdoc}
      */
@@ -181,20 +204,6 @@ abstract class User implements UserInterface
             $this->email,
             $this->emailCanonical,
         ));
-    }
-
-     /**
-     *
-     * @ORM\PrePersist
-     * @ORM\PreUpdate
-     */
-    public function updatedTimestamps()
-    {
-        $this->setUpdated(new \DateTime('now'));
-
-        if ($this->getCreated() == null) {
-            $this->setCreated(new \DateTime('now'));
-        }
     }
 
     /**
@@ -308,7 +317,7 @@ abstract class User implements UserInterface
     {
         return $this->confirmationToken;
     }
-    
+
     /**
      * {@inheritdoc}
      */
@@ -346,7 +355,7 @@ abstract class User implements UserInterface
     {
         return $this->hasRole(static::ROLE_SUPER_ADMIN);
     }
-    
+
     /**
      * {@inheritdoc}
      */
@@ -458,11 +467,9 @@ abstract class User implements UserInterface
         $this->passwordRequestedAt = $date;
         return $this;
     }
-    
+
     /**
-     * Gets the timestamp that the user requested a password reset.
-     *
-     * @return null|\DateTime
+     * {@inheritdoc}
      */
     public function getPasswordRequestedAt()
     {
@@ -522,10 +529,7 @@ abstract class User implements UserInterface
      */
     public function getRoles()
     {
-        $roles = $this->roles;
-        // we need to make sure to have at least one role
-        $roles[] = static::ROLE_DEFAULT;
-        return $roles;
+        return $this->roles;
     }
 
     /**
@@ -537,9 +541,7 @@ abstract class User implements UserInterface
     }
 
     /**
-     * Get enabled
-     *
-     * @return boolean 
+     * {@inheritdoc}
      */
     public function getEnabled()
     {
@@ -566,7 +568,7 @@ abstract class User implements UserInterface
             // otherwise the event listeners won't be called and the file is lost
             $this->updatedAt = new \DateTimeImmutable();
         }
-        
+
         return $this;
     }
 
@@ -579,23 +581,75 @@ abstract class User implements UserInterface
     }
 
     /**
-     * @param string $imageName
-     *
-     * @return User
+     * {@inheritdoc}
      */
     public function setImageName($imageName)
     {
         $this->imageName = $imageName;
-        
+
         return $this;
     }
 
     /**
-     * @return string|null
+     * {@inheritdoc}
      */
     public function getImageName()
     {
         return $this->imageName;
+    }
+
+    /**
+     * {@inheritdoc}
+     */
+    public function setUpdatedAt($updatedAt)
+    {
+        $this->updatedAt = $updatedAt;
+
+        return $this;
+    }
+
+    /**
+     * {@inheritdoc}
+     */
+    public function getUpdatedAt()
+    {
+        return $this->updatedAt;
+    }
+
+    /**
+     * {@inheritdoc}
+     */
+    public function setCreated($created)
+    {
+        $this->created = $created;
+
+        return $this;
+    }
+
+    /**
+     * {@inheritdoc}
+     */
+    public function getCreated()
+    {
+        return $this->created;
+    }
+
+    /**
+     * {@inheritdoc}
+     */
+    public function setUpdated($updated)
+    {
+        $this->updated = $updated;
+
+        return $this;
+    }
+
+    /**
+     * {@inheritdoc}
+     */
+    public function getUpdated()
+    {
+        return $this->updated;
     }
 
     /**
@@ -606,73 +660,27 @@ abstract class User implements UserInterface
         return (string) $this->getUsername();
     }
 
-
     /**
-     * Set updatedAt
+     * Set creator
      *
-     * @param \DateTime $updatedAt
+     * @param \SMS\UserBundle\Entity\User $creator
+     *
      * @return User
      */
-    public function setUpdatedAt($updatedAt)
+    public function setCreator(\SMS\UserBundle\Entity\User $creator = null)
     {
-        $this->updatedAt = $updatedAt;
+        $this->creator = $creator;
 
         return $this;
     }
 
     /**
-     * Get updatedAt
+     * Get creator
      *
-     * @return \DateTime 
+     * @return \SMS\UserBundle\Entity\User
      */
-    public function getUpdatedAt()
+    public function getCreator()
     {
-        return $this->updatedAt;
-    }
-
-    /**
-     * Set created
-     *
-     * @param \DateTime $created
-     * @return User
-     */
-    public function setCreated($created)
-    {
-        $this->created = $created;
-
-        return $this;
-    }
-
-    /**
-     * Get created
-     *
-     * @return \DateTime 
-     */
-    public function getCreated()
-    {
-        return $this->created;
-    }
-
-    /**
-     * Set updated
-     *
-     * @param \DateTime $updated
-     * @return User
-     */
-    public function setUpdated($updated)
-    {
-        $this->updated = $updated;
-
-        return $this;
-    }
-
-    /**
-     * Get updated
-     *
-     * @return \DateTime 
-     */
-    public function getUpdated()
-    {
-        return $this->updated;
+        return $this->creator;
     }
 }

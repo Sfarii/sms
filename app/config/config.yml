@@ -2,12 +2,11 @@ imports:
     - { resource: parameters.yml }
     - { resource: security.yml }
     - { resource: services.yml }
-    - { resource: datatables.yml }
+    - { resource: sms_param.yml }
 # Put parameters here that don't need to change on each machine where the app is deployed
 # http://symfony.com/doc/current/best_practices/configuration.html#application-related-configuration
 parameters:
     locale: en
-
 framework:
     esi: ~
     translator: { fallbacks: ['%locale%'] }
@@ -96,6 +95,24 @@ vich_uploader:
         user_image:
             uri_prefix:         /images/user_img
             upload_destination: '%kernel.root_dir%/../web/images/user_img'
+            inject_on_load:     false
+            delete_on_update:   true
+            delete_on_remove:   true
+        app_image:
+            uri_prefix:         /images/app_img
+            upload_destination: '%kernel.root_dir%/../web/images/app_img'
+            inject_on_load:     false
+            delete_on_update:   true
+            delete_on_remove:   true
+        store_image:
+            uri_prefix:         /images/store_image
+            upload_destination: '%kernel.root_dir%/../web/images/store_image'
+            inject_on_load:     false
+            delete_on_update:   true
+            delete_on_remove:   true
+        establishment_logo:
+            uri_prefix:         /images/establishment_logo
+            upload_destination: '%kernel.root_dir%/../web/images/establishment_logo'
             inject_on_load:     false
             delete_on_update:   true
             delete_on_remove:   true

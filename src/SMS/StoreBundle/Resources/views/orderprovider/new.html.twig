@@ -1,0 +1,143 @@
+{% extends 'layout/base_header_double_height.html.twig' %}
+
+{% block body %}
+  <div class="uk-width-medium-8-10 uk-container-center">
+    <div class="md-card md-card-single">
+      <div class="md-card-toolbar">
+        <a href="{{ path('orderprovider_index') }}">
+          <span class="md-icon md-card-fullscreen-deactivate material-icons uk-float-left">&#xE5C4;</span>
+        </a>
+        <h3 class="md-card-toolbar-heading-text large uk-margin-small-left">
+          {{ 'orderprovider.new.title'|trans }}
+        </h3>
+      </div>
+      <div class="md-card-content">
+        {{ form_start(form) }}
+        <div class="uk-margin-small-top">
+          <div class="uk-grid" data-uk-grid-margin>
+            <div class="uk-width-1-2">
+              <div class="uk-form-row uk-input-group">
+                  <span class="uk-input-group-addon">
+                    <i class="provider material-icons md-24">&#xE7EF;</i>
+                  </span>
+                {{ form_label(form.provider) }}
+                {{ form_widget(form.provider)}}
+                <div class="parsley-errors-list filled uk-text-danger">
+                  {{ form_errors(form.provider) }}
+                </div>
+              </div>
+            </div>
+          </div>
+
+          <div class="uk-overflow-container uk-margin-medium-top">
+            <table class="uk-table">
+              <thead>
+                <tr>
+                  <th class="uk-text-nowrap uk-width-2-10 heading_c">{{ 'action.name'|trans }}</th>
+                  <th class="uk-width-4-10 uk-text-nowrap heading_c">{{ 'orderprovider.field.product'|trans }}</th>
+                  <th class="uk-width-3-10 uk-text-nowrap heading_c">{{ 'orderprovider.field.quantity'|trans }}</th>
+
+                </tr>
+              </thead>
+              <tbody>
+                <tr>
+                  <td colspan="3" class="uk-padding-remove">
+                    <table class="uk-table" data-dynamic-fields="field_template_order_line"></table>
+                  </td>
+                </tr>
+              </tbody>
+            </table>
+            {% set a = "{" %}
+            {% set c = "counter" %}
+            {% set b = "}" %}
+            <script id="field_template_order_line" type="text/x-handlebars-template">
+              <tr class="form_section">
+                <td class="uk-text-left uk-text-middle uk-width-2-10">
+                  <a href="#" class="btnSectionClone" data-section-clone="#options_section">
+                    <i class="material-icons md-24">&#xE145;</i>
+                  </a>
+                </td>
+                <td class="uk-width-4-10">
+                  <div class="uk-input-group">
+                    <span class="uk-input-group-addon">
+                      <i id="icon" class="material-icons md-24">&#xE854;</i>
+                    </span>
+                    <select data-required data-md-selectize id="sms_storebundle_orderprovider_product" name="sms_storebundle_orderprovider[product{{ a }}{{ a }}{{ c }}{{ b }}{{ b }}]" class="md-input product md-input-width-large">
+                      <option value="" selected="selected">{{ 'orderprovider.field.select_product'|trans }}</option>
+                      {% for productType in productTypes %}
+                        <optgroup label="{{productType.productTypeName}}">
+                          {% for product in productType.products %}
+                            <option value="{{product.id}}">{{product.productName}}</option>
+                          {% endfor %}
+                        </optgroup>
+                      {% endfor %}
+                    </select>
+                  </div>
+                </td>
+                <td class="uk-width-4-10">
+                  <div class="uk-input-group">
+                    <span class="uk-input-group-addon">
+                      <i id="icon" class=" uk-icon-cubes"></i>
+                    </span>
+                    <input
+                      data-required
+                      class="md-input md-input-width-small quantity"
+                      placeholder="{{ 'orderprovider.field.quantity'|trans }}"
+                      type="text"
+                      id="sms_storebundle_orderprovider_quantity"
+                      name="sms_storebundle_orderprovider[quantity{{ a }}{{ a }}{{ c }}{{ b }}{{ b }}]"/>
+                  </div>
+                </td>
+              </tr>
+            </script>
+          </div>
+          {{ form_widget(form) }}
+
+          {{ form_end(form) }}
+        </div>
+      </div>
+    </div>
+  </div>
+{% endblock %}
+
+{% block javascripts %}
+  {{ parent() }}
+  <!-- page specific plugins -->
+  <!-- handlebars.js -->
+  <script src="{{ asset('assets/js/handlebars.min.js')}}"></script>
+  <script src="{{ asset('assets/js/handlebars_helpers.min.js')}}"></script>
+  <!-- parsley (validation) -->
+  <script>
+    // load parsley config (altair_admin_common.js)
+    $("#sms_storebundle_orderprovider_save").click(function(e) {
+      e.preventDefault();
+      var error = false;
+      if ($("#sms_storebundle_orderprovider_provider").val() == "") {
+        $(".provider").addClass("md-color-red-A700");
+        error = true;
+      }else{
+        $(".provider").addClass("md-color-green-A700");
+      }
+
+      var $elem = $("[data-required],.data-required");
+      if ($elem.length) {
+          $elem.each(function() {
+            var $this = this;
+            if ($($this).val()== ""){
+              $($this).closest("div").parent(".uk-input-group").find("#icon").addClass("md-color-red-A700");
+              error = true;
+            }else{
+              $($this).closest("div").parent(".uk-input-group").find("#icon").addClass("md-color-green-A700");
+
+            }
+          });
+      }
+
+      if (error === false){
+        $("form").submit();
+      }
+
+    });
+  </script>
+  <script src="{{ asset('assets/js/parsley.min.js')}}"></script>
+{% endblock %}

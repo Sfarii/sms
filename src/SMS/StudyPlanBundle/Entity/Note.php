@@ -59,7 +59,7 @@ class Note
 
     /**
      * @var datetime $updated
-     * 
+     *
      * @ORM\Column(type="datetime", nullable = true)
      */
     protected $updated;
@@ -81,7 +81,7 @@ class Note
     /**
      * Get id
      *
-     * @return integer 
+     * @return integer
      */
     public function getId()
     {
@@ -104,7 +104,7 @@ class Note
     /**
      * Get mark
      *
-     * @return float 
+     * @return float
      */
     public function getMark()
     {
@@ -127,7 +127,7 @@ class Note
     /**
      * Get created
      *
-     * @return \DateTime 
+     * @return \DateTime
      */
     public function getCreated()
     {
@@ -150,7 +150,7 @@ class Note
     /**
      * Get updated
      *
-     * @return \DateTime 
+     * @return \DateTime
      */
     public function getUpdated()
     {
@@ -173,7 +173,7 @@ class Note
     /**
      * Get student
      *
-     * @return \SMS\UserBundle\Entity\Student 
+     * @return \SMS\UserBundle\Entity\Student
      */
     public function getStudent()
     {
@@ -196,7 +196,7 @@ class Note
     /**
      * Get exam
      *
-     * @return \SMS\StudyPlanBundle\Entity\Exam 
+     * @return \SMS\StudyPlanBundle\Entity\Exam
      */
     public function getExam()
     {
@@ -219,7 +219,7 @@ class Note
     /**
      * Get user
      *
-     * @return \SMS\UserBundle\Entity\User 
+     * @return \SMS\UserBundle\Entity\User
      */
     public function getUser()
     {

@@ -27,7 +27,7 @@ class CourseController extends BaseController
      *
      * @Route("/", name="course_index")
      * @Method("GET")
-     * @Template("smsstudyplanbundle/course/index.html.twig")
+     * @Template("SMSStudyPlanBundle:course:index.html.twig")
      */
     public function indexAction()
     {
@@ -49,6 +49,16 @@ class CourseController extends BaseController
 
         $query = $this->getDataTableQuery()->getQueryFrom($courses);
 
+        $user = $this->getUser();
+        $function = function($qb) use ($user)
+        {
+            $qb->join('course.establishment', 'establishment')
+                ->andWhere('establishment.id = :establishment')
+        				->setParameter('establishment', $user->getEstablishment()->getId());
+        };
+
+        $query->addWhereAll($function);
+
         return $query->getResponse();
     }
     /**
@@ -56,12 +66,12 @@ class CourseController extends BaseController
      *
      * @Route("/new", name="course_new", options={"expose"=true})
      * @Method({"GET", "POST"})
-     * @Template("smsstudyplanbundle/course/new.html.twig")
+     * @Template("SMSStudyPlanBundle:course:new.html.twig")
      */
     public function newAction(Request $request)
     {
         $course = new Course();
-        $form = $this->createForm(CourseType::class, $course);
+        $form = $this->createForm(CourseType::class, $course, array('establishment' => $this->getUser()->getEstablishment()));
         $form->handleRequest($request);
 
         if ($form->isSubmitted() && $form->isValid() && $form->get('save')->isClicked()) {
@@ -86,7 +96,7 @@ class CourseController extends BaseController
     {
         $deleteForm = $this->createDeleteForm($course);
 
-        return $this->render('smsstudyplanbundle/course/show.html.twig', array(
+        return $this->render('SMSStudyPlanBundle:course:show.html.twig', array(
             'course' => $course,
             'delete_form' => $deleteForm->createView(),
         ));
@@ -97,11 +107,11 @@ class CourseController extends BaseController
      *
      * @Route("/{id}/edit", name="course_edit", options={"expose"=true})
      * @Method({"GET", "POST"})
-     * @Template("smsstudyplanbundle/course/edit.html.twig")
+     * @Template("SMSStudyPlanBundle:course:edit.html.twig")
      */
     public function editAction(Request $request, Course $course)
     {
-        $editForm = $this->createForm(CourseType::class, $course)->handleRequest($request);
+        $editForm = $this->createForm(CourseType::class, $course, array('establishment' => $this->getUser()->getEstablishment()))->handleRequest($request);
         if ($editForm->isSubmitted() && $editForm->isValid() && $editForm->get('save')->isClicked()) {
             $this->getEntityManager()->update($course);
             $this->flashSuccessMsg('course.edit.success');
@@ -110,7 +120,7 @@ class CourseController extends BaseController
 
         return array(
             'course' => $course,
-            'edit_form' => $editForm->createView(),
+            'form' => $editForm->createView(),
         );
     }
 
@@ -141,7 +151,7 @@ class CourseController extends BaseController
             } catch (\Exception $e) {
                 return new Response($this->get('translator')->trans('course.delete.fail'), 200);
             }
-            
+
 
             return new Response($this->get('translator')->trans('course.delete.success'), 200);
         }

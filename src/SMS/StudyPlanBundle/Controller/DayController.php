@@ -27,7 +27,7 @@ class DayController extends BaseController
      *
      * @Route("/", name="day_index")
      * @Method("GET")
-     * @Template("smsstudyplanbundle/day/index.html.twig")
+     * @Template("SMSStudyPlanBundle:day/index.html.twig")
      */
     public function indexAction()
     {
@@ -56,7 +56,7 @@ class DayController extends BaseController
      *
      * @Route("/new", name="day_new", options={"expose"=true})
      * @Method({"GET", "POST"})
-     * @Template("smsstudyplanbundle/day/new.html.twig")
+     * @Template("SMSStudyPlanBundle:day/new.html.twig")
      */
     public function newAction(Request $request)
     {
@@ -81,7 +81,7 @@ class DayController extends BaseController
      *
      * @Route("/{id}/edit", name="day_edit", options={"expose"=true})
      * @Method({"GET", "POST"})
-     * @Template("smsstudyplanbundle/day/edit.html.twig")
+     * @Template("SMSStudyPlanBundle:day/edit.html.twig")
      */
     public function editAction(Request $request, Day $day)
     {

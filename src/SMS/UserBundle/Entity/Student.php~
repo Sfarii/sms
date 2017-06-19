@@ -3,10 +3,12 @@
 namespace SMS\UserBundle\Entity;
 
 use Doctrine\ORM\Mapping as ORM;
+use Symfony\Component\Validator\Constraints as Assert;
+use Vich\UploaderBundle\Mapping\Annotation as Vich;
 
 /**
  * Student
- *
+ * @Vich\Uploadable
  * @ORM\Table(name="student")
  * @ORM\Entity(repositoryClass="SMS\UserBundle\Repository\StudentRepository")
  */
@@ -15,7 +17,7 @@ class Student extends User
     /**
      * @var string
      *
-     * @ORM\Column(name="recordeNumber", type="string", length=150)
+     * @ORM\Column(name="recordeNumber", type="string", length=150, unique=true)
      */
     private $recordeNumber;
 
@@ -23,6 +25,9 @@ class Student extends User
      * @var string
      *
      * @ORM\Column(name="firstName", type="string", length=50)
+     * @Assert\NotBlank(groups= {"Registration" , "SimpleRegistration" , "Edit"}),
+     * @Assert\Regex(pattern="/^[a-z0-9 .\-]+$/i" ,match=true , groups= {"Registration" , "SimpleRegistration" , "Edit"})
+     * @Assert\Length(min = 2, max = 40 , groups= {"Registration" , "SimpleRegistration" , "Edit"})
      */
     private $firstName;
 
@@ -30,6 +35,9 @@ class Student extends User
      * @var string
      *
      * @ORM\Column(name="lastName", type="string", length=50)
+     * @Assert\NotBlank(groups= {"Registration" , "SimpleRegistration" , "Edit"})
+     * @Assert\Regex(pattern="/^[a-z0-9 .\-]+$/i" ,match=true , groups= {"Registration" , "SimpleRegistration" , "Edit"})
+     * @Assert\Length(min = 2, max = 40 , groups= {"Registration" , "SimpleRegistration" , "Edit"})
      */
     private $lastName;
 
@@ -37,6 +45,8 @@ class Student extends User
      * @var string
      *
      * @ORM\Column(name="gender", type="string", length=30)
+     * @Assert\Choice(choices = {"gender.male", "gender.female", "gender.other"} , groups= {"Registration" , "SimpleRegistration" , "Edit"})
+     * @Assert\NotBlank(groups= {"Registration" , "SimpleRegistration" , "Edit"})
      */
     private $gender;
 
@@ -44,28 +54,40 @@ class Student extends User
      * @var \DateTime
      *
      * @ORM\Column(name="birthday", type="date")
+     * @Assert\NotBlank(groups= {"Registration" , "SimpleRegistration" , "Edit"})
+     * @Assert\Date(groups= {"Registration" , "SimpleRegistration" , "Edit"})
      */
     private $birthday;
 
     /**
      * Many Students have One Section.
-     * @ORM\ManyToOne(targetEntity="SMS\EstablishmentBundle\Entity\Section")
+     * @ORM\ManyToOne(targetEntity="SMS\EstablishmentBundle\Entity\Section", inversedBy="students" ,fetch="EXTRA_LAZY")
      * @ORM\JoinColumn(name="section_id", referencedColumnName="id")
+     * @Assert\NotBlank(groups= {"Edit"})
      */
     private $section;
 
     /**
      * Many Students have One Parent.
-     * @ORM\ManyToOne(targetEntity="StudentParent" , inversedBy="students")
+     * @ORM\ManyToOne(targetEntity="StudentParent" , inversedBy="students",fetch="EXTRA_LAZY")
      * @ORM\JoinColumn(name="student_parent_id", referencedColumnName="id")
+     * @Assert\NotBlank(groups= {"Registration" , "SimpleRegistration" , "Edit"})
      */
     private $studentParent;
 
+    /**
+     * constructor.
+     */
+    public function __construct()
+    {
+        parent::__construct();
+        $this->roles = array(self::ROLE_STUDENT);
+    }
 
     /**
      * Get id
      *
-     * @return integer 
+     * @return integer
      */
     public function getId()
     {
@@ -88,7 +110,7 @@ class Student extends User
     /**
      * Get recordeNumber
      *
-     * @return string 
+     * @return string
      */
     public function getRecordeNumber()
     {
@@ -111,7 +133,7 @@ class Student extends User
     /**
      * Get firstName
      *
-     * @return string 
+     * @return string
      */
     public function getFirstName()
     {
@@ -134,7 +156,7 @@ class Student extends User
     /**
      * Get lastName
      *
-     * @return string 
+     * @return string
      */
     public function getLastName()
     {
@@ -157,7 +179,7 @@ class Student extends User
     /**
      * Get gender
      *
-     * @return string 
+     * @return string
      */
     public function getGender()
     {
@@ -180,7 +202,7 @@ class Student extends User
     /**
      * Get birthday
      *
-     * @return \DateTime 
+     * @return \DateTime
      */
     public function getBirthday()
     {
@@ -203,7 +225,7 @@ class Student extends User
     /**
      * Get section
      *
-     * @return \SMS\EstablishmentBundle\Entity\Section 
+     * @return \SMS\EstablishmentBundle\Entity\Section
      */
     public function getSection()
     {
@@ -226,7 +248,7 @@ class Student extends User
     /**
      * Get studentParent
      *
-     * @return \SMS\UserBundle\Entity\StudentParent 
+     * @return \SMS\UserBundle\Entity\StudentParent
      */
     public function getStudentParent()
     {
@@ -249,7 +271,7 @@ class Student extends User
     /**
      * Get created
      *
-     * @return \DateTime 
+     * @return \DateTime
      */
     public function getCreated()
     {
@@ -272,10 +294,18 @@ class Student extends User
     /**
      * Get updated
      *
-     * @return \DateTime 
+     * @return \DateTime
      */
     public function getUpdated()
     {
         return $this->updated;
+    }
+
+    /**
+     * @return string
+     */
+    public function __toString()
+    {
+        return sprintf("%s %s",$this->getFirstName(),$this->getLastName());
     }
 }

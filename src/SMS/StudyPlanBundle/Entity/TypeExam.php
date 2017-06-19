@@ -4,12 +4,15 @@ namespace SMS\StudyPlanBundle\Entity;
 
 use Doctrine\ORM\Mapping as ORM;
 use Symfony\Component\Validator\Constraints as Assert;
+use Symfony\Bridge\Doctrine\Validator\Constraints\UniqueEntity;
 
 /**
  * TypeExam
  *
  * @ORM\Table(name="type_exam")
  * @ORM\Entity(repositoryClass="SMS\StudyPlanBundle\Repository\TypeExamRepository")
+ * @UniqueEntity(fields={"typeExamName" , "establishment"})
+ * @ORM\HasLifecycleCallbacks
  */
 class TypeExam
 {
@@ -33,23 +36,55 @@ class TypeExam
     private $typeExamName;
 
     /**
+     * @var float
+     *
+     * @ORM\Column(name="factor", type="float")
+     * @Assert\NotBlank()
+     * @Assert\Range(
+     *      min = 0,
+     *      max = 1000)
+     * @Assert\Regex("(\d+(?:,\d+)?)")
+     */
+    private $factor;
+
+    /**
      * One TypeExam has Many Exams.
      * @ORM\OneToMany(targetEntity="Exam", mappedBy="typeExam",fetch="EXTRA_LAZY")
      */
     private $exams;
 
     /**
-     * One User has Many Divivsions.
+     * One User has Many TypeExams.
      * @ORM\ManyToOne(targetEntity="SMS\UserBundle\Entity\User" ,fetch="EXTRA_LAZY")
      * @ORM\JoinColumn(name="user_id", referencedColumnName="id")
      */
     private $user;
 
+    /**
+     * @var datetime $created
+     *
+     * @ORM\Column(type="datetime")
+     */
+    protected $created;
+
+    /**
+     * @var datetime $updated
+     *
+     * @ORM\Column(type="datetime", nullable = true)
+     */
+    protected $updated;
+
+    /**
+     * One establishment has Many TypeExams.
+     * @ORM\ManyToOne(targetEntity="SMS\EstablishmentBundle\Entity\Establishment" ,fetch="EXTRA_LAZY")
+     * @ORM\JoinColumn(name="establishment_id", referencedColumnName="id")
+     */
+    private $establishment;
 
     /**
      * Get id
      *
-     * @return integer 
+     * @return integer
      */
     public function getId()
     {
@@ -62,6 +97,43 @@ class TypeExam
     {
         $this->exams = new \Doctrine\Common\Collections\ArrayCollection();
     }
+
+    /**
+    * @ORM\PrePersist
+    * @ORM\PreUpdate
+    */
+   public function updatedTimestamps()
+   {
+       $this->setUpdated(new \DateTime('now'));
+
+       if ($this->getCreated() == null) {
+           $this->setCreated(new \DateTime('now'));
+       }
+   }
+
+    /**
+     * Set factor
+     *
+     * @param float $factor
+     * @return Exam
+     */
+    public function setFactor($factor)
+    {
+        $this->factor = $factor;
+
+        return $this;
+    }
+
+    /**
+     * Get factor
+     *
+     * @return float
+     */
+    public function getFactor()
+    {
+        return $this->factor;
+    }
+
 
     /**
      * Set typeExamName
@@ -79,7 +151,7 @@ class TypeExam
     /**
      * Get typeExamName
      *
-     * @return string 
+     * @return string
      */
     public function getTypeExamName()
     {
@@ -112,7 +184,7 @@ class TypeExam
     /**
      * Get exams
      *
-     * @return \Doctrine\Common\Collections\Collection 
+     * @return \Doctrine\Common\Collections\Collection
      */
     public function getExams()
     {
@@ -135,10 +207,80 @@ class TypeExam
     /**
      * Get user
      *
-     * @return \SMS\UserBundle\Entity\User 
+     * @return \SMS\UserBundle\Entity\User
      */
     public function getUser()
     {
         return $this->user;
+    }
+
+    /**
+     * Set created
+     *
+     * @param \DateTime $created
+     * @return Course
+     */
+    public function setCreated($created)
+    {
+        $this->created = $created;
+
+        return $this;
+    }
+
+    /**
+     * Get created
+     *
+     * @return \DateTime
+     */
+    public function getCreated()
+    {
+        return $this->created;
+    }
+
+    /**
+     * Set updated
+     *
+     * @param \DateTime $updated
+     * @return Course
+     */
+    public function setUpdated($updated)
+    {
+        $this->updated = $updated;
+
+        return $this;
+    }
+
+    /**
+     * Get updated
+     *
+     * @return \DateTime
+     */
+    public function getUpdated()
+    {
+        return $this->updated;
+    }
+
+    /**
+     * Set establishment
+     *
+     * @param \SMS\EstablishmentBundle\Entity\Establishment $establishment
+     *
+     * @return TypeExam
+     */
+    public function setEstablishment(\SMS\EstablishmentBundle\Entity\Establishment $establishment = null)
+    {
+        $this->establishment = $establishment;
+
+        return $this;
+    }
+
+    /**
+     * Get establishment
+     *
+     * @return \SMS\EstablishmentBundle\Entity\Establishment
+     */
+    public function getEstablishment()
+    {
+        return $this->establishment;
     }
 }

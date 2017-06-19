@@ -28,7 +28,7 @@ class DivisionController extends BaseController
      *
      * @Route("/", name="division_index")
      * @Method("GET")
-     * @Template("smsestablishmentbundle/division/index.html.twig")
+     * @Template("SMSEstablishmentBundle:division:index.html.twig")
      */
     public function indexAction()
     {
@@ -36,7 +36,7 @@ class DivisionController extends BaseController
         $divisions->buildDatatable();
 
         return array('divisions' => $divisions);
-    } 
+    }
 
     /**
      * Lists all division entities.
@@ -51,6 +51,15 @@ class DivisionController extends BaseController
         $divisions->buildDatatable();
 
         $query = $this->getDataTableQuery()->getQueryFrom($divisions);
+        $user = $this->getUser();
+        $function = function($qb) use ($user)
+        {
+            $qb->join('division.establishment', 'establishment')
+                ->andWhere('establishment.id = :establishment')
+        				->setParameter('establishment', $user->getEstablishment()->getId());
+        };
+
+        $query->addWhereAll($function);
 
         return $query->getResponse();
     }
@@ -59,12 +68,12 @@ class DivisionController extends BaseController
      *
      * @Route("/new", name="division_new")
      * @Method({"GET", "POST"})
-     * @Template("smsestablishmentbundle/division/new.html.twig")
+     * @Template("SMSEstablishmentBundle:division:new.html.twig")
      */
     public function newAction(Request $request)
     {
         $division = new Division();
-        $form = $this->createForm(DivisionType::class, $division);
+        $form = $this->createForm(DivisionType::class, $division, array('establishment' => $this->getUser()->getEstablishment()));
         $form->handleRequest($request);
 
         if ($form->isSubmitted() && $form->isValid() && $form->get('save')->isClicked()) {
@@ -89,7 +98,7 @@ class DivisionController extends BaseController
     {
         $deleteForm = $this->createDeleteForm($division);
 
-        return $this->render('smsestablishmentbundle/division/show.html.twig', array(
+        return $this->render('SMSEstablishmentBundle:division:show.html.twig', array(
             'division' => $division,
             'delete_form' => $deleteForm->createView(),
         ));
@@ -100,11 +109,11 @@ class DivisionController extends BaseController
      *
      * @Route("/{id}/edit", name="division_edit", options={"expose"=true})
      * @Method({"GET", "POST"})
-     * @Template("smsestablishmentbundle/division/edit.html.twig")
+     * @Template("SMSEstablishmentBundle:division:edit.html.twig")
      */
     public function editAction(Request $request, Division $division)
     {
-        $editForm = $this->createForm(DivisionType::class, $division)->handleRequest($request);
+        $editForm = $this->createForm(DivisionType::class, $division, array('establishment' => $this->getUser()->getEstablishment()))->handleRequest($request);
         if ($editForm->isSubmitted() && $editForm->isValid() && $editForm->get('save')->isClicked()) {
             $this->getEntityManager()->update($division);
             $this->flashSuccessMsg('division.edit.success');
@@ -113,7 +122,7 @@ class DivisionController extends BaseController
 
         return array(
             'division' => $division,
-            'edit_form' => $editForm->createView(),
+            'form' => $editForm->createView(),
         );
     }
 
@@ -144,7 +153,7 @@ class DivisionController extends BaseController
             } catch (\Exception $e) {
                 return new Response($this->get('translator')->trans('division.delete.fail'), 200);
             }
-            
+
 
             return new Response($this->get('translator')->trans('division.delete.success'), 200);
         }

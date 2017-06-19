@@ -1,0 +1,90 @@
+{% extends 'layout/base_header_double_height.html.twig' %}
+
+{% block body %}
+  <div class="uk-width-medium-8-10 uk-container-center">
+    <div class="md-card md-card-single">
+      <div class="md-card-toolbar">
+        <a href="{{ path('payment_index') }}">
+          <span class="md-icon md-card-fullscreen-deactivate material-icons uk-float-left">&#xE5C4;</span>
+        </a>
+        <h3 class="md-card-toolbar-heading-text large uk-margin-small-left">
+          {{ 'payment.edit.title'|trans }}
+        </h3>
+      </div>
+      <div class="md-card-content">
+        <div class="uk-margin-small-top">
+
+          {{ form_start(form) }}
+          <div class="uk-grid uk-margin-medium-bottom" data-uk-grid-margin>
+            <div class="uk-width-1-2">
+              <div class="uk-form-row">
+                {{ form_widget(form.grade)}}
+                <span class="uk-form-help-block uk-text-bold">{{ form_label(form.grade) }}</span>
+                <div class="parsley-errors-list filled uk-text-danger">
+                  {{ form_errors(form.grade) }}
+                </div>
+              </div>
+
+            </div>
+            <div class="uk-width-1-2">
+              <div class="uk-form-row">
+                {{ form_widget(form.section)}}
+                <span class="uk-form-help-block  uk-text-bold">{{ form_label(form.section) }}</span>
+                <div class="parsley-errors-list filled uk-text-danger">
+                  {{ form_errors(form.section) }}
+                </div>
+              </div>
+            </div>
+          </div>
+					<div class="uk-grid uk-margin-small-top uk-margin-medium-bottom" data-uk-grid-margin>
+            <div class="uk-width-1-2">
+              <div class="uk-form-row">
+                {{ form_widget(form.student)}}
+                <span class="uk-form-help-block  uk-text-bold">{{ form_label(form.student) }}</span>
+                <div class="parsley-errors-list filled uk-text-danger">
+                  {{ form_errors(form.student) }}
+                </div>
+              </div>
+
+              <div class="uk-form-row">
+
+    						{{ form_widget(form.month)}}
+                <span class="uk-form-help-block  uk-text-bold">{{ form_label(form.month) }}</span>
+    						<div class="parsley-errors-list filled uk-text-danger">
+    							{{ form_errors(form.month) }}
+    						</div>
+    					</div>
+            </div>
+            <div class="uk-width-1-2">
+              <div class="uk-form-row">
+                {{ form_widget(form.paymentType)}}
+                <span class="uk-form-help-block  uk-text-bold">{{ form_label(form.paymentType) }}</span>
+                <div class="parsley-errors-list filled uk-text-danger">
+                  {{ form_errors(form.paymentType) }}
+                </div>
+              </div>
+              <div class="uk-form-row uk-input-group">
+    						<span class="uk-input-group-addon">
+    							<i class="md-list-addon-icon material-icons md-24">&#xE227;</i>
+    						</span>
+    						<label class="uk-form-label">{{ form_label(form.price) }}</label>
+    						{{ form_widget(form.price)}}
+    						<div class="parsley-errors-list filled uk-text-danger">
+    							{{ form_errors(form.price) }}
+    						</div>
+    					</div>
+            </div>
+					</div>
+          {{ form_widget(form) }}
+
+          {{ form_end(form) }}
+        </div>
+      </div>
+    </div>
+  </div>
+{% endblock %}
+
+{% block javascripts %}
+  {{ parent() }}
+  {% include '@SMSPayment/payment/filter.html.twig' %}
+{% endblock %}

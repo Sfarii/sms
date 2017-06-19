@@ -58,7 +58,7 @@ class AttendanceStudent
 
     /**
      * @var \DateTime $updated
-     * 
+     *
      * @ORM\Column(type="datetime", nullable = true)
      */
     protected $updated;

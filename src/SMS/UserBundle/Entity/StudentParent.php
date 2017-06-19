@@ -14,7 +14,7 @@ use Vich\UploaderBundle\Mapping\Annotation as Vich;
  */
 class StudentParent extends User
 {
-    
+
 
     /**
      * @var string
@@ -102,18 +102,9 @@ class StudentParent extends User
     private $students;
 
     /**
-     * constructor.
-     */
-    public function __construct()
-    {
-        parent::__construct();
-        $this->roles = array(self::ROLE_PARENT);
-    }
-
-    /**
      * Get id
      *
-     * @return integer 
+     * @return integer
      */
     public function getId()
     {
@@ -136,7 +127,7 @@ class StudentParent extends User
     /**
      * Get fatherName
      *
-     * @return string 
+     * @return string
      */
     public function getFatherName()
     {
@@ -159,7 +150,7 @@ class StudentParent extends User
     /**
      * Get motherName
      *
-     * @return string 
+     * @return string
      */
     public function getMotherName()
     {
@@ -182,7 +173,7 @@ class StudentParent extends User
     /**
      * Get familyName
      *
-     * @return string 
+     * @return string
      */
     public function getFamilyName()
     {
@@ -205,7 +196,7 @@ class StudentParent extends User
     /**
      * Get fatherProfession
      *
-     * @return string 
+     * @return string
      */
     public function getFatherProfession()
     {
@@ -228,7 +219,7 @@ class StudentParent extends User
     /**
      * Get motherProfession
      *
-     * @return string 
+     * @return string
      */
     public function getMotherProfession()
     {
@@ -251,7 +242,7 @@ class StudentParent extends User
     /**
      * Get address
      *
-     * @return string 
+     * @return string
      */
     public function getAddress()
     {
@@ -274,7 +265,7 @@ class StudentParent extends User
     /**
      * Get phone
      *
-     * @return string 
+     * @return string
      */
     public function getPhone()
     {
@@ -307,7 +298,7 @@ class StudentParent extends User
     /**
      * Get students
      *
-     * @return \Doctrine\Common\Collections\Collection 
+     * @return \Doctrine\Common\Collections\Collection
      */
     public function getStudents()
     {
@@ -330,7 +321,7 @@ class StudentParent extends User
     /**
      * Get created
      *
-     * @return \DateTime 
+     * @return \DateTime
      */
     public function getCreated()
     {
@@ -353,10 +344,18 @@ class StudentParent extends User
     /**
      * Get updated
      *
-     * @return \DateTime 
+     * @return \DateTime
      */
     public function getUpdated()
     {
         return $this->updated;
+    }
+
+    /**
+     * @return string
+     */
+    public function __toString()
+    {
+        return sprintf("%s %s",$this->getFatherName(),$this->getFamilyName());
     }
 }
