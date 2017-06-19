@@ -67,23 +67,48 @@ class ProfessorDatatable extends AbstractDatatableView
                     ),
                 )
             ))
+            ->add('birthday', 'datetime', array(
+                'title' => $this->translator->trans('professor.field.birthday'),
+                'date_format' => "DD/MM/YYYY",
+                'filter' => array('daterange', array('class' => "md-input")),
+            ))
             ->add('firstName', 'column', array(
                 'title' => $this->translator->trans('professor.field.firstName'),
+                'filter' => array('text', array(
+                    'search_type' => 'eq',
+                    'class' => "md-input"
+                ))
             ))
             ->add('lastName', 'column', array(
                 'title' => $this->translator->trans('professor.field.lastName'),
+                'filter' => array('text', array(
+                    'search_type' => 'eq',
+                    'class' => "md-input"
+                ))
+            ))
+            ->add('email', 'column', array(
+                'title' => $this->translator->trans('user.field.email'),
+                'filter' => array('text', array(
+                    'search_type' => 'eq',
+                    'class' => "md-input"
+                ))
+            ))
+            ->add('phone', 'column', array(
+                'title' => $this->translator->trans('professor.field.phone'),
+                'filter' => array('text', array(
+                    'search_type' => 'eq',
+                    'class' => "md-input"
+                ))
             ))
             ->add('enabled', 'boolean', array(
                 'title' => $this->translator->trans('user.field.enabled'),
                 'true_label' => $this->translator->trans('user.active.true_label'),
                 'false_label' => $this->translator->trans('user.active.false_label'),
-            ))
-            ->add('birthday', 'datetime', array(
-                'title' => $this->translator->trans('professor.field.birthday'),
-                'date_format' => "DD/MM/YY"
-            ))
-            ->add('phone', 'column', array(
-                'title' => $this->translator->trans('professor.field.phone'),
+                'filter' => array('select', array(
+                    'search_type' => 'eq',
+                    'select_options' => array('' => $this->translator->trans('filter.field.all') , true => $this->translator->trans('user.active.true_label') , false => $this->translator->trans('user.active.false_label')) ,
+                    'class' => "md-input"
+                ))
             ))
             ->add(null, 'action', array(
                 'title' => $this->translator->trans('datatables.actions.title'),

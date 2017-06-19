@@ -11,7 +11,7 @@ use Symfony\Bridge\Doctrine\Validator\Constraints\UniqueEntity;
  *
  * @ORM\Table(name="registration")
  * @ORM\HasLifecycleCallbacks
- * @UniqueEntity(fields={ "registrationType" , "student", "establishment"}, errorPath="student")
+ * @UniqueEntity(fields={ "registrationType" , "student", "establishment"}, errorPath="registrationType")
  * @ORM\Entity(repositoryClass="SMS\PaymentBundle\Repository\RegistrationRepository")
  */
 class Registration

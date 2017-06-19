@@ -81,6 +81,13 @@ class StudentDatatable extends AbstractDatatableView
                     'class' => "md-input"
                 ))
             ))
+            
+            
+            ->add('birthday', 'datetime', array(
+                'title' => $this->translator->trans('student.field.birthday'),
+                'date_format' => "DD/MM/YYYY",
+                'filter' => array('daterange', array('class' => "md-input")),
+            ))
             ->add('firstName', 'column', array(
                 'title' => $this->translator->trans('student.field.firstName'),
                 'filter' => array('text', array(
@@ -104,11 +111,6 @@ class StudentDatatable extends AbstractDatatableView
                     'select_options' => array('' => $this->translator->trans('filter.field.all') , true => $this->translator->trans('user.active.true_label') , false => $this->translator->trans('user.active.false_label')) ,
                     'class' => "md-input"
                 ))
-            ))
-            ->add('birthday', 'datetime', array(
-                'title' => $this->translator->trans('student.field.birthday'),
-                'date_format' => "DD/MM/YY",
-                'filter' => array('daterange', array()),
             ))
             ->add(null, 'action', array(
                 'title' => $this->translator->trans('datatables.actions.title'),

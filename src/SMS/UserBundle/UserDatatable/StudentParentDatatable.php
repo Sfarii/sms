@@ -69,24 +69,48 @@ class StudentParentDatatable extends AbstractDatatableView
             ))
             ->add('fatherName', 'column', array(
                 'title' => $this->translator->trans('studentparent.field.fatherName'),
+                'filter' => array('text', array(
+                    'search_type' => 'eq',
+                    'class' => "md-input"
+                ))
             ))
             ->add('motherName', 'column', array(
                 'title' => $this->translator->trans('studentparent.field.motherName'),
+                'filter' => array('text', array(
+                    'search_type' => 'eq',
+                    'class' => "md-input"
+                ))
             ))
             ->add('familyName', 'column', array(
                 'title' => $this->translator->trans('studentparent.field.familyName'),
+                'filter' => array('text', array(
+                    'search_type' => 'eq',
+                    'class' => "md-input"
+                ))
             ))
-            ->add('fatherProfession', 'column', array(
-                'title' => $this->translator->trans('studentparent.field.fatherProfession'),
-            ))
-            ->add('motherProfession', 'column', array(
-                'title' => $this->translator->trans('studentparent.field.motherProfession'),
-            ))
-            ->add('address', 'column', array(
-                'title' => $this->translator->trans('studentparent.field.address'),
+            ->add('email', 'column', array(
+                'title' => $this->translator->trans('user.field.email'),
+                'filter' => array('text', array(
+                    'search_type' => 'eq',
+                    'class' => "md-input"
+                ))
             ))
             ->add('phone', 'column', array(
                 'title' => $this->translator->trans('studentparent.field.phone'),
+                'filter' => array('text', array(
+                    'search_type' => 'eq',
+                    'class' => "md-input"
+                ))
+            ))
+            ->add('enabled', 'boolean', array(
+                'title' => $this->translator->trans('user.field.enabled'),
+                'true_label' => $this->translator->trans('user.active.true_label'),
+                'false_label' => $this->translator->trans('user.active.false_label'),
+                'filter' => array('select', array(
+                    'search_type' => 'eq',
+                    'select_options' => array('' => $this->translator->trans('filter.field.all') , true => $this->translator->trans('user.active.true_label') , false => $this->translator->trans('user.active.false_label')) ,
+                    'class' => "md-input"
+                ))
             ))
 
             ->add(null, 'action', array(

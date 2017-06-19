@@ -100,10 +100,7 @@
           <h3 class="full_width_in_card heading_c">{{ 'user.show.school_info'|trans }}</h3>
           <div class="uk-grid uk-margin-medium-top uk-margin-large-bottom" data-uk-grid-margin>
             <div class="uk-width-medium-1-2">
-              <div class="uk-form-row uk-input-group">
-                <span class="uk-input-group-addon">
-                  <i class="md-list-addon-icon material-icons md-24">&#xE3D0;</i>
-                </span>
+              <div class="uk-form-row ">
                 {{ form_widget(form.grade)}}
                 <span class="uk-form-help-block">{{ form_label(form.grade) }}</span>
                 <div class="parsley-errors-list filled uk-text-danger">
@@ -113,10 +110,7 @@
             </div>
             <div class="uk-width-medium-1-2">
               <div class="parsley-row">
-                <div class="uk-form-row uk-input-group">
-                  <span class="uk-input-group-addon">
-                    <i class="md-list-addon-icon material-icons md-24">&#xE3D1;</i>
-                  </span>
+                <div class="uk-form-row ">
                   {{ form_widget(form.section)}}
                   <span class="uk-form-help-block">{{ form_label(form.section) }}</span>
                   <div class="parsley-errors-list filled uk-text-danger">
