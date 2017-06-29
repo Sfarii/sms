@@ -99,6 +99,22 @@ class UserEntityManager
         }
     }
 
+    /**
+     * @param User $user
+     * @return void
+     */
+    public function saveUserManager(UserInterface $user)
+    {
+        // password encode
+        $password = $this->_passwordEncoder
+                ->encodePassword($user, $user->getPlainPassword());
+        $user->setPassword($password);
+        // set the username and email for the log in
+        $this->updateCanonicalizer($user);
+        // saveUser the user in the database
+        $this->saveUser($user);
+    }
+
     public function editUser($user , $roles = array())
     {
       if (!empty($roles)){

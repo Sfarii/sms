@@ -13,8 +13,8 @@ use Symfony\Component\Form\Extension\Core\Type\SubmitType;
 use Symfony\Component\Form\Extension\Core\Type\CheckboxType;
 use SMS\UserBundle\Entity\Professor;
 use Vich\UploaderBundle\Form\Type\VichImageType;
-use API\Form\Type\GenderType;
-use API\Form\EventSubscriber\UsersListener;
+use SMS\UserBundle\Form\Type\GenderType;
+use SMS\UserBundle\Form\EventSubscriber\UsersListener;
 use Symfony\Component\Security\Core\Authentication\Token\Storage\TokenStorageInterface;
 
 class ProfessorType extends AbstractType

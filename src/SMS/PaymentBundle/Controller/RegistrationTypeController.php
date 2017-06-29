@@ -4,7 +4,7 @@ namespace SMS\PaymentBundle\Controller;
 
 use SMS\PaymentBundle\Entity\RegistrationType;
 use SMS\PaymentBundle\Form\RegistrationTypeType;
-use API\BaseController\BaseController;
+use SMS\PaymentBundle\BaseController\BaseController;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\Method;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\Route;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\Template;

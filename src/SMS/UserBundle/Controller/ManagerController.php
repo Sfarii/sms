@@ -5,10 +5,11 @@ namespace SMS\UserBundle\Controller;
 use SMS\UserBundle\Entity\Manager;
 use SMS\UserBundle\Form\ManagerType;
 use SMS\UserBundle\Form\EditManagerType;
-use API\BaseController\BaseController;
+use SMS\UserBundle\BaseController\BaseController;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\Method;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\Route;
-use Sensio\Bundle\FrameworkExtraBundle\Configuration\Template;use Symfony\Component\HttpFoundation\Request;
+use Sensio\Bundle\FrameworkExtraBundle\Configuration\Template;
+use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
 
 /**
@@ -49,6 +50,15 @@ class ManagerController extends BaseController
         $managers->buildDatatable();
 
         $query = $this->getDataTableQuery()->getQueryFrom($managers);
+
+        $user = $this->getUser();
+        $function = function($qb) use ($user)
+        {
+            $qb->andWhere('manager.id != :userId')
+                ->setParameter('userId', $user->getId());
+        };
+
+        $query->addWhereAll($function);
 
         return $query->getResponse();
     }
@@ -104,7 +114,7 @@ class ManagerController extends BaseController
     {
         $editForm = $this->createForm(EditManagerType::class, $manager)->handleRequest($request);
         if ($editForm->isSubmitted() && $editForm->isValid() && $editForm->get('save')->isClicked()) {
-            $this->getEntityManager()->update($manager);
+            $this->getUserEntityManager()->editUser($manager);
             $this->flashSuccessMsg('manager.edit.success');
             if ($manager->getId() !== $this->getUser()->getId()){
               return $this->redirectToRoute('manager_index');

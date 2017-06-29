@@ -1,0 +1,184 @@
+about:
+    title: about.title   # FIXME
+
+aboutUs:
+    delete:
+        fail: aboutUs.delete.fail   # FIXME
+        success: aboutUs.delete.success   # FIXME
+
+aboutu:
+    list:
+        title: aboutu.list.title   # FIXME
+
+aboutus:
+    field:
+        icon: aboutus.field.icon   # FIXME
+        image: aboutus.field.image   # FIXME
+        text: aboutus.field.text   # FIXME
+        title: aboutus.field.title   # FIXME
+
+    show:
+        detail: aboutus.show.detail   # FIXME
+        title: aboutus.show.title   # FIXME
+
+action:
+    delete: action.delete   # FIXME
+
+author:
+    created: author.created   # FIXME
+    creator: author.creator   # FIXME
+    info: author.info   # FIXME
+    updated: author.updated   # FIXME
+
+contact:
+    delete:
+        fail: contact.delete.fail   # FIXME
+        success: contact.delete.success   # FIXME
+
+    field:
+        email: contact.field.email   # FIXME
+        message: contact.field.message   # FIXME
+        name: contact.field.name   # FIXME
+        phone: contact.field.phone   # FIXME
+
+    list:
+        title: contact.list.title   # FIXME
+
+    show:
+        detail: contact.show.detail   # FIXME
+        title: contact.show.title   # FIXME
+
+    title: contact.title   # FIXME
+    title_sub: contact.title_sub   # FIXME
+
+count:
+    establishment: count.establishment   # FIXME
+    parent: count.parent   # FIXME
+    professor: count.professor   # FIXME
+    student: count.student   # FIXME
+
+datatables:
+    actions:
+        edit: datatables.actions.edit   # FIXME
+        show: datatables.actions.show   # FIXME
+        title: datatables.actions.title   # FIXME
+
+delete: delete   # FIXME
+
+feature:
+    delete:
+        fail: feature.delete.fail   # FIXME
+        success: feature.delete.success   # FIXME
+
+    field:
+        icon: feature.field.icon   # FIXME
+        text: feature.field.text   # FIXME
+        title: feature.field.title   # FIXME
+
+    list:
+        title: feature.list.title   # FIXME
+
+    show:
+        detail: feature.show.detail   # FIXME
+        title: feature.show.title   # FIXME
+
+    title: feature.title   # FIXME
+    title_sub: feature.title_sub   # FIXME
+
+file:
+    upload_file: file.upload_file   # FIXME
+
+menu:
+    contact:
+        title: menu.contact.title   # FIXME
+
+    feature:
+        title: menu.feature.title   # FIXME
+
+    home:
+        title: menu.home.title   # FIXME
+
+    pricing:
+        title: menu.pricing.title   # FIXME
+
+pricing:
+    buy: pricing.buy   # FIXME
+    currency: pricing.currency   # FIXME
+
+    delete:
+        fail: pricing.delete.fail   # FIXME
+        success: pricing.delete.success   # FIXME
+
+    field:
+        price: pricing.field.price   # FIXME
+        pricingName: pricing.field.pricingName   # FIXME
+        unitPrice: pricing.field.unitPrice   # FIXME
+
+    list:
+        title: pricing.list.title   # FIXME
+
+    show:
+        detail: pricing.show.detail   # FIXME
+        title: pricing.show.title   # FIXME
+
+pricingFeature:
+    delete:
+        fail: pricingFeature.delete.fail   # FIXME
+        success: pricingFeature.delete.success   # FIXME
+
+pricing_table:
+    title: pricing_table.title   # FIXME
+    title_sub: pricing_table.title_sub   # FIXME
+
+pricingfeature:
+    field:
+        pricing: pricingfeature.field.pricing   # FIXME
+        state: pricingfeature.field.state   # FIXME
+        text: pricingfeature.field.text   # FIXME
+        value: pricingfeature.field.value   # FIXME
+
+    list:
+        title: pricingfeature.list.title   # FIXME
+
+    show:
+        detail: pricingfeature.show.detail   # FIXME
+        title: pricingfeature.show.title   # FIXME
+
+schoolTestimonial:
+    delete:
+        fail: schoolTestimonial.delete.fail   # FIXME
+        success: schoolTestimonial.delete.success   # FIXME
+
+schooltestimonial:
+    field:
+        subtitle: schooltestimonial.field.subtitle   # FIXME
+        text: schooltestimonial.field.text   # FIXME
+        title: schooltestimonial.field.title   # FIXME
+
+    list:
+        title: schooltestimonial.list.title   # FIXME
+
+    show:
+        detail: schooltestimonial.show.detail   # FIXME
+        photo: schooltestimonial.show.photo   # FIXME
+        title: schooltestimonial.show.title   # FIXME
+
+slider:
+    delete:
+        fail: slider.delete.fail   # FIXME
+        success: slider.delete.success   # FIXME
+
+    field:
+        subtitle: slider.field.subtitle   # FIXME
+        title: slider.field.title   # FIXME
+
+    list:
+        title: slider.list.title   # FIXME
+
+    show:
+        detail: slider.show.detail   # FIXME
+        photo: slider.show.photo   # FIXME
+        title: slider.show.title   # FIXME
+
+testimonial:
+    title: testimonial.title   # FIXME

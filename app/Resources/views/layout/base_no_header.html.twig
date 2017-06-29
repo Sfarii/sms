@@ -19,6 +19,9 @@
     <title>{{ app_name }}</title>
 
     {% block stylesheets %}
+        <!-- google web fonts -->
+        <link href="https://fonts.googleapis.com/css?family=Source+Code+Pro:400,700:latin" rel="stylesheet">
+        <link href="https://fonts.googleapis.com/css?family=Roboto:400,300,500,700,400italic:latin" rel="stylesheet">
         <!-- uikit -->
         <link rel="stylesheet" href="{{ asset('assets/css/uikit.almost-flat.min.css') }}" media="all">
 
@@ -53,24 +56,6 @@
     <div id="page_content">
         <div id="page_content_inner">
 
-            <!-- main flash success message -->
-            {% for flash_message in app.session.flashbag.get(msg_success) %}
-                <div class="uk-alert" data-uk-alert>
-                    <a href="#" class="uk-alert-close uk-close"></a>
-                    {{ flash_message }}
-                </div>
-            {% endfor %}
-            <!-- main flash success message end -->
-
-            <!-- main flash success message -->
-            {% for flash_message in app.session.flashbag.get(msg_danger) %}
-                <div class="uk-alert uk-alert-danger" data-uk-alert>
-                    <a href="#" class="uk-alert-close uk-close"></a>
-                    {{ flash_message }}
-                </div>
-            {% endfor %}
-            <!-- main flash success message end -->
-
             {% block body %}
 
             {% endblock %}
@@ -86,26 +71,6 @@
     {% include 'layout/sidebar.html.twig' %}
     <!-- main sidebar end -->
     {% block javascripts %}
-          <!-- google web fonts -->
-          <script>
-              WebFontConfig = {
-                  google: {
-                      families: [
-                          'Source+Code+Pro:400,700:latin',
-                          'Roboto:400,300,500,700,400italic:latin'
-                      ]
-                  }
-              };
-              (function() {
-                  var wf = document.createElement('script');
-                  wf.src = ('https:' == document.location.protocol ? 'https' : 'http') +
-                  '://ajax.googleapis.com/ajax/libs/webfont/1/webfont.js';
-                  wf.type = 'text/javascript';
-                  wf.async = 'true';
-                  var s = document.getElementsByTagName('script')[0];
-                  s.parentNode.insertBefore(wf, s);
-              })();
-          </script>
         <!-- common functions -->
         <script src="{{ asset('assets/js/common.min.js')}}"></script>
         <!-- uikit functions -->
@@ -116,6 +81,23 @@
         <script src="{{ asset('assets/websocket/autobahn.min.js')}}"></script>
         <script src="{{ asset('assets/websocket/gos_web_socket_client.js')}}"></script>-->
     {% endblock %}
+
+    <!-- main flash success message -->
+    {% for flash_message in app.session.flashbag.get(msg_success) %}
+        <script type="text/javascript">
+            UIkit.notify({message: "<a href='#' class='notify-action'><span class='uk-icon-times md-light'></span></a>{{ flash_message }}", status: "success", timeout: 1000, group: null, pos: 'top-right'});
+        </script>
+
+    {% endfor %}
+    <!-- main flash success message end -->
+
+    <!-- main flash success message -->
+    {% for flash_message in app.session.flashbag.get(msg_danger) %}
+        <script type="text/javascript">
+            UIkit.notify({message: "<a href='#' class='notify-action'><span class='uk-icon-times md-light'></span></a>{{ flash_message }}", status: "error", timeout: 1000, group: null, pos: 'top-right'});
+        </script>
+    {% endfor %}
+    <!-- main flash success message end -->
 
     {% block audio %}
         <audio id="audio-alert" src="{{ asset('assets/audio/alert.mp3')}}" preload="auto">

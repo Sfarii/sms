@@ -1,0 +1,189 @@
+about:
+    title: School Management Software   # FIXME
+    title_sub: Best School Management System for a 360 Degree Visibility and Administration of your Institution.
+
+aboutUs:
+    delete:
+        fail: Could not delete from the specified Row   # FIXME
+        success: The specified Rows successfully deleted   # FIXME
+    add:
+        success: Row successfully added    # FIXME
+    edit:
+        success: Row successfully edited   # FIXME
+aboutu:
+    list:
+        title: About Us List   # FIXME
+
+aboutus:
+    field:
+        icon: Icon   # FIXME
+        image: Image   # FIXME
+        text: Text   # FIXME
+        title: Title   # FIXME
+
+    show:
+        detail: Detail   # FIXME
+        title: More Information   # FIXME
+
+action:
+    delete: Delete   # FIXME
+
+author:
+    created: Created   # FIXME
+    creator: Creator   # FIXME
+    info: Author Info   # FIXME
+    updated: Updated   # FIXME
+
+contact:
+    delete:
+        fail: Could not delete from the specified Msg   # FIXME
+        success: The specified Msg successfully deleted   # FIXME
+    add:
+        success: Your message has been successfully sent. We will send you a reply as soon as possible.    # FIXME
+    edit:
+        success: Division successfully edited   # FIXME
+    field:
+        email: E-mail   # FIXME
+        message: Message   # FIXME
+        name: Name   # FIXME
+        phone: Phone   # FIXME
+        submit: Send Message
+
+    list:
+        title: List Message   # FIXME
+
+    show:
+        detail: Message detail   # FIXME
+        title: Message Info   # FIXME
+
+    title: Contact Us   # FIXME
+    title_sub: How can we help you?   # FIXME
+
+count:
+    establishment: Establishment   # FIXME
+    parent: Parent   # FIXME
+    professor: Professor   # FIXME
+    student: Student   # FIXME
+
+feature:
+    delete:
+        fail: Could not delete from the specified features   # FIXME
+        success: The specified features successfully deleted   # FIXME
+    add:
+        success: feature successfully added    # FIXME
+    edit:
+        success: feature successfully edited   # FIXME
+
+    field:
+        icon: Icon   # FIXME
+        text: Text   # FIXME
+        title: Title   # FIXME
+
+    list:
+        title: Feature List   # FIXME
+
+    show:
+        detail: Feature Detail   # FIXME
+        title: Feature Info   # FIXME
+
+    title: Feature   # FIXME
+    title_sub: A Student Information System packed with awesome Features.   # FIXME
+
+file:
+    upload_file: Upload Image   # FIXME
+
+pricing:
+    buy: Buy   # FIXME
+    currency: TND   # FIXME
+
+    delete:
+        fail: Could not delete from the specified pricings   # FIXME
+        success: The specified pricings successfully deleted   # FIXME
+    add:
+        success: pricing successfully added    # FIXME
+    edit:
+        success: pricing successfully edited   # FIXME
+
+    field:
+        price: Price   # FIXME
+        pricingName: Pricing Name   # FIXME
+        unitPrice: Unit Price   # FIXME
+
+    list:
+        title: Pricing List  # FIXME
+
+    show:
+        detail: Pricing Detail   # FIXME
+        title: Pricing Title   # FIXME
+
+pricingFeature:
+    delete:
+        fail: Could not delete from the specified pricings Lines   # FIXME
+        success: The specified pricings Lines successfully deleted   # FIXME
+    add:
+        success: pricings Line successfully added    # FIXME
+    edit:
+        success: pricings Line successfully edited   # FIXME
+
+pricing_table:
+    title: Pricing Table   # FIXME
+    title_sub: simple pricing for school management software   # FIXME
+
+pricingfeature:
+    field:
+        pricing: Pricing   # FIXME
+        state: State   # FIXME
+        text: Text   # FIXME
+
+    list:
+        title: pricings Line List  # FIXME
+
+    show:
+        detail: pricings Line Detail   # FIXME
+        title: pricings Line Title   # FIXME
+
+schoolTestimonial:
+    delete:
+        fail: Could not delete from the specified Testimonials   # FIXME
+        success: The specified Testimonials successfully deleted   # FIXME
+    add:
+        success: Testimonial successfully added    # FIXME
+    edit:
+        success: Testimonial successfully edited   # FIXME
+schooltestimonial:
+    field:
+        subtitle: Subtitle   # FIXME
+        text: Text   # FIXME
+        title: Title   # FIXME
+
+    list:
+        title: Testimonial List   # FIXME
+
+    show:
+        detail: Testimonial Detail   # FIXME
+        photo: Testimonial Image   # FIXME
+        title: Testimonial Title   # FIXME
+
+slider:
+    delete:
+        fail: Could not delete from the specified Sliders   # FIXME
+        success: The specified Sliders successfully deleted   # FIXME
+    add:
+        success: Slider successfully added    # FIXME
+    edit:
+        success: Slider successfully edited   # FIXME
+    field:
+        subtitle: Subtitle   # FIXME
+        title: Title   # FIXME
+
+    list:
+        title: Slider List   # FIXME
+
+    show:
+        detail: Slider Detail   # FIXME
+        photo: Slider Image   # FIXME
+        title: Slider Title   # FIXME
+
+testimonial:
+    title: Testimonial   # FIXME
+    title_sub: The Voice of our Customers

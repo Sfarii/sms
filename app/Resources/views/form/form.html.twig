@@ -1,9 +1,9 @@
 {% block form_row %}
   {% spaceless %}
-    <div class="uk-form-row">
+    <div class="uk-form-row input-field">
       {{ form_label(form) }}
       {{ form_widget(form) }}
-      <div class="parsley-errors-list filled uk-text-danger">
+      <div class="parsley-errors-list filled uk-text-danger text-danger">
         {{ form_errors(form) }}
       </div>
     </div>
@@ -94,7 +94,7 @@
 {%- endblock form_widget_compound -%}
 
 {%- block textarea_widget -%}
-  <textarea class="md-input" {{ block('widget_attributes') }}>{{ value }}</textarea>
+  <textarea class="md-input materialize-textarea" {{ block('widget_attributes') }}>{{ value }}</textarea>
 {%- endblock textarea_widget -%}
 
 {% block form_errors %}

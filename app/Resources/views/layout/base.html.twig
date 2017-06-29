@@ -20,6 +20,9 @@
     <title>{{ app_name }}</title>
 
     {% block stylesheets %}
+      <!-- google web fonts -->
+      <link href="https://fonts.googleapis.com/css?family=Source+Code+Pro:400,700:latin" rel="stylesheet">
+      <link href="https://fonts.googleapis.com/css?family=Roboto:400,300,500,700,400italic:latin" rel="stylesheet">
       <!-- uikit -->
       <link rel="stylesheet" href="{{ asset('assets/css/uikit.almost-flat.min.css') }}" media="all">
       <!-- flag icons -->
@@ -78,26 +81,6 @@
 
     <!-- main sidebar end -->
     {% block javascripts %}
-      <!-- google web fonts -->
-      <script>
-          WebFontConfig = {
-              google: {
-                  families: [
-                      'Source+Code+Pro:400,700:latin',
-                      'Roboto:400,300,500,700,400italic:latin'
-                  ]
-              }
-          };
-          (function() {
-              var wf = document.createElement('script');
-              wf.src = ('https:' == document.location.protocol ? 'https' : 'http') +
-              '://ajax.googleapis.com/ajax/libs/webfont/1/webfont.js';
-              wf.type = 'text/javascript';
-              wf.async = 'true';
-              var s = document.getElementsByTagName('script')[0];
-              s.parentNode.insertBefore(wf, s);
-          })();
-      </script>
       <!-- uikit functions -->
       <script src="{{ asset('assets/js/uikit_custom.min.js')}}"></script>
       <!-- altair common functions/helpers -->

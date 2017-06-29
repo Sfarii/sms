@@ -8,7 +8,7 @@ use Sensio\Bundle\FrameworkExtraBundle\Configuration\Method;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\Template;
 use Symfony\Component\Security\Core\Exception\AccessDeniedException;
 use SMS\UserBundle\Entity\UserInterface;
-use API\BaseController\BaseController;
+use SMS\UserBundle\BaseController\BaseController;
 use SMS\UserBundle\Entity\User;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
@@ -47,16 +47,16 @@ class UserController extends BaseController
     }
 
     /**
-     * Bulk delete action.
+     * Bulk deactivate action.
      *
      * @param Request $request
      *
-     * @Route("/bulk/delete", name="user_bulk_delete")
+     * @Route("/bulk/deactivate", name="user_bulk_deactivate")
      * @Method("POST")
      *
      * @return Response
      */
-    public function bulkDeleteAction(Request $request)
+    public function bulkDesactivateAction(Request $request)
     {
         $isAjax = $request->isXmlHttpRequest();
 
@@ -68,21 +68,16 @@ class UserController extends BaseController
                 throw new AccessDeniedException('The CSRF token is invalid.');
             }
 
-            try {
-                $this->getEntityManager()->deleteAll(User::class, $choices);
-            } catch (\Exception $e) {
-                return new Response($this->get('translator')->trans('user.delete.fail'), 200);
-            }
+            $this->getUserEntityManager()->enabledAll($choices , false);
 
-
-            return new Response($this->get('translator')->trans('user.delete.success'), 200);
+            return new Response($this->get('translator')->trans('user.deactivate.success'), 200);
         }
 
         return new Response('Bad Request', 500);
     }
 
     /**
-     * Bulk delete action.
+     * Bulk activate action.
      *
      * @param Request $request
      *
@@ -103,14 +98,9 @@ class UserController extends BaseController
                 throw new AccessDeniedException('The CSRF token is invalid.');
             }
 
-            try {
-                $this->getEntityManager()->ActivateAll(User::class, $choices);
-            } catch (\Exception $e) {
-                return new Response($this->get('translator')->trans('user.delete.fail'), 200);
-            }
+            $this->getUserEntityManager()->enabledAll($choices , true);
 
-
-            return new Response($this->get('translator')->trans('user.delete.success'), 200);
+            return new Response($this->get('translator')->trans('user.activate.success'), 200);
         }
 
         return new Response('Bad Request', 500);

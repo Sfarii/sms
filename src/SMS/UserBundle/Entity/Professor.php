@@ -14,8 +14,6 @@ use Vich\UploaderBundle\Mapping\Annotation as Vich;
  */
 class Professor extends User
 {
-
-
     /**
      * @var string
      *
@@ -101,6 +99,15 @@ class Professor extends User
      * @ORM\OneToMany(targetEntity="SMS\StudyPlanBundle\Entity\Schedule", mappedBy="professor")
      */
     private $schedules;
+
+    /**
+     * User constructor.
+     */
+    public function __construct()
+    {
+        parent::__construct();
+        $this->roles = array(self::ROLE_PROFESSOR);
+    }
 
     /**
      * Get id

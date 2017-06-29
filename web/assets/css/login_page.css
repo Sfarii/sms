@@ -5224,10 +5224,7 @@ html {
   background: #ececec;
 }
 body {
-  min-height: 100%;
   font: 400 14px / 1.42857143 "Roboto", sans-serif;
-  padding-top: 48px;
-  box-sizing: border-box;
 }
 a,
 button {
@@ -5495,18 +5492,6 @@ address p + p {
     border-style: solid;
     border-color: rgba(0, 0, 0, 0.12);
     box-sizing: border-box;
-  }
-}
-body {
-  font-size: 15px;
-  padding: 75px 24px;
-  overflow-y: auto;
-  height: auto;
-  min-height: 100%;
-}
-@media only screen and (max-width: 767px) {
-  body {
-    padding: 24px;
   }
 }
 .login_page_wrapper {

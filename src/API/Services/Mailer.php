@@ -59,7 +59,7 @@ class Mailer
         ->setTo($user->getEmail())
         ->setBody(
             $this->_templating->render(
-                'smsuserbundle/user/resetting/email.html.twig',
+                'SMSUserBundle:user/resetting:email.html.twig',
                 array('user' => $user )
             )
         , 'text/html')
@@ -91,7 +91,7 @@ class Mailer
         ->setTo($user->getEmail())
         ->setBody(
             $this->_templating->render(
-                'smsuserbundle/user/registration/emailV2.html.twig',
+                'SMSUserBundle:user/registration:emailV2.html.twig',
                 array('user' => $user )
             )
         , 'text/html')
@@ -107,7 +107,7 @@ class Mailer
         ->setTo($user->getEmail())
         ->setBody(
             $this->_templating->render(
-                'smsuserbundle/user/registration/emailV1.html.twig',
+                'SMSUserBundle:user/registration:emailV1.html.twig',
                 array('user' => $user )
             )
         , 'text/html')

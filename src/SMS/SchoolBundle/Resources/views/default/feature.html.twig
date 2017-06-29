@@ -1,0 +1,50 @@
+{% extends 'frontLayout/base.html.twig' %}
+{% block body %}
+  <section class="page-title ptb-50">
+    <div class="container">
+      <div class="row">
+        <div class="col-md-12">
+          <h2>{{ "feature.title"|trans }}</h2>
+          <ol class="breadcrumb">
+            <li>
+              <a href="{{ path("home_page")}}">{{"menu.home.title"|trans}}</a>
+            </li>
+            <li class="active">{{ "menu.feature.title"|trans }}</li>
+          </ol>
+        </div>
+      </div>
+    </div>
+  </section>
+  <section id="#feature" class="section-padding wow fadeInUp" data-wow-delay=".6s">
+    <div class="container">
+
+      <div class="text-center mb-80">
+        <h2 class="section-title text-uppercase">{{ "feature.title"|trans }}</h2>
+        <p class="section-sub">{{ "feature.title_sub"|trans }}</p>
+      </div>
+      <div class="row equal-height-row">
+        {% for feature in features %}
+          <!-- /.col-md-4 -->
+          <div class="col-md-4 mb-30">
+            <!-- featured-item -->
+            <div class="featured-item border-box radius-4 hover brand-hover equal-height-column">
+              <div class="icon mb-30">
+                <i class="material-icons brand-icon">{{ feature.icon|raw }}</i>
+              </div>
+              <div class="desc">
+                <h2>{{ feature.title }}</h2>
+                <p>{{ feature.text }}</p>
+              </div>
+            </div>
+            <!-- /.featured-item -->
+          </div>
+          <!-- /.col-md-4 -->
+        {% endfor %}
+      </div>
+      <!-- /.row -->
+
+    </div>
+    <!-- /.container -->
+  </section>
+
+{% endblock %}

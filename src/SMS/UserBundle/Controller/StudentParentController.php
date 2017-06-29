@@ -4,7 +4,7 @@ namespace SMS\UserBundle\Controller;
 
 use SMS\UserBundle\Entity\StudentParent;
 use SMS\UserBundle\Form\StudentParentType;
-use API\BaseController\BaseController;
+use SMS\UserBundle\BaseController\BaseController;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\Method;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\Route;
 use Symfony\Component\HttpFoundation\Request;
@@ -56,6 +56,8 @@ class StudentParentController extends BaseController
         {
             $qb->join('parent.establishment', 'establishment')
                 ->andWhere('establishment.id = :establishment')
+                ->andWhere('parent.id != :userId')
+                ->setParameter('userId', $user->getId())
         				->setParameter('establishment', $user->getEstablishment()->getId());
         };
 
@@ -119,7 +121,7 @@ class StudentParentController extends BaseController
 
         $editForm = $this->createForm(StudentParentType::class, $studentParent)->handleRequest($request);
         if ($editForm->isSubmitted() && $editForm->isValid() && $editForm->get('save')->isClicked()) {
-            $this->getEntityManager()->update($studentParent);
+            $this->getUserEntityManager()->editUser($studentParent);
             $this->flashSuccessMsg('studentParent.edit.success');
             if ($studentParent->getId() !== $this->getUser()->getId()){
               return $this->redirectToRoute('studentparent_index');

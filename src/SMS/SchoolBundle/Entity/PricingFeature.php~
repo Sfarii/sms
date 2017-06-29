@@ -32,9 +32,9 @@ class PricingFeature
     /**
      * @var string
      *
-     * @ORM\Column(name="value", type="string", length=100)
+     * @ORM\Column(name="state", type="boolean", length=100)
      */
-    private $value;
+    private $state;
 
     /**
      * One Pricing has Many Pricing Features.
@@ -160,27 +160,27 @@ class PricingFeature
     }
 
     /**
-     * Set value
+     * Set state
      *
-     * @param string $value
+     * @param string $state
      *
      * @return PricingFeature
      */
-    public function setValue($value)
+    public function setState($state)
     {
-        $this->value = $value;
+        $this->state = $state;
 
         return $this;
     }
 
     /**
-     * Get value
+     * Get state
      *
      * @return string
      */
-    public function getValue()
+    public function getState()
     {
-        return $this->value;
+        return $this->state;
     }
 
     /**

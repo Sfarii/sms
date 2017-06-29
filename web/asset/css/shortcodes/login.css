@@ -8,68 +8,6 @@ Login Form
   width: 100%;
   margin: 0 auto 100px;
 }
-.login-wrapper.active .card-wrapper:first-child {
-  background: #f2f2f2;
-  margin: 0 15px;
-}
-.login-wrapper.active .card-wrapper:nth-child(2) {
-  background: #fbfbfb;
-  margin: 0 10px;
-}
-.login-wrapper.active .card-wrapper.alt {
-  top: 20px;
-  right: 0;
-  width: 100%;
-  min-width: 100%;
-  height: auto;
-  border-radius: 5px;
-  padding: 60px 0 40px;
-  overflow: hidden;
-}
-.login-wrapper.active .card-wrapper.alt .toggle {
-  position: absolute;
-  top: 40px;
-  right: -70px;
-  box-shadow: none;
-  -webkit-transform: scale(12);
-  transform: scale(12);
-  -webkit-transition: -webkit-transform .3s ease;
-  transition: -webkit-transform .3s ease;
-  transition: transform .3s ease;
-  transition: transform .3s ease, -webkit-transform .3s ease;
-}
-.login-wrapper.active .card-wrapper.alt .toggle:before {
-  content: '';
-}
-.login-wrapper.active .card-wrapper.alt .title,
-.login-wrapper.active .card-wrapper.alt .input-container,
-.login-wrapper.active .card-wrapper.alt .button-container {
-  left: 0;
-  opacity: 1;
-  visibility: visible;
-  -webkit-transition: .3s ease;
-  transition: .3s ease;
-}
-.login-wrapper.active .card-wrapper.alt .title {
-  -webkit-transition-delay: .3s;
-          transition-delay: .3s;
-}
-.login-wrapper.active .card-wrapper.alt .input-container {
-  -webkit-transition-delay: .4s;
-          transition-delay: .4s;
-}
-.login-wrapper.active .card-wrapper.alt .input-container:nth-child(2) {
-  -webkit-transition-delay: .5s;
-          transition-delay: .5s;
-}
-.login-wrapper.active .card-wrapper.alt .input-container:nth-child(3) {
-  -webkit-transition-delay: .6s;
-          transition-delay: .6s;
-}
-.login-wrapper.active .card-wrapper.alt .button-container {
-  -webkit-transition-delay: .7s;
-          transition-delay: .7s;
-}
 
 /* card-wrapper */
 .card-wrapper {
@@ -101,85 +39,25 @@ Login Form
   margin: 0 0 35px;
   padding: 10px 0 10px 50px;
   color: #03a9f4;
-  font-size: 32px;
+  font-size: 25px;
   font-weight: 500;
   text-transform: uppercase;
 }
-.card-wrapper .input-container {
-  position: relative;
-  margin: 0 60px 50px;
-}
 
-
-.card-wrapper .input-container input {
-  outline: none;
-  z-index: 1;
-  position: relative;
-  background: none;
-  width: 100%;
-  height: 60px;
-  border: 0;
-  color: #212121;
-  font-size: 20px;
-  font-weight: 400;
-}
-.card-wrapper .input-container input:focus ~ label {
-  color: #9d9d9d;
-  -webkit-transform: translate(-12%, -50%) scale(0.75);
-          transform: translate(-12%, -50%) scale(0.75);
-}
-.card-wrapper .input-container input:focus ~ .bar:before, 
-.card-wrapper .input-container input:focus ~ .bar:after {
-  width: 50%;
-}
-.card-wrapper .input-container input:valid ~ label {
-  color: #9d9d9d;
-  -webkit-transform: translate(-12%, -50%) scale(0.75);
-          transform: translate(-12%, -50%) scale(0.75);
-}
-.card-wrapper .input-container label {
-  position: absolute;
-  top: 0;
-  left: 0;
-  color: #757575;
-  font-size: 20px;
-  font-weight: 300;
-  line-height: 60px;
-  -webkit-transition: 0.2s ease;
-  transition: 0.2s ease;
-}
-.card-wrapper .input-container .bar {
-  position: absolute;
-  left: 0;
-  bottom: 0;
-  background: #757575;
-  width: 100%;
-  height: 1px;
-}
-.card-wrapper .input-container .bar:before, 
-.card-wrapper .input-container .bar:after {
-  content: '';
-  position: absolute;
-  background: #03a9f4;
-  width: 0;
-  height: 2px;
-  -webkit-transition: .2s ease;
-  transition: .2s ease;
-}
-.card-wrapper .input-container .bar:before {
-  left: 50%;
-}
-.card-wrapper .input-container .bar:after {
-  right: 50%;
-}
-.card-wrapper .button-container {
-  margin: 0 60px;
+.card-wrapper .login-container {
+  margin: 0 60px 40px;
   text-align: center;
+}
+
+.card-wrapper .error-container {
+  margin: 0 60px;
+  text-align: left;
+  color: #ff0000;
 }
 
 .card-wrapper .footer {
     margin: 40px 0 0;
-    font-size: 18px;
+    font-size: 14px;
     font-weight: 300;
     text-align: center;
 }
@@ -195,7 +73,7 @@ Login Form
 .card-wrapper.alt {
   position: absolute;
   top: 40px;
-  right: -70px;
+  right: -90px;
   z-index: 10;
   width: 140px;
   height: 140px;
@@ -212,14 +90,14 @@ Login Form
 }
 .card-wrapper.alt .toggle {
   position: relative;
-  background: #ed2553;
-  width: 120px;
-  height: 120px;
+  background: #03a9f4;
+  width: 100px;
+  height: 100px;
   border-radius: 100%;
   box-shadow: 0 1px 3px rgba(0, 0, 0, 0.12), 0 1px 2px rgba(0, 0, 0, 0.24);
   color: #ffffff;
-  font-size: 50px;
-  line-height: 120px;
+  font-size: 30px;
+  line-height: 100px;
   text-align: center;
   cursor: pointer;
 }
@@ -229,20 +107,38 @@ Login Form
   .card-wrapper.alt .toggle {
       width: 80px;
       height: 80px;
-      font-size: 34px;
+      font-size: 50px;
       line-height: 80px;
-  }
-
-  .login-wrapper.active .card-wrapper.alt .toggle {
-    -webkit-transform: scale(18);
-    transform: scale(18);
   }
 
 }
 
 
 .card-wrapper.alt .toggle:before {
-  content: '\f040';
+  content: '\f007';
+  display: inline-block;
+  font: normal normal normal 14px/1 FontAwesome;
+  font-size: inherit;
+  text-rendering: auto;
+  -webkit-font-smoothing: antialiased;
+  -moz-osx-font-smoothing: grayscale;
+  -webkit-transform: translate(0, 0);
+          transform: translate(0, 0);
+}
+.card-wrapper.alt.email-icon .toggle:before {
+  content: '\f084';
+  display: inline-block;
+  font: normal normal normal 14px/1 FontAwesome;
+  font-size: inherit;
+  text-rendering: auto;
+  -webkit-font-smoothing: antialiased;
+  -moz-osx-font-smoothing: grayscale;
+  -webkit-transform: translate(0, 0);
+          transform: translate(0, 0);
+}
+
+.card-wrapper.alt.send-icon .toggle:before {
+  content: '\f1d9';
   display: inline-block;
   font: normal normal normal 14px/1 FontAwesome;
   font-size: inherit;
@@ -253,8 +149,7 @@ Login Form
           transform: translate(0, 0);
 }
 .card-wrapper.alt .title,
-.card-wrapper.alt .input-container,
-.card-wrapper.alt .button-container {
+.card-wrapper.alt .login-container {
   left: 100px;
   opacity: 0;
   visibility: hidden;
@@ -283,46 +178,24 @@ Login Form
       top: -8px;
       right: 20px;
   }
+  .card-wrapper.alt {
+    top: -25px;
+    right: -30px;
+  }
 }
 
 .card-wrapper.alt .title .close:before {
   content: '\00d7';
 }
-.card-wrapper.alt .input-container input {
-  color: #fff;
-}
-.card-wrapper.alt .input-container input:focus ~ label {
-  color: #fff !important;
-}
-.card-wrapper.alt .input-container input:focus ~ .bar:before, 
-.card-wrapper.alt .input-container input:focus ~ .bar:after {
-  background: #fff;
-}
-.card-wrapper.alt .input-container input:valid ~ label {
-  color: #fff;
-}
-.card-wrapper.alt .input-container label {
-  color: rgba(255, 255, 255, 0.8);
-}
-.card-wrapper.alt .input-container .bar {
-  background: rgba(255, 255, 255, 0.8);
-}
-.card-wrapper.alt .button-container a.btn {
+
+.card-wrapper.alt .login-container a.btn {
   position: relative;
   z-index: 10;
 }
 
 
 /*Customizing with Material CSS*/
-.login-wrapper input[type=text]:focus:not([readonly]),
-.login-wrapper input[type=password]:focus:not([readonly]) {
-    border-bottom: 0;
-    box-shadow: none;
-}
-.login-wrapper input[type=text],
-.login-wrapper input[type=password] {
-  margin: 0;
-}
+
 .login-wrapper .btn {
     height: 60px;
     font-size: 18px;

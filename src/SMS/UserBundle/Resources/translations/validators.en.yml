@@ -1,0 +1,3 @@
+user:
+    password:
+        mismatch: Your password and confirmation password do not match.   # FIXME

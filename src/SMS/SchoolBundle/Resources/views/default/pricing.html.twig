@@ -1,0 +1,76 @@
+{% extends 'frontLayout/base.html.twig' %}
+{% block body %}
+  <section class="page-title ptb-50">
+    <div class="container">
+      <div class="row">
+        <div class="col-md-12">
+          <h2>{{ "pricing_table.title"|trans }}</h2>
+          <ol class="breadcrumb">
+            <li>
+              <a href="{{ path ("home_page")}}">{{"menu.home.title"|trans}}</a>
+            </li>
+            <li class="active">{{ "menu.pricing.title"|trans }}</li>
+          </ol>
+        </div>
+      </div>
+    </div>
+  </section>
+  <section id="#pricing" class="section-padding">
+    <div class="container">
+      <div class="text-center mb-80">
+        <h2 class="section-title text-uppercase">{{ "pricing_table.title"|trans }}</h2>
+        <p class="section-sub">{{ "pricing_table.title_sub"|trans }}</p>
+      </div>
+      <div class="row">
+        {% for pricing in pricings %}
+        <div class="col-md-4">
+          <div class="pricing-table">
+            <div class="table-contents text-center">
+              <div class="table-header brand-hover">
+                <div class="package-name">
+                  <span>{{pricing.pricingName}}</span>
+                </div>
+
+                <div class="package-price">
+                  <span class="currency-symbol">{{ "pricing.currency"|trans }}</span>
+                  <span class="price">{{ pricing.Price }}</span>
+                  <span class="currency-code">{{ pricing.unitPrice }}</span>
+                </div>
+              </div>
+              <!-- /.table-header -->
+
+              <div class="table-info">
+                <ul>
+                  {% for pricingFeature in pricing.pricingFeature %}
+                    {% if pricingFeature.state %}
+                      <li>{{ pricingFeature.text }}</li>
+                    {% else %}
+                      <li>
+                        <del>{{ pricingFeature.text }}</del>
+                      </li>
+                    {% endif %}
+                  {% endfor %}
+                </ul>
+              </div>
+              <!-- /.table-info -->
+              <div class="table-footer">
+                <div class="purchase-button">
+                  <a class="btn btn-lg text-capitalize waves-effect waves-light">{{ "pricing.buy"|trans }}</a>
+                </div>
+              </div>
+              <!-- /.table-footer -->
+            </div>
+            <!-- /.table-contents -->
+          </div>
+          <!-- /.pricing-table -->
+        </div>
+        <!-- /.col-md-4 -->
+        {% endfor %}
+      </div>
+      <!-- /.row -->
+    </div>
+    <!-- /.container -->
+
+  </section>
+
+{% endblock %}

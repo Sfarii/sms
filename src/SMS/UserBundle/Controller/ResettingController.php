@@ -9,7 +9,7 @@ use Sensio\Bundle\FrameworkExtraBundle\Configuration\Template;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\Form\FormError;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\ParamConverter;
-use API\BaseController\BaseController;
+use SMS\UserBundle\BaseController\BaseController;
 use SMS\UserBundle\Entity\User;
 use SMS\UserBundle\Form\ResettingPasswordFormType;
 use SMS\UserBundle\Form\ResettingFormType;
@@ -51,7 +51,7 @@ class ResettingController extends BaseController
     }
 
     /**
-     * @Route("/resetting:{token}" , name="resetting_password")
+     * @Route("/resetting/{token}" , name="resetting_password")
      * @ParamConverter("user", class="SMSUserBundle:User", options={
      *    "repository_method" = "findUserByToken",
      *    "map_method_signature" = true

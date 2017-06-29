@@ -13,8 +13,8 @@ use Symfony\Bridge\Doctrine\Form\Type\EntityType;
 use Symfony\Component\Form\Extension\Core\Type\SubmitType;
 use SMS\UserBundle\Entity\Administrator;
 use Vich\UploaderBundle\Form\Type\VichImageType;
-use API\Form\Type\GenderType;
-use API\Form\EventSubscriber\UsersListener;
+use SMS\UserBundle\Form\Type\GenderType;
+use SMS\UserBundle\Form\EventSubscriber\UsersListener;
 use Symfony\Component\Security\Core\Authentication\Token\Storage\TokenStorageInterface;
 
 class AdministratorType extends AbstractType

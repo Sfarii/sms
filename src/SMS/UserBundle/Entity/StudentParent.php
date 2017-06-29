@@ -14,8 +14,6 @@ use Vich\UploaderBundle\Mapping\Annotation as Vich;
  */
 class StudentParent extends User
 {
-
-
     /**
      * @var string
      *
@@ -100,6 +98,15 @@ class StudentParent extends User
      * @ORM\OneToMany(targetEntity="Student", mappedBy="studentParent")
      */
     private $students;
+
+    /**
+     * User constructor.
+     */
+    public function __construct()
+    {
+        parent::__construct();
+        $this->roles = array(self::ROLE_PARENT);
+    }
 
     /**
      * Get id

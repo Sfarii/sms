@@ -14,11 +14,6 @@ services:
         arguments: ["@doctrine.orm.entity_Manager"]
         calls:
             - [ setDays , ["%days%"]]
-    sms.user.entity_manager:
-        class: API\Services\UserEntityManager
-        arguments: ["@doctrine.orm.entity_Manager" , "@security.password_encoder" , '@security.token_storage']
-        calls:
-          - [setMailer, ['@sms.mailer']]
     sms.mailer:
         class: API\Services\Mailer
         arguments: ["@mailer" , "@templating"]
@@ -50,14 +45,7 @@ services:
         arguments: ["@knp_menu.factory" , "@security.authorization_checker" , "@security.context"]
         tags:
             - { name: knp_menu.menu_builder, method: createMainMenu, alias: main }
-            #- { name: knp_menu.menu_builder, method: createSidebarMenu, alias: sidebar }
-    #form type
-    sms.form.type.role:
-        class: API\Form\Type\RoleType
-        arguments:
-            - '%security.role_hierarchy.roles%'
-        tags:
-            - { name: form.type }
+            - { name: knp_menu.menu_builder, method: createSidebarMenu, alias: sidebar }
     sms.form.type.day:
         class: API\Form\Type\DayType
         arguments:

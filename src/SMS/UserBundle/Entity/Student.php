@@ -76,6 +76,15 @@ class Student extends User
     private $studentParent;
 
     /**
+     * User constructor.
+     */
+    public function __construct()
+    {
+        parent::__construct();
+        $this->roles = array(self::ROLE_STUDENT);
+    }
+
+    /**
      * Get id
      *
      * @return integer

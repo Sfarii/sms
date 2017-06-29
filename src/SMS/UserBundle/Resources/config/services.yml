@@ -1,38 +1,59 @@
 services:
-  #UserDatatable
+  #User Datatable
   sms.datatable.manager:
-      class: SMS\UserBundle\UserDatatable\ManagerDatatable
+      class: %user_manager_class%
       parent: sg_datatables.datatable.abstract
   sms.datatable.administrator:
-      class: SMS\UserBundle\UserDatatable\AdministratorDatatable
+      class: %user_administrator_class%
       parent: sg_datatables.datatable.abstract
   sms.datatable.professor:
-      class: SMS\UserBundle\UserDatatable\ProfessorDatatable
+      class: %user_professor_class%
       parent: sg_datatables.datatable.abstract
   sms.datatable.student:
-      class: SMS\UserBundle\UserDatatable\StudentDatatable
+      class: %user_student_class%
       parent: sg_datatables.datatable.abstract
   sms.datatable.student_parent:
-      class: SMS\UserBundle\UserDatatable\StudentParentDatatable
+      class: %user_parent_class%
       parent: sg_datatables.datatable.abstract
-  #form
+  #Services
+  sms.user.entity_manager:
+      class: %user_entity_manager%
+      arguments: ["@doctrine.orm.entity_Manager" , "@security.password_encoder" , '@security.token_storage']
+      calls:
+        - [setMailer, ['@sms.user.mailer']]
+  sms.user.mailer:
+      class: %user_mail_manager%
+      arguments: ["@mailer" , "@templating"]
+      calls:
+        - [setEmail, ["%mailer_user%"]]
+        - [setResettingTemplatePath, ["%resetting_template%"]]
+        - [setRegistrationTemplatePathWithPassword, ["%registration_template_with_password%"]]
+        - [setRegistrationTemplatePathWithOutPassword, ["%registration_template_without_password%"]]
+  #Forms
   sms.form.student_parent:
-      class: SMS\UserBundle\Form\StudentParentType
+      class: %form_user_parent_class%
       arguments: ['@security.token_storage']
       tags:
           - { name: form.type }
   sms.form.administrator:
-      class: SMS\UserBundle\Form\AdministratorType
+      class: %form_user_administrator_class%
       arguments: ['@security.token_storage']
       tags:
           - { name: form.type }
   sms.form.professor:
-      class: SMS\UserBundle\Form\ProfessorType
+      class: %form_user_professor_class%
       arguments: ['@security.token_storage']
       tags:
           - { name: form.type }
   sms.form.student:
-      class: SMS\UserBundle\Form\StudentType
+      class: %form_user_student_class%
       arguments: ['@security.token_storage' , "@doctrine.orm.entity_Manager"]
+      tags:
+          - { name: form.type }
+  #form type
+  sms.form.type.role:
+      class: %user_role_type%
+      arguments:
+          - '%security.role_hierarchy.roles%'
       tags:
           - { name: form.type }

@@ -15,11 +15,11 @@ use SMS\UserBundle\Entity\Student;
 use SMS\UserBundle\Entity\StudentParent;
 use SMS\EstablishmentBundle\Entity\Section;
 use Vich\UploaderBundle\Form\Type\VichImageType;
-use API\Form\Type\GenderType;
+use SMS\UserBundle\Form\Type\GenderType;
 use Symfony\Component\Form\Extension\Core\Type\CheckboxType;
-use API\Form\EventSubscriber\UsersListener;
+use SMS\UserBundle\Form\EventSubscriber\UsersListener;
 use Doctrine\ORM\EntityRepository;
-use API\Form\EventSubscriber\GradeSectionFilterListener;
+use SMS\UserBundle\Form\EventSubscriber\GradeSectionFilterListener;
 use Symfony\Component\Security\Core\Authentication\Token\Storage\TokenStorageInterface;
 
 class StudentType extends AbstractType

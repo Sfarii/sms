@@ -78,11 +78,12 @@ class Manager extends User
     private $address;
 
     /**
-     * @return string
+     * User constructor.
      */
-    public function __toString()
+    public function __construct()
     {
-        return (string) $this->getUsername();
+        parent::__construct();
+        $this->roles = array(self::ROLE_MANAGER);
     }
 
     /**
@@ -179,5 +180,13 @@ class Manager extends User
     public function getAddress()
     {
         return $this->address;
+    }
+
+    /**
+     * @return string
+     */
+    public function __toString()
+    {
+        return sprintf("%s",$this->getUsername());
     }
 }

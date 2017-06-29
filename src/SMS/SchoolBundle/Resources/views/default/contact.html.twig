@@ -1,0 +1,149 @@
+{% extends 'frontLayout/base.html.twig' %}
+{% block body %}
+  <section class="page-title ptb-50">
+    <div class="container">
+      <div class="row">
+        <div class="col-md-12">
+          <h2>{{ "contact.title"|trans }}</h2>
+          <ol class="breadcrumb">
+            <li>
+              <a href="{{ path ("home_page")}}">{{"menu.home.title"|trans}}</a>
+            </li>
+            <li class="active">{{ "menu.contact.title"|trans }}</li>
+          </ol>
+        </div>
+      </div>
+    </div>
+  </section>
+  <!-- contact-form-section -->
+  <section id="#contact" class="section-padding" style="background: url({{asset('asset/img/vactor-map.png')}}) no-repeat center center;">
+
+    <div class="container">
+      <div class="text-center mb-80">
+        <h2 class="section-title text-uppercase">{{ "contact.title"|trans }}</h2>
+        <p class="section-sub">{{ "contact.title_sub"|trans }}</p>
+      </div>
+      <div class="row">
+        <div class="col-md-12">
+          {{ form_start(form) }}
+          <div class="row">
+            <div class="col-md-6">
+              <div class="input-field">
+                {{ form_label(form.name) }}
+                {{ form_widget(form.name)}}
+                <div class="parsley-errors-list filled text-danger">
+                  {{ form_errors(form.name) }}
+                </div>
+              </div>
+            </div>
+            <!-- /.col-md-6 -->
+
+            <div class="col-md-6">
+              <div class="input-field">
+                {{ form_label(form.email) }}
+                {{ form_widget(form.email)}}
+                <div class="parsley-errors-list filled text-danger">
+                  {{ form_errors(form.email) }}
+                </div>
+              </div>
+            </div>
+            <!-- /.col-md-6 -->
+          </div>
+          <!-- /.row -->
+
+          <div class="row">
+            <div class="col-md-6">
+              <div class="input-field">
+                {{ form_label(form.phone) }}
+                {{ form_widget(form.phone)}}
+                <div class="parsley-errors-list filled text-danger">
+                  {{ form_errors(form.phone) }}
+                </div>
+              </div>
+            </div>
+            <!-- /.col-md-6 -->
+          </div>
+          <!-- /.row -->
+
+          <div class="input-field">
+
+            {{ form_widget(form.message, { 'attr' : { "class" : "materialize-textarea"}})}}
+            {{ form_label(form.message) }}
+            <div class="parsley-errors-list filled text-danger">
+              {{ form_errors(form.message) }}
+            </div>
+          </div>
+
+          <button type="submit" class="waves-effect waves-light btn submit-button mt-30 mb-sm-30">
+            {{ "contact.field.submit"|trans}}
+          </button>
+          {{ form_widget(form) }}
+          {{ form_end(form) }}
+        </div>
+        <!-- /.col-md-8 -->
+        <!-- /.col-md-4 -->
+      </div>
+      <!-- /.row -->
+    </div>
+  </section>
+  <!-- contact-form-section End -->
+  <!-- map-section -->
+  <div id="myMap" class="height-350"></div>
+  <!-- /.map-section -->
+{% endblock %}
+{% block javascripts %}
+  {{ parent() }}
+  <script src="https://maps.googleapis.com/maps/api/js"></script>
+  <!-- Google Map Customization  -->
+  <script type="text/javascript">
+    jQuery(document).ready(function() {
+
+      //set your google maps parameters
+      var $latitude = 35.813681, //Visit http://www.latlong.net/convert-address-to-lat-long.html for generate your Lat. Long.
+        $longitude = 10.635538,
+        $map_zoom = 16/* ZOOM SETTING */
+
+        //google map custom marker icon
+        var $marker_url = '{{ asset("asset/img/icon-blue.png") }}';
+
+        //we define here the style of the map
+        var style = [
+          {
+            "stylers": [
+              {
+                "hue": "#03a9f4"
+              }, {
+                "saturation": 10
+              }, {
+                "gamma": 2.15
+              }, {
+                "lightness": 12
+              }
+            ]
+          }
+        ];
+
+        //set google map options
+        var map_options = {
+          center: new google.maps.LatLng($latitude, $longitude),
+          zoom: $map_zoom,
+          panControl: true,
+          zoomControl: true,
+          mapTypeControl: true,
+          streetViewControl: true,
+          mapTypeId: google.maps.MapTypeId.ROADMAP,
+          scrollwheel: false,
+          styles: style
+        }
+        //inizialize the map
+        var map = new google.maps.Map(document.getElementById('myMap'), map_options);
+        //add a custom marker to the map
+        var marker = new google.maps.Marker({
+          position: new google.maps.LatLng($latitude, $longitude),
+          map: map,
+          visible: true,
+          icon: $marker_url
+        });
+      });
+  </script>
+{% endblock %}

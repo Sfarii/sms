@@ -14,6 +14,14 @@ Version: 1.4
         /* === Preloader === */
         $("#preloader").delay(200).fadeOut("slow");
 
+        $('.toggle').on('click', function() {
+          $('.login-wrapper').stop().addClass('active');
+        });
+
+        $('.close').on('click', function() {
+          $('.login-wrapper').stop().removeClass('active');
+        });
+
 
         /* === Alternate menu appear === */
         $("#matrox-menu-alt").html('<ul class="menuzord-menu">' + $("#menu-list").html() + "</ul>");
@@ -85,16 +93,6 @@ Version: 1.4
                 }
             }
 
-        });
-
-
-        /* === Onepage Menu === */
-        $(".op-nav li").on("click",function(){
-            if($(".showhide").is(":visible")){
-                $(".showhide").trigger("click");
-            }
-            $(".op-nav li").removeClass("active");
-            $(this).addClass("active");
         });
 
 

@@ -7,7 +7,7 @@ use Sensio\Bundle\FrameworkExtraBundle\Configuration\Method;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\Template;
 use Symfony\Component\HttpFoundation\Request;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\Route;
-use API\BaseController\BaseController;
+use SMS\UserBundle\BaseController\BaseController;
 
 /**
  * @author Rami Sfari <rami2sfari@gmail.com>

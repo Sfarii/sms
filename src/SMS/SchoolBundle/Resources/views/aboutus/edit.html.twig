@@ -1,0 +1,30 @@
+{% extends 'layout/base_header_double_height.html.twig' %}
+{% block stylesheets %}
+  {{ parent() }}
+  <!-- additional styles for plugins -->
+  <!-- dropify -->
+  <link rel="stylesheet" href="{{ asset('assets/skins/dropify/css/dropify.css')}}">
+{% endblock %}
+{% block body %}
+
+  {% include 'layout/form_layout.html.twig' with {'form': edit_form, 'form_name': 'aboutu.edit.title', 'index_url': path('aboutus_index')} %}
+
+{% endblock %}
+{% block javascripts %}
+  {{ parent() }}
+  <!-- page specific plugins -->
+  <!-- file input -->
+  <script src="{{ asset('assets/plugins/dropify/dist/js/dropify.min.js')}}"></script>
+  <script>
+    $(function() {
+      $(".dropify").dropify({
+        'defaultFile': "{{ vich_uploader_asset(aboutUs, 'imageFile') }}",
+        messages: {
+          "default": "{{ 'file.upload_file'|trans }}",
+          replace: "{{ 'file.upload_file'|trans }}",
+          remove: "{{ 'delete'|trans }}"
+        }
+      });
+    });
+  </script>
+{% endblock %}

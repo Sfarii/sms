@@ -55,9 +55,20 @@ class AdministratorDatatable extends AbstractDatatableView
             ->add(null, 'multiselect', array(
                 'actions' => array(
                     array(
-                        'route' => 'user_bulk_delete',
-                        'icon' => '&#xE872;',
-                        'label' => $this->translator->trans('action.delete'),
+                        'route' => 'user_bulk_deactivate',
+                        'icon' => '&#xE14C;',
+                        'label' => $this->translator->trans('action.deactivate'),
+                        'attributes' => array(
+                            'rel' => 'tooltip',
+                            'title' => $this->translator->trans('action.delete'),
+                            'class' => 'md-btn buttons-copy buttons-html5',
+                            'role' => 'button'
+                        ),
+                    ),
+                    array(
+                        'route' => 'user_bulk_activate',
+                        'icon' => '&#xE876;',
+                        'label' => $this->translator->trans('action.activate'),
                         'attributes' => array(
                             'rel' => 'tooltip',
                             'title' => $this->translator->trans('action.delete'),

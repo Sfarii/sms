@@ -73,8 +73,8 @@ class PricingFeatureDatatable extends AbstractDatatableView
             ->add('text', 'column', array(
                 'title' => $this->translator->trans('pricingfeature.field.text'),
             ))
-            ->add('value', 'column', array(
-                'title' => $this->translator->trans('pricingfeature.field.value'),
+            ->add('state', 'column', array(
+                'title' => $this->translator->trans('pricingfeature.field.state'),
             ))
             ->add(null, 'action', array(
                 'title' => $this->translator->trans('datatables.actions.title'),

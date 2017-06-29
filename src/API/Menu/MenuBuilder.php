@@ -215,6 +215,10 @@ class MenuBuilder
 
       $menu->addChild('menu.school_testimonial', array('route' => 'schooltestimonial_index'))
           ->setAttribute('icon', '&#xE85D;');
+      $menu->addChild('menu.contact', array('route' => 'contact_index'))
+          ->setAttribute('icon', '&#xE85D;');
+      $menu->addChild('menu.aboutus', array('route' => 'aboutus_index'))
+          ->setAttribute('icon', '&#xE85D;');
 
       $menu->addChild('users', array('label' => 'menu.users.title'))
           ->setAttribute('dropdown', true)
@@ -283,22 +287,16 @@ class MenuBuilder
       return $menu;
     }
 
-
-
     /**
      * @param array $options
      * @return FactoryInterface
      */
     public function createSidebarMenu(array $options)
     {
-        $menu = $this->factory->createItem('sidebar');
-
-        if (isset($options['include_homepage']) && $options['include_homepage']) {
-            $menu->addChild('Home', array('route' => 'homepage'));
-        }
-
-        // ... add more children
-
+        $menu = $this->factory->createItem('sidebar')
+                              ->setChildrenAttribute('class', 'nav menuzord-menu pull-right');
+                $menu->addChild('menu.login.title', array('route' => 'login'));
+                $menu->addChild('menu.contact.title', array('route' => 'contact_page'));
         return $menu;
     }
 }

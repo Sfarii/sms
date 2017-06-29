@@ -1,0 +1,21 @@
+parameters:
+  #Datatables
+  user_manager_class: SMS\UserBundle\UserDatatable\ManagerDatatable
+  user_administrator_class: SMS\UserBundle\UserDatatable\AdministratorDatatable
+  user_professor_class: SMS\UserBundle\UserDatatable\ProfessorDatatable
+  user_student_class: SMS\UserBundle\UserDatatable\StudentDatatable
+  user_parent_class: SMS\UserBundle\UserDatatable\StudentParentDatatable
+  #Services
+  user_entity_manager: SMS\UserBundle\Services\UserEntityManager
+  user_mail_manager: SMS\UserBundle\Services\Mailer
+  #Forms
+  form_user_parent_class: SMS\UserBundle\Form\StudentParentType
+  form_user_administrator_class: SMS\UserBundle\Form\AdministratorType
+  form_user_professor_class: SMS\UserBundle\Form\ProfessorType
+  form_user_student_class: SMS\UserBundle\Form\StudentType
+  #Templating
+  resetting_template: SMSUserBundle:user/resetting:email.html.twig
+  registration_template_with_password: SMSUserBundle:user/registration:emailV2.html.twig
+  registration_template_without_password: SMSUserBundle:user/registration:emailV1.html.twig
+  #Form Type
+  user_role_type: SMS\UserBundle\Form\Type\RoleType

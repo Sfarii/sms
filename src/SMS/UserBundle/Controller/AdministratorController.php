@@ -5,7 +5,7 @@ namespace SMS\UserBundle\Controller;
 use SMS\UserBundle\Entity\Administrator;
 use SMS\UserBundle\Entity\Manager;
 use SMS\UserBundle\Form\AdministratorType;
-use API\BaseController\BaseController;
+use SMS\UserBundle\BaseController\BaseController;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\Method;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\Route;
 use Symfony\Component\HttpFoundation\Request;
@@ -58,6 +58,8 @@ class AdministratorController extends BaseController
           {
               $qb->join('administrator.establishment', 'establishment')
                   ->andWhere('establishment.id = :establishment')
+                  ->andWhere('administrator.id != :userId')
+                  ->setParameter('userId', $user->getId())
           				->setParameter('establishment', $user->getEstablishment()->getId());
           };
 
@@ -121,7 +123,7 @@ class AdministratorController extends BaseController
 
         $editForm = $this->createForm(AdministratorType::class, $administrator)->handleRequest($request);
         if ($editForm->isSubmitted() && $editForm->isValid() && $editForm->get('save')->isClicked()) {
-            $this->getEntityManager()->update($administrator);
+            $this->getUserEntityManager()->editUser($administrator);
             $this->flashSuccessMsg('administrator.edit.success');
             if ($administrator->getId() !== $this->getUser()->getId()){
               return $this->redirectToRoute('administrator_index');

@@ -4,7 +4,7 @@ namespace SMS\UserBundle\Controller;
 
 use SMS\UserBundle\Entity\Professor;
 use SMS\UserBundle\Form\ProfessorType;
-use API\BaseController\BaseController;
+use SMS\UserBundle\BaseController\BaseController;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\Method;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\Route;
 use Symfony\Component\HttpFoundation\Request;
@@ -56,6 +56,8 @@ class ProfessorController extends BaseController
         {
             $qb->join('professor.establishment', 'establishment')
                 ->andWhere('establishment.id = :establishment')
+                ->andWhere('professor.id != :userId')
+                ->setParameter('userId', $user->getId())
         				->setParameter('establishment', $user->getEstablishment()->getId());
         };
 
@@ -118,7 +120,7 @@ class ProfessorController extends BaseController
 
         $editForm = $this->createForm(ProfessorType::class, $professor)->handleRequest($request);
         if ($editForm->isSubmitted() && $editForm->isValid() && $editForm->get('save')->isClicked()) {
-            $this->getEntityManager()->update($professor);
+            $this->getUserEntityManager()->editUser($professor);
             $this->flashSuccessMsg('professor.edit.success');
             if ($professor->getId() !== $this->getUser()->getId()){
               return $this->redirectToRoute('professor_index');

@@ -13,12 +13,19 @@
 
 {% endblock %}
 {% block javascripts %}
-	{{ parent() }}
-	<!-- page specific plugins -->
-    <!-- file input -->
-		<script src="{{ asset('assets/plugins/dropify/dist/js/dropify.min.js')}}"></script>
-    <script>
-		$(function(){
-			$(".dropify").dropify({messages:{"default":"{{ 'file.upload_file'|trans }}",replace:"{{ 'file.upload_file'|trans }}",remove:"{{ 'delete'|trans }}"}});
-		});</script>
+  {{ parent() }}
+  <!-- page specific plugins -->
+  <!-- file input -->
+  <script src="{{ asset('assets/plugins/dropify/dist/js/dropify.min.js')}}"></script>
+  <script>
+    $(function() {
+      $(".dropify").dropify({
+        messages: {
+          "default": "{{ 'file.upload_file'|trans }}",
+          replace: "{{ 'file.upload_file'|trans }}",
+          remove: "{{ 'delete'|trans }}"
+        }
+      });
+    });
+  </script>
 {% endblock %}

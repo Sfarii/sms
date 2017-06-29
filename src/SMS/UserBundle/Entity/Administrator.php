@@ -83,6 +83,15 @@ class Administrator extends User
     private $address;
 
     /**
+     * User constructor.
+     */
+    public function __construct()
+    {
+        parent::__construct();
+        $this->roles = array(self::ROLE_ADMIN);
+    }
+
+    /**
      * Get id
      *
      * @return integer

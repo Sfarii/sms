@@ -1,3 +1,11 @@
+sms_school_about_us:
+    resource: "@SMSSchoolBundle/Controller/AboutUsController.php"
+    type:     annotation
+
+sms_school_contact:
+    resource: "@SMSSchoolBundle/Controller/ContactController.php"
+    type:     annotation
+
 sms_store:
     resource: "@SMSStoreBundle/Controller/"
     type:     annotation

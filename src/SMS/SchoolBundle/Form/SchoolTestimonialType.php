@@ -11,6 +11,7 @@ use Symfony\Bridge\Doctrine\Form\Type\EntityType;
 use Symfony\Component\Form\Extension\Core\Type\SubmitType;
 use SMS\SchoolBundle\Entity\SchoolTestimonial;
 use Vich\UploaderBundle\Form\Type\VichImageType;
+use Symfony\Component\Form\Extension\Core\Type\TextareaType;
 
 class SchoolTestimonialType extends AbstractType
 {
@@ -31,7 +32,7 @@ class SchoolTestimonialType extends AbstractType
               ->add('subtitle' ,TextType::class , array(
                   'label' => 'schooltestimonial.field.subtitle')
               )
-              ->add('text' ,TextType::class , array(
+              ->add('text' ,TextareaType::class , array(
                   'label' => 'schooltestimonial.field.text')
               )
               ->add('save', SubmitType::class);

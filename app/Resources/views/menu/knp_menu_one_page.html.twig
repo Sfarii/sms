@@ -1,0 +1,14 @@
+{% extends 'knp_menu.html.twig' %}
+
+{% import "knp_menu.html.twig" as macros %}
+
+
+{% block linkElement %}
+  <a href="{{ item.uri }}" {{ macros.attributes(item.linkAttributes) }}>{{ block('label') }}</a>
+{% endblock %}
+
+{% block spanElement %}
+	<a {{ macros.attributes(item.linkAttributes) }}>{{ block('label') }}</a>
+{% endblock %}
+
+{% block label %}{{ item.label|trans }}{% endblock %}

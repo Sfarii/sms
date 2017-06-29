@@ -7,8 +7,8 @@ parameters:
     # mailer
     mailer_transport: smtp
     mailer_host: 127.0.0.1
-    mailer_user:     ramisfari22@gmail.com
-    mailer_password:
+    mailer_user: ramisfari22@gmail.com
+    mailer_password: ramisfari123
     payment_template: email/payment.html.twig
     # attendance status
     attendance:

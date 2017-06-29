@@ -73,9 +73,6 @@ class SchoolTestimonialDatatable extends AbstractDatatableView
             ->add('subtitle', 'column', array(
                 'title' => $this->translator->trans('schooltestimonial.field.subtitle'),
             ))
-            ->add('text', 'column', array(
-                'title' => $this->translator->trans('schooltestimonial.field.text'),
-            ))
             ->add(null, 'action', array(
                 'title' => $this->translator->trans('datatables.actions.title'),
                 'actions' => array(

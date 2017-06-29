@@ -7,6 +7,7 @@ use Symfony\Component\Form\FormBuilderInterface;
 use Symfony\Component\OptionsResolver\OptionsResolver;
 use Symfony\Component\Form\Extension\Core\Type\TextType;
 use Symfony\Component\Form\Extension\Core\Type\DateType;
+use Symfony\Component\Form\Extension\Core\Type\TextareaType;
 use Symfony\Bridge\Doctrine\Form\Type\EntityType;
 use Symfony\Component\Form\Extension\Core\Type\SubmitType;
 use SMS\SchoolBundle\Entity\Feature;
@@ -25,7 +26,7 @@ class FeatureType extends AbstractType
               ->add('title' ,TextType::class , array(
                   'label' => 'feature.field.title')
               )
-              ->add('text' ,TextType::class , array(
+              ->add('text' ,TextareaType::class , array(
                   'label' => 'feature.field.text')
               )
               ->add('save', SubmitType::class);

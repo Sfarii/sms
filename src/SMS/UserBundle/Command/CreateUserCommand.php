@@ -41,7 +41,7 @@ class CreateUserCommand extends ContainerAwareCommand
       $user->setUsername($input->getArgument('username'));
       $user->setPlainPassword($input->getArgument('password'));
 
-      $userManager->addUser($user);
+      $userManager->saveUserManager($user);
 
       $output->writeln('<fg=green>User successfully generated!</>');
     }

@@ -174,7 +174,6 @@ use Vich\UploaderBundle\Mapping\Annotation as Vich;
     public function __construct()
     {
         $this->enabled = true;
-        $this->roles = array();
     }
 
      /**

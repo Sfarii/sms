@@ -12,6 +12,12 @@ services:
   sms.datatable.slider:
       class: SMS\SchoolBundle\SchoolDatatable\SliderDatatable
       parent: sg_datatables.datatable.abstract
+  sms.datatable.contact:
+      class: SMS\SchoolBundle\SchoolDatatable\ContactDatatable
+      parent: sg_datatables.datatable.abstract
+  sms.datatable.aboutUs:
+      class: SMS\SchoolBundle\SchoolDatatable\AboutUsDatatable
+      parent: sg_datatables.datatable.abstract
   sms.datatable.schoolTestimonial:
       class: SMS\SchoolBundle\SchoolDatatable\SchoolTestimonialDatatable
       parent: sg_datatables.datatable.abstract
