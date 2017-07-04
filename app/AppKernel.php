@@ -22,9 +22,6 @@ class AppKernel extends Kernel
             new FOS\JsRoutingBundle\FOSJsRoutingBundle(),
             new Knp\Bundle\PaginatorBundle\KnpPaginatorBundle(),
             new Vich\UploaderBundle\VichUploaderBundle(),
-            new Ddeboer\DataImportBundle\DdeboerDataImportBundle(),
-            new Gos\Bundle\WebSocketBundle\GosWebSocketBundle(),
-            new Gos\Bundle\PubSubRouterBundle\GosPubSubRouterBundle(),
             new Sg\DatatablesBundle\SgDatatablesBundle(),
             new DatatablesBundle\DatatablesBundle(),
             new Knp\Bundle\MenuBundle\KnpMenuBundle(),
@@ -33,6 +30,7 @@ class AppKernel extends Kernel
             new SMS\SchoolBundle\SMSSchoolBundle(),
             new SMS\PaymentBundle\SMSPaymentBundle(),
             new SMS\StoreBundle\SMSStoreBundle(),
+            new Knp\Bundle\SnappyBundle\KnpSnappyBundle(),
         );
 
         if (in_array($this->getEnvironment(), array('dev', 'test'), true)) {

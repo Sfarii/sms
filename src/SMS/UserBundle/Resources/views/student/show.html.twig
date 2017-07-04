@@ -70,15 +70,6 @@
                   </div>
                 </li>
 
-                <li>
-                  <div class="md-list-content">
-
-                    <span class="md-list-heading uk-text-large">{{ student.section.sectionName }}</span>
-                    <span class="uk-text-small uk-text-muted uk-display-block">
-                      {{'student.field.section'|trans }}</span>
-                  </div>
-                </li>
-
               </ul>
             </div>
             <div class="uk-width-large-1-2">
@@ -105,6 +96,7 @@
             </div>
 
           </div>
+          {% if student.studentParent %}
           <h3 class="full_width_in_card heading_c">{{ 'user.show.parent_info'|trans }}</h3>
           <div class="uk-grid uk-margin-medium-top uk-margin-large-bottom" data-uk-grid-margin>
             <div class="uk-width-large-1-2">
@@ -157,6 +149,7 @@
               </ul>
             </div>
           </div>
+          {% endif %}
           <h3 class="full_width_in_card heading_c">{{ 'user.show.school_info'|trans }}</h3>
           <div class="uk-grid uk-margin-medium-top uk-margin-large-bottom" data-uk-grid-margin>
             <div class="uk-width-large-1-2">
@@ -171,6 +164,7 @@
                       {{'user.field.establishment'|trans }}</span>
                   </div>
                 </li>
+                {% if student.section %}
                 <li>
                   <div class="md-list-content">
                     <div class="md-list-addon-element">
@@ -182,10 +176,12 @@
                       {{'student.field.grade'|trans }}</span>
                   </div>
                 </li>
+                {% endif %}
               </ul>
             </div>
             <div class="uk-width-large-1-2">
               <ul class="md-list md-list-addon">
+                {% if student.section %}
                 <li>
                   <div class="md-list-content">
                     <div class="md-list-addon-element">
@@ -197,6 +193,7 @@
                       {{'user.field.section'|trans }}</span>
                   </div>
                 </li>
+                {% endif %}
                 <li>
                   <div class="md-list-content">
                     <div class="md-list-addon-element">
@@ -227,23 +224,13 @@
                       {{'user.field.email'|trans }}</span>
                   </div>
                 </li>
-                <li>
-                  <div class="md-list-content">
-                    <div class="md-list-addon-element">
-                      <i class="md-list-addon-icon material-icons">&#xE0CD;</i>
-                    </div>
 
-                    <span class="md-list-heading uk-text-large">{{ student.studentParent.phone }}
-                    </span>
-                    <span class="uk-text-small uk-text-muted uk-display-block">
-                      {{'studentparent.field.phone'|trans }}</span>
-                  </div>
-                </li>
               </ul>
             </div>
+
             <div class="uk-width-large-1-2">
               <ul class="md-list md-list-addon">
-
+                {% if student.studentParent %}
                 <li>
                   <div class="md-list-content">
                     <div class="md-list-addon-element">
@@ -255,8 +242,22 @@
                       {{'studentparent.field.address'|trans }}</span>
                   </div>
                 </li>
+                {% endif %}
+                <li>
+                  <div class="md-list-content">
+                    <div class="md-list-addon-element">
+                      <i class="md-list-addon-icon material-icons">&#xE0CD;</i>
+                    </div>
+
+                    <span class="md-list-heading uk-text-large">{{ student.phone }}
+                    </span>
+                    <span class="uk-text-small uk-text-muted uk-display-block">
+                      {{'studentparent.field.phone'|trans }}</span>
+                  </div>
+                </li>
               </ul>
             </div>
+
           </div>
         </div>
       </div>

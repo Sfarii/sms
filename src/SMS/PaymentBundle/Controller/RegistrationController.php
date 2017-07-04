@@ -3,6 +3,7 @@
 namespace SMS\PaymentBundle\Controller;
 
 use SMS\PaymentBundle\Entity\Registration;
+use SMS\PaymentBundle\Entity\PaymentType;
 use SMS\PaymentBundle\Form\RegistrationType;
 use SMS\PaymentBundle\BaseController\BaseController;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\Method;
@@ -10,6 +11,7 @@ use Sensio\Bundle\FrameworkExtraBundle\Configuration\Route;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\Template;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
+use SMS\UserBundle\Entity\Student;
 
 /**
  * Registration controller.
@@ -66,63 +68,85 @@ class RegistrationController extends BaseController
      * Creates a new registration entity.
      *
      * @Route("/new", name="registration_new", options={"expose"=true})
-     * @Method({"GET", "POST"})
+     * @Method("GET")
      * @Template("SMSPaymentBundle:registration:new.html.twig")
      */
     public function newAction(Request $request)
     {
-        $registration = new Registration();
-        $form = $this->createForm(RegistrationType::class, $registration, array('establishment' => $this->getUser()->getEstablishment()));
-        $form->handleRequest($request);
+      // registration form
+      $form = $this->createForm(RegistrationType::class, null, array('establishment' => $this->getUser()->getEstablishment()))->handleRequest($request);
 
-        if ($form->isSubmitted() && $form->isValid() && $form->get('save')->isClicked()) {
-            $this->getEntityManager()->insert($registration , $this->getUser());
-            $this->flashSuccessMsg('registration.add.success');
-            return $this->redirectToRoute('registration_index');
-        }
+      $student = $this->getStudentEntityManager();
+      $student->buildDatatable();
 
-        return array(
-            'registration' => $registration,
-            'form' => $form->createView(),
-        );
+      return array('students' => $student , "form" => $form->createView());
     }
 
     /**
-     * Finds and displays a registration entity.
+     * Lists all student entities.
      *
-     * @Route("/{id}", name="registration_show", options={"expose"=true})
+     * @Route("/registration_student", name="registration_student_results")
      * @Method("GET")
+     * @return Response
      */
-    public function showAction(Registration $registration)
+    public function indexRegistrationResultsAction()
     {
-        $deleteForm = $this->createDeleteForm($registration);
+        $student = $this->getStudentEntityManager();
+        $student->buildDatatable();
 
-        return $this->render('SMSPaymentBundle:registration:show.html.twig', array(
-            'registration' => $registration,
-            'delete_form' => $deleteForm->createView(),
-        ));
+        $query = $this->getDataTableQuery()->getQueryFrom($student);
+
+        $user = $this->getUser();
+        $function = function($qb) use ($user)
+        {
+            $qb->join('student.establishment', 'establishment')
+                ->andWhere('establishment.id = :establishment')
+                ->andWhere('student.id != :userId')
+                ->setParameter('userId', $user->getId())
+        				->setParameter('establishment', $user->getEstablishment()->getId());
+        };
+
+        $query->addWhereAll($function);
+
+        return $query->getResponse();
     }
 
     /**
-     * Displays a form to edit an existing registration entity.
+     * Bulk delete action.
      *
-     * @Route("/{id}/edit", name="registration_edit", options={"expose"=true})
-     * @Method({"GET", "POST"})
-     * @Template("SMSPaymentBundle:registration:edit.html.twig")
+     * @param Request $request
+     *
+     * @Route("/bulk/new/{id}", name="registration_bulk_new", options={"expose"=true})
+     * @Method("POST")
+     *
+     * @return Response
      */
-    public function editAction(Request $request, Registration $registration)
+    public function bulkNewAction(PaymentType $paymentType, Request $request)
     {
-        $editForm = $this->createForm(RegistrationType::class, $registration, array('establishment' => $this->getUser()->getEstablishment()))->handleRequest($request);
-        if ($editForm->isSubmitted() && $editForm->isValid() && $editForm->get('save')->isClicked()) {
-            $this->getEntityManager()->update($registration);
-            $this->flashSuccessMsg('registration.edit.success');
-            return $this->redirectToRoute('registration_index');
+        $isAjax = $request->isXmlHttpRequest();
+
+        if ($isAjax) {
+            $data = array('students' => $request->request->get('data'),
+                          'months' => $request->request->get('months'),
+                          'paymentType' => $paymentType,
+                          'user' => $this->getUser());
+
+            $token = $request->request->get('token');
+
+            if (!$this->isCsrfTokenValid('paymentType', $token)) {
+                throw new AccessDeniedException('The CSRF token is invalid.');
+            }
+
+            if (empty($data['students']) || empty($data['months'])){
+              throw new AccessDeniedException('Data is invalid.');
+            }
+
+            $this->getEntityManager()->newRegistration(Student::class, $data);
+
+            return new Response($this->get('translator')->trans('registration.add.success'), 200);
         }
 
-        return array(
-            'registration' => $registration,
-            'form' => $editForm->createView(),
-        );
+        return new Response('Bad Request', 400);
     }
 
     /**
@@ -161,40 +185,6 @@ class RegistrationController extends BaseController
     }
 
     /**
-     * Deletes a registration entity.
-     *
-     * @Route("/{id}", name="registration_delete")
-     * @Method("DELETE")
-     */
-    public function deleteAction(Request $request, Registration $registration)
-    {
-        $form = $this->createDeleteForm($registration)->handleRequest($request);
-
-        if ($form->isSubmitted() && $form->isValid()) {
-            $this->getEntityManager()->delete($registration);
-            $this->flashSuccessMsg('registration.delete.one.success');
-        }
-
-        return $this->redirectToRoute('registration_index');
-    }
-
-    /**
-     * Creates a form to delete a registration entity.
-     *
-     * @param Registration $registration The registration entity
-     *
-     * @return \Symfony\Component\Form\Form The form
-     */
-    private function createDeleteForm(Registration $registration)
-    {
-        return $this->createFormBuilder()
-            ->setAction($this->generateUrl('registration_delete', array('id' => $registration->getId())))
-            ->setMethod('DELETE')
-            ->getForm()
-        ;
-    }
-
-    /**
      * Get registration Entity Manager Service.
      *
      * @return SMS\Classes\Services\EntityManager
@@ -208,4 +198,21 @@ class RegistrationController extends BaseController
         }
 
         return $this->get('sms.datatable.registration');
-    }}
+    }
+
+    /**
+     * Get student Entity Manager Service.
+     *
+     * @return API\Services\EntityManager
+     *
+     * @throws \NotFoundException
+     */
+    protected function getStudentEntityManager()
+    {
+        if (!$this->has('sms.datatable.registration.students')){
+           throw $this->createNotFoundException('Service Not Found');
+        }
+
+        return $this->get('sms.datatable.registration.students');
+    }
+}

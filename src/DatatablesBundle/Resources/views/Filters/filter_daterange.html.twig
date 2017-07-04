@@ -1,0 +1,88 @@
+{##
+ # This file is part of the SgDatatablesBundle package.
+ #
+ # (c) stwe <https://github.com/stwe/DatatablesBundle>
+ #
+ # For the full copyright and license information, please view the LICENSE
+ # file that was distributed with this source code.
+ #}
+
+{% block html %}
+  <input
+    type="text"
+    class="individual_filtering sg-daterange{% if column.filter.class %} {{ column.filter.class }}{% endif %}"
+    style="{% if column.width %} width:{{ column.width }};{% endif %}"
+    placeholder="{{ column.title|striptags|trim }}"
+    data-filter-property-id="{{ filterColumnId }}"
+    {% if column.name %}
+    name="{{ column.name }}"
+    {% endif %}/>
+{% endblock %}
+
+{% block javascript %}
+  <div class="uk-modal" id="modal_daterange">
+    <div class="uk-modal-dialog">
+      <div class="uk-modal-header uk-margin-medium-bottom">
+          <h3 class="uk-modal-title">{{"daterange.title"|trans}}</h3>
+      </div>
+      <div class="uk-grid" data-uk-grid-margin>
+        <div class="uk-width-small-1-2">
+          <div class="uk-input-group">
+            <span class="uk-input-group-addon">
+              <i class="uk-input-group-icon uk-icon-calendar"></i>
+            </span>
+            <label for="ts_dp_start">{{"daterange.start_date"|trans}}</label>
+            <input class="md-input" type="text" id="ts_dp_start">
+          </div>
+        </div>
+        <div class="uk-width-small-1-2">
+          <div class="uk-input-group">
+            <span class="uk-input-group-addon">
+              <i class="uk-input-group-icon uk-icon-calendar"></i>
+            </span>
+            <label for="ts_dp_end">{{"daterange.end_date"|trans}}</label>
+            <input class="md-input" type="text" id="ts_dp_end">
+          </div>
+        </div>
+      </div>
+      <div class="uk-modal-footer uk-text-right">
+        <button type="button" class="md-btn md-btn-flat uk-modal-close">{{ 'datatables.dialog.close'|trans({}, 'messages') }}</button>
+        <button type="button" id="daterangeCancel" class="md-btn md-btn-flat md-btn-flat-danger">{{ 'daterange.cancel'|trans({}, 'messages') }}</button>
+        <button type="button" id="daterangeApply" class="md-btn md-btn-flat md-btn-flat-primary">{{ 'daterange.apply'|trans({}, 'messages') }}</button>
+      </div>
+    </div>
+  </div>
+  <script type="text/javascript">
+    a = UIkit.modal("#modal_daterange", {
+      center: !0
+    });
+    $("#{{ tableId }} .sg-daterange").on("focus", function() {
+      a.isActive()
+        ? a.hide()
+        : a.show()
+    });
+    var o = $("#ts_dp_start"),
+      l = $("#ts_dp_end"),
+      s = UIkit.datepicker(o, {format: "{{ 'daterange.format'|trans({}, 'messages') }}"}),
+      c = UIkit.datepicker(l, {format: "{{ 'daterange.format'|trans({}, 'messages') }}"});
+    o.on("change", function() {
+      c.options.minDate = o.val()
+    }),
+    l.on("change", function() {
+      s.options.maxDate = l.val()
+    }),
+    $("#daterangeApply").on("click", function(e) {
+      e.preventDefault(),
+      a.hide(),
+      $("#{{ tableId }} .sg-daterange").val(o.val() + " - " + l.val()).change().blur()
+    }),
+    $("#daterangeCancel").on("click", function(e) {
+      e.preventDefault(),
+      a.hide(),
+      o.val(""),
+      l.val(""),
+      $("#{{ tableId }} .sg-daterange").val(""),
+      $("#{{ tableId }} .sg-daterange").change()
+    })
+  </script>
+{% endblock %}

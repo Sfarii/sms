@@ -1,0 +1,36 @@
+<script>
+$(function() {
+	var $token = $('input[type="hidden"]');
+	var $grade = $('.gradeField');
+	var $studentType = $('.studentTypeField');
+
+	// When grade gets selected ...
+	$grade.change(function() {
+	  // ... retrieve the corresponding form.
+	  var $form = $(this).closest('form');
+	  // Simulate form data, but only include the selected grade value.
+	  var data = {};
+	  data[$grade.attr('name')] = $grade.val();
+	  data[$token.attr('name')] = $token.val();
+		data[$studentType.attr('name')] = $studentType.val();
+	  // Submit data via AJAX to the form's action path.
+	  $.ajax({
+	    url : $form.attr('action'),
+	    type: $form.attr('method'),
+	    data : data,
+        cache: false,
+        timeout: 3000,
+	    success: function(html) {
+	      // Replace current position field ...
+	      $('.sectionField').parent(".uk-form-row").empty().append(
+	        // ... with the returned one from the AJAX response.
+	        $(html).find('.sectionField').parent()
+	      );
+	      altair_forms.init();
+	      // Position field now displays the appropriate positions.
+	    }
+	  });
+	});
+
+});
+</script>

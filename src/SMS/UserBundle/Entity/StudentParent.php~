@@ -14,8 +14,6 @@ use Vich\UploaderBundle\Mapping\Annotation as Vich;
  */
 class StudentParent extends User
 {
-
-
     /**
      * @var string
      *
@@ -102,7 +100,7 @@ class StudentParent extends User
     private $students;
 
     /**
-     * constructor.
+     * User constructor.
      */
     public function __construct()
     {

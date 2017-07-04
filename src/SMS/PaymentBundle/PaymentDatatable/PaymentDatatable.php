@@ -15,7 +15,6 @@ class PaymentDatatable extends AbstractDatatableView
     /**
      * @var String Class Names
      */
-    protected $sectionClass;
     protected $paymentTypeClass;
     protected $month;
 
@@ -44,22 +43,12 @@ class PaymentDatatable extends AbstractDatatableView
     }
 
     /**
-     * Section class
-     *
-     * @param String Class Names
-     */
-    function setSectionClass( $sectionClass)
-    {
-        $this->sectionClass = $sectionClass;
-    }
-    /**
      * {@inheritdoc}
      */
     public function buildDatatable(array $options = array())
     {
 
       $establishment = $this->securityToken->getToken()->getUser()->getEstablishment();
-      $sections = $this->em->getRepository($this->sectionClass)->findBy(array("establishment" => $establishment));
       $typePayments = $this->em->getRepository($this->paymentTypeClass)->findBy(array("establishment" => $establishment));
 
         $this->callbacks->set(array(
@@ -91,35 +80,12 @@ class PaymentDatatable extends AbstractDatatableView
         ));
 
         $this->ajax->set(array(
-            'url' => $this->router->generate('payment_results'),
+            'url' => $this->router->generate('payment_results', array("id" => $options['id'])),
             'type' => 'GET',
             'pipeline' => 0
         ));
 
         $this->columnBuilder
-            ->add(null, 'multiselect', array(
-                'actions' => array(
-                    array(
-                        'route' => 'payment_bulk_delete',
-                        'icon' => '&#xE872;',
-                        'label' => $this->translator->trans('action.delete'),
-                        'attributes' => array(
-                            'rel' => 'tooltip',
-                            'title' => $this->translator->trans('action.delete'),
-                            'class' => 'md-btn buttons-copy buttons-html5',
-                            'role' => 'button'
-                        ),
-                    ),
-                )
-            ))
-            ->add('student.section.sectionName', 'column', array(
-                'title' => $this->translator->trans('attendance_student.field.sectionName'),
-                'filter' => array('select', array(
-                    'search_type' => 'eq',
-                    'select_options' => array('' => $this->translator->trans('filter.field.all')) + $this->getCollectionAsOptionsArray($sections, 'sectionName', 'sectionName'),
-                    'class' => "md-input"
-                ))
-            ))
             ->add('month', 'column', array(
                 'title' => $this->translator->trans('payment.field.month'),
                 'filter' => array('select', array(
@@ -133,14 +99,16 @@ class PaymentDatatable extends AbstractDatatableView
                 'filter' => array('text', array(
                     'search_type' => 'eq',
                     'class' => "md-input"
-                ))
+                )),
+                "render" => $this->translator->trans('payment.unit.price')
             ))
             ->add('credit', 'column', array(
                 'title' => $this->translator->trans('payment.field.credit'),
                 'filter' => array('text', array(
                     'search_type' => 'eq',
                     'class' => "md-input"
-                ))
+                )),
+                "render" => $this->translator->trans('payment.unit.price')
             ))
             ->add('paymentType.TypePaymentName', 'column', array(
                 'title' => $this->translator->trans('paymentType.field.TypePaymentName'),
@@ -150,34 +118,9 @@ class PaymentDatatable extends AbstractDatatableView
                     'class' => "md-input"
                 ))
             ))
-            ->add('student.firstName', 'column', array(
-                'title' => $this->translator->trans('payment.field.student.firstName'),
-                'filter' => array('text', array(
-                    'search_type' => 'eq',
-                    'class' => "md-input"
-                ))
-            ))
-            ->add('student.lastName', 'column', array(
-                'title' => $this->translator->trans('payment.field.student.lastName'),
-                'filter' => array('text', array(
-                    'search_type' => 'eq',
-                    'class' => "md-input"
-                ))
-            ))
             ->add(null, 'action', array(
                 'title' => $this->translator->trans('datatables.actions.title'),
                 'actions' => array(
-                    array(
-                        'route' => 'payment_show',
-                        'route_parameters' => array(
-                            'id' => 'id'
-                        ),
-                        'icon' => '&#xE8F4;',
-                        'attributes' => array(
-                            'rel' => 'tooltip',
-                            'title' => $this->translator->trans('datatables.actions.show'),
-                        ),
-                    ),
                     array(
                         'route' => 'payment_edit',
                         'route_parameters' => array(
@@ -187,6 +130,17 @@ class PaymentDatatable extends AbstractDatatableView
                         'attributes' => array(
                             'rel' => 'tooltip',
                             'title' => $this->translator->trans('datatables.actions.edit'),
+                        ),
+                    ),
+                    array(
+                        'route' => 'payment_pdf',
+                        'route_parameters' => array(
+                            'id' => 'id'
+                        ),
+                        'icon' => '&#xE8AD;',
+                        'attributes' => array(
+                            'rel' => 'tooltip',
+                            'title' => $this->translator->trans('datatables.actions.pdf'),
                         ),
                     )
                 )

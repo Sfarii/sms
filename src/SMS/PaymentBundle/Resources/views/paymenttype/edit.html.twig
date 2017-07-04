@@ -34,6 +34,16 @@
               {{ form_errors(form.price) }}
             </div>
           </div>
+					<div class="uk-form-row uk-input-group">
+            <span class="uk-input-group-addon">
+              <i class="md-list-addon-icon material-icons md-24">&#xE227;</i>
+            </span>
+            <label class="uk-form-label">{{ form_label(form.registrationFee) }}</label>
+            {{ form_widget(form.registrationFee)}}
+            <div class="parsley-errors-list filled uk-text-danger">
+              {{ form_errors(form.registrationFee) }}
+            </div>
+          </div>
             {{ form_widget(form) }}
 
             {{ form_end(form) }}

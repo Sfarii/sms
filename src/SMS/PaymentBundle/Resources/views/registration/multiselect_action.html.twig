@@ -1,0 +1,71 @@
+<script type="text/javascript">
+  $(function() {
+    $("#sms_paymentbundle_registration_paymentType").on('change', function() {
+      if (this.value == "") {
+        $(".error").css("display", '');
+      } else {
+        $(".error").css("display", 'none');
+      }
+    });
+    $(".registration_add").on('click', function(event) {
+      var length = $("input.student_datatable_multiselect_checkbox:checkbox:checked").length;
+      var modal = UIkit.modal(".uk-modal");
+      var error = false;
+      if ($("#sms_paymentbundle_registration_paymentType").val() == "") {
+        $(".error").css("display", '');
+        error = true;
+        return;
+      } else {
+        $(".error").css("display", 'none');
+      }
+      var months = [];
+      $.each($("#sms_paymentbundle_registration_months option:selected"), function() {
+        months.push($(this).val());
+      });
+
+      event.preventDefault();
+
+      if (modal.isActive()) {
+        modal.hide();
+      }
+
+      if (length > 0 && error == false) {
+        UIkit.modal.confirm("{{ 'datatables.bulk.confirmMsg'|trans({}, 'messages') }} ", function() {
+          {% set token = csrf_token('paymentType') %}
+
+          $.ajax({
+            url: Routing.generate('registration_bulk_new', {id: $("#sms_paymentbundle_registration_paymentType").val()}),
+            type: "POST",
+            cache: false,
+            data: {
+              'months': months,
+              'data': $("input:checkbox:checked.student_datatable_multiselect_checkbox", oTable.rows().nodes()).serializeArray(),
+              'token': '{{ token }}'
+            },
+            success: function(msg) {
+              new UIkit.notify({
+                message: "<a href='#' class='notify-action'><span class='uk-icon-times'></span></a>" + msg,
+                status: "error",
+                timeout: 5000,
+                group: null,
+                pos: 'top-right'
+              });
+            },
+            error: function(XMLHttpRequest, textStatus, errorThrown) {
+              console.log(XMLHttpRequest + ' ' + textStatus + ' ' + errorThrown);
+              new UIkit.notify({
+                message: "<a href='#' class='notify-action'><span class='uk-icon-times'></span></a>" + textStatus,
+                status: "error",
+                timeout: 5000,
+                group: null,
+                pos: 'top-right'
+              });
+            }
+          })
+        });
+      } else {
+        UIkit.modal.alert("{{ 'datatables.bulk.selectError'|trans({}, 'messages') }}");
+      }
+    });
+  });
+</script>

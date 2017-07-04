@@ -40,7 +40,7 @@ class BaseController extends Controller
      *
      * @throws \NotFoundException
      */
-    protected function getPaymentEntityManager()
+    protected function getEntityManager()
     {
         if (!$this->has('sms.payment.entity_manager')){
            throw $this->createNotFoundException('Service Not Found');

@@ -8,22 +8,26 @@ use Symfony\Component\Form\FormEvents;
 use Symfony\Component\Form\FormInterface;
 use Symfony\Bridge\Doctrine\Form\Type\EntityType;
 use Doctrine\ORM\EntityManager;
-use Symfony\Component\Security\Core\Authentication\Token\Storage\TokenStorageInterface;
-use Symfony\Component\Validator\Constraints\NotBlank;
 use Doctrine\ORM\EntityRepository;
-use SMS\EstablishmentBundle\Entity\Establishment;
-use SMS\EstablishmentBundle\Entity\Grade;
-use SMS\EstablishmentBundle\Entity\Section;
+use Symfony\Component\Form\Extension\Core\Type\SubmitType;
+use Symfony\Component\Validator\Constraints\NotBlank;
 
 /**
  * Class GradeSectionFilterListener
  *
  * @author Rami Sfari <rami2sfari@gmail.com>
  * @copyright Copyright (c) 2017, SMS
- * @package API\Form\EventSubscriber
+ * @package SMS\UserBundle\Form\EventSubscriber
  */
 class GradeSectionFilterListener implements EventSubscriberInterface
 {
+
+    const ADD = 'ADD';
+    const EDIT = 'EDIT';
+    /**
+     * @var String
+     */
+    private $_action ;
 
     /**
      * @var EntityManager
@@ -31,7 +35,14 @@ class GradeSectionFilterListener implements EventSubscriberInterface
     protected $em;
 
     /**
-     * @var EntityManager
+     * @var String Class Names
+     */
+    protected $studentClass;
+    protected $gradeClass;
+    protected $sectionClass;
+
+    /**
+     * @var Establishment
      */
     protected $establishment;
 
@@ -40,11 +51,13 @@ class GradeSectionFilterListener implements EventSubscriberInterface
      *
      * @param EntityManager $em
      */
-    function __construct(EntityManager $em , Establishment $establishment )
+    function __construct(EntityManager $em , $gradeClass , $sectionClass ,$establishment)
     {
         $this->em = $em;
         $this->establishment = $establishment;
-    }
+        $this->gradeClass = $gradeClass;
+        $this->sectionClass = $sectionClass;
+      }
 
     public static function getSubscribedEvents()
     {
@@ -61,49 +74,53 @@ class GradeSectionFilterListener implements EventSubscriberInterface
      * @param Grade $grade
      * @return Void
      */
-    public function addElements(FormInterface $form, Grade $grade = null ) {
-        // Remove the submit button, we will place this at the end of the form later
-        $submit = $form->get('save');
+    public function addElements(FormInterface $form, $grade) {
         $form->remove('save');
         $establishment = $this->establishment ;
         // Add the grade element
         $form->add('grade' , EntityType::class , array(
                     'data'          => $grade,
-                    'class'         => Grade::class,
+                    'class'         => $this->gradeClass,
+                    'property'      => 'gradeName',
                     'query_builder' => function (EntityRepository $er) use ($establishment) {
                         return $er->createQueryBuilder('grade')
                                   ->join('grade.establishment', 'establishment')
                                   ->andWhere('establishment.id = :establishment')
                                   ->setParameter('establishment', $establishment->getId());
                     },
-                    'property'      => 'gradeName',
-                    'placeholder'   => 'filter.field.grade',
+                    'placeholder'   => 'filter.field.select_grade',
                     'mapped'        => false,
-                    'constraints'   => [new NotBlank()],
                     'label'         => 'filter.field.grade',
                     'attr'          => [ 'class'=> 'gradeField'])
-        );
-
-        // Section are empty, unless we actually supplied a grade
-        $sections = array();
-        if ($grade) {
-            // Fetch the section from specified grade
-            $repo = $this->em->getRepository(Section::class);
-            $sections = $repo->findByGrade($grade, array('name' => 'asc'));
-        }
-        // Add the Section element
-        $form->add('section' , EntityType::class , array(
-                    'class'         => Section::class,
+        )->add('section' , EntityType::class , array(
+                    'class'         => $this->sectionClass,
                     'property'      => 'sectionName',
-                    'placeholder'   => 'filter.field.section',
+                    'query_builder' => function (EntityRepository $er) use ($establishment , $grade) {
+                        return $er->createQueryBuilder('section')
+                                  ->join('section.grade', 'grade')
+                                  ->andWhere('grade.id = :grade')
+                                  ->setParameter('grade', $grade)
+                                  ->join('section.establishment', 'establishment')
+                                  ->andWhere('establishment.id = :establishment')
+                                  ->setParameter('establishment', $establishment->getId());
+                    },
+                    'placeholder'   => 'filter.field.select_section',
                     'label'         => 'filter.field.section',
-                    'constraints'   => [new NotBlank()],
-                    'choices'       => $sections,
                     'attr'          => [ 'class'=> 'sectionField']
                     )
                 );
-        // Add submit button again, this time, it's back at the end of the form
-        $form->add($submit);
+    }
+
+    public function removeElement($form)
+    {
+      $form->remove('save');
+      $form->add('save', SubmitType::class, array(
+          'validation_groups' => "SimpleRegistration",
+          'label' => 'md-fab'
+      ));
+      $form->remove('grade');
+      $form->remove('section');
+
     }
 
     /**
@@ -112,9 +129,32 @@ class GradeSectionFilterListener implements EventSubscriberInterface
     public function onPreSubmit(FormEvent $event) {
         $form = $event->getForm();
         $data = $event->getData();
-        // Note that the data is not yet hydrated into the entity.
-        $grade = $this->em->getRepository(Grade::class)->find($data['grade']);
-        $this->addElements($form, $grade);
+        if (array_key_exists('studentType', $data) && $data['studentType'] == true) {
+          // Note that the data is not yet hydrated into the entity.
+          $grade = array_key_exists('grade', $data) ? $this->em->getRepository($this->gradeClass)->find($data['grade']) : null;
+          $this->addElements($form, $grade);
+          unset($data['save']);
+          if ($this->_action == Self::EDIT){
+            $form->add('save', SubmitType::class, array(
+                'validation_groups' => "InternEdit",
+                'label' => 'md-fab'
+            ));
+          }else
+          if (array_key_exists('show_username_password', $data) && $this->_action == Self::ADD) {
+            $form->add('save', SubmitType::class, array(
+                'validation_groups' => "InternRegistration",
+                'label' => 'md-fab'
+            ));
+          }else {
+            $form->add('save', SubmitType::class, array(
+                'validation_groups' => "Intern",
+                'label' => 'md-fab'
+            ));
+          }
+        }else{
+          $this->removeElement($form);
+        }
+
     }
 
     /**
@@ -123,12 +163,16 @@ class GradeSectionFilterListener implements EventSubscriberInterface
     public function onPreSetData(FormEvent $event) {
         $data = $event->getData();
         $form = $event->getForm();
-        // We might have an empty data (when we insert a new data, for instance)
-        $grade = null;
-        if (!is_null($data)){
-            $grade = $data->getSection() ? $data->getSection()->getGrade() : null;
+        if (!$data || null === $data->getId()) {
+            $this->_action = self::ADD ;
+        }else{
+            $this->_action = self::EDIT ;
+            if ($data->getStudentType() == true) {
+              // We might have an empty data (when we insert a new data, for instance)
+              $grade = $data->getSection() ? $data->getSection()->getGrade() : null;
+              $this->addElements($form, $grade);
+            }
         }
-        $this->addElements($form, $grade);
     }
 
 }

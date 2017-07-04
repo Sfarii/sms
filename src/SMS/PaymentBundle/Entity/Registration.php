@@ -33,12 +33,20 @@ class Registration
     private $registered;
 
     /**
-     * Many Registrations have One RegistrationType.
-     * @ORM\ManyToOne(targetEntity="RegistrationType", inversedBy="registrations" ,fetch="EXTRA_LAZY")
-     * @ORM\JoinColumn(name="type_registration_id", referencedColumnName="id")
+     * Many Payments have One PaymentType.
+     * @ORM\ManyToOne(targetEntity="PaymentType", inversedBy="payments" ,fetch="EXTRA_LAZY")
+     * @ORM\JoinColumn(name="type_payment_id", referencedColumnName="id")
      * @Assert\NotBlank()
      */
-    private $registrationType;
+    private $paymentType;
+
+    /**
+     * @var array
+     *
+     * @ORM\Column(name="month", type="array")
+     * @Assert\NotBlank()
+     */
+    private $months;
 
     /**
      * @var datetime $created
@@ -63,7 +71,7 @@ class Registration
 
     /**
      * One Student has Many Registrations.
-     * @ORM\ManyToOne(targetEntity="SMS\UserBundle\Entity\Student" ,fetch="EXTRA_LAZY")
+     * @ORM\ManyToOne(targetEntity="SMS\UserBundle\Entity\Student" , inversedBy="registrations" ,fetch="EXTRA_LAZY")
      * @ORM\JoinColumn(name="student_id", referencedColumnName="id")
      */
     private $student;
@@ -74,6 +82,15 @@ class Registration
      * @ORM\JoinColumn(name="establishment_id", referencedColumnName="id")
      */
     private $establishment;
+
+    /**
+     * Registration constructor.
+     */
+    public function __construct()
+    {
+        $this->registered = true;
+        $this->months = array();
+    }
 
     /**
     * @ORM\PrePersist
@@ -172,30 +189,6 @@ class Registration
     }
 
     /**
-     * Set registrationType
-     *
-     * @param \SMS\PaymentBundle\Entity\RegistrationType $registrationType
-     *
-     * @return Registration
-     */
-    public function setRegistrationType(\SMS\PaymentBundle\Entity\RegistrationType $registrationType = null)
-    {
-        $this->registrationType = $registrationType;
-
-        return $this;
-    }
-
-    /**
-     * Get registrationType
-     *
-     * @return \SMS\PaymentBundle\Entity\RegistrationType
-     */
-    public function getRegistrationType()
-    {
-        return $this->registrationType;
-    }
-
-    /**
      * Set user
      *
      * @param \SMS\UserBundle\Entity\User $user
@@ -265,5 +258,66 @@ class Registration
     public function getEstablishment()
     {
         return $this->establishment;
+    }
+
+    /**
+     * Set paymentType
+     *
+     * @param \SMS\PaymentBundle\Entity\PaymentType $paymentType
+     *
+     * @return Registration
+     */
+    public function setPaymentType(\SMS\PaymentBundle\Entity\PaymentType $paymentType = null)
+    {
+        $this->paymentType = $paymentType;
+
+        return $this;
+    }
+
+    /**
+     * Get paymentType
+     *
+     * @return \SMS\PaymentBundle\Entity\PaymentType
+     */
+    public function getPaymentType()
+    {
+        return $this->paymentType;
+    }
+
+    /**
+     * Set months
+     *
+     * @param array $months
+     *
+     * @return Registration
+     */
+    public function setMonths($months)
+    {
+        $this->months = $months;
+
+        return $this;
+    }
+
+    /**
+     * Get months
+     *
+     * @return array
+     */
+    public function getMonths()
+    {
+        return $this->months;
+    }
+
+    /**
+     * {@inheritdoc}
+     */
+    public function addMonths($months)
+    {
+        foreach ($months as $month) {
+          if (!in_array($month, $this->months, true)) {
+              $this->months[] = $month;
+          }
+        }
+        return $this;
     }
 }

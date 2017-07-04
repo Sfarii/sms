@@ -4,6 +4,7 @@ namespace SMS\UserBundle\Repository;
 
 use Doctrine\ORM\EntityRepository;
 use SMS\UserBundle\Entity\User;
+use Doctrine\ORM\Query;
 /**
  * StudentRepository
  *
@@ -12,7 +13,7 @@ use SMS\UserBundle\Entity\User;
  */
 class StudentRepository extends EntityRepository
 {
-	/**
+    /**
      * @param string[] $criteria format: array('user' => <user_id>, 'name' => <name>)
      */
     public function findByUniqueCriteria(array $criteria)
@@ -21,30 +22,38 @@ class StudentRepository extends EntityRepository
         return $this->_em->getRepository(User::class)->findBy($criteria);
     }
 
+      /**
+     * Get All registred users
+     *
+     * @return array
+     */
+    public function findAllRegistredStudent()
+    {
+        $query = $this->createQueryBuilder('student')
+          ->join('student.registrations', 'registrations')
+          ->select("partial student.{id ,imageName , username , firstName , lastName , phone , email}")
+          ->distinct('student.id')
+          ->getQuery();
+        $query->setHint(Query::HINT_FORCE_PARTIAL_LOAD, 1);
+        return $query;
+    }
+
     /**
      * Get Student By Section And establishment
      *
      * @param integer $section
      * @return array
      */
-	public function findBySectionAndEstablishment($section,$establishment)
-	{
-		return $this->createQueryBuilder('student')
-				->join('student.section', 'section')
-				->join('student.establishment', 'establishment')
-				->andWhere('section.id = :section')
-				->setParameter('section', $section)
-				->andWhere('establishment.id = :establishment')
-				->setParameter('establishment', $establishment)
-				->getQuery()
-				->getResult();
-	}
-
-    public function findLast() {
+    public function findBySectionAndEstablishment($section, $establishment)
+    {
         return $this->createQueryBuilder('student')
-                    ->select("student.recordeNumber as recordeNumber")
-                    ->setMaxResults( 1 )
-                    ->orderBy('student.id', 'DESC')
-                    ->getQuery()->getSingleResult();
+                ->join('student.section', 'section')
+                ->join('student.establishment', 'establishment')
+                ->andWhere('section.id = :section')
+                ->setParameter('section', $section)
+                ->andWhere('establishment.id = :establishment')
+                ->setParameter('establishment', $establishment)
+                ->getQuery()
+                ->getResult();
     }
 }

@@ -1,4 +1,4 @@
-<?php 
+<?php
 namespace API\EventListener;
 
 use Symfony\Component\HttpKernel\Event\GetResponseEvent;

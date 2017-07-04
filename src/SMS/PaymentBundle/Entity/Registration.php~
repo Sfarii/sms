@@ -11,7 +11,7 @@ use Symfony\Bridge\Doctrine\Validator\Constraints\UniqueEntity;
  *
  * @ORM\Table(name="registration")
  * @ORM\HasLifecycleCallbacks
- * @UniqueEntity(fields={ "registrationType" , "student", "establishment"}, errorPath="student")
+ * @UniqueEntity(fields={ "registrationType" , "student", "establishment"}, errorPath="registrationType")
  * @ORM\Entity(repositoryClass="SMS\PaymentBundle\Repository\RegistrationRepository")
  */
 class Registration
@@ -33,12 +33,20 @@ class Registration
     private $registered;
 
     /**
-     * Many Registrations have One RegistrationType.
-     * @ORM\ManyToOne(targetEntity="RegistrationType", inversedBy="registrations" ,fetch="EXTRA_LAZY")
-     * @ORM\JoinColumn(name="type_registration_id", referencedColumnName="id")
+     * Many Payments have One PaymentType.
+     * @ORM\ManyToOne(targetEntity="PaymentType", inversedBy="payments" ,fetch="EXTRA_LAZY")
+     * @ORM\JoinColumn(name="type_payment_id", referencedColumnName="id")
      * @Assert\NotBlank()
      */
-    private $registrationType;
+    private $paymentType;
+
+    /**
+     * @var array
+     *
+     * @ORM\Column(name="month", type="array")
+     * @Assert\NotBlank()
+     */
+    private $months;
 
     /**
      * @var datetime $created
@@ -74,6 +82,14 @@ class Registration
      * @ORM\JoinColumn(name="establishment_id", referencedColumnName="id")
      */
     private $establishment;
+
+    /**
+     * Registration constructor.
+     */
+    public function __construct()
+    {
+        $this->registered = true;
+    }
 
     /**
     * @ORM\PrePersist
@@ -172,30 +188,6 @@ class Registration
     }
 
     /**
-     * Set registrationType
-     *
-     * @param \SMS\PaymentBundle\Entity\RegistrationType $registrationType
-     *
-     * @return Registration
-     */
-    public function setRegistrationType(\SMS\PaymentBundle\Entity\RegistrationType $registrationType = null)
-    {
-        $this->registrationType = $registrationType;
-
-        return $this;
-    }
-
-    /**
-     * Get registrationType
-     *
-     * @return \SMS\PaymentBundle\Entity\RegistrationType
-     */
-    public function getRegistrationType()
-    {
-        return $this->registrationType;
-    }
-
-    /**
      * Set user
      *
      * @param \SMS\UserBundle\Entity\User $user
@@ -265,5 +257,29 @@ class Registration
     public function getEstablishment()
     {
         return $this->establishment;
+    }
+
+    /**
+     * Set paymentType
+     *
+     * @param \SMS\PaymentBundle\Entity\PaymentType $paymentType
+     *
+     * @return Registration
+     */
+    public function setPaymentType(\SMS\PaymentBundle\Entity\PaymentType $paymentType = null)
+    {
+        $this->paymentType = $paymentType;
+
+        return $this;
+    }
+
+    /**
+     * Get paymentType
+     *
+     * @return \SMS\PaymentBundle\Entity\PaymentType
+     */
+    public function getPaymentType()
+    {
+        return $this->paymentType;
     }
 }

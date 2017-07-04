@@ -37,19 +37,18 @@ class Payment
     /**
      * @var int
      *
-     * @ORM\Column(name="price", type="integer")
+     * @ORM\Column(name="price", type="float")
      * @Assert\NotBlank()
      * @Assert\Range(
      *      min = 0,
      *      max = 999999999)
-     * @Assert\Regex("(\d+(?:,\d+)?)")
      */
     private $price;
 
     /**
      * @var int
      *
-     * @ORM\Column(name="credit", type="integer" , nullable = true)
+     * @ORM\Column(name="credit", type="float" , nullable = true)
      */
     private $credit;
 

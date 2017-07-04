@@ -120,12 +120,10 @@ class StudentController extends BaseController
      */
     public function editAction(Request $request, Student $student)
     {
+        $editForm = $this->createForm(StudentType::class, $student, array('establishment' => $this->getUser()->getEstablishment()))->handleRequest($request);
 
-        $editForm = $this->createForm(StudentType::class, $student, array(
-                              'establishment' => $this->getUser()->getEstablishment()
-                          ))->handleRequest($request);
         if ($editForm->isSubmitted() && $editForm->isValid() && $editForm->get('save')->isClicked()) {
-            $this->getUserEntityManager()->editUser($student);
+            $this->getUserEntityManager()->updateStudent($student);
             $this->flashSuccessMsg('student.edit.success');
             if ($student->getId() !== $this->getUser()->getId()){
               return $this->redirectToRoute('student_index');

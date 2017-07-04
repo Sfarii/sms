@@ -1,5 +1,8 @@
 action:
     delete: Delete   # FIXME
+    registered: Registered
+    not_registered: Not Registered
+
 
 author:
     created: Created   # FIXME
@@ -8,6 +11,7 @@ author:
     updated: Updated   # FIXME
 
 payment:
+    payment_info: Payment Information
     delete:
         fail: Could not delete from the specified payments   # FIXME
         success: The specified payments successfully deleted   # FIXME
@@ -17,16 +21,27 @@ payment:
         success: Payment successfully edited   # FIXME
     edit:
         title: Edit Payment   # FIXME
-
+    to:
+      Bill To
+    email:
+      notification: Notification
+      footer: © Copyright Texhnolyze Solution All Rights Reserved
     field:
         credit: Credit   # FIXME
         month: Month   # FIXME
         paymentType: Payment Type   # FIXME
-        price: Price   # FIXME
+        select_paymentType: Select Payment Type ...  # FIXME
+        price: Price paid   # FIXME
         student: Student   # FIXME
         student.firstName: Student First Name   # FIXME
         student.lastName: Student Last Name
-
+        student.section: Section Name
+        student.grade: Grade Name
+        student.parent: Student Parent
+        total: Price Total
+        id: Payment Number
+    unit:
+        price: TND
     list:
         title: Payment Lists   # FIXME
 
@@ -38,7 +53,22 @@ payment:
         title: Payment Information   # FIXME
 
     unit: Dinar   # FIXME
-
+search:
+    student:
+        title: Filter By Student
+        by_every_thing: Search
+        extern: Extern Student
+        intren: Intern Student
+    payment:
+        title: Filter By Payment
+        paid: Paid
+        has_credit: Has Credit
+        not_paid: Not Paid
+    registration:
+        title: Filter By Registration
+        registred: Registred
+        not_registred: Not Registred
+    submit: Filter
 paymentType:
     delete:
         fail: Could not delete from the specified payments Types  # FIXME
@@ -57,13 +87,23 @@ paymenttype:
     field:
         TypePaymentName: Payment Type Name   # FIXME
         price: Price   # FIXME
+        registrationFee: Registration Fee   # FIXME
+        months: Months   # FIXME
+        select_months: Select Months ..   # FIXME
 
     list:
         title: Payment Type Lists   # FIXME
-
+    detail:
+        credit: Credit
+        credit_info: Sum of all the Credit
+        income: Income
+        income_info: Sum of all the money earned from this payment type
+        student: Student
+        student_info: Sum of all the Student subscribe in this payment type
     new:
         title: Adding an Payment Type   # FIXME
-
+    stats:
+        not_found: Not enough data available
     show:
         detail: Payment Type Detail   # FIXME
         title: Payment Type information   # FIXME
@@ -85,7 +125,8 @@ registration:
         student: Student   # FIXME
         student.firstName: Student First Name   # FIXME
         student.lastName: Student Last Name
-
+    paymenttype:
+        error: This value should not be blank.
     list:
         title: Registration Lists   # FIXME
 
@@ -93,8 +134,8 @@ registration:
         title: Adding an Registration   # FIXME
 
     registered:
-        false_label: registered   # FIXME
-        true_label: not registered   # FIXME
+        false_label: Registered   # FIXME
+        true_label: Not Registered   # FIXME
 
     show:
         detail: Registration Detail   # FIXME
@@ -130,3 +171,15 @@ registrationtype:
     show:
         detail: Registration Type Detail   # FIXME
         title: Registration Type Information   # FIXME
+1: January
+2: February
+3: March
+4: April
+5: May
+6: June
+7: July
+8: August
+9: September
+10: October
+11: November
+12: December

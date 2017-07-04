@@ -47,7 +47,7 @@ services:
           - { name: form.type }
   sms.form.student:
       class: %form_user_student_class%
-      arguments: ['@security.token_storage' , "@doctrine.orm.entity_Manager"]
+      arguments: ['@security.token_storage' , "@doctrine.orm.entity_Manager", %grade_class% , %section_class%]
       tags:
           - { name: form.type }
   #form type

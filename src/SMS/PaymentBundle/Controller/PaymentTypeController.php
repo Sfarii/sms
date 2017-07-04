@@ -94,11 +94,8 @@ class PaymentTypeController extends BaseController
      */
     public function showAction(PaymentType $paymentType)
     {
-        $deleteForm = $this->createDeleteForm($paymentType);
-
         return $this->render('SMSPaymentBundle:paymenttype:show.html.twig', array(
             'paymentType' => $paymentType,
-            'delete_form' => $deleteForm->createView(),
         ));
     }
 

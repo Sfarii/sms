@@ -10,7 +10,7 @@ use Symfony\Bridge\Doctrine\Validator\Constraints\UniqueEntity;
  * Payment
  *
  * @ORM\Table(name="payment")
- * @UniqueEntity(fields={"month" , "paymentType" , "student", "establishment"} , errorPath="student")
+ * @UniqueEntity(fields={"month" , "paymentType" , "student", "establishment"} , errorPath="month")
  * @ORM\HasLifecycleCallbacks
  * @ORM\Entity(repositoryClass="SMS\PaymentBundle\Repository\PaymentRepository")
  */
@@ -28,7 +28,7 @@ class Payment
     /**
      * @var string
      *
-     * @ORM\Column(name="month", type="string", length=50)
+     * @ORM\Column(name="month", type="string", length=2)
      * @Assert\Choice({"01" , "02" , "03" ,  "04" ,"05" , "06" , "07" ,"08" ,"09"  , "10"  ,"11"  , "12"})
      * @Assert\NotBlank()
      */
@@ -37,15 +37,18 @@ class Payment
     /**
      * @var int
      *
-     * @ORM\Column(name="price", type="integer")
-     * @Assert\Expression(expression="this.getPaymentType().getPrice() >= value")
+     * @ORM\Column(name="price", type="float")
+     * @Assert\NotBlank()
+     * @Assert\Range(
+     *      min = 0,
+     *      max = 999999999)
      */
     private $price;
 
     /**
      * @var int
      *
-     * @ORM\Column(name="credit", type="integer" , nullable = true)
+     * @ORM\Column(name="credit", type="float" , nullable = true)
      */
     private $credit;
 

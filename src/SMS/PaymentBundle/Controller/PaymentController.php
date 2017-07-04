@@ -3,6 +3,8 @@
 namespace SMS\PaymentBundle\Controller;
 
 use SMS\PaymentBundle\Entity\Payment;
+use SMS\PaymentBundle\Entity\Registration;
+use SMS\UserBundle\Entity\Student;
 use SMS\PaymentBundle\Form\PaymentType;
 use SMS\PaymentBundle\BaseController\BaseController;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\Method;
@@ -10,6 +12,7 @@ use Sensio\Bundle\FrameworkExtraBundle\Configuration\Route;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\Template;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
+use SMS\PaymentBundle\Form\SearchType;
 
 /**
  * Payment controller.
@@ -30,38 +33,42 @@ class PaymentController extends BaseController
      * @Method("GET")
      * @Template("SMSPaymentBundle:payment:index.html.twig")
      */
-    public function indexAction()
+    public function indexAction(Request $request)
     {
-        $payments = $this->getPaymentEntityManager();
-        $payments->buildDatatable();
+        $form = $this->createForm(SearchType::class,null, array( 'establishment' => $this->getUser()->getEstablishment()))->handleRequest($request);
 
-        return array('payments' => $payments);
+        $pagination = $this->getPaginator()->paginate(
+            $this->getDoctrine()->getRepository(Student::class)->findAllRegistredStudent(), /* query NOT result */
+            $request->query->getInt('page', 1)/*page number*/,
+            9/*limit per page*/
+        );
+
+        // parameters to template
+        return array('pagination' => $pagination , 'form' => $form->createView());
     }
 
     /**
-     * Lists all payment entities.
+     * Finds and displays a payment entity.
      *
-     * @Route("/results", name="payment_results")
+     * @Route("/pdf/{id}", name="payment_pdf", options={"expose"=true})
      * @Method("GET")
-     * @return Response
      */
-    public function indexResultsAction()
+    public function pdfAction(Payment $payment)
     {
-        $payments = $this->getPaymentEntityManager();
-        $payments->buildDatatable();
+      $html = $this->renderView('SMSPaymentBundle:pdf:payment.html.twig', array(
+          'payment'  => $payment
+      ));
 
-        $query = $this->getDataTableQuery()->getQueryFrom($payments);
-        $user = $this->getUser();
-        $function = function($qb) use ($user)
-        {
-            $qb->join('payment.establishment', 'establishment')
-                ->andWhere('establishment.id = :establishment')
-        				->setParameter('establishment', $user->getEstablishment()->getId());
-        };
-
-        $query->addWhereAll($function);
-        return $query->getResponse();
+      return new Response(
+          $this->get('knp_snappy.pdf')->getOutputFromHtml($html),
+          200,
+          array(
+              'Content-Type'          => 'application/pdf',
+              'Content-Disposition'   => sprintf('attachment; filename="%.pdf"' , $payment->getStudent())
+          )
+      );
     }
+
     /**
      * Creates a new payment entity.
      *
@@ -90,19 +97,48 @@ class PaymentController extends BaseController
     }
 
     /**
-     * Finds and displays a payment entity.
+     * Finds and displays a registration entity.
      *
-     * @Route("/{id}", name="payment_show", options={"expose"=true})
+     * @Route("/payment/user/{id}", name="user_payment_show", options={"expose"=true})
      * @Method("GET")
      */
-    public function showAction(Payment $payment)
+    public function showAction(Student $student)
     {
-        $deleteForm = $this->createDeleteForm($payment);
+        $payments = $this->getPaymentEntityManager();
+        $payments->buildDatatable(array('id' => $student->getId()));
 
-        return $this->render('SMSPaymentBundle:payment:show.html.twig', array(
-            'payment' => $payment,
-            'delete_form' => $deleteForm->createView(),
+        return $this->render('SMSPaymentBundle:registration:show.html.twig', array(
+            'student' => $student,
+            'payments' => $payments
         ));
+    }
+
+    /**
+     * Lists all payment entities.
+     *
+     * @Route("/results/payment/{id}", name="payment_results")
+     * @Method("GET")
+     * @return Response
+     */
+    public function indexPaymentResultsAction(Student $student)
+    {
+        $payments = $this->getPaymentEntityManager();
+        $payments->buildDatatable(array('id' => $student->getId()));
+
+        $query = $this->getDataTableQuery()->getQueryFrom($payments);
+        $user = $this->getUser();
+        $function = function($qb) use ($user , $student)
+        {
+            $qb->join('payment.establishment', 'establishment')
+              ->join('payment.student', 'student')
+                ->andWhere('student.id = :student')
+                ->andWhere('establishment.id = :establishment')
+                ->setParameter('student', $student->getId())
+        				->setParameter('establishment', $user->getEstablishment()->getId());
+        };
+
+        $query->addWhereAll($function);
+        return $query->getResponse();
     }
 
     /**
@@ -210,4 +246,20 @@ class PaymentController extends BaseController
         }
 
         return $this->get('sms.datatable.payment');
-    }}
+    }
+
+    /**
+     * Get paginator Manager Service.
+     *
+     * @return SMS\Classes\Services\EntityManager
+     * @throws \NotFoundException
+     */
+    protected function getPaginator()
+    {
+        if (!$this->has('knp_paginator')){
+           throw $this->createNotFoundException('Service Not Found');
+        }
+
+        return $this->get('knp_paginator');
+    }
+}

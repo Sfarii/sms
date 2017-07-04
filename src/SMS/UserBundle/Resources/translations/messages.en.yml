@@ -1,6 +1,12 @@
 action:
-  activate: Activate
-  deactivate: Deactivate
+    delete: Delete
+    edit: Edit
+    help: Help
+    picture: Picture   # FIXME
+    print: Print
+    activate: Activate
+    deactivate: Deactivate
+
 administrator:
     add:
         success: administrator account successfully added    # FIXME
@@ -29,6 +35,8 @@ author:
 
 filter:
     field:
+        select_section: Select Section ...
+        select_grade: Select Grade ...
         grade: Grade   # FIXME
         all: All   # FIXME
         section: Section   # FIXME
@@ -131,6 +139,9 @@ registration:
                 Note: Please change your password soon as you get this message.
         author: The Texhnolyze Solution Team .
 student:
+    studentType:
+        false_label: Extern Student  # FIXME
+        true_label: Intern Student   # FIXME
     add:
         success: Student account successfully added    # FIXME
     edit:
@@ -144,7 +155,9 @@ student:
         recordeNumber: Recorde Number   # FIXME
         section: Section   # FIXME
         studentParent: Student Parent   # FIXME
-
+        select_studentParent: Select Student Parent ...   # FIXME
+        phone: Phone
+        studentType: Intern/Extern
     list:
         title: Lists of student   # FIXME
 

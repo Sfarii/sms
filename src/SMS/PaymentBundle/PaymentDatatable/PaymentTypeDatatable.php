@@ -72,6 +72,11 @@ class PaymentTypeDatatable extends AbstractDatatableView
             ))
             ->add('price', 'column', array(
                 'title' => $this->translator->trans('paymenttype.field.price'),
+                "render" => $this->translator->trans('payment.unit.price')
+            ))
+            ->add('registrationFee', 'column', array(
+                'title' => $this->translator->trans('paymenttype.field.registrationFee'),
+                "render" => $this->translator->trans('payment.unit.price')
             ))
             ->add('user.username', 'column', array(
                 'title' => $this->translator->trans('author.creator'),

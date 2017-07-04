@@ -4,7 +4,6 @@ services:
       class: %payment_datatable%
       parent: sg_datatables.datatable.abstract
       calls:
-          - [ setSectionClass , ["%section_class%"]]
           - [ setPaymentTypeClass , ["%payment_type_class%"]]
           - [ setMonth , ["%months%"]]
   sms.datatable.paymentType:
@@ -14,11 +13,24 @@ services:
       class: %registration_datatable%
       parent: sg_datatables.datatable.abstract
       calls:
-          - [ setSectionClass , ["%section_class%"]]
-          - [ setRegistrationTypeClass , ["%registration_type_class%"]]
-  sms.datatable.registrationType:
-      class: %registration_type_datatable%
+          - [ setPaymentTypeClass , ["%payment_type_class%"]]
+  sms.datatable.registration.students:
+      class: %registration_users_datatable%
       parent: sg_datatables.datatable.abstract
+  #Services
+  sms.payment.entity_manager:
+      class: %payment_entity_manager%
+      arguments: ["@doctrine.orm.entity_Manager"]
+      calls:
+        - [setMailer, ['@sms.payment.mailer']]
+  sms.payment.mailer:
+      class: %payment_mail_manager%
+      arguments: ["@mailer" , "@templating"]
+      calls:
+        - [setEmail, ["%mailer_user%"]]
+        - [setPaymentTemplatePath, ["%payment_template%"]]
+        - [setRegistrationTemplatePath, ["%registration_template%"]]
+  #Form
   sms.form.type.payment:
       class: %payment_form%
       arguments: ['@doctrine.orm.entity_Manager' , %student_class% , %grade_class% , %section_class% , %establishment_class% ]
@@ -26,6 +38,6 @@ services:
           - { name: form.type }
   sms.form.type.registration:
       class: %registration_form%
-      arguments: ['@doctrine.orm.entity_Manager' , %student_class% , %grade_class% , %section_class% , %establishment_class% ]
+      arguments: [ %establishment_class% ]
       tags:
           - { name: form.type }

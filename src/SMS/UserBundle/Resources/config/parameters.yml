@@ -19,3 +19,6 @@ parameters:
   registration_template_without_password: SMSUserBundle:user/registration:emailV1.html.twig
   #Form Type
   user_role_type: SMS\UserBundle\Form\Type\RoleType
+  #Dependency Injection class
+  grade_class: SMS\EstablishmentBundle\Entity\Grade
+  section_class: SMS\EstablishmentBundle\Entity\Section

@@ -1,106 +1,166 @@
 {% extends 'layout/base.html.twig' %}
 
-{% block heading_actions %} 
+{% block heading_actions %}
   <a href="{{ path('paymenttype_index') }}">
     <i class="md-icon material-icons">&#xE5C4;</i>
   </a>
   <a href="{{ path('paymenttype_new') }}">
     <i class="md-icon material-icons">&#xE5C8;</i>
   </a>
-{% endblock %} 
-
-{% block sticky_button %}
-<a class="md-fab md-fab-primary" href="{{ path('paymenttype_edit', { 'id': paymentType.id }) }}">
-    <i class="material-icons">&#xE254;</i>
-</a>
 {% endblock %}
 
-{% block title_page %} 
- {{ 'paymenttype.show.title'|trans }}
+{% block sticky_button %}
+  <a class="md-fab md-fab-primary" href="{{ path('paymenttype_edit', { 'id': paymentType.id }) }}">
+    <i class="material-icons">&#xE254;</i>
+  </a>
+{% endblock %}
+
+{% block title_page %}
+  {{ 'paymenttype.show.title'|trans }}
 {% endblock %}
 
 {% block body %}
-    <div class="uk-grid uk-grid-medium" data-uk-grid-margin>
+  <!-- circular charts -->
+  <div class="uk-grid uk-grid-width-small-1-2 uk-grid-width-large-1-3 uk-grid-width-xlarge-1-3 uk-text-center uk-sortable sortable-handler" data-uk-grid-margin>
 
-        <div class="uk-width-xLarge-8-10  uk-width-large-7-10">
-            <div class="md-card">
-                <div class="md-card-toolbar">
-                    <h3 class="md-card-toolbar-heading-text">
-                        {{ 'paymenttype.show.detail'|trans }}
-                    </h3>
-                </div>
-                <div class="md-card-content">
-                    <ul class="md-list">
-                        <li>
-                            <div class="md-list-content">
-                            <span class="md-list-heading uk-text-large">{{ paymentType.id }}</span>
-                        </div>
-                        <span class="uk-text-small uk-text-muted uk-display-block"> {{'paymenttype.field.id'|trans }}</span>
-                    </li>
-                        <li>
-                            <div class="md-list-content">
-                            <span class="md-list-heading uk-text-large">{{ paymentType.TypePaymentName }}</span>
-                        </div>
-                        <span class="uk-text-small uk-text-muted uk-display-block"> {{'paymenttype.field.TypePaymentName'|trans }}</span>
-                    </li>
-                        <li>
-                            <div class="md-list-content">
-                            <span class="md-list-heading uk-text-large">{% if paymentType.created %}{{ paymentType.created|date('Y-m-d H:i:s') }}{% endif %}</span>
-                        </div>
-                        <span class="uk-text-small uk-text-muted uk-display-block"> {{'paymenttype.field.created'|trans }}</span>
-                    </li>
-                        <li>
-                            <div class="md-list-content">
-                            <span class="md-list-heading uk-text-large">{% if paymentType.updated %}{{ paymentType.updated|date('Y-m-d H:i:s') }}{% endif %}</span>
-                        </div>
-                        <span class="uk-text-small uk-text-muted uk-display-block"> {{'paymenttype.field.updated'|trans }}</span>
-                    </li>
-                        <li>
-                            <div class="md-list-content">
-                            <span class="md-list-heading uk-text-large">{{ paymentType.price }}</span>
-                        </div>
-                        <span class="uk-text-small uk-text-muted uk-display-block"> {{'paymenttype.field.price'|trans }}</span>
-                    </li>                    </ul>
-                </div>
-            </div>
+    <div>
+      <div class="md-card md-card-hover md-card-overlay">
+        <div class="md-card-content">
+          <h1 class="heading_a uk-padding-center uk-text-bold">
+            50
+          </h1>
         </div>
-        <div class="uk-width-xLarge-2-10 uk-width-large-3-10">
-            <div class="md-card">
-                <div class="md-card-toolbar">
-                    <h3 class="md-card-toolbar-heading-text">
-                        {{ 'author.info'|trans }}
-                    </h3>
-                </div>
-                <div class="md-card-content">
-                    <ul class="md-list md-list-addon">
-                        <li>
-                            <div class="md-list-addon-element">
-                                <i class="md-list-addon-icon material-icons">&#xE7FD;</i>
-                            </div>
-                            <div class="md-list-content">
-                                <span class="md-list-heading">{{ paymentType.user.username }}</span>
-                                <span class="uk-text-small uk-text-muted">{{ 'author.creator'|trans }}</span>
-                            </div>
-                        </li>
-                        <li>
-                            <div class="md-list-addon-element">
-                                <i class="md-list-addon-icon material-icons">&#xE8DF;</i>
-                            </div>
-                            <div class="md-list-content"><span class="md-list-heading">{% if paymentType.created %}{{ paymentType.created|date('d M Y') }}{% endif %}</span>
-                                <span class="uk-text-small uk-text-muted">{{ 'author.updated'|trans }}</span>
-                            </div>
-                        </li>
-                        <li>
-                            <div class="md-list-addon-element">
-                                <i class="md-list-addon-icon material-icons">&#xE8B5;</i>
-                            </div>
-                            <div class="md-list-content"><span class="md-list-heading">{% if paymentType.created %}{{ paymentType.created|date('d M Y') }}{% endif %}</span>
-                                <span class="uk-text-small uk-text-muted">{{ 'author.created'|trans }}</span>
-                            </div>
-                        </li>
-                    </ul>
-                </div>
-            </div>
+        <div class="md-card-overlay-content">
+          <div class="uk-clearfix md-card-overlay-header">
+            <i class="md-icon material-icons md-card-overlay-toggler">&#xE5D4;</i>
+            <h3>
+              {{'paymenttype.detail.student'|trans }}
+            </h3>
+          </div>
+          {{'paymenttype.detail.student_info'|trans }}
+        </div>
+      </div>
+    </div>
+
+    <div>
+      <div class="md-card md-card-hover md-card-overlay">
+        <div class="md-card-content">
+          <h1 class="heading_a uk-padding-center uk-text-bold">
+              50
+          </h1>
+        </div>
+        <div class="md-card-overlay-content">
+          <div class="uk-clearfix md-card-overlay-header">
+            <i class="md-icon material-icons md-card-overlay-toggler">&#xE5D4;</i>
+            <h3>
+              {{'paymenttype.detail.income'|trans }}
+            </h3>
+          </div>
+          {{'paymenttype.detail.income_info'|trans }}
+        </div>
+      </div>
+    </div>
+    <div>
+      <div class="md-card md-card-hover md-card-overlay">
+        <div class="md-card-content">
+          <h1 class="heading_a uk-padding-center uk-text-bold">
+            50
+          </h1>
+        </div>
+        <div class="md-card-overlay-content">
+          <div class="uk-clearfix md-card-overlay-header">
+            <i class="md-icon material-icons md-card-overlay-toggler">&#xE5D4;</i>
+            <h3>
+              {{'paymenttype.detail.credit'|trans }}
+            </h3>
+          </div>
+          {{'paymenttype.detail.credit_info'|trans }}
+        </div>
+      </div>
+    </div>
+  </div>
+  <div class="md-card">
+    <div class="md-card-content">
+        <div class="echart-large">
+          <span class="chart_icon">
+            <i class="material-icons">&#xE88B;</i>
+            <h1 class="uk-text-large">{{ 'paymenttype.stats.not_found'|trans }}</h1>
+          </span>
         </div>
     </div>
+  </div>
+  <div class="uk-grid uk-grid-medium" data-uk-grid-margin>
+
+    <div class="uk-width-xLarge-8-10  uk-width-large-7-10">
+      <div class="md-card">
+        <div class="md-card-toolbar">
+          <h3 class="md-card-toolbar-heading-text">
+            {{ 'paymenttype.show.detail'|trans }}
+          </h3>
+        </div>
+        <div class="md-card-content">
+          <ul class="md-list">
+            <li>
+              <div class="md-list-content">
+                <span class="md-list-heading uk-text-large">{{ paymentType.TypePaymentName }}</span>
+              </div>
+              <span class="uk-text-small uk-text-muted uk-display-block">
+                {{'paymenttype.field.TypePaymentName'|trans }}</span>
+            </li>
+            <li>
+              <div class="md-list-content">
+                <span class="md-list-heading uk-text-large">{{ paymentType.price }}</span>
+              </div>
+              <span class="uk-text-small uk-text-muted uk-display-block">
+                {{'paymenttype.field.price'|trans }}</span>
+            </li>
+          </ul>
+        </div>
+      </div>
+    </div>
+    <div class="uk-width-xLarge-2-10 uk-width-large-3-10">
+      <div class="md-card">
+        <div class="md-card-toolbar">
+          <h3 class="md-card-toolbar-heading-text">
+            {{ 'author.info'|trans }}
+          </h3>
+        </div>
+        <div class="md-card-content">
+          <ul class="md-list md-list-addon">
+            <li>
+              <div class="md-list-addon-element">
+                <i class="md-list-addon-icon material-icons">&#xE7FD;</i>
+              </div>
+              <div class="md-list-content">
+                <span class="md-list-heading">{{ paymentType.user.username }}</span>
+                <span class="uk-text-small uk-text-muted">{{ 'author.creator'|trans }}</span>
+              </div>
+            </li>
+            <li>
+              <div class="md-list-addon-element">
+                <i class="md-list-addon-icon material-icons">&#xE8DF;</i>
+              </div>
+              <div class="md-list-content">
+                <span class="md-list-heading">
+                  {% if paymentType.created %}{{ paymentType.created|date('d M Y') }}{% endif %}
+                </span>
+                <span class="uk-text-small uk-text-muted">{{ 'author.updated'|trans }}</span>
+              </div>
+            </li>
+            <li>
+              <div class="md-list-addon-element">
+                <i class="md-list-addon-icon material-icons">&#xE8B5;</i>
+              </div>
+              <div class="md-list-content">
+                <span class="md-list-heading">
+                  {% if paymentType.created %}{{ paymentType.created|date('d M Y') }}{% endif %}
+                </span>
+                <span class="uk-text-small uk-text-muted">{{ 'author.created'|trans }}</span>
+              </div>
+            </li>
+          </ul>
+        </div>
+      </div>
+    </div>
+  </div>
 {% endblock %}

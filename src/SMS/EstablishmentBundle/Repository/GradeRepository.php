@@ -13,19 +13,19 @@ use Doctrine\ORM\EntityRepository;
 class GradeRepository extends EntityRepository
 {
 
-  /**
-     * Get Grade By Establishment
-     *
-     * @param Establishment $establishment
-     * @return array
-     */
-	public function findByEstablishment($establishment)
-	{
-		return $this->createQueryBuilder('grade')
-				->join('grade.establishment', 'establishment')
-				->andWhere('establishment.id = :establishment')
-				->setParameter('establishment', $establishment->getId())
-				->getQuery()
-				->getResult();
-	}
+    /**
+       * Get Grade By Establishment
+       *
+       * @param Establishment $establishment
+       * @return array
+       */
+  	public function findByEstablishment($establishment)
+  	{
+  		return $this->createQueryBuilder('grade')
+  				->join('grade.establishment', 'establishment')
+  				->andWhere('establishment.id = :establishment')
+  				->setParameter('establishment', $establishment->getId())
+  				->getQuery()
+  				->getResult();
+  	}
 }

@@ -25,6 +25,8 @@ use Symfony\Component\Security\Core\Authentication\Token\Storage\TokenStorageInt
  */
 class UsersListener implements EventSubscriberInterface
 {
+    const ADD = 'ADD';
+    const EDIT = 'EDIT';
 
     /**
      * @var String
@@ -74,14 +76,14 @@ class UsersListener implements EventSubscriberInterface
             $form->add($submit);
         }
         if (!$user || null === $user->getId()) {
-            $this->_action = 'ADD';
+            $this->_action = self::ADD ;
         } elseif ($this->tokenStorage->getToken()->getUser()->getId() === $user->getId()) {
             $form->remove('show_username_password')
                   ->add('enabled', CheckboxType::class, array(
                       'label' => 'user.field.enabled')
                     );
         } else {
-            $this->_action = 'EDIT';
+            $this->_action = self::EDIT ;
             $form->remove('show_username_password')
                         ->add('enabled', CheckboxType::class, array(
                             'label' => 'user.field.enabled'
@@ -91,9 +93,9 @@ class UsersListener implements EventSubscriberInterface
                             'empty_data'    => false,
                             'multiple'      => true)
                             )->add('save', SubmitType::class, array(
-                    'validation_groups' => "Edit",
-                    'label' => 'md-fab'
-                ));
+                                'validation_groups' => "Edit",
+                                'label' => 'md-fab'
+                            ));
         }
     }
 
@@ -101,7 +103,7 @@ class UsersListener implements EventSubscriberInterface
     {
         $user = $event->getData();
         $form = $event->getForm();
-        if (!$user||!array_key_exists('show_username_password', $user) || $this->_action == 'EDIT') {
+        if (!$user||!array_key_exists('show_username_password', $user) || $this->_action == self::EDIT) {
             return;
         }
         if (array_key_exists('show_username_password', $user)) {
@@ -114,10 +116,18 @@ class UsersListener implements EventSubscriberInterface
                 ->add('plainPassword', PasswordType::class, array(
                 'label' => 'user.field.password'
                     )
-                )->add('save', SubmitType::class, array(
-                'validation_groups' => "Registration",
-                'label' => 'md-fab'
-            ));
+                );
+                if (array_key_exists('studentType', $user)) {
+                  $form->add('save', SubmitType::class, array(
+                      'validation_groups' => "InternRegistration",
+                      'label' => 'md-fab'
+                  ));
+                }else {
+                  $form->add('save', SubmitType::class, array(
+                      'validation_groups' => "Registration",
+                      'label' => 'md-fab'
+                  ));
+                }
         } else {
             unset($user['save']);
             $form->add('save', SubmitType::class, array(

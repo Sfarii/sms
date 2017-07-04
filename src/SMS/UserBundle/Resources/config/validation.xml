@@ -12,6 +12,7 @@
             <option name="groups">
                 <value>Registration</value>
                 <value>Profile</value>
+                <value>InternRegistration</value>
             </option>
         </constraint>
 
@@ -22,6 +23,9 @@
                 <value>Registration</value>
                 <value>SimpleRegistration</value>
                 <value>Profile</value>
+                <value>InternRegistration</value>
+                <value>Intern</value>
+                <value>InternEdit</value>
             </option>
         </constraint>
 
@@ -30,6 +34,7 @@
                 <option name="groups">
                     <value>Registration</value>
                     <value>Profile</value>
+                    <value>InternRegistration</value>
                 </option>
             </constraint>
             <constraint name="Regex">
@@ -38,6 +43,7 @@
                 <option name="groups">
                     <value>Registration</value>
                     <value>Profile</value>
+                    <value>InternRegistration</value>
                 </option>
             </constraint>
             <constraint name="Length">
@@ -46,6 +52,7 @@
                 <option name="groups">
                     <value>Registration</value>
                     <value>Profile</value>
+                    <value>InternRegistration</value>
                 </option>
             </constraint>
         </property>
@@ -56,6 +63,9 @@
                     <value>Registration</value>
                     <value>Profile</value>
                     <value>SimpleRegistration</value>
+                    <value>Intern</value>
+                    <value>InternEdit</value>
+                    <value>InternRegistration</value>
                 </option>
             </constraint>
 
@@ -66,6 +76,9 @@
                     <value>Registration</value>
                     <value>Profile</value>
                     <value>SimpleRegistration</value>
+                    <value>Intern</value>
+                    <value>InternEdit</value>
+                    <value>InternRegistration</value>
                 </option>
             </constraint>
             <constraint name="Email">
@@ -73,6 +86,9 @@
                     <value>Registration</value>
                     <value>Profile</value>
                     <value>SimpleRegistration</value>
+                    <value>Intern</value>
+                    <value>InternEdit</value>
+                    <value>InternRegistration</value>
                 </option>
             </constraint>
         </property>
@@ -81,6 +97,7 @@
             <constraint name="NotBlank">
                 <option name="groups">
                     <value>Registration</value>
+                    <value>InternRegistration</value>
                     <value>ResetPassword</value>
                     <value>ChangePassword</value>
                 </option>
@@ -91,6 +108,7 @@
                 <option name="groups">
                     <value>Registration</value>
                     <value>Profile</value>
+                    <value>InternRegistration</value>
                     <value>ResetPassword</value>
                     <value>ChangePassword</value>
                 </option>

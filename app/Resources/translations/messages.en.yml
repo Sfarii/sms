@@ -8,6 +8,10 @@ header:
 delete: Delete
 file:
   upload_file: choose file
+daterange:
+    title: Date Range
+    start_date: Start Date
+    end_date: End Date
 #menu
 menu:
   feature.title: Feature

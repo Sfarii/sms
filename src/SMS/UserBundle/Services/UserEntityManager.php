@@ -76,7 +76,6 @@ class UserEntityManager
           //check and generate username and strong password
           $user = $this->checkAndGeneratePasswordAndUsername($user);
         }
-				$this->generateRecordeNumber($user);
         // password encode
         $password = $this->_passwordEncoder
                 ->encodePassword($user, $user->getPlainPassword());
@@ -91,6 +90,8 @@ class UserEntityManager
         }
         // saveUser the user in the database
         $this->saveUser($user);
+        // unique Recorde Number
+				$this->generateRecordeNumber($user);
         // send email
         if (!$autoUsername) {
           $this->_mailer->sendRegistrationEmail($user);
@@ -144,6 +145,17 @@ class UserEntityManager
       $this->_em->flush($user);
     }
 
+    public function updateStudent(UserInterface $user)
+    {
+      $this->updateCanonicalizer($user);
+      if ($user->getStudentType() == false){
+        $user->setSection(null);
+        $user->setStudentParent(null);
+      }
+      // saveUser the user in the database
+      $this->_em->flush($user);
+    }
+
     /**
      * @param SMS\UserBundle\Entity\UserInterface $user
      * @return void
@@ -151,8 +163,10 @@ class UserEntityManager
     public function generateRecordeNumber(UserInterface $user)
     {
         if ($user instanceof Student) {
-            $recordeNumber = sprintf("%03d-%03d-%06d", $this->_tokenStorage->getToken()->getUser()->getEstablishment()->getId() , $user->getSection()->getId() , $user->getId());
+            $recordeNumber = sprintf("%d-%02d-%06d", date("Y"), $user->getEstablishment()->getId() , $user->getId());
             $user->setRecordeNumber($recordeNumber);
+            // saveUser the user in the database
+            $this->saveUser($user);
         }
 
     }
@@ -183,19 +197,14 @@ class UserEntityManager
      * @param String $max_size
      * @return String
      */
-    public function generateUsername($firstName, $lastName, $maxSize = 6)
+    public function generateUsername($firstName, $lastName, $maxSize = 4)
     {
         $secondeString = mb_convert_case($lastName, MB_CASE_LOWER, "UTF-8");
         $firstString = mb_convert_case($firstName, MB_CASE_LOWER, "UTF-8");
         do {
             $username = substr($secondeString . $firstString , 0, $maxSize);
             $username .= trim(rand(0, 100));
-						$maxSize ++;
             $user = $this->_getUserRepository->findUserByUsername($username);
-
-						if (strlen($fullName) <= strlen($username)) {
-							return $this->randomPassword(4);
-						}
 
             if (is_null($user)) {
                 return $username ;

@@ -12,31 +12,20 @@ use Sg\DatatablesBundle\Datatable\View\Style;
  */
 class RegistrationDatatable extends AbstractDatatableView
 {
-    /**
-     * @var String Class Names
-     */
-    protected $sectionClass;
-    protected $registrationTypeClass;
+  /**
+   * @var String Class Names
+   */
+  protected $paymentTypeClass;
 
-    /**
-     * Session class
-     *
-     * @param String Class Names
-     */
-    function setRegistrationTypeClass( $registrationTypeClass)
-    {
-        $this->registrationTypeClass = $registrationTypeClass;
-    }
-
-    /**
-     * Section class
-     *
-     * @param String Class Names
-     */
-    function setSectionClass( $sectionClass)
-    {
-        $this->sectionClass = $sectionClass;
-    }
+  /**
+   * Session class
+   *
+   * @param String Class Names
+   */
+  function setPaymentTypeClass( $paymentTypeClass)
+  {
+      $this->paymentTypeClass = $paymentTypeClass;
+  }
 
 
     /**
@@ -45,8 +34,7 @@ class RegistrationDatatable extends AbstractDatatableView
     public function buildDatatable(array $options = array())
     {
       $establishment = $this->securityToken->getToken()->getUser()->getEstablishment();
-      $sections = $this->em->getRepository($this->sectionClass)->findBy(array("establishment" => $establishment));
-      $registrationTypes = $this->em->getRepository($this->registrationTypeClass)->findBy(array("establishment" => $establishment));
+      $typePayments = $this->em->getRepository($this->paymentTypeClass)->findBy(array("establishment" => $establishment));
 
 
         $this->callbacks->set(array(
@@ -70,7 +58,7 @@ class RegistrationDatatable extends AbstractDatatableView
             'scroll_collapse' => false,
             'search_delay' => 0,
             'state_duration' => 7200,
-            'class' => "uk-table uk-table-striped",
+            'class' => "uk-table uk-table-align-vertical uk-table-nowrap tablesorter tablesorter-altair",
             'individual_filtering' => true,
             'individual_filtering_position' => 'head',
             'use_integration_options' => true,
@@ -99,41 +87,24 @@ class RegistrationDatatable extends AbstractDatatableView
                     ),
                 )
             ))
-            ->add('student.section.sectionName', 'column', array(
-                'title' => $this->translator->trans('attendance_student.field.sectionName'),
+            ->add('paymentType.TypePaymentName', 'column', array(
+                'title' => $this->translator->trans('paymentType.field.TypePaymentName'),
                 'filter' => array('select', array(
                     'search_type' => 'eq',
-                    'select_options' => array('' => $this->translator->trans('filter.field.all')) + $this->getCollectionAsOptionsArray($sections, 'sectionName', 'sectionName'),
-                    'class' => "md-input"
-                ))
-            ))
-            ->add('registrationType.registrationTypeName', 'column', array(
-                'title' => $this->translator->trans('registrationType.field.registrationTypeName'),
-                'filter' => array('select', array(
-                    'search_type' => 'eq',
-                    'select_options' => array('' => $this->translator->trans('filter.field.all')) + $this->getCollectionAsOptionsArray($registrationTypes, 'registrationTypeName', 'registrationTypeName'),
-                    'class' => "md-input"
-                ))
-            ))
-            ->add('registrationType.registrationFee', 'column', array(
-                'title' => $this->translator->trans('registrationType.field.registrationFee'),
-                'filter' => array('text', array(
-                    'search_type' => 'eq',
-                    'class' => "md-input"
+                    'select_options' => array('' => $this->translator->trans('filter.field.all')) + $this->getCollectionAsOptionsArray($typePayments, 'TypePaymentName', 'TypePaymentName'),
+                    'class' => "tablesorter-filter"
                 ))
             ))
             ->add('student.firstName', 'column', array(
                 'title' => $this->translator->trans('registration.field.student.firstName'),
                 'filter' => array('text', array(
-                    'search_type' => 'eq',
-                    'class' => "md-input"
+                    'class' => "tablesorter-filter"
                 ))
             ))
             ->add('student.lastName', 'column', array(
                 'title' => $this->translator->trans('registration.field.student.lastName'),
                 'filter' => array('text', array(
-                    'search_type' => 'eq',
-                    'class' => "md-input"
+                    'class' => "tablesorter-filter"
                 ))
             ))
             ->add('registered', 'boolean', array(
@@ -143,9 +114,8 @@ class RegistrationDatatable extends AbstractDatatableView
                 'filter' => array('select', array(
                     'search_type' => 'eq',
                     'select_options' => array('' => $this->translator->trans('filter.field.all') , true => $this->translator->trans('registration.registered.true_label') , false => $this->translator->trans('registration.registered.false_label')) ,
-                    'class' => "md-input"
+                    'class' => "tablesorter-filter"
                 )),
-                'editable' => true,
             ))
         ;
     }

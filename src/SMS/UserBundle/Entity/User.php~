@@ -683,4 +683,28 @@ use Vich\UploaderBundle\Mapping\Annotation as Vich;
     {
         return $this->creator;
     }
+
+    /**
+     * Set establishment
+     *
+     * @param \SMS\EstablishmentBundle\Entity\Establishment $establishment
+     *
+     * @return User
+     */
+    public function setEstablishment(\SMS\EstablishmentBundle\Entity\Establishment $establishment = null)
+    {
+        $this->establishment = $establishment;
+
+        return $this;
+    }
+
+    /**
+     * Get establishment
+     *
+     * @return \SMS\EstablishmentBundle\Entity\Establishment
+     */
+    public function getEstablishment()
+    {
+        return $this->establishment;
+    }
 }

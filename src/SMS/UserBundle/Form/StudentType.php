@@ -8,15 +8,13 @@ use Symfony\Component\OptionsResolver\OptionsResolver;
 use Doctrine\ORM\EntityManager;
 use Symfony\Component\Form\Extension\Core\Type\TextType;
 use Symfony\Component\Form\Extension\Core\Type\DateType;
-use Symfony\Component\Form\Extension\Core\Type\PasswordType;
 use Symfony\Component\Form\Extension\Core\Type\SubmitType;
 use Symfony\Bridge\Doctrine\Form\Type\EntityType;
 use SMS\UserBundle\Entity\Student;
-use SMS\UserBundle\Entity\StudentParent;
-use SMS\EstablishmentBundle\Entity\Section;
+use Symfony\Component\Form\Extension\Core\Type\CheckboxType;
 use Vich\UploaderBundle\Form\Type\VichImageType;
 use SMS\UserBundle\Form\Type\GenderType;
-use Symfony\Component\Form\Extension\Core\Type\CheckboxType;
+use SMS\UserBundle\Form\EventSubscriber\StudentListener;
 use SMS\UserBundle\Form\EventSubscriber\UsersListener;
 use Doctrine\ORM\EntityRepository;
 use SMS\UserBundle\Form\EventSubscriber\GradeSectionFilterListener;
@@ -24,6 +22,11 @@ use Symfony\Component\Security\Core\Authentication\Token\Storage\TokenStorageInt
 
 class StudentType extends AbstractType
 {
+  /**
+   * @var String Class Names
+   */
+  protected $gradeClass;
+  protected $sectionClass;
 
   /**
    * @var TokenStorageInterface
@@ -40,10 +43,12 @@ class StudentType extends AbstractType
    *
    * @param EntityManager $em
    */
-  function __construct(TokenStorageInterface $tokenStorage ,EntityManager $em)
+  function __construct(TokenStorageInterface $tokenStorage ,EntityManager $em  , $gradeClass , $sectionClass)
   {
       $this->tokenStorage = $tokenStorage;
       $this->em = $em;
+      $this->gradeClass = $gradeClass;
+      $this->sectionClass = $sectionClass;
   }
 
     /**
@@ -75,27 +80,25 @@ class StudentType extends AbstractType
                 'label' => 'student.field.birthday' ,
                 'attr' => [ 'data-uk-datepicker'=> "{format:'YYYY-MM-DD'}"],
             ))
+            ->add('phone' ,TextType::class , array(
+                'label' => 'student.field.phone')
+            )
             ->add('email' ,TextType::class , array(
                 'label' => 'user.field.email')
-            )
-            ->add('studentParent' , EntityType::class , array(
-                'class' => StudentParent::class,
-                'query_builder' => function (EntityRepository $er) use ($establishment) {
-                    return $er->createQueryBuilder('studentParent')
-                              ->join('studentParent.establishment', 'establishment')
-                              ->andWhere('establishment.id = :establishment')
-                              ->setParameter('establishment', $establishment->getId());
-                },
-                'label' => 'student.field.studentParent',
-                'placeholder' => 'student.field.studentParent')
             )
             ->add('show_username_password', CheckboxType::class, array(
                 'label' => 'user.field.show_username_password',
                 'mapped' => false
                 )
             )
-            ->addEventSubscriber(new GradeSectionFilterListener($this->em , $establishment))
+            ->add('studentType', CheckboxType::class, array(
+                'label' => 'student.field.studentType',
+                'attr'  => [ 'class'=> 'studentTypeField']
+                )
+            )
             ->addEventSubscriber(new UsersListener($this->tokenStorage))
+            ->addEventSubscriber(new GradeSectionFilterListener($this->em , $this->gradeClass , $this->sectionClass , $establishment))
+            ->addEventSubscriber(new StudentListener($establishment))
             ->add('save', SubmitType::class ,array(
                 'validation_groups' => "SimpleRegistration",
                 'label' => 'md-fab'

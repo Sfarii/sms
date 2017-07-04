@@ -8,40 +8,27 @@ use Symfony\Component\OptionsResolver\OptionsResolver;
 use Symfony\Component\Form\Extension\Core\Type\CheckboxType;
 use Symfony\Component\Form\Extension\Core\Type\DateType;
 use Symfony\Bridge\Doctrine\Form\Type\EntityType;
-use Symfony\Component\Form\Extension\Core\Type\SubmitType;
 use SMS\PaymentBundle\Entity\Registration;
-use SMS\PaymentBundle\Entity\RegistrationType as TypeRegistration;
-use SMS\UserBundle\Entity\Student;
+use SMS\PaymentBundle\Entity\PaymentType as TypePayment;
 use Doctrine\ORM\EntityManager;
-use SMS\PaymentBundle\Form\EventSubscriber\GradeSectionStudentFilterListener;
 use API\Form\Type\HiddenEntityType;
+use API\Form\Type\MonthType;
 use SMS\EstablishmentBundle\Entity\Establishment;
 
 class RegistrationType extends AbstractType
 {
     /**
-     * @var EntityManager
-     */
-    protected $em;
-
-    /**
      * @var String Class Names
      */
-    protected $studentClass;
-    protected $gradeClass;
-    protected $sectionClass;
     protected $establishmentClass;
+
     /**
      * Constructor
      *
      * @param EntityManager $em
      */
-    function __construct(EntityManager $em , $studentClass , $gradeClass , $sectionClass , $establishmentClass)
+    function __construct( $establishmentClass)
     {
-        $this->em = $em;
-        $this->gradeClass = $gradeClass;
-        $this->sectionClass = $sectionClass;
-        $this->studentClass = $studentClass;
         $this->establishmentClass =  $establishmentClass;
     }
     /**
@@ -52,29 +39,28 @@ class RegistrationType extends AbstractType
       $establishment = $options['establishment'];
 
         $builder
-            ->addEventSubscriber(new GradeSectionStudentFilterListener($this->em ,$this->studentClass , $this->gradeClass , $this->sectionClass , $establishment))
-
-            ->add('registered' ,CheckboxType::class , array(
-                'label' => 'registration.field.registered')
-            )
-            ->add('registrationType' , EntityType::class , array(
-                'class' => TypeRegistration::class ,
-                'property' => "registrationTypeName",
+            ->add('paymentType' , EntityType::class , array(
+                'class' => TypePayment::class ,
+                'property' => "TypePaymentName",
                 'query_builder' => function ( $er) use ($establishment) {
-                    return $er->createQueryBuilder('provider')
-                              ->join('provider.establishment', 'establishment')
+                    return $er->createQueryBuilder('paymentType')
+                              ->join('paymentType.establishment', 'establishment')
                               ->andWhere('establishment.id = :establishment')
                               ->setParameter('establishment', $establishment->getId());
                 },
-                'placeholder'   => 'registration.field.select_registrationType',
-                'label' => 'registration.field.registrationType')
+                'placeholder'   => 'payment.field.select_paymentType',
+                'label' => 'payment.field.paymentType',
+                'attr'          => [ 'class'=> 'paymentTypeField'])
             )
-
-            ->add('establishment', HiddenEntityType::class, array(
-                'class' => $this->establishmentClass,
-                'data' =>  $establishment, // Field value by default
-                ))
-            ->add('save', SubmitType::class);
+            ->add('months' ,MonthType::class , array(
+                  'multiple' => true,
+                  'label' => 'paymenttype.field.months',
+                  'placeholder'   => 'paymenttype.field.select_months')
+              )
+            ->add('registration', CheckboxType::class, array(
+              'label' => 'registration.field.registered',
+                )
+            );
 
     }
 
@@ -83,9 +69,6 @@ class RegistrationType extends AbstractType
      */
     public function configureOptions(OptionsResolver $resolver)
     {
-        $resolver->setDefaults(array(
-            'data_class' => Registration::class
-        ));
         $resolver->setRequired('establishment');
     }
 

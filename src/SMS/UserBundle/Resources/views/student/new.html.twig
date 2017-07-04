@@ -84,6 +84,7 @@
               </div>
             </div>
           </div>
+          {% if form.studentParent is defined %}
           <h3 class="full_width_in_card heading_c">{{ 'user.show.parent_info'|trans }}</h3>
           <div class="uk-margin-medium-top uk-margin-large-bottom uk-width-large-1-2">
             <div class="uk-form-row uk-input-group">
@@ -97,6 +98,8 @@
               </div>
             </div>
           </div>
+          {% endif %}
+          {% if form.grade is defined and form.section is defined %}
           <h3 class="full_width_in_card heading_c">{{ 'user.show.school_info'|trans }}</h3>
           <div class="uk-grid uk-margin-medium-top uk-margin-large-bottom" data-uk-grid-margin>
             <div class="uk-width-medium-1-2">
@@ -120,6 +123,7 @@
               </div>
             </div>
           </div>
+          {% endif %}
           <h3 class="full_width_in_card heading_c">{{ 'user.show.contact_info'|trans }}</h3>
           <div class="uk-grid uk-margin-medium-top uk-margin-large-bottom" data-uk-grid-margin>
             <div class="uk-width-large-1-2">
@@ -134,6 +138,18 @@
                 </div>
               </div>
             </div>
+            <div class="uk-width-large-1-2">
+              <div class="uk-form-row uk-input-group">
+                <span class="uk-input-group-addon">
+                  <i class="md-list-addon-icon material-icons">&#xE0CD;</i>
+                </span>
+                <label class="uk-form-label">{{ form_label(form.phone) }}</label>
+                {{ form_widget(form.phone)}}
+                <div class="parsley-errors-list filled uk-text-danger">
+                  {{ form_errors(form.phone) }}
+                </div>
+              </div>
+						</div>
           </div>
         </div>
       </div>
@@ -145,6 +161,10 @@
 					<div class="uk-form-row">
             {{ form_widget(form.show_username_password, { 'attr': {'data-switchery-color': '#1976d2' , "data-switchery-size" : "medium" , "class" : "show_username_password" ,  "data-switchery" : ""} }) }}
             <label for="show_username_password" class="inline-label">{{ form_label(form.show_username_password) }}</label>
+          </div>
+          <div class="uk-form-row">
+            {{ form_widget(form.studentType, { 'attr': {'data-switchery-color': '#1976d2' , "data-switchery-size" : "medium" , "class" : "show_username_password studentTypeField" ,  "data-switchery" : ""} }) }}
+            <label for="show_username_password" class="inline-label">{{ form_label(form.studentType) }}</label>
           </div>
           {% if form.username is defined and form.plainPassword is defined %}
             <div class="uk-form-row">
@@ -178,5 +198,5 @@
   <script src="{{ asset('assets/js/custom/user_add.js')}}"></script>
   <!-- file input -->
   <script src="{{ asset('assets/js/custom/uikit_fileinput.min.js')}}"></script>
-  {% include 'filter/grade_section_filter.html.twig' %}
+  {% include '@SMSUser/student/filter.html.twig' %}
 {% endblock %}

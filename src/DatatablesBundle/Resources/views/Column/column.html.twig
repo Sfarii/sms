@@ -51,7 +51,7 @@
         {% endif %}
         {% if column.render %}
             "render": function(data, type, row, meta) {
-                return {{ column.render }}(data, type, row, meta);
+                return data + " " + "{{ column.render }}";
             },
         {% endif %}
         {% if column.editable %}

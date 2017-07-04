@@ -25,19 +25,26 @@ class Student extends User
      * @var string
      *
      * @ORM\Column(name="firstName", type="string", length=50)
-     * @Assert\NotBlank(groups= {"Registration" , "SimpleRegistration" , "Edit"}),
-     * @Assert\Regex(pattern="/^[a-z0-9 .\-]+$/i" ,match=true , groups= {"Registration" , "SimpleRegistration" , "Edit"})
-     * @Assert\Length(min = 2, max = 40 , groups= {"Registration" , "SimpleRegistration" , "Edit"})
+     * @Assert\NotBlank(groups= {"Registration" , "Intern" ,"InternRegistration"  , "SimpleRegistration" , "Edit","InternEdit"}),
+     * @Assert\Regex(pattern="/^[a-z0-9 .\-]+$/i" ,match=true , groups= {"Registration" , "Intern" ,"InternRegistration"  , "SimpleRegistration" , "Edit","InternEdit"})
+     * @Assert\Length(min = 2, max = 40 , groups= {"Registration" , "Intern" ,"InternRegistration"  ,"SimpleRegistration" , "Edit","InternEdit"})
      */
     private $firstName;
+
+    /**
+     * @var bool
+     *
+     * @ORM\Column(name="studentType", type="boolean")
+     */
+    private $studentType;
 
     /**
      * @var string
      *
      * @ORM\Column(name="lastName", type="string", length=50)
-     * @Assert\NotBlank(groups= {"Registration" , "SimpleRegistration" , "Edit"})
-     * @Assert\Regex(pattern="/^[a-z0-9 .\-]+$/i" ,match=true , groups= {"Registration" , "SimpleRegistration" , "Edit"})
-     * @Assert\Length(min = 2, max = 40 , groups= {"Registration" , "SimpleRegistration" , "Edit"})
+     * @Assert\NotBlank(groups= {"Registration" , "Intern" ,"InternRegistration"  , "SimpleRegistration" , "Edit","InternEdit"})
+     * @Assert\Regex(pattern="/^[a-z0-9 .\-]+$/i" ,match=true , groups= {"Registration" , "Intern" ,"InternRegistration"  , "SimpleRegistration" , "Edit","InternEdit"})
+     * @Assert\Length(min = 2, max = 40 , groups= {"Registration" , "Intern" ,"InternRegistration"  , "SimpleRegistration" , "Edit","InternEdit"})
      */
     private $lastName;
 
@@ -45,8 +52,8 @@ class Student extends User
      * @var string
      *
      * @ORM\Column(name="gender", type="string", length=30)
-     * @Assert\Choice(choices = {"gender.male", "gender.female", "gender.other"} , groups= {"Registration" , "SimpleRegistration" , "Edit"})
-     * @Assert\NotBlank(groups= {"Registration" , "SimpleRegistration" , "Edit"})
+     * @Assert\Choice(choices = {"gender.male", "gender.female", "gender.other"} , groups= {"Registration" , "Intern" ,"InternRegistration"  , "SimpleRegistration" , "Edit","InternEdit"})
+     * @Assert\NotBlank(groups= {"Registration" , "Intern" ,"InternRegistration"  , "SimpleRegistration" , "Edit","InternEdit"})
      */
     private $gender;
 
@@ -54,16 +61,30 @@ class Student extends User
      * @var \DateTime
      *
      * @ORM\Column(name="birthday", type="date")
-     * @Assert\NotBlank(groups= {"Registration" , "SimpleRegistration" , "Edit"})
-     * @Assert\Date(groups= {"Registration" , "SimpleRegistration" , "Edit"})
+     * @Assert\NotBlank(groups= {"Registration" , "Intern" ,"InternRegistration"  , "SimpleRegistration" , "Edit","InternEdit"})
+     * @Assert\Date(groups= {"Registration" , "Intern" ,"InternRegistration"  , "SimpleRegistration" , "Edit","InternEdit"})
      */
     private $birthday;
+
+    /**
+     * @var string
+     *
+     * @ORM\Column(name="phone", type="string", length=20)
+     * @Assert\Regex( pattern="/\d/", groups= {"Registration" , "Intern" ,"InternRegistration"  , "SimpleRegistration" , "Edit","InternEdit"}),
+     * @Assert\NotBlank(groups= {"Registration" , "Intern" ,"InternRegistration"  , "SimpleRegistration" , "Edit","InternEdit"}),
+     * @Assert\Length(
+     *    min = 8,
+     *    max = 20,
+     *    groups= {"Registration" , "Intern" ,"InternRegistration"  , "SimpleRegistration" , "Edit","InternEdit"}
+     * )
+     */
+    private $phone;
 
     /**
      * Many Students have One Section.
      * @ORM\ManyToOne(targetEntity="SMS\EstablishmentBundle\Entity\Section", inversedBy="students" ,fetch="EXTRA_LAZY")
      * @ORM\JoinColumn(name="section_id", referencedColumnName="id")
-     * @Assert\NotBlank(groups= {"Edit"})
+     * @Assert\NotBlank(groups= {"Registration" , "Intern" ,"InternRegistration","InternEdit" })
      */
     private $section;
 
@@ -71,9 +92,15 @@ class Student extends User
      * Many Students have One Parent.
      * @ORM\ManyToOne(targetEntity="StudentParent" , inversedBy="students",fetch="EXTRA_LAZY")
      * @ORM\JoinColumn(name="student_parent_id", referencedColumnName="id")
-     * @Assert\NotBlank(groups= {"Registration" , "SimpleRegistration" , "Edit"})
+     * @Assert\NotBlank(groups= {"Registration" , "Intern" ,"InternRegistration" ,"InternEdit"})
      */
     private $studentParent;
+
+    /**
+     * One Student has Many Registration.
+     * @ORM\OneToMany(targetEntity="SMS\PaymentBundle\Entity\Registration", mappedBy="student",fetch="EXTRA_LAZY")
+     */
+    private $registrations;
 
     /**
      * User constructor.
@@ -307,5 +334,87 @@ class Student extends User
     public function __toString()
     {
         return sprintf("%s %s",$this->getFirstName(),$this->getLastName());
+    }
+
+    /**
+     * Set studentType
+     *
+     * @param boolean $studentType
+     *
+     * @return Student
+     */
+    public function setStudentType($studentType)
+    {
+        $this->studentType = $studentType;
+
+        return $this;
+    }
+
+    /**
+     * Get studentType
+     *
+     * @return boolean
+     */
+    public function getStudentType()
+    {
+        return $this->studentType;
+    }
+
+    /**
+     * Set phone
+     *
+     * @param string $phone
+     *
+     * @return Student
+     */
+    public function setPhone($phone)
+    {
+        $this->phone = $phone;
+
+        return $this;
+    }
+
+    /**
+     * Get phone
+     *
+     * @return string
+     */
+    public function getPhone()
+    {
+        return $this->phone;
+    }
+
+    /**
+     * Add registration
+     *
+     * @param \SMS\UserBundle\Entity\Registration $registration
+     *
+     * @return Student
+     */
+    public function addRegistration(\SMS\UserBundle\Entity\Registration $registration)
+    {
+        $this->registrations[] = $registration;
+
+        return $this;
+    }
+
+    /**
+     * Remove registration
+     *
+     * @param \SMS\UserBundle\Entity\Registration $registration
+     */
+    public function removeRegistration(\SMS\UserBundle\Entity\Registration $registration)
+    {
+        $this->registrations->removeElement($registration);
+    }
+
+    /**
+     * Get registrations
+     *
+     * @return \Doctrine\Common\Collections\Collection
+     */
+    public function getRegistrations()
+    {
+        return $this->registrations;
     }
 }

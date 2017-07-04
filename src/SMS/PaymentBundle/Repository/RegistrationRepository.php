@@ -1,6 +1,7 @@
 <?php
 
 namespace SMS\PaymentBundle\Repository;
+use Doctrine\ORM\Query;
 
 /**
  * RegistrationRepository
@@ -10,4 +11,5 @@ namespace SMS\PaymentBundle\Repository;
  */
 class RegistrationRepository extends \Doctrine\ORM\EntityRepository
 {
+  
 }

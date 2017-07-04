@@ -56,9 +56,16 @@ class PaymentType
     /**
      * @var int
      *
-     * @ORM\Column(name="price", type="integer")
+     * @ORM\Column(name="price", type="float")
      */
     private $price;
+
+    /**
+     * @var int
+     *
+     * @ORM\Column(name="registrationFee", type="float")
+     */
+    private $registrationFee;
 
     /**
      * One PaymentType has Many Payments.
@@ -279,5 +286,53 @@ class PaymentType
     public function getEstablishment()
     {
         return $this->establishment;
+    }
+
+    /**
+     * Set months
+     *
+     * @param array $months
+     *
+     * @return PaymentType
+     */
+    public function setMonths($months)
+    {
+        $this->months = $months;
+
+        return $this;
+    }
+
+    /**
+     * Get months
+     *
+     * @return array
+     */
+    public function getMonths()
+    {
+        return $this->months;
+    }
+
+    /**
+     * Set registrationFee
+     *
+     * @param integer $registrationFee
+     *
+     * @return PaymentType
+     */
+    public function setRegistrationFee($registrationFee)
+    {
+        $this->registrationFee = $registrationFee;
+
+        return $this;
+    }
+
+    /**
+     * Get registrationFee
+     *
+     * @return integer
+     */
+    public function getRegistrationFee()
+    {
+        return $this->registrationFee;
     }
 }

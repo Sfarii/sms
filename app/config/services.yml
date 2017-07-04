@@ -21,9 +21,6 @@ services:
           - method: setEmail
             arguments:
               - "%mailer_user%"
-          - method: setPaymentTemplate
-            arguments:
-              - "%payment_template%"
     #listener
     #sms.exception_listener:
         #class: API\EventListener\ExceptionListener

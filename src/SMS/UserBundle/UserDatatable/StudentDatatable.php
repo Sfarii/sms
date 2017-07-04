@@ -21,8 +21,6 @@ class StudentDatatable extends AbstractDatatableView
 
       $establishment = $this->securityToken->getToken()->getUser()->getEstablishment();
 
-      $sections = $this->em->getRepository(Section::class)->findBy(array("establishment" => $establishment));
-
         $this->callbacks->set(array(
         'row_callback' => array(
             'template' => 'Pagination/row_callback.js.twig',
@@ -84,32 +82,26 @@ class StudentDatatable extends AbstractDatatableView
                   ),
                 )
             ))
-            ->add('section.sectionName', 'column', array(
-                'title' => $this->translator->trans('student.field.section'),
-                'filter' => array('select', array(
-                    'search_type' => 'eq',
-                    'select_options' => array('' => $this->translator->trans('filter.field.all')) + $this->getCollectionAsOptionsArray($sections, 'sectionName', 'sectionName'),
-                    'class' => "md-input"
-                ))
-            ))
-
-
             ->add('birthday', 'datetime', array(
                 'title' => $this->translator->trans('student.field.birthday'),
                 'date_format' => "DD/MM/YYYY",
                 'filter' => array('daterange', array('class' => "md-input")),
             ))
+            ->add('recordeNumber', 'column', array(
+                'title' => $this->translator->trans('student.field.recordeNumber'),
+                'filter' => array('text', array(
+                    'class' => "md-input"
+                ))
+            ))
             ->add('firstName', 'column', array(
                 'title' => $this->translator->trans('student.field.firstName'),
                 'filter' => array('text', array(
-                    'search_type' => 'eq',
                     'class' => "md-input"
                 ))
             ))
             ->add('lastName', 'column', array(
                 'title' => $this->translator->trans('student.field.lastName'),
                 'filter' => array('text', array(
-                    'search_type' => 'eq',
                     'class' => "md-input"
                 ))
             ))

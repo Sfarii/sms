@@ -3,13 +3,14 @@
 namespace SMS\PaymentBundle\Services;
 
 use Doctrine\ORM\EntityManager;
+use SMS\PaymentBundle\Entity\Registration;
+
 /**
  * @author Rami Sfari <rami2sfari@gmail.com>
  * @copyright Copyright (c) 2017, SMS
  * @package SMS\PaymentBundle\Services
  */
-
-class EntityManager
+class PaymentEntityManager
 {
     /**
     * @var Doctrine\ORM\EntityManager
@@ -51,21 +52,57 @@ class EntityManager
         $this->_em->flush($object);
     }
 
-    public function addPayment($object, $user = null)
+    public function addPayment($payment, $user = null)
     {
       if (!is_null($user)){
-        $object->setUser($user);
+        $payment->setUser($user);
       }
-      if ($object->getPaymentType()->getPrice() < $object->getPrice()) {
+      if ($payment->getPaymentType()->getPrice() < $payment->getPrice()) {
         return false;
       }
 
-      $object->setCredit($object->getPaymentType()->getPrice() - $object->getPrice());
-      $this->_em->persist($object);
-      $this->_em->flush($object);
+      $payment->setCredit($payment->getPaymentType()->getPrice() - $payment->getPrice());
+      $this->_em->persist($payment);
+      $this->_em->flush($payment);
 
-      $this->_mailer->sendPaymentEmail($user , $object);
+      $this->_mailer->sendPaymentEmail($user , $payment);
+
       return true;
+    }
+
+    /**
+    * add multiple entity to the database
+    *
+    * @param String $className
+    * @param array $data
+    */
+    public function newRegistration($className , $data = array())
+    {
+      $repository = $this->_em->getRepository($className);
+      $registrationRepository = $this->_em->getRepository(Registration::class);
+
+      $this->_em->beginTransaction();
+      foreach ($data['students'] as $choice) {
+          $student = $repository->find($choice['value']);
+          $registration = $registrationRepository->findOneBy(array('establishment' => $data['user']->getEstablishment() ,'student' => $student , 'paymentType' => $data['paymentType'] ));
+
+          if (!empty($registration)){
+            $registration->setRegistered(true)
+                          ->addMonths($data['months']);
+            $this->_em->flush($registration);
+            continue;
+          }
+          $registration = new Registration();
+          $registration->setStudent($student)
+                        ->setPaymentType($data['paymentType'])
+                        ->setEstablishment($data['user']->getEstablishment())
+                        ->setMonths($data['months'])
+                        ->setStudent($student)
+                        ->setUser($data['user']);
+          $this->_em->persist($registration);
+      }
+      $this->_em->flush();
+      $this->_em->commit();
     }
 
     /**
@@ -89,7 +126,9 @@ class EntityManager
 
     /**
     * delete multiple entity from the database
-    * @param Object $object
+    *
+    * @param String $className
+    * @param array $choices
     */
     public function deleteAll($className, $choices = array())
     {

@@ -11,6 +11,7 @@ use Symfony\Bridge\Doctrine\Form\Type\EntityType;
 use Symfony\Component\Form\Extension\Core\Type\SubmitType;
 use SMS\PaymentBundle\Entity\PaymentType;
 use API\Form\Type\HiddenEntityType;
+use SMS\PaymentBundle\Entity\RegistrationType as TypeRegistration;
 use SMS\EstablishmentBundle\Entity\Establishment;
 
 class PaymentTypeType extends AbstractType
@@ -28,6 +29,9 @@ class PaymentTypeType extends AbstractType
               )
               ->add('price' ,TextType::class , array(
                   'label' => 'paymenttype.field.price')
+              )
+              ->add('registrationFee' ,TextType::class , array(
+                  'label' => 'paymenttype.field.registrationFee')
               )
               ->add('establishment', HiddenEntityType::class, array(
                   'class' => Establishment::class,
