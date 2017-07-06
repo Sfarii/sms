@@ -2,7 +2,9 @@
 
 namespace SMS\PaymentBundle\Controller;
 
+use SMS\PaymentBundle\Entity\Payment;
 use SMS\PaymentBundle\Entity\PaymentType;
+use SMS\PaymentBundle\Entity\Registration;
 use SMS\PaymentBundle\Form\PaymentTypeType;
 use SMS\PaymentBundle\BaseController\BaseController;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\Method;
@@ -93,12 +95,19 @@ class PaymentTypeController extends BaseController
      *
      * @Route("/{id}", name="paymenttype_show", options={"expose"=true})
      * @Method("GET")
+     * @Template("SMSPaymentBundle:paymenttype:show.html.twig")
      */
     public function showAction(PaymentType $paymentType)
     {
-        return $this->render('SMSPaymentBundle:paymenttype:show.html.twig', array(
+        $paymentRepository = $this->getDoctrine()->getRepository(Payment::class);
+        $registrationRepository = $this->getDoctrine()->getRepository(Registration::class);
+
+        return array(
             'paymentType' => $paymentType,
-        ));
+            'paymentsInfo' => $paymentRepository->findByPayment($paymentType) ,
+            'studentInfo' => $registrationRepository->findByPayment($paymentType) ,
+            'chart' => $paymentRepository->findChartByPayment($paymentType)
+        );
     }
 
     /**

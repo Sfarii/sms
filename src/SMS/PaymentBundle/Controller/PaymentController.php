@@ -68,7 +68,7 @@ class PaymentController extends BaseController
           200,
           array(
               'Content-Type'          => 'application/pdf',
-              'Content-Disposition'   => sprintf('attachment; filename="%.pdf"' , $payment->getStudent())
+              'Content-Disposition'   => sprintf('attachment; filename="%s.pdf"' , $payment->getStudent())
           )
       );
     }
@@ -104,22 +104,20 @@ class PaymentController extends BaseController
     /**
      * Finds and displays a registration entity.
      *
-     * @Route("/payment/user/{id}", name="user_payment_show", options={"expose"=true})
+     * @Route("/student/{id}", name="user_payment_show", options={"expose"=true})
      * @Method("GET")
+     * @Template("SMSPaymentBundle:payment:show.html.twig")
      */
     public function showAction(Student $student)
     {
         $payments = $this->getPaymentEntityManager();
         $payments->buildDatatable(array('id' => $student->getId()));
-
-        $registration = $this->getRegistrationEntityManager();
-        $registration->buildDatatable(array('id' => $student->getId()));
-
-        return $this->render('SMSPaymentBundle:student:show.html.twig', array(
+        $paymentsInfo = $this->getDoctrine()->getRepository(Payment::class)->findByStudent($student);
+        return array(
             'student' => $student,
             'payments' => $payments,
-            'registration' => $registration
-        ));
+            'paymentsInfo' => $paymentsInfo
+        );
     }
 
     /**
@@ -205,40 +203,6 @@ class PaymentController extends BaseController
     }
 
     /**
-     * Deletes a payment entity.
-     *
-     * @Route("/{id}", name="payment_delete")
-     * @Method("DELETE")
-     */
-    public function deleteAction(Request $request, Payment $payment)
-    {
-        $form = $this->createDeleteForm($payment)->handleRequest($request);
-
-        if ($form->isSubmitted() && $form->isValid()) {
-            $this->getEntityManager()->delete($payment);
-            $this->flashSuccessMsg('payment.delete.one.success');
-        }
-
-        return $this->redirectToRoute('payment_index');
-    }
-
-    /**
-     * Creates a form to delete a payment entity.
-     *
-     * @param Payment $payment The payment entity
-     *
-     * @return \Symfony\Component\Form\Form The form
-     */
-    private function createDeleteForm(Payment $payment)
-    {
-        return $this->createFormBuilder()
-            ->setAction($this->generateUrl('payment_delete', array('id' => $payment->getId())))
-            ->setMethod('DELETE')
-            ->getForm()
-        ;
-    }
-
-    /**
      * Get payment Entity Manager Service.
      *
      * @return SMS\Classes\Services\EntityManager
@@ -267,21 +231,5 @@ class PaymentController extends BaseController
         }
 
         return $this->get('knp_paginator');
-    }
-
-    /**
-     * Get registration Entity Manager Service.
-     *
-     * @return SMS\Classes\Services\EntityManager
-     *
-     * @throws \NotFoundException
-     */
-    protected function getRegistrationEntityManager()
-    {
-        if (!$this->has('sms.datatable.registration')){
-           throw $this->createNotFoundException('Service Not Found');
-        }
-
-        return $this->get('sms.datatable.registration');
     }
 }

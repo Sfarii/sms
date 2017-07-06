@@ -102,7 +102,9 @@ class PaymentEntityManager
                   ->setParameter('paymentType', $form->get('paymentType')->getData());
           }
           if (!empty($form->get('months')->getData())){
-            $query->andWhere('registrations.month = :months')
+            $query
+                ->join("paymentType")
+                ->andWhere('payment.month = :months')
                 ->setParameter('months', $form->get('months')->getData());
           }
 
@@ -173,7 +175,7 @@ class PaymentEntityManager
     public function deleteAll($className, $choices = array())
     {
         $repository = $this->_em->getRepository($className);
-
+        $this->_em->beginTransaction();
         foreach ($choices as $choice) {
             $object = $repository->find($choice['value']);
 
@@ -186,7 +188,27 @@ class PaymentEntityManager
                 throw new Exception("Error this Entity has child ", 1);
             }
         }
-
         $this->_em->flush();
+        $this->_em->commit();
+    }
+
+    /**
+    * Registration Action
+    *
+    * @param String $className
+    * @param array $choices
+    * @param boolean $boolean
+    */
+    public function registrationAction($choices = array(),$boolean)
+    {
+        $repository = $this->_em->getRepository(Registration::class);
+        $this->_em->beginTransaction();
+        foreach ($choices as $choice) {
+            $object = $repository->find($choice['value']);
+            $object->setRegistered($boolean);
+
+        }
+        $this->_em->flush();
+        $this->_em->commit();
     }
 }

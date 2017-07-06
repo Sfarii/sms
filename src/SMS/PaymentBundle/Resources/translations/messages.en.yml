@@ -1,7 +1,7 @@
 action:
     delete: Delete   # FIXME
     registered: Registered
-    not_registered: Not Registered
+    not_registered: Unregistered
 
 
 author:
@@ -28,7 +28,7 @@ payment:
       footer: © Copyright Texhnolyze Solution All Rights Reserved
     field:
         credit: Credit   # FIXME
-        month: Month   # FIXME
+        month: Monthly Payment   # FIXME
         paymentType: Payment Type   # FIXME
         select_paymentType: Select Payment Type ...  # FIXME
         price: Price paid   # FIXME
@@ -38,7 +38,10 @@ payment:
         student.section: Section Name
         student.grade: Grade Name
         student.parent: Student Parent
-        total: Price Total
+        totalPrice: Total Price paid
+        totalCredit: Total Credit
+        total: Total
+        totalRegistration: Total Registration
         id: Payment Number
     unit:
         price: TND
@@ -67,7 +70,7 @@ search:
     registration:
         title: Filter By Registration
         registred: Registred
-        not_registred: Not Registred
+        not_registred: Unregistred
     submit: Filter
     reset: Reset Page
     result_not_found:
@@ -91,7 +94,7 @@ paymenttype:
 
     field:
         TypePaymentName: Payment Type Name   # FIXME
-        price: Price   # FIXME
+        price: Price By Month   # FIXME
         registrationFee: Registration Fee   # FIXME
         months: Months   # FIXME
         select_months: Select Months ..   # FIXME
@@ -109,6 +112,7 @@ paymenttype:
         title: Adding an Payment Type   # FIXME
     stats:
         not_found: Not enough data available
+        title: Payment Type Stats By Month
     show:
         detail: Payment Type Detail   # FIXME
         title: Payment Type information   # FIXME
@@ -118,18 +122,19 @@ registration:
         fail: Could not delete from the specified Registration   # FIXME
         success: The specified Registrations successfully deleted   # FIXME
     add:
-        success: Registration successfully added    # FIXME
+        success: The specified Registrations successfully added    # FIXME
     edit:
-        success: Registration successfully edited   # FIXME
+        success: The specified Registrations successfully edited   # FIXME
     edit:
         title: Edit Registration   # FIXME
-
     field:
         registered: Registered   # FIXME
         registrationType: Registration Type   # FIXME
         student: Student   # FIXME
         student.firstName: Student First Name   # FIXME
         student.lastName: Student Last Name
+        close: Close
+        submit: ADD Registrations
     paymenttype:
         error: This value should not be blank.
     list:
@@ -139,43 +144,13 @@ registration:
         title: Adding an Registration   # FIXME
 
     registered:
-        false_label: Registered   # FIXME
-        true_label: Not Registered   # FIXME
+        false_label: Unregistred  # FIXME
+        true_label: Registered  # FIXME
 
     show:
         detail: Registration Detail   # FIXME
         title: Registration Information   # FIXME
 
-registrationType:
-    delete:
-        fail: Could not delete from the specified Registration Types   # FIXME
-        success: The specified Registrations Types successfully deleted   # FIXME
-    add:
-        success: Registration Type successfully added    # FIXME
-    edit:
-        success: Registration Type successfully edited   # FIXME
-    field:
-        registrationFee: Registration Fee   # FIXME
-        registrationTypeName: Registration Type Name   # FIXME
-        student: Student   # FIXME
-
-registrationtype:
-    edit:
-        title: Registration Type Edit  # FIXME
-
-    field:
-        registrationFee: Registration Fee   # FIXME
-        registrationTypeName: Registration Type Name   # FIXME
-
-    list:
-        title: Registration Type Lists   # FIXME
-
-    new:
-        title: Adding an Registration Type   # FIXME
-
-    show:
-        detail: Registration Type Detail   # FIXME
-        title: Registration Type Information   # FIXME
 1: January
 2: February
 3: March

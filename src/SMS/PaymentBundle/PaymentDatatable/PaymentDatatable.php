@@ -97,7 +97,6 @@ class PaymentDatatable extends AbstractDatatableView
             ->add('price', 'column', array(
                 'title' => $this->translator->trans('payment.field.price'),
                 'filter' => array('text', array(
-                    'search_type' => 'eq',
                     'class' => "md-input"
                 )),
                 "render" => $this->translator->trans('payment.unit.price')
@@ -105,7 +104,6 @@ class PaymentDatatable extends AbstractDatatableView
             ->add('credit', 'column', array(
                 'title' => $this->translator->trans('payment.field.credit'),
                 'filter' => array('text', array(
-                    'search_type' => 'eq',
                     'class' => "md-input"
                 )),
                 "render" => $this->translator->trans('payment.unit.price')

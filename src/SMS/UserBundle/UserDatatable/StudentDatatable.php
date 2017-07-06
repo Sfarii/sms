@@ -112,7 +112,7 @@ class StudentDatatable extends AbstractDatatableView
                 'filter' => array('select', array(
                     'search_type' => 'eq',
                     'select_options' => array('' => $this->translator->trans('filter.field.all') , true => $this->translator->trans('user.active.true_label') , false => $this->translator->trans('user.active.false_label')) ,
-                    'class' => "md-input"
+                    'class' => "tablesorter-filter"
                 ))
             ))
             ->add(null, 'action', array(

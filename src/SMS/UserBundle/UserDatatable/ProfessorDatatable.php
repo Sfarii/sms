@@ -86,28 +86,28 @@ class ProfessorDatatable extends AbstractDatatableView
             ->add('firstName', 'column', array(
                 'title' => $this->translator->trans('professor.field.firstName'),
                 'filter' => array('text', array(
-                    'search_type' => 'eq',
+
                     'class' => "md-input"
                 ))
             ))
             ->add('lastName', 'column', array(
                 'title' => $this->translator->trans('professor.field.lastName'),
                 'filter' => array('text', array(
-                    'search_type' => 'eq',
+
                     'class' => "md-input"
                 ))
             ))
             ->add('email', 'column', array(
                 'title' => $this->translator->trans('user.field.email'),
                 'filter' => array('text', array(
-                    'search_type' => 'eq',
+
                     'class' => "md-input"
                 ))
             ))
             ->add('phone', 'column', array(
                 'title' => $this->translator->trans('professor.field.phone'),
                 'filter' => array('text', array(
-                    'search_type' => 'eq',
+
                     'class' => "md-input"
                 ))
             ))
@@ -118,7 +118,7 @@ class ProfessorDatatable extends AbstractDatatableView
                 'filter' => array('select', array(
                     'search_type' => 'eq',
                     'select_options' => array('' => $this->translator->trans('filter.field.all') , true => $this->translator->trans('user.active.true_label') , false => $this->translator->trans('user.active.false_label')) ,
-                    'class' => "md-input"
+                    'class' => "tablesorter-filter"
                 ))
             ))
             ->add(null, 'action', array(

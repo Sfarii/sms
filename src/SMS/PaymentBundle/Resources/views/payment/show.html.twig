@@ -1,0 +1,119 @@
+{% extends 'layout/base_no_header.html.twig' %}
+
+{% block sticky_button %}
+  <a class="md-fab md-fab-primary" href="{{ path("payment_new" , { "id" : student.id })}}">
+    <i class="material-icons">&#xE145;</i>
+  </a>
+{% endblock %}
+
+{% block title_page %}
+  {{ 'registration.show.title'|trans }}
+{% endblock %}
+
+{% block body %}
+  <div class="uk-grid" data-uk-grid-margin data-uk-grid-match id="user_profile">
+    <div class="uk-width-large-7-10">
+      <div class="md-card">
+        <div class="user_heading">
+          <div class="user_heading_avatar">
+            <div class="fileinput-new thumbnail">
+              {% if student.imageName %}
+                <img src="{{ vich_uploader_asset(student, 'imageFile') }}" alt="{{ student.imageName }}"/>
+              {% else %}
+                <img src="{{ asset('assets/img/avatars/user@2x.png') }}" alt="user avatar"/>
+              {% endif %}
+            </div>
+          </div>
+          <div class="user_heading_content">
+            <h2 class="heading_b uk-margin-bottom">
+              <span class="uk-text-truncate">{{ student.username }}</span>
+              <span class="sub-heading">{{ student.firstName }}
+                {{ student.lastName }}</span>
+            </h2>
+          </div>
+          <div class="md-fab-wrapper">
+            <a class="md-fab md-fab-small md-fab-success" href="{{ path('payment_index') }}">
+              <i class="material-icons">&#xE88A;</i>
+            </a>
+          </div>
+        </div>
+        <div class="user_content">
+          <div class="uk-margin-medium-bottom">
+            <ul class="uk-tab">
+              <li>
+                <a href="{{ path("student_show" , { "id" : student.id})}}">{{ "student.show.title"|trans}}</a>
+              </li>
+              <li class="uk-active">
+                <a href="{{ path("user_payment_show" , { "id" : student.id})}}">{{ "payment.show.detail"|trans}}</a>
+              </li>
+              <li>
+                <a href="{{ path("user_registration_show" , { "id" : student.id})}}">{{ "registration.show.detail"|trans}}</a>
+              </li>
+            </ul>
+          </div>
+          <div class="uk-margin-medium-bottom uk-margin-medium-top">
+            {{ datatable_render(payments) }}
+          </div>
+        </div>
+      </div>
+    </div>
+    <div class="uk-width-xLarge-2-10 uk-width-large-3-10">
+      <div class="md-card">
+        <div class="md-card-content">
+          <ul class="md-list md-list-addon">
+            <li>
+              <div class="md-list-addon-element">
+                <i class="md-list-addon-icon material-icons">&#xE25C;</i>
+              </div>
+              <div class="md-list-content">
+                <span class="md-list-heading">
+                  {% if paymentsInfo.credit %}
+                    {{ paymentsInfo.credit }}
+                  {% else %}
+                    0
+                  {% endif %}
+                  {{ 'payment.unit.price'|trans }}
+                </span>
+                <span class="uk-text-small uk-text-muted">{{ 'payment.field.credit'|trans }}</span>
+              </div>
+            </li>
+            <li>
+              <div class="md-list-addon-element">
+                <i class="md-list-addon-icon material-icons">&#xE227;</i>
+              </div>
+              <div class="md-list-content">
+                <span class="md-list-heading">
+                  {% if paymentsInfo.price %}
+                    {{ paymentsInfo.price }}
+                  {% else %}
+                    0
+                  {% endif %}
+                  {{ 'payment.unit.price'|trans }}
+                </span>
+                <span class="uk-text-small uk-text-muted">{{ 'payment.field.price'|trans }}</span>
+              </div>
+            </li>
+          </ul>
+        </div>
+      </div>
+    </div>
+  </div>
+{% endblock %}
+{% block head_javascripts %}
+  {{ parent() }}
+  <!-- page specific plugins -->
+  <!-- datatables -->
+  <script src="{{ asset('assets/plugins/datatables/js/jquery.dataTables.min.js')}}"></script>
+  <script src="{{ asset('bundles/fosjsrouting/js/router.js') }}"></script>
+  <script src="{{ path('fos_js_routing_js', {'callback': 'fos.Router.setData'}) }}"></script>
+  <!--  form file input functions -->
+  <!-- uikit functions -->
+  <script src="{{ asset('assets/js/uikit_custom.min.js')}}"></script>
+{% endblock %}
+{% block javascripts %}
+  <!-- altair common functions/helpers -->
+  <script src="{{ asset('assets/js/altair_admin_common.min.js')}}"></script>
+  <!-- datatables custom integration -->
+  <script src="{{ asset('assets/js/custom/datatables/datatables.uikit.min.js')}}"></script>
+  <script src="{{ asset('assets/js/uikit_custom_dataTable.js')}}"></script>
+{% endblock %}

@@ -3,6 +3,7 @@
 namespace SMS\PaymentBundle\Controller;
 
 use SMS\PaymentBundle\Entity\Registration;
+use SMS\PaymentBundle\Entity\Payment;
 use SMS\PaymentBundle\Entity\PaymentType;
 use SMS\PaymentBundle\Form\RegistrationType;
 use SMS\PaymentBundle\BaseController\BaseController;
@@ -48,22 +49,29 @@ class RegistrationController extends BaseController
         $query->addWhereAll($function);
         return $query->getResponse();
     }
+
     /**
-     * Creates a new registration entity.
+     * Finds and displays a payment entity.
      *
-     * @Route("/new", name="registration_new", options={"expose"=true})
+     * @Route("/pdf/{id}", name="registration_pdf", options={"expose"=true})
      * @Method("GET")
-     * @Template("SMSPaymentBundle:registration:new.html.twig")
      */
-    public function newAction(Request $request)
+    public function pdfAction(Registration $registration)
     {
-      // registration form
-      $form = $this->createForm(RegistrationType::class, null, array('establishment' => $this->getUser()->getEstablishment()))->handleRequest($request);
+      $paymentRepository = $this->getDoctrine()->getRepository(Payment::class);
+      $html = $this->renderView('SMSPaymentBundle:pdf:registration.html.twig', array(
+          'registration'  => $registration,
+          'payments' => $paymentRepository->findByRegistration($registration)
+      ));
 
-      $student = $this->getStudentEntityManager();
-      $student->buildDatatable();
-
-      return array('students' => $student , "form" => $form->createView());
+      return new Response(
+          $this->get('knp_snappy.pdf')->getOutputFromHtml($html),
+          200,
+          array(
+              'Content-Type'          => 'application/pdf',
+              'Content-Disposition'   => sprintf('attachment; filename="%s.pdf"' , $registration->getStudent())
+          )
+      );
     }
 
     /**
@@ -93,6 +101,45 @@ class RegistrationController extends BaseController
         $query->addWhereAll($function);
 
         return $query->getResponse();
+    }
+
+
+    /**
+     * Creates a new registration entity.
+     *
+     * @Route("/new", name="registration_new", options={"expose"=true})
+     * @Method("GET")
+     * @Template("SMSPaymentBundle:registration:new.html.twig")
+     */
+    public function newAction(Request $request)
+    {
+      // registration form
+      $form = $this->createForm(RegistrationType::class, null, array('establishment' => $this->getUser()->getEstablishment()))->handleRequest($request);
+
+      $student = $this->getStudentEntityManager();
+      $student->buildDatatable();
+
+      return array('students' => $student , "form" => $form->createView());
+    }
+
+    /**
+     * Finds and displays a registration entity.
+     *
+     * @Route("/student/{id}", name="user_registration_show", options={"expose"=true})
+     * @Method("GET")
+     * @Template("SMSPaymentBundle:registration:show.html.twig")
+     */
+    public function showAction(Student $student)
+    {
+        $registration = $this->getRegistrationEntityManager();
+        $registration->buildDatatable(array('id' => $student->getId()));
+        $registrationRepository = $this->getDoctrine()->getRepository(Registration::class);
+        return array(
+            'student' => $student,
+            'registration' => $registration,
+            'price' => $registrationRepository->getPriceByStudent($student),
+            'registrationFee' => $registrationRepository->getRegistrationFeeByStudent($student),
+        );
     }
 
     /**
@@ -134,16 +181,16 @@ class RegistrationController extends BaseController
     }
 
     /**
-     * Bulk delete action.
+     * Bulk registration action.
      *
      * @param Request $request
      *
-     * @Route("/bulk/delete", name="registration_bulk_delete")
+     * @Route("/bulk/registred", name="registration_registred")
      * @Method("POST")
      *
      * @return Response
      */
-    public function bulkDeleteAction(Request $request)
+    public function bulkRegistredAction(Request $request)
     {
         $isAjax = $request->isXmlHttpRequest();
 
@@ -155,14 +202,39 @@ class RegistrationController extends BaseController
                 throw new AccessDeniedException('The CSRF token is invalid.');
             }
 
-            try {
-                $this->getEntityManager()->deleteAll(registration::class ,$choices);
-            } catch (\Exception $e) {
-                return new Response($this->get('translator')->trans('registration.delete.fail'), 200);
+            $this->getEntityManager()->registrationAction($choices, true);
+
+            return new Response($this->get('translator')->trans('registration.edit.success'), 200);
+        }
+
+        return new Response('Bad Request', 400);
+    }
+
+    /**
+     * Bulk registration action.
+     *
+     * @param Request $request
+     *
+     * @Route("/bulk/not/registred", name="registration_not_registred")
+     * @Method("POST")
+     *
+     * @return Response
+     */
+    public function bulkNotRegistredAction(Request $request)
+    {
+        $isAjax = $request->isXmlHttpRequest();
+
+        if ($isAjax) {
+            $choices = $request->request->get('data');
+            $token = $request->request->get('token');
+
+            if (!$this->isCsrfTokenValid('multiselect', $token)) {
+                throw new AccessDeniedException('The CSRF token is invalid.');
             }
 
+            $this->getEntityManager()->registrationAction($choices, false);
 
-            return new Response($this->get('translator')->trans('registration.delete.success'), 200);
+            return new Response($this->get('translator')->trans('registration.edit.success'), 200);
         }
 
         return new Response('Bad Request', 400);

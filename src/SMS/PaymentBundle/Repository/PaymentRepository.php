@@ -10,4 +10,71 @@ namespace SMS\PaymentBundle\Repository;
  */
 class PaymentRepository extends \Doctrine\ORM\EntityRepository
 {
+    /**
+     * Get All registred users
+     * @param $student
+     * @return array
+     */
+    public function findByStudent($student)
+    {
+        return $this->createQueryBuilder('payment')
+          ->join('payment.student', 'student')
+          ->where('student.id = :student')
+          ->setParameter('student', $student->getId())
+          ->select("SUM(payment.credit) as credit , SUM(payment.price) as price")
+          ->getQuery()
+          ->getOneOrNullResult();
+    }
+
+    /**
+     * findByPayment
+     * @param $student
+     * @return array
+     */
+    public function findByPayment($payment)
+    {
+        return $this->createQueryBuilder('payment')
+          ->join('payment.paymentType', 'paymentType')
+          ->where('paymentType.id = :paymentType')
+          ->setParameter('paymentType', $payment->getId())
+          ->select("SUM(payment.credit) as credit , SUM(payment.price) as price")
+          ->getQuery()
+          ->getOneOrNullResult();
+    }
+
+    /**
+     * Chart By Payment
+     * @param $student
+     * @return array
+     */
+    public function findChartByPayment($payment)
+    {
+        return $this->createQueryBuilder('payment')
+          ->join('payment.paymentType', 'paymentType')
+          ->where('paymentType.id = :paymentType')
+          ->setParameter('paymentType', $payment->getId())
+          ->select("payment.month , SUM(payment.credit) as credit , SUM(payment.price) as price")
+          ->groupBy('payment.month')
+          ->getQuery()
+          ->getResult();
+    }
+
+    /**
+     * findByRegistration
+     * @param $registration
+     * @return array
+     */
+    public function findByRegistration($registration)
+    {
+        return $this->createQueryBuilder('payment')
+          ->join('payment.student', 'student')
+          ->join('payment.paymentType', 'paymentType')
+          ->select("partial payment.{id ,credit , price , month}")
+          ->where('student.id = :student')
+          ->setParameter('student', $registration->getStudent()->getId())
+          ->andWhere('paymentType.id = :paymentType')
+          ->setParameter('paymentType', $registration->getPaymentType()->getId())
+          ->getQuery()
+          ->getResult();
+    }
 }

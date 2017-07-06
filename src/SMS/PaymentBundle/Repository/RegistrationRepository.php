@@ -11,5 +11,55 @@ use Doctrine\ORM\Query;
  */
 class RegistrationRepository extends \Doctrine\ORM\EntityRepository
 {
-  
+  /**
+   * Get All registred users
+   * @param $student
+   * @return array
+   */
+  public function getPriceByStudent($student)
+  {
+      return $this->createQueryBuilder('registration')
+        ->join('registration.student', 'student')
+        ->join('registration.paymentType', 'paymentType')
+        ->where('student.id = :student')
+        ->andWhere('registration.registered = 1')
+        ->setParameter('student', $student)
+        ->select("SUM(paymentType.price) as price")
+        ->getQuery()
+        ->getSingleScalarResult();
+  }
+
+  /**
+   * findByPayment
+   * @param $student
+   * @return array
+   */
+  public function findByPayment($payment)
+  {
+      return $this->createQueryBuilder('registration')
+        ->join('registration.student', 'student')
+        ->join('registration.paymentType', 'paymentType')
+        ->andWhere('paymentType.id = :paymentType')
+        ->setParameter('paymentType', $payment->getId())
+        ->select("count(student)")
+        ->getQuery()
+        ->getSingleScalarResult();
+  }
+
+  /**
+   * Get All registred users
+   * @param $student
+   * @return array
+   */
+  public function getRegistrationFeeByStudent($student)
+  {
+      return $this->createQueryBuilder('registration')
+        ->join('registration.student', 'student')
+        ->join('registration.paymentType', 'paymentType')
+        ->where('student.id = :student')
+        ->setParameter('student', $student)
+        ->select("SUM(paymentType.registrationFee) as registrationFee")
+        ->getQuery()
+        ->getSingleScalarResult();
+  }
 }

@@ -72,6 +72,32 @@ class RegistrationDatatable extends AbstractDatatableView
         ));
 
         $this->columnBuilder
+            ->add(null, 'multiselect', array(
+                'actions' => array(
+                    array(
+                        'route' => 'registration_registred',
+                        'icon' => '&#xE923;',
+                        'label' => $this->translator->trans('action.registered'),
+                        'attributes' => array(
+                            'rel' => 'tooltip',
+                            'title' => $this->translator->trans('action.registered'),
+                            'class' => 'md-btn buttons-copy buttons-html5',
+                            'role' => 'button'
+                        ),
+                    ),
+                    array(
+                        'route' => 'registration_not_registred',
+                        'icon' => '&#xE923;',
+                        'label' => $this->translator->trans('action.not_registered'),
+                        'attributes' => array(
+                            'rel' => 'tooltip',
+                            'title' => $this->translator->trans('action.not_registered'),
+                            'class' => 'md-btn buttons-copy buttons-html5',
+                            'role' => 'button'
+                        ),
+                    ),
+                )
+            ))
             ->add('paymentType.TypePaymentName', 'column', array(
                 'title' => $this->translator->trans('paymentType.field.TypePaymentName'),
                 'filter' => array('select', array(
@@ -79,6 +105,20 @@ class RegistrationDatatable extends AbstractDatatableView
                     'select_options' => array('' => $this->translator->trans('filter.field.all')) + $this->getCollectionAsOptionsArray($typePayments, 'TypePaymentName', 'TypePaymentName'),
                     'class' => "tablesorter-filter"
                 ))
+            ))
+            ->add('paymentType.price', 'column', array(
+                'title' => $this->translator->trans('paymenttype.field.price'),
+                "render" => $this->translator->trans('payment.unit.price'),
+                'filter' => array('text', array(
+                    'class' => "md-input"
+                )),
+            ))
+            ->add('paymentType.registrationFee', 'column', array(
+                'title' => $this->translator->trans('paymenttype.field.registrationFee'),
+                "render" => $this->translator->trans('payment.unit.price'),
+                'filter' => array('text', array(
+                    'class' => "md-input"
+                )),
             ))
             ->add('registered', 'boolean', array(
                 'title' => $this->translator->trans('registration.field.registered'),
@@ -89,6 +129,22 @@ class RegistrationDatatable extends AbstractDatatableView
                     'select_options' => array('' => $this->translator->trans('filter.field.all') , true => $this->translator->trans('registration.registered.true_label') , false => $this->translator->trans('registration.registered.false_label')) ,
                     'class' => "tablesorter-filter"
                 )),
+            ))
+            ->add(null, 'action', array(
+                'title' => $this->translator->trans('datatables.actions.title'),
+                'actions' => array(
+                    array(
+                        'route' => 'registration_pdf',
+                        'route_parameters' => array(
+                            'id' => 'id'
+                        ),
+                        'icon' => '&#xE8AD;',
+                        'attributes' => array(
+                            'rel' => 'tooltip',
+                            'title' => $this->translator->trans('datatables.actions.pdf'),
+                        ),
+                    )
+                )
             ))
         ;
     }

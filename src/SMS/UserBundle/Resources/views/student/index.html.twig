@@ -1,19 +1,12 @@
 {% extends 'layout/base.html.twig' %}
 
-{% block stylesheets %}
-	{{ parent() }}
-	<!-- page specific plugins -->
-	<link rel="stylesheet" href="{{ asset('assets/plugins/bootstrap/css/bootstrap.min.css')}}">
-    <link rel="stylesheet" type="text/css" href="{{ asset('assets/css/daterangepicker.css')}}" />
-{% endblock %}
-
 {% block sticky_button %}
 <a class="md-fab md-fab-primary" href="{{ path('student_new') }}">
     <i class="material-icons">&#xE145;</i>
 </a>
 {% endblock %}
 
-{% block title_page %} 
+{% block title_page %}
  {{ 'student.list.title'|trans }}
 {% endblock %}
 
@@ -27,9 +20,7 @@
 {% block head_javascripts %}
 	{{ parent() }}
 	<!-- page specific plugins -->
-    <!--  form file input functions -->
-    <script src="{{ asset('assets/plugins/bootstrap/js/bootstrap.min.js')}}"></script>
-    <script src="{{ asset('assets/js/moment-with-locales.min.js')}}"></script>
-    <script type="text/javascript" src="{{ asset('assets/js/daterangepicker.js')}}"></script>
+	<!-- uikit functions -->
+	<script src="{{ asset('assets/js/uikit_custom.min.js')}}"></script>
 
 {% endblock %}
