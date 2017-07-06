@@ -87,7 +87,6 @@ class MenuBuilder
           ->setAttribute('dropdown', true)
           ->setAttribute('icon', '&#xE53E;');
           $menu['payment']->addChild('menu.payment.payment', array('route' => 'payment_index'));
-          $menu['payment']->addChild('menu.registration.registration', array('route' => 'registration_index'));
           $menu['payment']->addChild('menu.payment.paymentType', array('route' => 'paymenttype_index'));
 
       $menu->addChild('users', array('label' => 'menu.users.title'))

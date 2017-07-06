@@ -28,37 +28,21 @@ class RegistrationController extends BaseController
     /**
      * Lists all registration entities.
      *
-     * @Route("/", name="registration_index")
-     * @Method("GET")
-     * @Template("SMSPaymentBundle:registration:index.html.twig")
-     */
-    public function indexAction()
-    {
-        $registrations = $this->getRegistrationEntityManager();
-        $registrations->buildDatatable();
-
-        return array('registrations' => $registrations);
-    }
-
-    /**
-     * Lists all registration entities.
-     *
-     * @Route("/results", name="registration_results")
+     * @Route("/results/{id}", name="registration_results")
      * @Method("GET")
      * @return Response
      */
-    public function indexResultsAction()
+    public function indexResultsAction(Student $student)
     {
         $registrations = $this->getRegistrationEntityManager();
-        $registrations->buildDatatable();
+        $registrations->buildDatatable(array('id' => $student->getId()));
 
         $query = $this->getDataTableQuery()->getQueryFrom($registrations);
-        $user = $this->getUser();
-        $function = function($qb) use ($user)
+        $function = function($qb) use ( $student)
         {
-            $qb->join('registration.establishment', 'establishment')
-                ->andWhere('establishment.id = :establishment')
-        				->setParameter('establishment', $user->getEstablishment()->getId());
+            $qb->join('registration.student', 'student')
+                ->andWhere('student.id = :student')
+                ->setParameter('student', $student->getId());
         };
 
         $query->addWhereAll($function);
@@ -127,7 +111,7 @@ class RegistrationController extends BaseController
 
         if ($isAjax) {
             $data = array('students' => $request->request->get('data'),
-                          'months' => $request->request->get('months'),
+                          'registered' => $request->request->get('registered'),
                           'paymentType' => $paymentType,
                           'user' => $this->getUser());
 
@@ -137,7 +121,7 @@ class RegistrationController extends BaseController
                 throw new AccessDeniedException('The CSRF token is invalid.');
             }
 
-            if (empty($data['students']) || empty($data['months'])){
+            if (empty($data['students'])){
               throw new AccessDeniedException('Data is invalid.');
             }
 

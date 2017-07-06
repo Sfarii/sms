@@ -71,6 +71,48 @@ class PaymentEntityManager
     }
 
     /**
+    * get Registred Student
+    *
+    * @param String $className
+    * @param SMS\PaymentBundle\Form\SearchType $form
+    */
+    public function getRegistredStudent($className, $form)
+    {
+      $query = $this->_em->getRepository($className)->findAllRegistredStudent();
+      if ($form->isSubmitted()) {
+          if (!empty($form->get('textField')->getData())){
+            $query->andWhere('student.firstName like :search OR student.phone LIKE :search OR student.lastName LIKE :search OR student.email LIKE :search')
+                  ->setParameter('search', '%'.$form->get('textField')->getData().'%');
+          }
+          /*$query->andWhere('student.studentType = :search')
+                ->setParameter('search', '%'.$form->get('extern')->getData().'%');
+          $query->andWhere('student.studentType = :search')
+                ->setParameter('search', '%'.$form->get('intren')->getData().'%');*/
+          if ($form->get('paid')->getData()){
+
+          }
+          if ($form->get('notPaid')->getData()){
+
+          }
+          if ($form->get('hasCredit')->getData()){
+
+          }
+          if (!is_null($form->get('paymentType')->getData())){
+            $query->andWhere('paymentType = :paymentType')
+                  ->setParameter('paymentType', $form->get('paymentType')->getData());
+          }
+          if (!empty($form->get('months')->getData())){
+            $query->andWhere('registrations.month = :months')
+                ->setParameter('months', $form->get('months')->getData());
+          }
+
+
+      }
+      return $query->getQuery();
+
+    }
+
+    /**
     * add multiple entity to the database
     *
     * @param String $className
@@ -85,21 +127,19 @@ class PaymentEntityManager
       foreach ($data['students'] as $choice) {
           $student = $repository->find($choice['value']);
           $registration = $registrationRepository->findOneBy(array('establishment' => $data['user']->getEstablishment() ,'student' => $student , 'paymentType' => $data['paymentType'] ));
-
-          if (!empty($registration)){
-            $registration->setRegistered(true)
-                          ->addMonths($data['months']);
-            $this->_em->flush($registration);
-            continue;
-          }
-          $registration = new Registration();
-          $registration->setStudent($student)
-                        ->setPaymentType($data['paymentType'])
-                        ->setEstablishment($data['user']->getEstablishment())
-                        ->setMonths($data['months'])
-                        ->setStudent($student)
-                        ->setUser($data['user']);
-          $this->_em->persist($registration);
+            if (!empty($registration)){
+              $registration->setRegistered($data['registered']);
+              $this->_em->flush($registration);
+              continue;
+            }
+            $registration = new Registration();
+            $registration->setStudent($student)
+                          ->setPaymentType($data['paymentType'])
+                          ->setEstablishment($data['user']->getEstablishment())
+                          ->setRegistered($data['registered'])
+                          ->setStudent($student)
+                          ->setUser($data['user']);
+            $this->_em->persist($registration);
       }
       $this->_em->flush();
       $this->_em->commit();
@@ -148,125 +188,5 @@ class PaymentEntityManager
         }
 
         $this->_em->flush();
-    }
-
-    /**
-    * insert note in the database
-    * @param Form $form
-    * @param User $user
-    */
-    public function addNote(Exam $exam, $user = null)
-    {
-        if (is_null($user)) {
-            throw new Exception("Error No User Found", 1);
-        }
-        $establishment = $user->getEstablishment()->getId();
-        $found = $this
-                    ->_em
-                    ->getRepository(Note::class)
-                    ->findByExam($exam);
-        if (is_null($found)) {
-          $this->_em->beginTransaction();
-          foreach ($exam->getCourse()->getGrade()->getSections() as $key => $section) {
-
-            $students = $this
-                            ->_em
-                            ->getRepository(Student::class)
-                            ->findBySectionAndEstablishment($section->getId() , $establishment);
-
-          foreach ($students as $student) {
-              $note = new Note();
-              $note->setExam($exam);
-              $note->setUser($user);
-              $note->setStudent($student);
-              $this->_em->persist($note);
-              $this->_em->flush();
-              $this->_em->detach($note);
-          }
-        }
-        $this->_em->commit();
-      }
-
-    }
-
-    /**
-    * insert student attendance in the database
-    * @param Form $form
-    * @param User $user
-    */
-    public function addStudentAttendance($form,User $user = null)
-    {
-        if (is_null($user)) {
-            throw new Exception("Error No User Found", 1);
-        }
-
-        $establishment = $user->getEstablishment()->getId();
-
-        $section = $form->get('section')->getData();
-        $date = $form->get('date')->getData();
-        $session = $form->get('session')->getData();
-
-        $found = $this
-                    ->_em
-                    ->getRepository(AttendanceStudent::class)
-                    ->findByDateAndSessionAndSection($date, $session, $section);
-        if (!empty($found["attendance_ids"])) {
-            return array_map('intval', explode(",", $found["attendance_ids"]));
-        }
-        $students = $this->_em
-                            ->getRepository(Student::class)
-                            ->findBySectionAndEstablishment($section->getId() , $establishment);
-
-        $attendance_ids = array();
-        $this->_em->beginTransaction();
-        foreach ($students as $student) {
-            $attendance = new AttendanceStudent();
-            $attendance->setSession($session);
-            $attendance->setDate($date);
-            $attendance->setStudent($student);
-            $attendance->setUser($user);
-            $attendance->setStatus($form->get("status")->getData());
-            $this->_em->persist($attendance);
-            $this->_em->flush();
-            $attendance_ids[] = $attendance->getId();
-            $this->_em->detach($attendance);
-        }
-        $this->_em->commit();
-        return $attendance_ids;
-    }
-
-    /**
-    * insert Attendance Professor in the database
-    * @param AttendanceProfessor $attendance
-    * @param User $user
-    */
-    public function addProfessorAttendance($attendance, $user = null)
-    {
-        if (is_null($user)) {
-            throw new Exception("Error No User Found", 1);
-        }
-
-        $found = $this
-                    ->_em
-                    ->getRepository(AttendanceProfessor::class)
-                    ->findByDateAndSessionAndUser($attendance);
-
-        if (!is_null($found)) {
-            if ($found->getStatus() !== $attendance->getStatus()) {
-                $found->setStatus($attendance->getStatus());
-            }
-            $this->update($found);
-        } else {
-            $this->insert($attendance, $user);
-        }
-    }
-
-    /**
-     * @param String $sessionName
-     * @return void
-     */
-    public function setSessionName($sessionName)
-    {
-        $this->_sessionName = $sessionName;
     }
 }

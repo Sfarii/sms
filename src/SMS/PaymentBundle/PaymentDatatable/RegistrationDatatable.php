@@ -58,7 +58,7 @@ class RegistrationDatatable extends AbstractDatatableView
             'scroll_collapse' => false,
             'search_delay' => 0,
             'state_duration' => 7200,
-            'class' => "uk-table uk-table-align-vertical uk-table-nowrap tablesorter tablesorter-altair",
+            'class' => "uk-table uk-table-striped",
             'individual_filtering' => true,
             'individual_filtering_position' => 'head',
             'use_integration_options' => true,
@@ -66,44 +66,17 @@ class RegistrationDatatable extends AbstractDatatableView
         ));
 
         $this->ajax->set(array(
-            'url' => $this->router->generate('registration_results'),
+            'url' => $this->router->generate('registration_results', array("id" => $options['id'])),
             'type' => 'GET',
             'pipeline' => 0
         ));
 
         $this->columnBuilder
-            ->add(null, 'multiselect', array(
-                'actions' => array(
-                    array(
-                        'route' => 'registration_bulk_delete',
-                        'icon' => '&#xE872;',
-                        'label' => $this->translator->trans('action.delete'),
-                        'attributes' => array(
-                            'rel' => 'tooltip',
-                            'title' => $this->translator->trans('action.delete'),
-                            'class' => 'md-btn buttons-copy buttons-html5',
-                            'role' => 'button'
-                        ),
-                    ),
-                )
-            ))
             ->add('paymentType.TypePaymentName', 'column', array(
                 'title' => $this->translator->trans('paymentType.field.TypePaymentName'),
                 'filter' => array('select', array(
                     'search_type' => 'eq',
                     'select_options' => array('' => $this->translator->trans('filter.field.all')) + $this->getCollectionAsOptionsArray($typePayments, 'TypePaymentName', 'TypePaymentName'),
-                    'class' => "tablesorter-filter"
-                ))
-            ))
-            ->add('student.firstName', 'column', array(
-                'title' => $this->translator->trans('registration.field.student.firstName'),
-                'filter' => array('text', array(
-                    'class' => "tablesorter-filter"
-                ))
-            ))
-            ->add('student.lastName', 'column', array(
-                'title' => $this->translator->trans('registration.field.student.lastName'),
-                'filter' => array('text', array(
                     'class' => "tablesorter-filter"
                 ))
             ))

@@ -52,11 +52,6 @@ class RegistrationType extends AbstractType
                 'label' => 'payment.field.paymentType',
                 'attr'          => [ 'class'=> 'paymentTypeField'])
             )
-            ->add('months' ,MonthType::class , array(
-                  'multiple' => true,
-                  'label' => 'paymenttype.field.months',
-                  'placeholder'   => 'paymenttype.field.select_months')
-              )
             ->add('registration', CheckboxType::class, array(
               'label' => 'registration.field.registered',
                 )

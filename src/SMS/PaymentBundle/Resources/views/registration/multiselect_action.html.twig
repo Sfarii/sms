@@ -39,6 +39,7 @@
             cache: false,
             data: {
               'months': months,
+              'registered': $("#sms_paymentbundle_registration_registration").val(),
               'data': $("input:checkbox:checked.student_datatable_multiselect_checkbox", oTable.rows().nodes()).serializeArray(),
               'token': '{{ token }}'
             },

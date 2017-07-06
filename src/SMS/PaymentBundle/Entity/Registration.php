@@ -33,20 +33,12 @@ class Registration
     private $registered;
 
     /**
-     * Many Payments have One PaymentType.
-     * @ORM\ManyToOne(targetEntity="PaymentType", inversedBy="payments" ,fetch="EXTRA_LAZY")
+     * Many Registration have One PaymentType.
+     * @ORM\ManyToOne(targetEntity="PaymentType", inversedBy="registrations" ,fetch="EXTRA_LAZY")
      * @ORM\JoinColumn(name="type_payment_id", referencedColumnName="id")
      * @Assert\NotBlank()
      */
     private $paymentType;
-
-    /**
-     * @var array
-     *
-     * @ORM\Column(name="month", type="array")
-     * @Assert\NotBlank()
-     */
-    private $months;
 
     /**
      * @var datetime $created
@@ -89,7 +81,6 @@ class Registration
     public function __construct()
     {
         $this->registered = true;
-        $this->months = array();
     }
 
     /**
@@ -282,42 +273,5 @@ class Registration
     public function getPaymentType()
     {
         return $this->paymentType;
-    }
-
-    /**
-     * Set months
-     *
-     * @param array $months
-     *
-     * @return Registration
-     */
-    public function setMonths($months)
-    {
-        $this->months = $months;
-
-        return $this;
-    }
-
-    /**
-     * Get months
-     *
-     * @return array
-     */
-    public function getMonths()
-    {
-        return $this->months;
-    }
-
-    /**
-     * {@inheritdoc}
-     */
-    public function addMonths($months)
-    {
-        foreach ($months as $month) {
-          if (!in_array($month, $this->months, true)) {
-              $this->months[] = $month;
-          }
-        }
-        return $this;
     }
 }

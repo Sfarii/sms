@@ -91,7 +91,7 @@ class PaymentDatatable extends AbstractDatatableView
                 'filter' => array('select', array(
                     'search_type' => 'eq',
                     'select_options' => $this->month,
-                    'class' => "md-input"
+                    'class' => "tablesorter-filter"
                 )),
             ))
             ->add('price', 'column', array(
@@ -115,7 +115,7 @@ class PaymentDatatable extends AbstractDatatableView
                 'filter' => array('select', array(
                     'search_type' => 'eq',
                     'select_options' => array('' => $this->translator->trans('filter.field.all')) + $this->getCollectionAsOptionsArray($typePayments, 'TypePaymentName', 'TypePaymentName'),
-                    'class' => "md-input"
+                    'class' => "tablesorter-filter"
                 ))
             ))
             ->add(null, 'action', array(

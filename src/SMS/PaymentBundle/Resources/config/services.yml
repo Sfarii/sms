@@ -33,7 +33,7 @@ services:
   #Form
   sms.form.type.payment:
       class: %payment_form%
-      arguments: ['@doctrine.orm.entity_Manager' , %student_class% , %grade_class% , %section_class% , %establishment_class% ]
+      arguments: [ %student_class% , %establishment_class% ]
       tags:
           - { name: form.type }
   sms.form.type.registration:

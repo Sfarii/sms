@@ -10,6 +10,8 @@ use Sensio\Bundle\FrameworkExtraBundle\Configuration\Route;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\Template;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
+use Symfony\Component\HttpFoundation\JsonResponse;
+use Symfony\Component\Security\Core\Exception\AccessDeniedException;
 
 /**
  * Paymenttype controller.
@@ -97,6 +99,21 @@ class PaymentTypeController extends BaseController
         return $this->render('SMSPaymentBundle:paymenttype:show.html.twig', array(
             'paymentType' => $paymentType,
         ));
+    }
+
+    /**
+     * Finds and return a paymentType entity.
+     *
+     * @Route("/json/{id}", name="paymenttype_json_show", options={"expose"=true})
+     * @Method("GET")
+     */
+    public function jsonAction(Request $request,PaymentType $paymentType)
+    {
+      $response = new JsonResponse();
+      $response->setData(array(
+        'price' => $paymentType->getPrice()
+      ));
+      return $response;
     }
 
     /**

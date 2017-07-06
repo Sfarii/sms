@@ -387,11 +387,11 @@ class Student extends User
     /**
      * Add registration
      *
-     * @param \SMS\UserBundle\Entity\Registration $registration
+     * @param \SMS\PaymentBundle\Entity\Registration $registration
      *
      * @return Student
      */
-    public function addRegistration(\SMS\UserBundle\Entity\Registration $registration)
+    public function addRegistration(\SMS\PaymentBundle\Entity\Registration $registration)
     {
         $this->registrations[] = $registration;
 
@@ -401,9 +401,9 @@ class Student extends User
     /**
      * Remove registration
      *
-     * @param \SMS\UserBundle\Entity\Registration $registration
+     * @param \SMS\PaymentBundle\Entity\Registration $registration
      */
-    public function removeRegistration(\SMS\UserBundle\Entity\Registration $registration)
+    public function removeRegistration(\SMS\PaymentBundle\Entity\Registration $registration)
     {
         $this->registrations->removeElement($registration);
     }

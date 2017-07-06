@@ -1,0 +1,27 @@
+<script>
+$(function() {
+	var $paymentType = $('.paymentTypeField');
+	var $price = $('#price');
+
+	if ($paymentType.val() != 0){
+		setPrice($paymentType.val());
+	}
+	// When grade gets selected ...
+	$paymentType.change(function() {
+	  // Submit data via AJAX.
+		setPrice($(this).val());
+	});
+
+	function setPrice($val) {
+		$.ajax({
+	    url : Routing.generate('paymenttype_json_show', {id: $val}),
+	    type: "GET",
+      cache: false,
+      timeout: 3000,
+	    success: function(data) {
+	      $price.text(">= "+data.price);
+	    }
+	  });
+	}
+});
+</script>

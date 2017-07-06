@@ -13,7 +13,6 @@ use SMS\PaymentBundle\Entity\Payment;
 use API\Form\Type\MonthType;
 use API\Form\Type\HiddenEntityType;
 use Doctrine\ORM\EntityManager;
-use SMS\EstablishmentBundle\Entity\Establishment;
 use SMS\PaymentBundle\Entity\PaymentType as TypePayment;
 
 class PaymentType extends AbstractType
@@ -51,9 +50,9 @@ class PaymentType extends AbstractType
             ->add('paymentType' , EntityType::class , array(
                 'class' => TypePayment::class ,
                 'property' => "TypePaymentName",
-                'query_builder' => function ($er) use ($establishment) {
+                'query_builder' => function ($er) use ($student) {
                     return $er->createQueryBuilder('paymentType')
-                              ->join('paymentType.registration', 'registration')
+                              ->join('paymentType.registrations', 'registration')
                               ->join('registration.student', 'student')
                               ->andWhere('student.id = :student')
                               ->setParameter('student', $student->getId());

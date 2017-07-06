@@ -37,11 +37,10 @@ class SearchType extends AbstractType
                               ->andWhere('establishment.id = :establishment')
                               ->setParameter('establishment', $establishment->getId());
                 },
-                'multiple' => true,
+                'placeholder'   => 'payment.field.select_paymentType',
                 'label' => 'payment.field.paymentType')
             )
             ->add('months' ,MonthType::class , array(
-                  'multiple' => true,
                   'label' => 'paymenttype.field.months',
                   'placeholder'   => 'paymenttype.field.select_months')
               )

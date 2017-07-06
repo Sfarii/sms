@@ -74,6 +74,12 @@ class PaymentType
     private $payments;
 
     /**
+     * One PaymentType has Many Registration.
+     * @ORM\OneToMany(targetEntity="Registration", mappedBy="paymentType",fetch="EXTRA_LAZY")
+     */
+    private $registrations;
+
+    /**
      * One establishment has Many PaymentType.
      * @ORM\ManyToOne(targetEntity="SMS\EstablishmentBundle\Entity\Establishment" ,fetch="EXTRA_LAZY")
      * @ORM\JoinColumn(name="establishment_id", referencedColumnName="id")

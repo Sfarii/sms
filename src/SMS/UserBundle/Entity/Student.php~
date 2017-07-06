@@ -5,7 +5,6 @@ namespace SMS\UserBundle\Entity;
 use Doctrine\ORM\Mapping as ORM;
 use Symfony\Component\Validator\Constraints as Assert;
 use Vich\UploaderBundle\Mapping\Annotation as Vich;
-use SMS\PaymentBundle\Entity\Registration;
 
 /**
  * Student
@@ -99,7 +98,7 @@ class Student extends User
 
     /**
      * One Student has Many Registration.
-     * @ORM\OneToMany(targetEntity="Registration", mappedBy="student",fetch="EXTRA_LAZY")
+     * @ORM\OneToMany(targetEntity="SMS\PaymentBundle\Entity\Registration", mappedBy="student",fetch="EXTRA_LAZY")
      */
     private $registrations;
 

@@ -41,7 +41,8 @@ class Payment
      * @Assert\NotBlank()
      * @Assert\Range(
      *      min = 0,
-     *      max = 999999999)
+     *      max = 99999999999999)
+     * @Assert\Expression(expression="this.getPaymentType().getPrice() >= value")
      */
     private $price;
 

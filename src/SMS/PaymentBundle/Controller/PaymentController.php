@@ -35,14 +35,18 @@ class PaymentController extends BaseController
      */
     public function indexAction(Request $request)
     {
-        $form = $this->createForm(SearchType::class,null, array( 'establishment' => $this->getUser()->getEstablishment()))->handleRequest($request);
+        $form = $this->createForm(SearchType::class,null, array('method' => 'GET', 'establishment' => $this->getUser()->getEstablishment()))->handleRequest($request);
 
         $pagination = $this->getPaginator()->paginate(
-            $this->getDoctrine()->getRepository(Student::class)->findAllRegistredStudent(), /* query NOT result */
+            $this->getEntityManager()->getRegistredStudent(Student::class , $form), /* query NOT result */
             $request->query->getInt('page', 1)/*page number*/,
             9/*limit per page*/
         );
-
+        $sort = $request->query->get('sort', 'empty');
+        if ($sort == "empty"){
+          $pagination->setParam('sort', 'student.firstName');
+          $pagination->setParam('direction', 'asc');
+        }
         // parameters to template
         return array('pagination' => $pagination , 'form' => $form->createView());
     }
@@ -72,26 +76,27 @@ class PaymentController extends BaseController
     /**
      * Creates a new payment entity.
      *
-     * @Route("/new", name="payment_new", options={"expose"=true})
+     * @Route("/new/{id}", name="payment_new")
      * @Method({"GET", "POST"})
      * @Template("SMSPaymentBundle:payment:new.html.twig")
      */
-    public function newAction(Request $request)
+    public function newAction(Student $student , Request $request)
     {
         $payment = new Payment();
-        $form = $this->createForm(PaymentType::class, $payment, array( 'establishment' => $this->getUser()->getEstablishment()));
+        $form = $this->createForm(PaymentType::class, $payment, array('student' => $student , 'establishment' => $this->getUser()->getEstablishment()));
         $form->handleRequest($request);
 
         if ($form->isSubmitted() && $form->isValid() && $form->get('save')->isClicked()) {
             if ($this->getEntityManager()->addPayment($payment , $this->getUser())){
               $this->flashSuccessMsg('payment.add.success');
-              return $this->redirectToRoute('payment_index');
+              return $this->redirectToRoute('user_payment_show', array('id' => $student->getId()));
             }
             $this->flashErrorMsg('payment.add.error');
         }
 
         return array(
             'payment' => $payment,
+            'student' => $student,
             'form' => $form->createView(),
         );
     }
@@ -107,9 +112,13 @@ class PaymentController extends BaseController
         $payments = $this->getPaymentEntityManager();
         $payments->buildDatatable(array('id' => $student->getId()));
 
-        return $this->render('SMSPaymentBundle:registration:show.html.twig', array(
+        $registration = $this->getRegistrationEntityManager();
+        $registration->buildDatatable(array('id' => $student->getId()));
+
+        return $this->render('SMSPaymentBundle:student:show.html.twig', array(
             'student' => $student,
-            'payments' => $payments
+            'payments' => $payments,
+            'registration' => $registration
         ));
     }
 
@@ -126,15 +135,11 @@ class PaymentController extends BaseController
         $payments->buildDatatable(array('id' => $student->getId()));
 
         $query = $this->getDataTableQuery()->getQueryFrom($payments);
-        $user = $this->getUser();
-        $function = function($qb) use ($user , $student)
+        $function = function($qb) use ( $student)
         {
-            $qb->join('payment.establishment', 'establishment')
-              ->join('payment.student', 'student')
+            $qb->join('payment.student', 'student')
                 ->andWhere('student.id = :student')
-                ->andWhere('establishment.id = :establishment')
-                ->setParameter('student', $student->getId())
-        				->setParameter('establishment', $user->getEstablishment()->getId());
+                ->setParameter('student', $student->getId());
         };
 
         $query->addWhereAll($function);
@@ -150,15 +155,16 @@ class PaymentController extends BaseController
      */
     public function editAction(Request $request, Payment $payment)
     {
-        $editForm = $this->createForm(PaymentType::class, $payment, array('establishment' => $this->getUser()->getEstablishment()))->handleRequest($request);
+        $editForm = $this->createForm(PaymentType::class, $payment, array('student' => $payment->getStudent() ,'establishment' => $this->getUser()->getEstablishment()))->handleRequest($request);
         if ($editForm->isSubmitted() && $editForm->isValid() && $editForm->get('save')->isClicked()) {
             $this->getEntityManager()->update($payment);
             $this->flashSuccessMsg('payment.edit.success');
-            return $this->redirectToRoute('payment_index');
+            return $this->redirectToRoute('user_payment_show', array('id' => $payment->getStudent()->getId()));
         }
 
         return array(
             'payment' => $payment,
+            'student' => $payment->getStudent(),
             'form' => $editForm->createView(),
         );
     }
@@ -261,5 +267,21 @@ class PaymentController extends BaseController
         }
 
         return $this->get('knp_paginator');
+    }
+
+    /**
+     * Get registration Entity Manager Service.
+     *
+     * @return SMS\Classes\Services\EntityManager
+     *
+     * @throws \NotFoundException
+     */
+    protected function getRegistrationEntityManager()
+    {
+        if (!$this->has('sms.datatable.registration')){
+           throw $this->createNotFoundException('Service Not Found');
+        }
+
+        return $this->get('sms.datatable.registration');
     }
 }
