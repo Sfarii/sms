@@ -289,8 +289,12 @@ class MenuBuilder
     {
         $menu = $this->factory->createItem('sidebar')
                               ->setChildrenAttribute('class', 'nav menuzord-menu pull-right');
-                $menu->addChild('menu.login.title', array('route' => 'login'));
-                $menu->addChild('menu.contact.title', array('route' => 'contact_page'));
+        $menu->addChild('menu.login.title', array('route' => 'login'));
+        $menu->addChild('menu.contact.title', array('route' => 'contact_page'));
+        $menu->addChild('lang', array('label' => 'menu.lang.title'))
+            ->setChildrenAttribute('class', 'dropdown');
+            $menu['lang']->addChild('menu.lang.french', array('route' => 'translate_index' , 'routeParameters' => array( "lang" => "fr")));
+            $menu['lang']->addChild('menu.lang.english', array('route' => 'translate_index', 'routeParameters' => array( "lang" => "en")));
         return $menu;
     }
 }

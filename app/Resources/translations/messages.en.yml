@@ -23,6 +23,9 @@ menu:
   login.title: Login
   contact.title: Contact
   home.title: Home
+  lang.title: Languages
+  lang.french: french
+  lang.english: English
   aboutus: About Us
   contact: Contact Us
   users:

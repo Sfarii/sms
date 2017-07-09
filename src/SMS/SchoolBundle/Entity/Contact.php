@@ -62,7 +62,6 @@ class Contact
      * @ORM\Column(name="message", type="text")
      * @Assert\NotBlank()
      * @Assert\Length(min = 2, max = 1000)
-     * @Assert\Regex(pattern="/^[a-z0-9 .\-]+$/i" ,match=true)
      */
     private $message;
 

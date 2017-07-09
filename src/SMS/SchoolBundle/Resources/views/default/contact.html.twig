@@ -25,6 +25,21 @@
       </div>
       <div class="row">
         <div class="col-md-12">
+          <!-- main flash success message -->
+          {% for flash_message in app.session.flashbag.get(msg_success) %}
+            <div class="row mb-40">
+              <div class="col-md-8 col-md-offset-2">
+                <div class="alert success-border" role="alert">
+                  <button type="button" class="close" data-dismiss="alert" aria-label="Close">
+                    <span aria-hidden="true">×</span>
+                  </button>
+                  <i class="fa fa-thumbs-o-up"></i>
+                  {{ flash_message }}
+                </div>
+              </div>
+            </div>
+          {% endfor %}
+          <!-- main flash success message end -->
           {{ form_start(form) }}
           <div class="row">
             <div class="col-md-6">

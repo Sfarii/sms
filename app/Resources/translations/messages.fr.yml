@@ -26,8 +26,11 @@ menu:
   feature.title: Fonctionnalité
   pricing_table.title: Tableau de tarification
   login.title: S'identifier
-  contact.title: Contactez nous
+  contact.title: Contact
   home.title: Accueil
+  lang.title: Langues
+  lang.french: french
+  lang.english: English
   aboutus: À propos de nous
   contact: Contactez nous
   users:

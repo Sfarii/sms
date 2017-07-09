@@ -15,7 +15,7 @@ use Sensio\Bundle\FrameworkExtraBundle\Configuration\Security;
  * Establishment controller.
  *
  * @Route("establishment")
- * @Security("has_role('ROLE_ADMIN')")
+ * @Security("has_role('ROLE_MANAGER')")
  *
  * @author Rami Sfari <rami2sfari@gmail.com>
  * @copyright Copyright (c) 2017, SMS

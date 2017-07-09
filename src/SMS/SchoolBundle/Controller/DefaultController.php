@@ -18,6 +18,16 @@ use SMS\SchoolBundle\Entity\AboutUs;
 class DefaultController extends BaseController
 {
     /**
+     * @Route("/translate/{lang}" , name="translate_index")
+     * @Method("GET")
+     */
+    public function translatorAction($lang)
+    {
+        $session = $this->getRequest()->getSession();
+        $session->set('_locale', $lang);
+        return $this->redirect($this->getRequest()->headers->get('referer'));
+    }
+    /**
      * @Route("/" , name="home_page")
      * @Method("GET")
      * @Template("SMSSchoolBundle:default:index.html.twig")
@@ -49,6 +59,7 @@ class DefaultController extends BaseController
       if ($form->isSubmitted() && $form->isValid()) {
           $this->getEntityManager()->insert($contact);
           $this->flashSuccessMsg('contact.add.success');
+          return $this->redirectToRoute('contact_page');
       }
 
       return array(

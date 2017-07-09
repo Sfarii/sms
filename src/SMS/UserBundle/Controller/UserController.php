@@ -18,7 +18,7 @@ use Sensio\Bundle\FrameworkExtraBundle\Configuration\Security;
  * @author Rami Sfari <rami2sfari@gmail.com>
  * @copyright Copyright (c) 2016, SMS
  *
- * @Security("has_role('ROLE_ADMIN')")
+ * @Security("has_role('ROLE_ADMIN') or has_role('ROLE_MANAGER')")
  */
 class UserController extends BaseController
 {
