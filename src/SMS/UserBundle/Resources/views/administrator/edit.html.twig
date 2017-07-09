@@ -8,7 +8,11 @@
         <div class="user_heading">
           <div class="user_heading_avatar fileinput fileinput-new" data-provides="fileinput">
             <div class="fileinput-new thumbnail">
-              <img src="{{ asset('assets/img/avatars/user@2x.png') }}" alt="user avatar"/>
+              {% if user.imageName %}
+                <img src="{{ vich_uploader_asset(user, 'imageFile') }}" alt="{{ user.imageName }}"/>
+              {% else %}
+                <img src="{{ asset('assets/img/avatars/user@2x.png') }}" alt="user avatar"/>
+              {% endif %}
             </div>
             <div class="fileinput-preview fileinput-exists thumbnail"></div>
             <div class="user_avatar_controls">
