@@ -3,7 +3,6 @@ UPGRADE FROM 2.7 to 2.8
 
 When upgrading Symfony from 2.7 to 2.8, beware of the following changes in the
 Standard Edition:
-
  * Assetic is not included by default anymore.
  * It comes with a new major version of `sensio/distribution-bundle`. If you are
    updating the bundle in your project as well, the following changes are required:

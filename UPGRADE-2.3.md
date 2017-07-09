@@ -12,7 +12,6 @@ to the code that came from the Standard Edition:
         use Symfony\Component\Debug\Debug;
 
         Debug::enable();
-
    You also need to enable debugging in the
    [`app/console`](https://github.com/symfony/symfony-standard/blob/2.3/app/console)
    script, after the `$debug` variable is defined:

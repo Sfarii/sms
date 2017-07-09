@@ -8,7 +8,6 @@ From Symfony 2.0 to Symfony 2.1
 
 As of Symfony 2.1, project dependencies are managed by
 [Composer](http://getcomposer.org/):
-
 * The `bin/vendors` script can be removed as `composer.phar` does all the work
   now (it is recommended to install it globally on your machine).
 
