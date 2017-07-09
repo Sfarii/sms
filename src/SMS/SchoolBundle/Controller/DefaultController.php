@@ -23,8 +23,12 @@ class DefaultController extends BaseController
      */
     public function translatorAction($lang)
     {
-        $session = $this->getRequest()->getSession();
-        $session->set('_locale', $lang);
+        if (in_array($lang, array("fr", "en")))
+        {
+          $session = $this->getRequest()->getSession();
+          $session->set('_locale', $lang);
+        }
+
         return $this->redirect($this->getRequest()->headers->get('referer'));
     }
     /**
