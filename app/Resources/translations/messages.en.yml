@@ -1,5 +1,9 @@
 #messages.en.yml
 #header
+error:
+    message: Sorry, but we can’t seem to find the page you are looking for.
+    not_found: OOPS! PAGE NOT FOUND
+    return: Take Me Home
 header:
   view_profile: My profile
   logout: Logout
