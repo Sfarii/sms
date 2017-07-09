@@ -26,6 +26,15 @@ services:
         #class: API\EventListener\ExceptionListener
         #tags:
             #- { name: kernel.event_listener, event: kernel.exception }
+    kernel.listener.CacheListener:
+        class: API\EventListener\CacheListener
+        tags:
+            - { name: kernel.event_listener, event: kernel.response, method: onKernelResponse }
+    #user.onligne_user_listener:
+        #class: API\EventListener\OnligneUserListener
+        #arguments: [@security.context, @sms.user.entity_manager]
+        #tags:
+            #- { name: kernel.event_listener, event: kernel.controller, method: onCoreController }
     sms.locale_listener:
         class: API\EventListener\LocaleListener
         arguments: ['%kernel.default_locale%']

@@ -9,11 +9,13 @@ use Sensio\Bundle\FrameworkExtraBundle\Configuration\Method;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\Route;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\Template;use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
+use Sensio\Bundle\FrameworkExtraBundle\Configuration\Security;
 
 /**
  * Day controller.
  *
  * @Route("day")
+ * @Security("has_role('ROLE_ADMIN')")
  *
  * @author Rami Sfari <rami2sfari@gmail.com>
  * @copyright Copyright (c) 2017, SMS
@@ -125,7 +127,7 @@ class DayController extends BaseController
             } catch (\Exception $e) {
                 return new Response($this->get('translator')->trans('day.delete.fail'), 200);
             }
-            
+
 
             return new Response($this->get('translator')->trans('day.delete.success'), 200);
         }

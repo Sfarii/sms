@@ -27,13 +27,16 @@ class StudentRepository extends EntityRepository
      *
      * @return array
      */
-    public function findAllRegistredStudent()
+    public function findAllRegistredStudent($establishment)
     {
         $query = $this->createQueryBuilder('student')
           ->join('student.registrations', 'registrations')
           ->join('registrations.paymentType', 'paymentType')
-          ->select("partial student.{id ,imageName , username , firstName , lastName , phone , email}")
-          ->distinct('student.id');
+          ->join('paymentType.payments', 'payment')
+          ->join('student.establishment', 'establishment')
+          ->select("payment.month , paymentType.id , partial student.{id ,imageName , username , firstName , lastName , phone , email} as studentInfo")
+          ->where('establishment.id = :establishment')
+          ->setParameter('establishment', $establishment->getId());
         return $query;
     }
 

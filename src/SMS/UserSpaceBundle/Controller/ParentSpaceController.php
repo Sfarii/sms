@@ -14,12 +14,17 @@ use SMS\StudyPlanBundle\Entity\TypeExam;
 use SMS\StudyPlanBundle\Entity\Exam;
 use Symfony\Component\HttpFoundation\JsonResponse;
 use SMS\UserSpaceBundle\Form\StudentAndDivisionListType;
+use Sensio\Bundle\FrameworkExtraBundle\Configuration\Security;
+
+/**
+ *
+ */
 
 /**
  * Parent Space Controller controller.
  *
  * @Route("parent_space")
- *
+ * @Security("has_role('ROLE_ADMIN')")
  * @author Rami Sfari <rami2sfari@gmail.com>
  * @copyright Copyright (c) 2017, SMS
  * @package Space\parentBundle\Controller

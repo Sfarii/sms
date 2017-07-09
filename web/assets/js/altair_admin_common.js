@@ -752,6 +752,7 @@
                                 duration: 200,
                                 easing: easing_swiftOut
                             })
+                        
                     }
                 });
 

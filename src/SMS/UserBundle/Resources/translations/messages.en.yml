@@ -136,8 +136,11 @@ registration:
         password: |
                     Password: %password%
         note : |
-                Note: Please change your password soon as you get this message.
-        author: The Texhnolyze Solution Team .
+                Please change your password soon as you get this message.
+        author: Enjoy SMS anywhere and anytime .
+        friends: FRIENDS
+        messages: MESSAGE
+        profile: PROFILE
 student:
     studentType:
         false_label: Extern Student  # FIXME

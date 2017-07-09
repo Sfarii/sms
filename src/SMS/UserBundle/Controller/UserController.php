@@ -12,10 +12,13 @@ use SMS\UserBundle\BaseController\BaseController;
 use SMS\UserBundle\Entity\User;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
+use Sensio\Bundle\FrameworkExtraBundle\Configuration\Security;
 
 /**
  * @author Rami Sfari <rami2sfari@gmail.com>
  * @copyright Copyright (c) 2016, SMS
+ *
+ * @Security("has_role('ROLE_ADMIN')")
  */
 class UserController extends BaseController
 {

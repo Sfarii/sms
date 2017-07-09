@@ -1,0 +1,193 @@
+course:
+    delete:
+        fail: Could not delete from the specified Courses
+        success: The specified Courses successfully deleted
+    add:
+        success: Course successfully added    # FIXME
+    edit:
+        success: Course successfully edited   # FIXME
+    edit:
+        title: Edit course
+
+    field:
+        coefficient: Coefficient
+        courseName: Course Name
+        division: Semester
+        grade: Grade
+
+    list:
+        title: List of courses
+
+    new:
+        title: Adding an course
+
+    show:
+        detail: Course Detail
+        title: Course Info
+
+division:
+    field:
+        divisionName: Semester Name
+
+exam:
+    delete:
+        fail: Could not delete from the specified exams
+        success: The specified exams successfully deleted
+    add:
+        success: exam successfully added    # FIXME
+    edit:
+        success: exam successfully edited   # FIXME
+    edit:
+        title: Edit Exam
+
+    field:
+        course: Course
+        dateExam: Date Exam
+        division: Semestre
+        endTime: End Time
+        examName: Exam Name
+        section: Section
+        sections: Sections
+        startTime: Start Time
+        typeExam: Type Exam
+
+    list:
+        title: List of Exam
+
+    new:
+        title: Adding an Exam
+
+    show:
+        detail: Exam Detail
+        title: Exam Title
+
+filter:
+    field:
+        all: Tout
+        division: Semester
+        professor: Professor
+        send: Send
+
+grade:
+    field:
+        gradeName: Grade Name
+
+note:
+    field:
+        by_student: By Student
+        created: note created
+        mark: Mark
+        updated: Updated
+
+    item: Note
+
+    list:
+        title: Lists of Note
+
+    show:
+        detail: Note Detail
+        title: Note Title
+
+professor:
+    field:
+        firstName: Professor First Name
+        lastName: Professor Last Name
+
+schedule:
+    delete:
+        fail: Could not delete from the specified schedules
+        success: The specified schedules successfully deleted
+    add:
+        success: schedule successfully added    # FIXME
+    edit:
+        success: schedule successfully edited   # FIXME
+    edit:
+        title: Edit Schedule
+
+    field:
+        course: Course
+        day: Day
+        division: Division
+        grade: Grade
+        professor: Professor
+        section: Section
+        session: Session
+        sessions: Sessions
+
+    list:
+        title: Lists of schedule
+
+    new:
+        title: Adding an Schedule
+
+    show:
+        detail: Schedule Detail
+        title: Schedule Title
+
+section:
+    field:
+        grade: Grade
+        sectionName: Section Name
+        sessionName: Session Name
+
+session:
+    delete:
+        fail: Could not delete from the specified session
+        success: The specified session successfully deleted
+    add:
+        success: session successfully added    # FIXME
+    edit:
+        success: session successfully edited   # FIXME
+    edit:
+        title: Edit Session
+
+    field:
+        endTime: End Time
+        sessionName: Session Name
+        startTime: Start Time
+
+    list:
+        title: Lists of session
+
+    new:
+        title: Adding an Session
+
+    show:
+        detail: Session Detail
+        title: Session Title
+
+student:
+    field:
+        firstName: Student First Name
+        lastName: Student Last Name
+        recordeNumber: Student Recorde Number
+
+studentparent:
+    field:
+        fatherName: Father Name
+
+typeExam:
+    delete:
+        fail: Could not delete from the specified type Exam
+        success: The specified Exam successfully deleted
+    add:
+        success: Type Exam successfully added    # FIXME
+    edit:
+        success: Type Exam successfully edited   # FIXME
+typeexam:
+    edit:
+        title: Edit Type Exam
+
+    field:
+        factor: Factor
+        typeExamName: Type Exam Name
+
+    list:
+        title: Lists of Type Exam
+
+    new:
+        title: Adding an Type Exam
+
+    show:
+        detail:  Type Exam Detail
+        title:   Type Exam Info

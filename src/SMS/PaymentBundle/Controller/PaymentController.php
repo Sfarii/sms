@@ -13,11 +13,13 @@ use Sensio\Bundle\FrameworkExtraBundle\Configuration\Template;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
 use SMS\PaymentBundle\Form\SearchType;
+use Sensio\Bundle\FrameworkExtraBundle\Configuration\Security;
 
 /**
  * Payment controller.
  *
  * @Route("payment")
+ * @Security("has_role('ROLE_ADMIN')")
  *
  * @author Rami Sfari <rami2sfari@gmail.com>
  * @copyright Copyright (c) 2017, SMS
@@ -38,9 +40,10 @@ class PaymentController extends BaseController
         $form = $this->createForm(SearchType::class,null, array('method' => 'GET', 'establishment' => $this->getUser()->getEstablishment()))->handleRequest($request);
 
         $pagination = $this->getPaginator()->paginate(
-            $this->getEntityManager()->getRegistredStudent(Student::class , $form), /* query NOT result */
+            $this->getEntityManager()->getRegistredStudent(Student::class , $form , $this->getUser()->getEstablishment()), /* query NOT result */
             $request->query->getInt('page', 1)/*page number*/,
-            9/*limit per page*/
+            9/*limit per page*/,
+            array('wrap-queries'=>true)
         );
         $sort = $request->query->get('sort', 'empty');
         if ($sort == "empty"){
@@ -155,7 +158,7 @@ class PaymentController extends BaseController
     {
         $editForm = $this->createForm(PaymentType::class, $payment, array('student' => $payment->getStudent() ,'establishment' => $this->getUser()->getEstablishment()))->handleRequest($request);
         if ($editForm->isSubmitted() && $editForm->isValid() && $editForm->get('save')->isClicked()) {
-            $this->getEntityManager()->update($payment);
+            $this->getEntityManager()->updatePayment($payment);
             $this->flashSuccessMsg('payment.edit.success');
             return $this->redirectToRoute('user_payment_show', array('id' => $payment->getStudent()->getId()));
         }

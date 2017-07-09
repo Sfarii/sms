@@ -73,7 +73,7 @@ class MenuBuilder
     {
       $menu = $this->factory->createItem('root');
 
-      $menu->addChild('menu.dashbord', array('route' => 'attendanceprofessor_index'))
+      $menu->addChild('menu.dashbord', array('route' => 'dashbord_index'))
           ->setAttribute('icon', '&#xE871;');
 
       $menu->addChild('establishment', array('label' => 'menu.establishment.title'))
@@ -158,7 +158,7 @@ class MenuBuilder
     {
       $menu = $this->factory->createItem('root');
 
-      $menu->addChild('menu.dashbord', array('route' => 'attendanceprofessor_index'))
+      $menu->addChild('menu.dashbord', array('route' => 'dashbord_index'))
           ->setAttribute('icon', '&#xE871;');
 
       $menu->addChild('menu.administration.show_attendance', array('route' => 'attendance_student_space'))
@@ -189,7 +189,7 @@ class MenuBuilder
     {
       $menu = $this->factory->createItem('root');
 
-      $menu->addChild('menu.dashbord', array('route' => 'attendanceprofessor_index'))
+      $menu->addChild('menu.dashbord', array('route' => 'dashbord_index'))
           ->setAttribute('icon', '&#xE871;');
 
       $menu->addChild('menu.establishment.title', array('route' => 'establishment_index'))
@@ -233,7 +233,7 @@ class MenuBuilder
     {
       $menu = $this->factory->createItem('root');
 
-      $menu->addChild('menu.dashbord', array('route' => 'attendanceprofessor_index'))
+      $menu->addChild('menu.dashbord', array('route' => 'dashbord_index'))
           ->setAttribute('icon', '&#xE871;');
 
       $menu->addChild('menu.administration.show_attendance', array('route' => 'attendance_parent_space'))
@@ -263,7 +263,7 @@ class MenuBuilder
     {
       $menu = $this->factory->createItem('root');
 
-      $menu->addChild('menu.dashbord', array('route' => 'attendanceprofessor_index'))
+      $menu->addChild('menu.dashbord', array('route' => 'dashbord_index'))
           ->setAttribute('icon', '&#xE871;');
 
       $menu->addChild('menu.administration.attendance', array('route' => 'attendance_student_new'))

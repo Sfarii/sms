@@ -20,9 +20,7 @@ class AfterLoginListener
     public function onSecurityInteractiveLogin(InteractiveLoginEvent $event)
     {
         $user = $event->getAuthenticationToken()->getUser();
-
         if (!$user instanceof Manager ) {
-          $this->session->set($this->sessionName, serialize($user->getEstablishment()));
         }
 
     }

@@ -10,11 +10,12 @@ use Sensio\Bundle\FrameworkExtraBundle\Configuration\Route;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\Template;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
-
+use Sensio\Bundle\FrameworkExtraBundle\Configuration\Security;
 /**
  * Division controller.
  *
  * @Route("division")
+ * @Security("has_role('ROLE_ADMIN')")
  *
  * @author Rami Sfari <rami2sfari@gmail.com>
  * @copyright Copyright (c) 2017, SMS

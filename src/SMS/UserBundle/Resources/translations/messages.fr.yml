@@ -1,200 +1,219 @@
 action:
-    delete: action.delete   # FIXME
+    delete: Supprimer
+    edit: Modifier
+    help: Aidez-moi
+    picture: Photo   # FIXME
+    print: Impression
+    activate: Activer
+    deactivate: Désactiver
 
 administrator:
+    add:
+        success: Compte d'administrateur ajouté avec succès    # FIXME
+    edit:
+        success: Compte d'administrateur édité avec succès   # FIXME
     field:
-        address: administrator.field.address   # FIXME
-        firstName: administrator.field.firstName   # FIXME
-        gender: administrator.field.gender   # FIXME
-        lastName: administrator.field.lastName   # FIXME
-        phone: administrator.field.phone   # FIXME
-
+        address: Adresse   # FIXME
+        firstName: Nom  # FIXME
+        gender: Sexe   # FIXME
+        lastName: Prénom   # FIXME
+        phone: Téléphone   # FIXME
     list:
-        title: administrator.list.title   # FIXME
+        title: Liste des administrateurs    # FIXME
 
     new:
-        title: administrator.new.title   # FIXME
+        title: Créer un nouveau compte administrateur   # FIXME
 
     show:
-        title: administrator.show.title   # FIXME
-
-author:
-    created: author.created   # FIXME
-    creator: author.creator   # FIXME
-    creator.empty: author.creator.empty   # FIXME
-    updated: author.updated   # FIXME
-
-contact:
-    title: contact.title   # FIXME
-
-course:
-    field:
-        grade: course.field.grade   # FIXME
-
-datatables:
-    actions:
-        edit: datatables.actions.edit   # FIXME
-        show: datatables.actions.show   # FIXME
-        title: datatables.actions.title   # FIXME
+        title: Informations sur l'administrateur   # FIXME
 
 filter:
     field:
-        all: filter.field.all   # FIXME
+        select_section: Sélectionnez la section ...
+        select_grade: Sélectionnez la Classe ...
+        grade: Classe   # FIXME
+        all: Tout   # FIXME
+        section: Section   # FIXME
 
 gender:
-    female: gender.female   # FIXME
-    male: gender.male   # FIXME
-    other: gender.other   # FIXME
+    female: Femelle   # FIXME
+    male: Mâle   # FIXME
+    other: Autre   # FIXME
 
 login:
-    help_show: login.help_show   # FIXME
-    page_title: login.page_title   # FIXME
-    submit: login.submit   # FIXME
+  page_title: S'identifier
+  submit: Se connecter
+  stay_signed: Rester connecté
+  help_show: Besoin d'aide
 
 manager:
-    delete:
-        fail: manager.delete.fail   # FIXME
-        success: manager.delete.success   # FIXME
-
+    add:
+        success: Le compte du gestionnaire d'utilisateurs a ajouté avec succès    # FIXME
+    edit:
+        success: Le compte du gestionnaire d'utilisateurs a été édité avec succès   # FIXME
     field:
-        address: manager.field.address   # FIXME
-        email: manager.field.email   # FIXME
-        firstName: manager.field.firstName   # FIXME
-        lastName: manager.field.lastName   # FIXME
-        phone: manager.field.phone   # FIXME
-        username: manager.field.username   # FIXME
+        address: Adresse   # FIXME
+        email: E-mail   # FIXME
+        firstName: Nom   # FIXME
+        lastName: Prénom   # FIXME
+        phone: Téléphone # FIXME
+        username: Nom d'utilisateur   # FIXME
 
     list:
-        title: manager.list.title   # FIXME
-
+        title: Listes des gestionnaires d'utilisateurs   # FIXME
     new:
-        title: manager.new.title   # FIXME
+        title: Créer un nouveau compte de gestionnaire d'utilisateurs   # FIXME
 
     show:
-        title: manager.show.title   # FIXME
-
-md-fab: md-fab   # FIXME
-
-menu:
-    home:
-        title: menu.home.title   # FIXME
+        title: Informations sur le gestionnaire d'utilisateurs   # FIXME
 
 professor:
+    add:
+        success: Le compte professeur a été ajouté avec succès    # FIXME
+    edit:
+        success: Compte professeur édité avec succès   # FIXME
     field:
-        address: professor.field.address   # FIXME
-        birthday: professor.field.birthday   # FIXME
-        email: professor.field.email   # FIXME
-        firstName: professor.field.firstName   # FIXME
-        gender: professor.field.gender   # FIXME
-        grade: professor.field.grade   # FIXME
-        lastName: professor.field.lastName   # FIXME
-        phone: professor.field.phone   # FIXME
+        address: Addresse   # FIXME
+        birthday: Anniversaire   # FIXME
+        email: E-mail   # FIXME
+        firstName: Nom   # FIXME
+        gender: Sexe   # FIXME
+        grade: Classe   # FIXME
+        lastName: Prénom   # FIXME
+        phone: Téléphone   # FIXME
 
     list:
-        title: professor.list.title   # FIXME
+        title: Listes des professeurs  # FIXME
 
     new:
-        title: professor.new.title   # FIXME
+        title: Créer un nouveau compte professeur  # FIXME
 
     show:
-        title: professor.show.title   # FIXME
+        title: Information du professeur   # FIXME
 
-registration:
-    email:
-        author: registration.email.author   # FIXME
-        button: registration.email.button   # FIXME
-        footer: registration.email.footer   # FIXME
-        message: registration.email.message   # FIXME
-        note: registration.email.note   # FIXME
-        password: registration.email.password   # FIXME
-        subject: registration.email.subject   # FIXME
-        title: registration.email.title   # FIXME
-        username: registration.email.username   # FIXME
-
+# reset
 reset:
+  submit: Envoyer
+  title: Réinitialiser le mot de passe
+  send_email: |
+        "Un courriel a été envoyé. Il contient un lien que vous devez cliquer pour réinitialiser votre mot de passe.
+        Note: Vous ne pouvez demander qu'un nouveau mot de passe dans %tokenLifetime% heures.
+        Si vous ne recevez pas un e-mail, vérifiez votre dossier de spam ou réessayez."
+  success: Le mot de passe a été réinitialisé avec succès.
+  email:
+    not_found : Le compte de messagerie que vous avez essayé d'atteindre n'existe pas.
+    title: Réinitialiser le mot de passe
+    footer: © Copyright Texhnolyze Solution Tous les droits sont réservés.
+    button: Réinitialisez votre mot de passe
+    subject: Bonjour,%name%
+    message : Vous avez récemment demandé de réinitialiser votre mot de passe pour votre compte Dev corporation. Cliquez sur le bouton pour le réinitialiser.
+    note : "Remarque: Si vous ne l'avez pas demandé, ignorez ce courriel."
+
+# registration
+registration:
+    check_email: Un courriel a été envoyé à %email%. Il contient un lien d'activation auquel vous devez cliquer pour activer votre compte.
+    confirmed: 'Félicitations %username%, votre compte est maintenant activé.'
+    repeat_confirmed: 'Félicitations %username%, votre compte est maintenant activé.'
+    submit: S'inscrire
+    title: Créer un compte
+    flash:
+        user_created: "L'utilisateur a été créé avec succès."
     email:
-        button: reset.email.button   # FIXME
-        footer: reset.email.footer   # FIXME
-        message: reset.email.message   # FIXME
-        not_found: reset.email.not_found   # FIXME
-        note: reset.email.note   # FIXME
-        subject: reset.email.subject   # FIXME
-        title: reset.email.title   # FIXME
-
-    send_email: reset.send_email   # FIXME
-    submit: reset.submit   # FIXME
-    title: reset.title   # FIXME
-
-schedule:
-    field:
-        section: schedule.field.section   # FIXME
-
+        subject: Bonjour,%name%
+        title: Bienvenue sur SMS
+        footer: © Copyright Texhnolyze Solution Tous les droits sont réservés.
+        button: S'identifier
+        message : |
+                    Vous avez été enregistré sous SMS (School Management Software).
+        username: |
+                    Nom d'utilisateur: %username%
+        password: |
+                    Mot de passe: %password%
+        note : |
+                Modifiez rapidement votre mot de passe lorsque vous recevez ce message.
+        author: Profitez SMS partout et à tout moment.
+        friends: AMIS
+        messages: MESSAGE
+        profile: PROFILE
 student:
+    studentType:
+        false_label: Étudiant externe  # FIXME
+        true_label: Étudiant interne   # FIXME
+    add:
+        success: Compte étudiant ajouté avec succès   # FIXME
+    edit:
+        success: Compte étudiant édité avec succès  # FIXME
     field:
-        birthday: student.field.birthday   # FIXME
-        firstName: student.field.firstName   # FIXME
-        gender: student.field.gender   # FIXME
-        grade: student.field.grade   # FIXME
-        lastName: student.field.lastName   # FIXME
-        recordeNumber: student.field.recordeNumber   # FIXME
-        section: student.field.section   # FIXME
-        studentParent: student.field.studentParent   # FIXME
-
+        birthday: Anniversaire   # FIXME
+        firstName: Nom   # FIXME
+        gender: Sexe   # FIXME
+        grade: Classe   # FIXME
+        lastName: Prénom   # FIXME
+        recordeNumber: Numéro d'enregistrement   # FIXME
+        section: Section   # FIXME
+        studentParent: Parent   # FIXME
+        select_studentParent: Sélectionner Parent ...   # FIXME
+        phone: Téléphone
+        studentType: Étudiant Externe/Interne
     list:
-        title: student.list.title   # FIXME
+        title: Listes d'étudiants   # FIXME
 
     new:
-        title: student.new.title   # FIXME
+        title: Créer un nouveau compte étudiant  # FIXME
 
     show:
-        title: student.show.title   # FIXME
+        title: Informations sur l'élève   # FIXME
 
 studentparent:
+    add:
+        success: Compte parent ajouté avec succès    # FIXME
+    edit:
+        success: Le compte parent a été édité avec succès   # FIXME
     field:
-        address: studentparent.field.address   # FIXME
-        familyName: studentparent.field.familyName   # FIXME
-        fatherName: studentparent.field.fatherName   # FIXME
-        fatherProfession: studentparent.field.fatherProfession   # FIXME
-        motherName: studentparent.field.motherName   # FIXME
-        motherProfession: studentparent.field.motherProfession   # FIXME
-        phone: studentparent.field.phone   # FIXME
+        address: Addresse   # FIXME
+        familyName: Nom de famille   # FIXME
+        fatherName: Nom du père   # FIXME
+        fatherProfession: Père Profession   # FIXME
+        motherName: Nom de la mère   # FIXME
+        motherProfession: Profession de la mère   # FIXME
+        phone: Téléphone   # FIXME
 
     list:
-        title: studentparent.list.title   # FIXME
+        title: Listes des parents   # FIXME
 
     new:
-        title: studentparent.new.title   # FIXME
+        title: Créer un nouveau compte parent   # FIXME
 
     show:
-        title: studentparent.show.title   # FIXME
+        title: Informations parentales  # FIXME
 
 user:
     active:
-        false_label: user.active.false_label   # FIXME
-        true_label: user.active.true_label   # FIXME
+        false_label: Désactivé   # FIXME
+        true_label: Activé   # FIXME
 
-    delete:
-        fail: user.delete.fail   # FIXME
-        success: user.delete.success   # FIXME
-
+    activate:
+        success: Les comptes utilisateurs spécifiés ont été activés avec succès   # FIXME
+    deactivate:
+        success: Les comptes utilisateurs spécifiés ont été désactivés avec succès   # FIXME
     field:
-        email: user.field.email   # FIXME
-        enabled: user.field.enabled   # FIXME
-        establishment: user.field.establishment   # FIXME
-        gender: user.field.gender   # FIXME
-        password: user.field.password   # FIXME
-        role: user.field.role   # FIXME
-        section: user.field.section   # FIXME
-        show_username_password: user.field.show_username_password   # FIXME
-        username: user.field.username   # FIXME
+        email: E-mail   # FIXME
+        enabled: Utilisateur actif   # FIXME
+        establishment: Établissement   # FIXME
+        gender: Sexe   # FIXME
+        password: Mot de passe   # FIXME
+        role: Rôle   # FIXME
+        section: Section   # FIXME
+        show_username_password: Nom d'utilisateur et mot de passe automatique   # FIXME
+        username: Nom d'utilisateur   # FIXME
 
-    new_password: user.new_password   # FIXME
-    new_password_confirmation: user.new_password_confirmation   # FIXME
-    setting: user.setting   # FIXME
+    new_password: Nouveau mot de passe   # FIXME
+    new_password_confirmation: Répété le nouveau mot de passe   # FIXME
+    setting: Autres réglages   # FIXME
 
     show:
-        account_info: user.show.account_info   # FIXME
-        contact_info: user.show.contact_info   # FIXME
-        general_info: user.show.general_info   # FIXME
-        parent_info: user.show.parent_info   # FIXME
-        school_info: user.show.school_info   # FIXME
+        account_info: Information sur le compte   # FIXME
+        contact_info: Informations de contact   # FIXME
+        general_info: informations générales   # FIXME
+        parent_info: Informations parentales   # FIXME
+        school_info: Informations sur l'école   # FIXME

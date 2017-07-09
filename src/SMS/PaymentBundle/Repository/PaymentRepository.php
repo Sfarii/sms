@@ -28,7 +28,7 @@ class PaymentRepository extends \Doctrine\ORM\EntityRepository
 
     /**
      * findByPayment
-     * @param $student
+     * @param $payment
      * @return array
      */
     public function findByPayment($payment)
@@ -38,6 +38,23 @@ class PaymentRepository extends \Doctrine\ORM\EntityRepository
           ->where('paymentType.id = :paymentType')
           ->setParameter('paymentType', $payment->getId())
           ->select("SUM(payment.credit) as credit , SUM(payment.price) as price")
+          ->getQuery()
+          ->getOneOrNullResult();
+    }
+
+    /**
+     * getPaymentInfoByEstablishment
+     * @param $establishment
+     * @return array
+     */
+    public function getPaymentInfoByEstablishment($establishment)
+    {
+        return $this->createQueryBuilder('payment')
+          ->join('payment.paymentType', 'paymentType')
+          ->join('paymentType.establishment', 'establishment')
+          ->where('establishment.id = :establishment')
+          ->setParameter('establishment', $establishment->getId())
+          ->select("SUM(paymentType.registrationFee) as registrationFee, SUM(payment.credit) as credit , SUM(payment.price) as price")
           ->getQuery()
           ->getOneOrNullResult();
     }
@@ -53,6 +70,24 @@ class PaymentRepository extends \Doctrine\ORM\EntityRepository
           ->join('payment.paymentType', 'paymentType')
           ->where('paymentType.id = :paymentType')
           ->setParameter('paymentType', $payment->getId())
+          ->select("payment.month , SUM(payment.credit) as credit , SUM(payment.price) as price")
+          ->groupBy('payment.month')
+          ->getQuery()
+          ->getResult();
+    }
+
+    /**
+     * Chart By All Payment
+     * @param $establishment
+     * @return array
+     */
+    public function findChartByAll($establishment)
+    {
+        return $this->createQueryBuilder('payment')
+          ->join('payment.paymentType', 'paymentType')
+          ->join('paymentType.establishment', 'establishment')
+          ->where('establishment.id = :establishment')
+          ->setParameter('establishment', $establishment->getId())
           ->select("payment.month , SUM(payment.credit) as credit , SUM(payment.price) as price")
           ->groupBy('payment.month')
           ->getQuery()

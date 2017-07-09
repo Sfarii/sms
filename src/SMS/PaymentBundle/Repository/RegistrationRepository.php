@@ -47,6 +47,24 @@ class RegistrationRepository extends \Doctrine\ORM\EntityRepository
   }
 
   /**
+   * findByPayment
+   * @param $student
+   * @return array
+   */
+  public function getRegistredStudent($establishment)
+  {
+      return $this->createQueryBuilder('registration')
+        ->join('registration.student', 'student')
+        ->join('registration.paymentType', 'paymentType')
+        ->join('paymentType.establishment', 'establishment')
+        ->where('establishment.id = :establishment')
+        ->setParameter('establishment', $establishment->getId())
+        ->select("count(student)")
+        ->getQuery()
+        ->getSingleScalarResult();
+  }
+
+  /**
    * Get All registred users
    * @param $student
    * @return array

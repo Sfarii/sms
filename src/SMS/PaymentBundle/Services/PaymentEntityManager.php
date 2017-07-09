@@ -4,6 +4,7 @@ namespace SMS\PaymentBundle\Services;
 
 use Doctrine\ORM\EntityManager;
 use SMS\PaymentBundle\Entity\Registration;
+use SMS\PaymentBundle\Entity\Payment;
 
 /**
  * @author Rami Sfari <rami2sfari@gmail.com>
@@ -71,43 +72,72 @@ class PaymentEntityManager
     }
 
     /**
+    * update entity in the database
+    * @param Object $payment
+    */
+    public function updatePayment($payment)
+    {
+        if ($payment->getPaymentType()->getPrice() < $payment->getPrice()) {
+          return false;
+        }
+
+        $payment->setCredit($payment->getPaymentType()->getPrice() - $payment->getPrice());
+        $this->_em->flush($payment);
+    }
+
+    /**
     * get Registred Student
     *
     * @param String $className
     * @param SMS\PaymentBundle\Form\SearchType $form
+    * @param SMS\EstablishmentBundle\Entity\Establishment $establishment
     */
-    public function getRegistredStudent($className, $form)
+    public function getRegistredStudent($className, $form , $establishment)
     {
-      $query = $this->_em->getRepository($className)->findAllRegistredStudent();
+      $query = $this->_em->getRepository($className)->findAllRegistredStudent($establishment);
       if ($form->isSubmitted()) {
           if (!empty($form->get('textField')->getData())){
             $query->andWhere('student.firstName like :search OR student.phone LIKE :search OR student.lastName LIKE :search OR student.email LIKE :search')
                   ->setParameter('search', '%'.$form->get('textField')->getData().'%');
           }
-          /*$query->andWhere('student.studentType = :search')
-                ->setParameter('search', '%'.$form->get('extern')->getData().'%');
-          $query->andWhere('student.studentType = :search')
-                ->setParameter('search', '%'.$form->get('intren')->getData().'%');*/
-          if ($form->get('paid')->getData()){
-
+          if (!$form->get('extern')->getData() && $form->get('intren')->getData()){
+            $query->andWhere('student.studentType = TRUE');
           }
-          if ($form->get('notPaid')->getData()){
-
+          if ($form->get('extern')->getData() && !$form->get('intren')->getData()){
+            $query->andWhere('student.studentType = FALSE');
           }
-          if ($form->get('hasCredit')->getData()){
+          if ($form->get('paid')->getData() && is_null($form->get('paymentType')->getData())){
+            $query->addSelect(sprintf("(SELECT SUM(payment1.credit) FROM %s as payment1 WHERE payment1.student = student ) AS credit1", Payment::class))
+                  ->andHaving('credit1 = 0');
+          }
+          if ($form->get('hasCredit')->getData() && is_null($form->get('paymentType')->getData())){
+            $query->addSelect(sprintf("(SELECT SUM(payment2.credit) FROM %s as payment2 WHERE payment2.student = student ) AS credit2", Payment::class))
+                  ->andHaving('credit2 > 0');
+          }
+          if ($form->get('paid')->getData() && !is_null($form->get('paymentType')->getData())){
+            $query->addSelect(sprintf("(SELECT SUM(payment3.credit) FROM %s as payment3 WHERE payment3 = payment AND payment3.student = student ) AS credit3", Payment::class))
+                  ->andHaving('credit3 = 0');
+          }
+          if ($form->get('hasCredit')->getData() && !is_null($form->get('paymentType')->getData())){
 
+            $query->addSelect(sprintf("(SELECT SUM(payment4.credit) FROM %s as payment4 WHERE payment4 = payment AND payment4.student = student ) AS credit4", Payment::class))
+                  ->andHaving('credit4 > 0');
           }
           if (!is_null($form->get('paymentType')->getData())){
-            $query->andWhere('paymentType = :paymentType')
-                  ->setParameter('paymentType', $form->get('paymentType')->getData());
+            $query->andHaving('paymentType.id = :paymentType')
+                  ->setParameter('paymentType', $form->get('paymentType')->getData()->getId());
           }
           if (!empty($form->get('months')->getData())){
             $query
-                ->join("paymentType")
                 ->andWhere('payment.month = :months')
                 ->setParameter('months', $form->get('months')->getData());
           }
-
+          if ($form->get('Registred')->getData() && !$form->get('notRegistred')->getData()){
+            $query->andWhere('registrations.registered = TRUE');
+          }
+          if (!$form->get('Registred')->getData() && $form->get('notRegistred')->getData()){
+            $query->andWhere('registrations.registered = FALSE');
+          }
 
       }
       return $query->getQuery();

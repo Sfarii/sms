@@ -10,12 +10,13 @@ use Sensio\Bundle\FrameworkExtraBundle\Configuration\Method;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\Route;
 use Symfony\Component\HttpFoundation\Request;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\Template;
+use Sensio\Bundle\FrameworkExtraBundle\Configuration\Security;
 
 /**
  * Administrator controller.
  *
  * @Route("administrator")
- *
+ * @Security("has_role('ROLE_ADMIN') or has_role('ROLE_MANAGER')")
  * @author Rami Sfari <rami2sfari@gmail.com>
  * @copyright Copyright (c) 2017, SMS
  * @package SMS\UserBundle\Controller

@@ -117,7 +117,8 @@
           </div>
       {% else %}
       <div class="uk-grid uk-grid-medium uk-grid-width-medium-1-2 uk-grid-width-large-1-3 hierarchical_show" data-uk-grid="{gutter: 20}" data-uk-grid-margin data-uk-grid-match="{target:'.md-card-content'}">
-        {% for student in pagination %}
+
+        {% for result in pagination %}
           <div>
             <div class="md-card">
               <div class="md-card-head md-bg-blue-700">
@@ -126,38 +127,38 @@
                   <div class="uk-dropdown uk-dropdown-small">
                     <ul class="uk-nav">
                       <li>
-                        <a href="{{ path("user_payment_show" , { "id" : student.id })}}">{{ "payment.payment_info"|trans }}</a>
+                        <a href="{{ path("user_payment_show" , { "id" : result.studentInfo.id })}}">{{ "payment.payment_info"|trans }}</a>
                       </li>
                       <li>
-                        <a href="{{ path("payment_new" , { "id" : student.id })}}">{{ "payment.new.title"|trans }}</a>
+                        <a href="{{ path("payment_new" , { "id" : result.studentInfo.id })}}">{{ "payment.new.title"|trans }}</a>
                       </li>
                     </ul>
                   </div>
                 </div>
                 <div class="uk-text-center">
-                  {% if student.imageName %}
-                    <img class="md-card-head-avatar" src="{{ vich_uploader_asset(student, 'imageFile') }}" alt="{{ student.imageName }}"/>
+                  {% if result.studentInfo.imageName %}
+                    <img class="md-card-head-avatar" src="{{ vich_uploader_asset(result.studentInfo, 'imageFile') }}" alt="{{ result.studentInfo.imageName }}"/>
                   {% else %}
                     <img class="md-card-head-avatar md-bg-grey-50" src="{{ asset('assets/img/avatars/user@2x.png') }}" alt="user avatar"/>
                   {% endif %}
                 </div>
                 <h3 class="md-card-head-text uk-text-center md-color-white">
-                  {{ student.firstName }}
-                  {{ student.lastName }}
-                  <span>{{ student.username }}</span>
+                  {{ result.studentInfo.firstName }}
+                  {{ result.studentInfo.lastName }}
+                  <span>{{ result.studentInfo.username }}</span>
                 </h3>
               </div>
               <div class="md-card-content">
                 <ul class="md-list">
                   <li>
                     <div class="md-list-content">
-                      <span class="md-list-heading">{{ student.email }}</span>
+                      <span class="md-list-heading">{{ result.studentInfo.email }}</span>
                       <span class="uk-text-small uk-text-muted">{{'user.field.email'|trans }}</span>
                     </div>
                   </li>
                   <li>
                     <div class="md-list-content">
-                      <span class="md-list-heading">{{ student.phone }}</span>
+                      <span class="md-list-heading">{{ result.studentInfo.phone }}</span>
                       <span class="uk-text-small uk-text-muted">{{'studentparent.field.phone'|trans }}</span>
                     </div>
                   </li>

@@ -1,12 +1,3 @@
-action:
-    delete: Delete   # FIXME
-
-author:
-    created: Created   # FIXME
-    creator: Author   # FIXME
-    info: Author Info  # FIXME
-    updated: Updated   # FIXME
-
 division:
     delete:
         fail: Could not delete from the specified divisions   # FIXME

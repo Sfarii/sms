@@ -1,0 +1,91 @@
+division:
+    delete:
+        fail: Impossible de supprimer Les semestres spécifié   # FIXME
+        success: Les semestres spécifié a été supprimé avec succès  # FIXME
+    add:
+        success: Semestre ajouté avec succès    # FIXME
+    edit:
+        success: Semestre rédigé avec succès   # FIXME
+    edit:
+        title: Modifier le semestre   # FIXME
+
+    field:
+        divisionName: Nom du semestre   # FIXME
+        endDate: Date de fin   # FIXME
+        establishment: Établissement   # FIXME
+        name: Nom du semestre   # FIXME
+        startDate: Date de début   # FIXME
+
+    list:
+        title: Listes de semestre   # FIXME
+
+    new:
+        title: Nouveau semestre   # FIXME
+
+    show:
+        detail: Détail du semestre  # FIXME
+        title: Info semestre  # FIXME
+
+establishment:
+    delete:
+        fail: Impossible de supprimer des établissements spécifiés  # FIXME
+        success: Les établissements spécifiés ont été supprimés avec succès  # FIXME
+    add:
+        success: Établissement ajouté avec succès   # FIXME
+    edit:
+        success: Établissement édité avec succès  # FIXME
+        title: Modifier l'établissement   # FIXME
+
+    field:
+        address: Addresse   # FIXME
+        email: Email   # FIXME
+        establishmentName: Nom de l'établissement   # FIXME
+        phone: Téléphone   # FIXME
+
+    list:
+        title: Listes d'établissement  # FIXME
+
+    show:
+        detail: Détail de l'établissement   # FIXME
+        title: Informations sur l'établissement  # FIXME
+    new:
+        title: Nouvel établissement   # FIXME
+grade:
+    delete:
+        fail: Impossible de supprimer les classes spécifiée   # FIXME
+        success: Les classes spécifiée a été supprimée avec succès  # FIXME
+    add:
+        success: Classe ajoutée avec succès    # FIXME
+    edit:
+        success: Classe éditée avec succès   # FIXME
+        title: Modifier la classe   # FIXME
+
+    field:
+        gradeCode: Code de classe  # FIXME
+        gradeName: Nom de classe  # FIXME
+
+    list:
+        title: Listes des classes   # FIXME
+
+    new:
+        title: Nouvelle classe   # FIXME
+
+section:
+    delete:
+        fail: Impossible de supprimer des sections spécifiées  # FIXME
+        success: Les sections spécifiées ont été supprimées avec succès  # FIXME
+    add:
+        success: Section ajoutée avec succès   # FIXME
+    edit:
+        success: Section éditée avec succès  # FIXME
+        title: Modifier la section   # FIXME
+
+    field:
+        grade: classe   # FIXME
+        sectionName: Nom de la section   # FIXME
+
+    list:
+        title: Listes de sections   # FIXME
+
+    new:
+        title: Nouvelle section   # FIXME

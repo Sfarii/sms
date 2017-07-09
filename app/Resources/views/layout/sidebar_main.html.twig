@@ -4,31 +4,33 @@
     <div class="sidebar_main_header">
         {% if app.user.establishment is null  %}
         <div class="sidebar_logo">
-            <a href="index.html" class="sSidebar_hide sidebar_logo_large">
+            <a href="#" class="sSidebar_hide sidebar_logo_large">
                 <img class="logo_regular" src="{{ asset('assets/img/logo_main.png')}}" alt="" height="15" width="71"/>
                 <img class="logo_light" src="{{ asset('assets/img/logo_main_white.png')}}" alt="" height="15" width="71"/>
             </a>
-            <a href="index.html" class="sSidebar_show sidebar_logo_small">
+            <a href="#" class="sSidebar_show sidebar_logo_small">
                 <img class="logo_regular" src="{{ asset('assets/img/logo_main_small.png')}}" alt="" height="32" width="32"/>
                 <img class="logo_light" src="{{ asset('assets/img/logo_main_small_light.png')}}" alt="" height="32" width="32"/>
             </a>
         </div>
         {% else %}
         <div class="sidebar_logo">
-            <a href="index.html" class="sSidebar_hide sidebar_logo_large">
+            <a href="#" class="sSidebar_hide sidebar_logo_large">
                 <img class="logo_regular" src="{{ vich_uploader_asset(app.user.establishment, 'imageFile') }}" alt="" height="15" width="71"/>
                 <img class="logo_light" src="{{ vich_uploader_asset(app.user.establishment, 'imageFile') }}" alt="" height="15" width="71"/>
             </a>
-            <a href="index.html" class="sSidebar_show sidebar_logo_small">
+            <a href="#" class="sSidebar_show sidebar_logo_small">
                 <img class="logo_regular" src="{{ vich_uploader_asset(app.user.establishment, 'imageFile') }}" alt="" height="32" width="32"/>
                 <img class="logo_light" src="{{ vich_uploader_asset(app.user.establishment, 'imageFile') }}" alt="" height="32" width="32"/>
             </a>
         </div>
         {% endif %}
         <div class="sidebar_actions">
+          <form id="lang_form" method="post" action="{{ path("translate_page") }}">
             <select id="lang_switcher" name="lang_switcher">
-                <option value="fr" selected>French</option>
+                <option value="{{app.session.get("_locale") == "en" or app.session.get("_locale") == "" ? "gb" : app.session.get("_locale")}}" selected></option>
             </select>
+          </form>
         </div>
     </div>
 

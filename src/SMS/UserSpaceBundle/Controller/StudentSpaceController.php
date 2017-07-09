@@ -15,11 +15,13 @@ use SMS\StudyPlanBundle\Entity\Exam;
 use SMS\UserBundle\Entity\Student;
 use Symfony\Component\HttpFoundation\JsonResponse;
 use SMS\UserSpaceBundle\Form\DivisionListType;
+use Sensio\Bundle\FrameworkExtraBundle\Configuration\Security;
 
 /**
  * Student Space Controller controller.
  *
  * @Route("student_space")
+ * @Security("has_role('ROLE_ADMIN')")
  *
  * @author Rami Sfari <rami2sfari@gmail.com>
  * @copyright Copyright (c) 2017, SMS
