@@ -18,7 +18,7 @@ set :interactive_mode, false
 logger.level = Logger::MAX_LEVEL
 set :use_composer, true
 #configure the shared files
-set :shared_files,      ["app/config/parameters.yml"]
+set :shared_files,      ["app/config/db_param.yml"]
 set :shared_children,     [app_path + "/logs", web_path + "/images", "vendor", app_path + "/sessions"]
 #Configure your server
 set :use_sudo,      false
