@@ -19,7 +19,6 @@
         {% endfor %}
     </div>
 {% endset %}
-
 $("#{{ view_table_id }}_multiselect_actions").append("{{ multiple_actions|e('js') }}");
 
 $('.{{ view_table_id }}_multiselect_checkall')
@@ -36,13 +35,15 @@ $('.{{ view_table_id }}_multiselect_checkall')
 
 $(".{{ view_table_id }}_multiselect_action_click").on('click', function(event) {
     var length = $("input.{{ view_table_id }}_multiselect_checkbox:checkbox:checked").length;
+    document.getElementById('audio-alert').play();
 
     event.preventDefault();
 
     if (length > 0) {
         var $route = $(this).attr('href');
+
         UIkit.modal.confirm("{{ 'datatables.bulk.confirmMsg'|trans({}, 'messages') }} ",
-        function(){ 
+        function(){
             {% set token = csrf_token('multiselect') %}
 
             $.ajax({
@@ -69,7 +70,6 @@ $(".{{ view_table_id }}_multiselect_action_click").on('click', function(event) {
                     {% endif %}
                 },
                 error: function (XMLHttpRequest, textStatus, errorThrown) {
-                    console.log(XMLHttpRequest + ' ' + textStatus + ' ' +errorThrown);
                     new UIkit.notify({
                         message: "<a href='#' class='notify-action'><span class='uk-icon-times'></span></a>"+textStatus,
                         status: "error",

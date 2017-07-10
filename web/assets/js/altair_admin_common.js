@@ -33,6 +33,8 @@
         // material design
         altair_md.init();
 
+        
+
     });
 
 
@@ -752,7 +754,7 @@
                                 duration: 200,
                                 easing: easing_swiftOut
                             })
-                        
+
                     }
                 });
 

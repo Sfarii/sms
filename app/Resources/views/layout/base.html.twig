@@ -36,10 +36,13 @@
       <!-- common functions -->
       <script src="{{ asset('assets/js/common.min.js')}}"></script>
       <!-- page specific plugins -->
+      <!-- uikit functions -->
+      <script src="{{ asset('assets/js/uikit_custom.min.js')}}"></script>
       <!-- datatables -->
       <script src="{{ asset('assets/plugins/datatables/js/jquery.dataTables.min.js')}}"></script>
       <script src="{{ asset('bundles/fosjsrouting/js/router.js') }}"></script>
       <script src="{{ path('fos_js_routing_js', {'callback': 'fos.Router.setData'}) }}"></script>
+
     {% endblock %}
   </head>
   <body class="sidebar_main_open sidebar_main_swipe">
@@ -78,13 +81,8 @@
 
     <!-- main sidebar end -->
     {% block javascripts %}
-      <!-- uikit functions -->
-      <script src="{{ asset('assets/js/uikit_custom.min.js')}}"></script>
       <!-- altair common functions/helpers -->
       <script src="{{ asset('assets/js/altair_admin_common.min.js')}}"></script>
-      <!-- sms Web Socket
-      <script src='{{ asset(' assets/websocket/autobahn.min.js')}}'></script>
-      <script src='{{ asset(' assets/websocket/gos_web_socket_client.js')}}'></script>-->
       <!-- sms router js -->
 
       <!-- datatables custom integration -->
@@ -104,7 +102,6 @@
       <script type="text/javascript">
         UIkit.notify({message: "<a href='#' class='notify-action'><span class='uk-icon-times'></span></a>{{ flash_message }}", status: "success", timeout: 0, group: null, pos: 'top-right'});
       </script>
-
     {% endfor %}
     <!-- main flash success message end -->
 
@@ -112,6 +109,7 @@
     {% for flash_message in app.session.flashbag.get(msg_danger) %}
       <script type="text/javascript">
         UIkit.notify({message: "<a href='#' class='notify-action'><span class='uk-icon-times'></span></a>{{ flash_message }}", status: "error", timeout: 0, group: null, pos: 'top-right'});
+        document.getElementById('audio-fail').play();
       </script>
     {% endfor %}
     <!-- main flash success message end -->
