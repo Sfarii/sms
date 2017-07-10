@@ -4,12 +4,6 @@ parameters:
     tokenLifetime: 21600
     app_name: 'SMS v0.1'
     Establishment: EstablishmentEntity
-    database:
-        database_host: 127.0.0.1
-        database_port: 2002
-        database_name: sms
-        database_user: sms_user
-        database_password: UZstchWo5Q
     # mailer
     mailer_transport: smtp
     mailer_host: 127.0.0.1
