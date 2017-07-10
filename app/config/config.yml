@@ -1,6 +1,5 @@
 imports:
-    - { resource: parameters.yml }
-    - { resource: db_param.yml }
+    - { resource: sms_parameters.yml }
     - { resource: security.yml }
     - { resource: services.yml }
     - { resource: sms_param.yml }
@@ -48,11 +47,11 @@ doctrine:
     dbal:
         default_connection: default
         driver: pdo_mysql
-        host: '%db_host%'
-        port: '%db_port%'
-        dbname: '%db_name%'
-        user: '%db_user%'
-        password: '%db_password%'
+        host: '%database_host%'
+        port: '%database_port%'
+        dbname: '%database_name%'
+        user: '%database_user%'
+        password: '%database_password%'
         charset: UTF8
         # if using pdo_sqlite as your database driver:
         #   1. add the path in parameters.yml

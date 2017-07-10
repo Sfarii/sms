@@ -1,7 +1,0 @@
-# This file is auto-generated during the composer install
-parameters:
-    db_host: 127.0.0.1
-    db_port: 33060
-    db_name: sms
-    db_user: sms_user
-    db_password: UZstchWo5Q
