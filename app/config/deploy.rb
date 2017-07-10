@@ -21,7 +21,7 @@ set :use_composer, true
 set :shared_files,      ["app/config/parameters.yml"]
 set :shared_children,     [app_path + "/logs", web_path + "/images", "vendor", app_path + "/sessions"]
 #Configure your server
-set :use_sudo,      false
+set :use_sudo,      true
 set :user, "hamza"
 set :writable_dirs,       ["app/cache", "app/logs", "app/sessions"]
 set :webserver_user,      "www-data"

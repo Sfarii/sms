@@ -5,7 +5,7 @@ parameters:
     database_host: 127.0.0.1
     database_port: 3306
     database_name: sms
-    database_user: root
+    database_user: sms_user
     database_password: UZstchWo5Q
     # You should uncomment this if you want to use pdo_sqlite
     #database_path: "%kernel.root_dir%/data.db3"
