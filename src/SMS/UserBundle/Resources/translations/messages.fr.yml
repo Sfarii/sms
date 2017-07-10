@@ -94,7 +94,7 @@ professor:
 # reset
 reset:
   submit: Envoyer
-  title: Réinitialiser le mot de passe
+  title: Réinitialiser
   send_email: |
         "Un courriel a été envoyé. Il contient un lien que vous devez cliquer pour réinitialiser votre mot de passe.
         Note: Vous ne pouvez demander qu'un nouveau mot de passe dans %tokenLifetime% heures.
