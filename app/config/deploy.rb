@@ -16,7 +16,7 @@ set  :keep_releases,  3
 set :interactive_mode, false
 # Be more verbose by uncommenting the following line
 logger.level = Logger::MAX_LEVEL
-set :use_composer, true
+set :use_composer, false
 #configure the shared files
 set :shared_files,      ["app/config/sms_parameters.yml"]
 set :shared_children,     [app_path + "/logs", web_path + "/images", "vendor", app_path + "/sessions"]
