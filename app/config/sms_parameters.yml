@@ -1,7 +1,7 @@
 # This file is auto-generated during the composer install
 parameters:
-    database_host: localhost
-    database_port: 2002
+    database_host: 127.0.0.1
+    database_port: 3306
     database_name: sms
     database_user: sms_user
     database_password: UZstchWo5Q
@@ -9,4 +9,4 @@ parameters:
     mailer_host: 127.0.0.1
     mailer_user: null
     mailer_password: null
-    secret: e4b6c44d13c437b18b59cf5c3f6f2a81ad08710b1
+    secret: e4b6c44d13c437b18b59cf5c3f6f2a81ad01ad98ff1
