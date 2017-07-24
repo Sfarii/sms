@@ -1,0 +1,70 @@
+<script type="text/javascript">
+  $(function() {
+    $(".new-action").on('click', function(event) {
+      var modal = UIkit.modal("#" + $(this).data('session'));
+      var $status = $('#' + $(this).data('status'));
+      var $error = $('.' + $(this).data('error'));
+      var $course = $(this).data('course');
+      var $session =  $(this).data('session');
+      var error = false;
+      console.log($status.val());
+      if ($status.val() == "") {
+        $error.css("display", '');
+        error = true;
+        return;
+      } else {
+        $error.css("display", 'none');
+      }
+
+      event.preventDefault();
+
+      if (modal.isActive()) {
+        modal.hide();
+      }
+
+      if (error == false) {
+        UIkit.modal.confirm("{{ 'datatables.bulk.confirmMsg'|trans({}, 'messages') }} ", function() {
+          {% set token = csrf_token('attendance_professor') %}
+
+          $.ajax({
+            url: Routing.generate('attendance_professor_add'),
+            type: "POST",
+            cache: false,
+            data: {
+              'data': {
+                'professor' : '{{ professor.id }}',
+                'session' : $session,
+                'date' : '{% if form.vars.value.date is defined %}{{ form.vars.value.date|date('Y-m-d') }}{% endif %}',
+                'division' : '{% if form.vars.value.division is defined %}{{ form.vars.value.division.id }}{% endif %}',
+                'status' : $status.val(),
+                'course' : $course
+              },
+              'token': '{{ token }}'
+            },
+            success: function(msg) {
+              new UIkit.notify({
+                message: "<a href='#' class='notify-action'><span class='uk-icon-times'></span></a>" + msg,
+                status: "error",
+                timeout: 5000,
+                group: null,
+                pos: 'top-right'
+              });
+            },
+            error: function(XMLHttpRequest, textStatus, errorThrown) {
+              console.log(XMLHttpRequest + ' ' + textStatus + ' ' + errorThrown);
+              new UIkit.notify({
+                message: "<a href='#' class='notify-action'><span class='uk-icon-times'></span></a>" + textStatus,
+                status: "error",
+                timeout: 5000,
+                group: null,
+                pos: 'top-right'
+              });
+            }
+          })
+        });
+      } else {
+        UIkit.modal.alert("{{ 'datatables.bulk.selectError'|trans({}, 'messages') }}");
+      }
+    });
+  });
+</script>

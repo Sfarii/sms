@@ -4,7 +4,7 @@ namespace SMS\SchoolBundle\Controller;
 
 use SMS\SchoolBundle\Entity\Feature;
 use SMS\SchoolBundle\Form\FeatureType;
-use API\BaseController\BaseController;
+use SMS\SchoolBundle\BaseController\BaseController;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\Method;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\Route;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\Template;

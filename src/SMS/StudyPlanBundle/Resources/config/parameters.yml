@@ -1,0 +1,18 @@
+parameters:
+  study_plan_entity_Manager: SMS\StudyPlanBundle\Services\StudyPlanManager
+  #Dependency Injection class
+  division_class: SMS\EstablishmentBundle\Entity\Division
+  student_class: SMS\UserBundle\Entity\Student
+  grade_class: SMS\EstablishmentBundle\Entity\Grade
+  section_class: SMS\EstablishmentBundle\Entity\Section
+  professor_class: SMS\UserBundle\Entity\Professor
+  section_class: SMS\EstablishmentBundle\Entity\Section
+  professor_class: SMS\UserBundle\Entity\Professor
+  attendance_professor_class: SMS\AdministrativeBundle\Entity\AttendanceProfessor
+  attendance_student_class: SMS\AdministrativeBundle\Entity\AttendanceStudent
+  schedule_class: SMS\StudyPlanBundle\Entity\Schedule
+  session_class: SMS\StudyPlanBundle\Entity\Session
+  exam_type_class: SMS\StudyPlanBundle\Entity\TypeExam
+  course_class: SMS\StudyPlanBundle\Entity\Course
+  exam_class: SMS\StudyPlanBundle\Entity\Exam
+  note_class: SMS\StudyPlanBundle\Entity\Note

@@ -10,6 +10,7 @@ use Symfony\Component\Security\Core\Exception\AccessDeniedException;
 use SMS\UserBundle\Entity\UserInterface;
 use SMS\UserBundle\BaseController\BaseController;
 use SMS\UserBundle\Entity\User;
+use SMS\UserBundle\Form\UserResettingPasswordFormType;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\Security;
@@ -18,7 +19,8 @@ use Sensio\Bundle\FrameworkExtraBundle\Configuration\Security;
  * @author Rami Sfari <rami2sfari@gmail.com>
  * @copyright Copyright (c) 2016, SMS
  *
- * @Security("has_role('ROLE_ADMIN') or has_role('ROLE_MANAGER')")
+ * @Route("setting")
+ * @Security("has_role('ROLE_ADMIN') or has_role('ROLE_MANAGER') or has_role('ROLE_STUDENT') or has_role('ROLE_PARENT') or has_role('ROLE_PROFESSOR')")
  */
 class UserController extends BaseController
 {
@@ -36,7 +38,7 @@ class UserController extends BaseController
     }
 
     /**
-     * @Route("/setting" , name="user_setting")
+     * @Route("/user" , name="user_setting")
      * @Method("GET")
      * @Template("SMSUserBundle:user/profile/setting.html.twig")
      */
@@ -47,6 +49,28 @@ class UserController extends BaseController
       }
       $className = substr( strtolower(get_class($this->getUser())) , strrpos(get_class($this->getUser()), '\\') + 1);
       return $this->redirectToRoute(sprintf('%s_edit' , $className), array('id' =>$this->getUser()->getId()));
+    }
+
+    /**
+     * @Route("/password/{id}" , name="change_password")
+     * @Method({"GET", "POST"})
+     * @Template("SMSUserBundle:user/resetting:password.html.twig")
+     * @Security("has_role('ROLE_ADMIN') or has_role('ROLE_MANAGER') or user.getId() == currentUser.getId()")
+     */
+    public function resettingPasswordAction(User $currentUser, Request $request)
+    {
+        // registration form
+        $form = $this->createForm(UserResettingPasswordFormType::class , $currentUser)->handleRequest($request);
+        $className = substr( strtolower(get_class($this->getUser())) , strrpos(get_class($currentUser), '\\') + 1);
+        $route = sprintf('%s_show' , $className);
+        if ($form->isSubmitted() && $form->isValid()) {
+            $this->getUserEntityManager()->userResettingNewPassword($currentUser);
+            $this->flashSuccessMsg('user.edit.password');
+            $className = substr( strtolower(get_class($this->getUser())) , strrpos(get_class($currentUser), '\\') + 1);
+            return $this->redirectToRoute($route, array('id' => $currentUser->getId()));
+        }
+
+        return array("form" => $form->createView() , 'user' => $currentUser , 'route' => $route);
     }
 
     /**

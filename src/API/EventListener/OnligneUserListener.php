@@ -8,7 +8,7 @@ use FOS\UserBundle\Model\UserManagerInterface;
 use FOS\UserBundle\Model\UserInterface;
 
 /**
- * Listener that updates the last activity of the authenticated user
+ * @author Rami Sfari <rami2sfari@gmail.com>
  */
 class OnligneUserListener
 {

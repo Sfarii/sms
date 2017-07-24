@@ -37,15 +37,16 @@ class ProfessorSpaceController extends Controller
      */
     public function scheduleAction(Request $request)
     {
-      $form = $this->createForm(DivisionListType::class)->handleRequest($request);
+      $divisions = $this->getDoctrine()->getRepository(Division::class)->findBy(array("establishment" => $this->getUser()->getEstablishment()));
+      $index = $request->query->get('index' , reset($divisions)->getId());
+      $division = array_filter($divisions, function ($value) use (&$index) {return $value->getId() == $index;});
 
-      if ($form->isSubmitted() && $form->isValid() && $form->get('send')->isClicked()) {
-          $result = $this->getUserSapaceManager()->getScheduleByProfessor($this->getUser(),$form->get('division')->getData());
-          $result['form'] = $form->createView();
-          return $result;
+      if (is_null($division) || empty($divisions)) {
+          $this->flashSuccessMsg('schedule.not_found');
+          return $this->redirectToRoute('attendance_professor_new');
       }
-
-      return array('form' => $form->createView());
+      $result = $this->getEntityManager()->getScheduleByProfessor($professor,reset($division), $this->getUser()->getEstablishment());
+      return  array('result' => $result , 'professor' => $professor , 'divisions' => $divisions);
     }
 
     /**

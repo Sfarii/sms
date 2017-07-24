@@ -59,15 +59,15 @@ class ScheduleStudentFilterType extends AbstractType
                               ->andWhere('establishment.id = :establishment')
                               ->setParameter('establishment', $establishment->getId());
                 },
-                'placeholder'=> 'schedule.field.division',
+                'placeholder'=> 'filter.field.division',
                 'constraints'   => [new NotBlank()],
-                'label' => 'schedule.field.division',
+                'label' => 'filter.field.division',
                 'attr'          => [ 'class'=> 'divisionField'])
             )
 
             ->add('save', SubmitType::class ,array(
-                    'label' => 'filter.field.send',
-                    'attr' => [ "button_type" => "filter"]
+                    'label' => 'filter.field.new',
+                    'attr' => [ 'button_type' => 'filter' , 'icon' => 'plus']
                 ));
 
     }

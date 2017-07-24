@@ -10,6 +10,7 @@ use Symfony\Component\Form\Extension\Core\Type\DateType;
 use Symfony\Bridge\Doctrine\Form\Type\EntityType;
 use Symfony\Component\Form\Extension\Core\Type\SubmitType;
 use SMS\SchoolBundle\Entity\Pricing;
+use SMS\SchoolBundle\Entity\Translations\PricingTranslation;
 
 class PricingType extends AbstractType
 {
@@ -19,15 +20,22 @@ class PricingType extends AbstractType
     public function buildForm(FormBuilderInterface $builder, array $options)
     {
         $builder
-               ->add('pricingName' ,TextType::class , array(
-                    'label' => 'pricing.field.pricingName')
+               ->add('price' ,TextType::class , array(
+                    'label' => 'pricing.field.price')
                 )
-              ->add('price' ,TextType::class , array(
-                  'label' => 'pricing.field.price')
-              )
-              ->add('unitPrice' ,TextType::class , array(
-                  'label' => 'pricing.field.unitPrice')
-              )
+              ->add('pricingName', 'sms_translatable_field', array(
+                  'field'          => 'pricingName',
+                  'property_path'  => 'translations',
+                  'widget'         => TextType::class,
+                  'personal_translation' => PricingTranslation::class,
+              ))
+              ->add('unitPrice', 'sms_translatable_field', array(
+                  'field'          => 'unitPrice',
+                  'label' => 'aboutus.field.text',
+                  'property_path'  => 'translations',
+                  'widget'         => TextType::class,
+                  'personal_translation' => PricingTranslation::class,
+              ))
               ->add('save', SubmitType::class);
 
     }

@@ -13283,12 +13283,10 @@ button {
   outline: none !important;
 }
 a {
-  color: #1e88e5;
   -webkit-tap-highlight-color: rgba(0, 0, 0, 0);
 }
 a:hover,
 a:active {
-  color: #0d47a1;
   text-decoration: none;
 }
 pre,

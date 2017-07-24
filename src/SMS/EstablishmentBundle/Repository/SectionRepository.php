@@ -12,37 +12,53 @@ use Doctrine\ORM\EntityRepository;
  */
 class SectionRepository extends EntityRepository
 {
-	/**
-     * Get section By Grade
-     *
-     * @param integer $grade
-     * @return array
-     */
-	public function findByGrade($grade)
-	{
-		return $this->createQueryBuilder('section')
-				->join('section.grade', 'grade')
-				->andWhere('grade.id = :grade')
-				->setParameter('grade', $grade)
-				->getQuery()
-				->getResult();
-	}
 
-	/**
-     * Get section By TypeExam
-     *
-     * @param integer $grade
-     * @return array
-     */
-	public function findByExam($exam)
-	{
-		return $this->createQueryBuilder('section')
-				->join('section.grade', 'grade')
-				->join('grade.courses', 'courses')
-				->join('courses.exams', 'exams')
-				->andWhere('exams.id = :exams')
-				->setParameter('exams', $exam)
-				->getQuery()
-				->getResult();
-	}
+		/**
+		 * Get Sections By Establishment
+		 *
+		 * @param Establishment $establishment
+		 * @return array
+		 */
+		public function findAllByEstablishment($establishment)
+		{
+			return $this->createQueryBuilder('section')
+					->join('section.establishment', 'establishment')
+					->join('section.grade', 'grade')
+					->andWhere('establishment.id = :establishment')
+					->setParameter('establishment', $establishment->getId());
+		}
+
+		/**
+	   * Get section By Grade
+	   *
+	   * @param integer $grade
+	   * @return array
+	   */
+		public function findByGrade($grade)
+		{
+			return $this->createQueryBuilder('section')
+					->join('section.grade', 'grade')
+					->andWhere('grade.id = :grade')
+					->setParameter('grade', $grade)
+					->getQuery()
+					->getResult();
+		}
+
+		/**
+	   * Get section By TypeExam
+	   *
+	   * @param integer $grade
+	   * @return array
+	   */
+		public function findByExam($exam)
+		{
+			return $this->createQueryBuilder('section')
+					->join('section.grade', 'grade')
+					->join('grade.courses', 'courses')
+					->join('courses.exams', 'exams')
+					->andWhere('exams.id = :exams')
+					->setParameter('exams', $exam)
+					->getQuery()
+					->getResult();
+		}
 }

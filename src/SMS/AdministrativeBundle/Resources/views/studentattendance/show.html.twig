@@ -1,0 +1,141 @@
+{% extends 'layout/base.html.twig' %}
+{% block sub_title_page %}
+  <p class="uk-text-bold uk-margin-small-top">
+    {{section.sectionName}}
+  </p>
+{% endblock %}
+{% block heading_actions %}
+  <a href="{{ path('attendance_student_show' , { 'id' : section.id }) }}">
+    <i class="md-icon material-icons">&#xE5D5;</i>
+  </a>
+	<a href="{{ path('attendance_student_new') }}">
+    <i class="md-icon material-icons">&#xE88A;</i>
+  </a>
+{% endblock %}
+{% block sticky_button %}
+  <a class="md-fab md-fab-primary" href="{{ url('attendance_student_index', {'id' : section.id}) }}">
+    <i class="material-icons">&#xE145;</i>
+  </a>
+{% endblock %}
+
+{% block title_page %}
+  {{ 'attendance.list.title'|trans }}
+{% endblock %}
+
+{% block body %}
+<div class="md-card">
+	<div class="md-card-content">
+		{{ form_start(form) }}
+		<div class="uk-grid" data-uk-grid-margin>
+
+			<div class="uk-width-medium-2-10">
+				<div class="uk-form-row">
+					<label class="uk-form-label">{{ form_label(form.startDate)}}</label>
+					{{ form_widget(form.startDate)}}
+					<div class="parsley-errors-list filled uk-text-danger">
+						{{ form_errors(form.startDate) }}
+					</div>
+				</div>
+			</div>
+			<div class="uk-width-medium-2-10">
+				<div class="uk-form-row">
+					<label class="uk-form-label">{{ form_label(form.endDate)}}</label>
+					{{ form_widget(form.endDate)}}
+					<div class="parsley-errors-list filled uk-text-danger">
+						{{ form_errors(form.endDate) }}
+					</div>
+				</div>
+			</div>
+			<div class="uk-width-medium-2-10">
+				<div class="uk-form-row uk-margin-small-top">
+					{{ form_widget(form.session)}}
+					<div class="parsley-errors-list  uk-margin-small-top filled uk-text-danger">
+						{{ form_errors(form.session) }}
+					</div>
+				</div>
+			</div>
+			<div class="uk-width-medium-3-10">
+				<div class="uk-form-row uk-margin-small-top">
+					{{ form_widget(form.course)}}
+					<div class="parsley-errors-list  uk-margin-small-top filled uk-text-danger">
+						{{ form_errors(form.course) }}
+					</div>
+				</div>
+			</div>
+			<div class="uk-width-medium-1-10 uk-text-center uk-margin-small-top">
+				{{ form_widget(form.save)}}
+			</div>
+		</div>
+		{{ form_end(form) }}
+	</div>
+</div>
+<div class="uk-grid hierarchical_show" data-uk-grid-margin>
+	<div class="uk-width-medium-1-2">
+		<div class="md-card">
+			<div class="md-card-content">
+				{% if stats is empty %}
+					<div class="echart-large">
+						<span class="chart_icon">
+							<i class="material-icons">&#xE88B;</i>
+							<h1 class="uk-text-large">{{ 'attendance_student.stats.not_found'|trans }}</h1>
+						</span>
+					</div>
+				{% else %}
+					<div data-echarts-pie data-title="{{ 'attendance_student.stats.name'|trans }}" data-values='{{ stats|json_encode|raw }}' class="echart-large"></div>
+				{% endif %}
+			</div>
+		</div>
+	</div>
+	<div class="uk-width-medium-1-2">
+
+  <div class="md-card">
+    <div class="md-card-content dataTables_wrapper form-inline dt-uikit md-processed">
+      <div class="uk-grid" data-uk-grid-margin>
+        <div class="uk-width-1-1">
+          <div class="uk-overflow-container uk-margin-small-top">
+            <table class="uk-table uk-table-striped dataTable no-footer uk-table-align-vertical ">
+              <thead>
+                <tr role="row">
+                  <th {% if pagination.isSorted('attendance.date') %} class="sorting_asc" {% else %}class="sorting"{% endif %}>{{ knp_pagination_sortable(pagination, 'attendance_student.field.date'|trans , 'attendance.date') }}</th>
+                  <th {% if pagination.isSorted('session.sessionName') %} class="sorting_asc"{% else %}class="sorting"{% endif %}>{{ knp_pagination_sortable(pagination, 'attendance_student.field.sessionName'|trans, 'session.sessionName') }}</th>
+                  <th {% if pagination.isSorted('course.courseName') %} class="sorting_asc"{% else %}class="sorting"{% endif %}>{{ knp_pagination_sortable(pagination, 'attendance_student.field.courseName'|trans, 'course.courseName') }}</th>
+                  <th>{{ 'datatables.actions.title'|trans }}</th>
+                </tr>
+              </thead>
+              <tbody>
+                {% for attendance in pagination %}
+                  <tr>
+                    <td>{{ attendance.date|date('d/m/Y') }}</td>
+                    <td class="uk-text-nowrap">{{ attendance.sessionName }}</td>
+                    <td class="uk-text-nowrap">{{ attendance.courseName }}</td>
+                    <td class="uk-text-nowrap">
+                      <a href="{{ path ('attendance_index' , {'id_section': section.id ,'date' : attendance.date|date('Y-m-d') ,'id_session' : attendance.sessionID})}}">
+                        <i class="material-icons md-24">&#xE8F4;</i>
+                      </a>
+                    </td>
+                  </tr>
+								{% else %}
+								   <tr>
+											<td colspan="4" class="uk-text-center">
+												{{ 'datatables.datatable.zeroRecords'|trans }}
+											</td>
+									</tr>
+                {% endfor %}
+              </tbody>
+            </table>
+          </div>
+          <div class="uk-margin-medium-top uk-margin-small-bottom">
+            {{ knp_pagination_render(pagination) }}
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+	</div>
+{% endblock %}
+{% block javascripts %}
+  {{ parent() }}
+  <script src="{{ asset('assets/plugins/chart/echarts.min.js')}}"></script>
+  <script src="{{ asset('assets/plugins/easypiechart/jquery.easypiechart.min.js')}}"></script>
+  <script src="{{ asset('assets/js/custom/echarts_functions.js')}}"></script>
+{% endblock %}

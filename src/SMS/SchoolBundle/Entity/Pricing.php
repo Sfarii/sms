@@ -3,13 +3,15 @@
 namespace SMS\SchoolBundle\Entity;
 
 use Doctrine\ORM\Mapping as ORM;
-
+use Gedmo\Mapping\Annotation as Gedmo;
+use Symfony\Component\Validator\Constraints as Assert;
 /**
  * Pricing
  *
  * @ORM\Table(name="pricing")
  * @ORM\HasLifecycleCallbacks
  * @ORM\Entity(repositoryClass="SMS\SchoolBundle\Repository\PricingRepository")
+ * @Gedmo\TranslationEntity(class="SMS\SchoolBundle\Entity\Translations\PricingTranslation")
  */
 class Pricing
 {
@@ -33,6 +35,7 @@ class Pricing
      * @var string
      *
      * @ORM\Column(name="unitPrice", type="string", length=100)
+     * @Gedmo\Translatable
      */
     private $unitPrice;
 
@@ -40,6 +43,7 @@ class Pricing
      * @var string
      *
      * @ORM\Column(name="pricingName", type="string", length=100)
+     * @Gedmo\Translatable
      */
     private $pricingName;
 
@@ -69,6 +73,47 @@ class Pricing
      * @ORM\Column(type="datetime", nullable = true)
      */
     protected $updated;
+
+    /**
+     * @var ArrayCollection
+     * * @Assert\Valid(deep = true)
+     * @ORM\OneToMany(targetEntity="SMS\SchoolBundle\Entity\Translations\PricingTranslation", mappedBy="object", cascade={"persist", "remove"})
+     */
+    private $translations;
+
+    public function __construct()
+    {
+        $this->translations = new \Doctrine\Common\Collections\ArrayCollection();
+        $this->pricingFeature = new \Doctrine\Common\Collections\ArrayCollection();
+    }
+
+
+    /**
+     * Get translations.
+     *
+     * @return ArrayCollection
+     */
+    public function getTranslations()
+    {
+        return $this->translations;
+    }
+
+    /**
+     * Add translation.
+     *
+     * @param PostTranslation $translation
+     *
+     * @return $this
+     */
+    public function addTranslation($translation)
+    {
+        if (!$this->translations->contains($translation)) {
+            $this->translations[] = $translation;
+            $translation->setObject($this);
+        }
+
+        return $this;
+    }
 
      /**
      * @ORM\PrePersist
@@ -235,13 +280,6 @@ class Pricing
     public function getUpdated()
     {
         return $this->updated;
-    }
-    /**
-     * Constructor
-     */
-    public function __construct()
-    {
-        $this->pricingFeature = new \Doctrine\Common\Collections\ArrayCollection();
     }
 
     /**

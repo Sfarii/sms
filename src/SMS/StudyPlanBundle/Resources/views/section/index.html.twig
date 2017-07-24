@@ -1,0 +1,13 @@
+{% extends 'layout/base.html.twig' %}
+
+{% block title_page %}
+ {{ 'section.list.title'|trans }}
+{% endblock %}
+
+{% block body %}
+    <div class="md-card uk-margin-medium-bottom">
+        <div class="md-card-content">
+            {{ datatable_render(section) }}
+        </div>
+    </div>
+{% endblock %}

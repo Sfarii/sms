@@ -21,3 +21,11 @@ services:
   sms.datatable.schoolTestimonial:
       class: SMS\SchoolBundle\SchoolDatatable\SchoolTestimonialDatatable
       parent: sg_datatables.datatable.abstract
+  form.type.translatable:
+    class: SMS\SchoolBundle\Form\FormType\TranslatedFieldType
+    arguments: [ @service_container ]
+    tags:
+      - { name: form.type, alias: sms_translatable_field }
+  sms.school.entity_manager:
+      class: SMS\SchoolBundle\Services\SchoolEntityManager
+      arguments: ["@doctrine.orm.entity_Manager" ]

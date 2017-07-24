@@ -4,7 +4,7 @@ action:
     not_registered: Pas encore inscrit
 
 payment:
-    payment_info: Informations de paiement
+    payment_info: Info de paiement
     delete:
         fail: Impossible de supprimer les paiements spécifiés  # FIXME
         success: Les paiements spécifiés ont été supprimés avec succès   # FIXME

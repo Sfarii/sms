@@ -6,7 +6,7 @@ use Symfony\Component\Validator\Constraints as Assert;
 use Doctrine\ORM\Mapping as ORM;
 use Symfony\Component\HttpFoundation\File\File;
 use Vich\UploaderBundle\Mapping\Annotation as Vich;
-
+use Gedmo\Mapping\Annotation as Gedmo;
 /**
  * Slider
  *
@@ -14,6 +14,7 @@ use Vich\UploaderBundle\Mapping\Annotation as Vich;
  * @ORM\HasLifecycleCallbacks
  * @ORM\Table(name="slider")
  * @ORM\Entity(repositoryClass="SMS\SchoolBundle\Repository\SliderRepository")
+ * @Gedmo\TranslationEntity(class="SMS\SchoolBundle\Entity\Translations\SliderTranslation")
  */
 class Slider
 {
@@ -52,6 +53,7 @@ class Slider
      * @var string
      *
      * @ORM\Column(name="title", type="string", length=150)
+     * @Gedmo\Translatable
      */
     private $title;
 
@@ -59,8 +61,48 @@ class Slider
      * @var string
      *
      * @ORM\Column(name="subtitle", type="string", length=200)
+     * @Gedmo\Translatable
      */
     private $subtitle;
+
+    /**
+     * @var ArrayCollection
+     * * @Assert\Valid(deep = true)
+     * @ORM\OneToMany(targetEntity="SMS\SchoolBundle\Entity\Translations\SliderTranslation", mappedBy="object", cascade={"persist", "remove"})
+     */
+    private $translations;
+
+    public function __construct()
+    {
+        $this->translations = new \Doctrine\Common\Collections\ArrayCollection();
+    }
+
+    /**
+     * Get translations.
+     *
+     * @return ArrayCollection
+     */
+    public function getTranslations()
+    {
+        return $this->translations;
+    }
+
+    /**
+     * Add translation.
+     *
+     * @param PostTranslation $translation
+     *
+     * @return $this
+     */
+    public function addTranslation($translation)
+    {
+        if (!$this->translations->contains($translation)) {
+            $this->translations[] = $translation;
+            $translation->setObject($this);
+        }
+
+        return $this;
+    }
 
     /**
      * One User has Many Divivsions.

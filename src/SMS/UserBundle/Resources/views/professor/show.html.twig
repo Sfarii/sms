@@ -32,15 +32,9 @@
             </h2>
           </div>
           <div class="md-fab-wrapper">
-            {% if app.user.id == professor.id %}
-            <a class="md-fab md-fab-small md-fab-success" href="{{ path('professor_edit', { 'id': professor.id }) }}">
-              <i class="material-icons">&#xE15A;</i>
+            <a class="md-fab md-fab-small md-fab-success" href="{{ path('change_password', { 'id': professor.id }) }}">
+              <i class="material-icons">&#xE8B8;</i>
             </a>
-            {% else %}
-            <a class="md-fab md-fab-small md-fab-success" href="{{ path('professor_index') }}">
-              <i class="material-icons">&#xE88A;</i>
-            </a>
-            {% endif %}
           </div>
         </div>
         <div class="user_content">

@@ -39,7 +39,7 @@ class Note
     /**
      * Many Notes have One Exam.
      * @ORM\ManyToOne(targetEntity="Exam" , inversedBy="notes",fetch="EXTRA_LAZY")
-     * @ORM\JoinColumn(name="exam_id", referencedColumnName="id")
+     * @ORM\JoinColumn(name="exam_id", referencedColumnName="id", onDelete="CASCADE")
      */
     private $exam;
 

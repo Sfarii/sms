@@ -1,7 +1,5 @@
 <?php
-
 namespace SMS\StudyPlanBundle\Form;
-
 use Symfony\Component\Form\AbstractType;
 use Symfony\Component\Form\FormBuilderInterface;
 use Symfony\Component\OptionsResolver\OptionsResolver;
@@ -12,7 +10,7 @@ use Symfony\Component\Form\Extension\Core\Type\SubmitType;
 use SMS\EstablishmentBundle\Entity\Division;
 use Doctrine\ORM\EntityManager;
 use Doctrine\ORM\EntityRepository;
-use API\Form\EventSubscriber\GradeSectionFilterListener;
+use SMS\StudyPlanBundle\Form\EventSubscriber\GradeSectionFilterListener;
 use Symfony\Component\Validator\Constraints\NotBlank;
 
 class ScheduleStudentFilterType extends AbstractType
@@ -21,7 +19,6 @@ class ScheduleStudentFilterType extends AbstractType
      * @var EntityManager
      */
     protected $em;
-
     /**
      * Constructor
      *
@@ -31,14 +28,12 @@ class ScheduleStudentFilterType extends AbstractType
     {
         $this->em = $em;
     }
-
     /**
      * {@inheritdoc}
      */
     public function buildForm(FormBuilderInterface $builder, array $options)
     {
         $establishment = $options['establishment'];
-
         $builder
             ->addEventSubscriber(new GradeSectionFilterListener($this->em , $establishment))
             ->add('division' , EntityType::class , array(
@@ -50,19 +45,15 @@ class ScheduleStudentFilterType extends AbstractType
                               ->andWhere('establishment.id = :establishment')
                               ->setParameter('establishment', $establishment->getId());
                 },
-                'placeholder'=> 'filter.field.division',
+                'placeholder'=> 'filter.field.select_division',
                 'constraints'   => [new NotBlank()],
-                'label' => 'filter.field.division',
+                'label' => false,
                 'attr'          => [ 'class'=> 'divisionField'])
             )
-
             ->add('save', SubmitType::class ,array(
-                    'label' => 'filter.field.send',
-                    'attr' => [ "button_type" => "filter"]
+                    'attr' => [ 'button_type' => 'filter' , 'icon' => 'eye' , 'class' => 'send']
                 ));
-
     }
-
     /**
      * {@inheritdoc}
      */
@@ -73,7 +64,6 @@ class ScheduleStudentFilterType extends AbstractType
         ));
         $resolver->setRequired('establishment');
     }
-
     /**
      * {@inheritdoc}
      */
@@ -81,6 +71,4 @@ class ScheduleStudentFilterType extends AbstractType
     {
         return 'sms_study_plan_bundle_schedule_student_filter';
     }
-
-
 }

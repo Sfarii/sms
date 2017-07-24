@@ -90,7 +90,7 @@ class UserSpaceManager
     public function getSchedule($section ,$division)
     {
         // get All the sessions
-        $sessions = $this->_em->getRepository(Session::class)->findAllByStartTime();
+        $sessions = $this->_em->getRepository(Session::class)->findAllByStartTime($section->getEstablishment());
         // get schedule by the section of the student
         $schedules = $this->_em->getRepository(Schedule::class)->findBySection($section,$division);
 

@@ -39,8 +39,8 @@
             </h2>
           </div>
           <div class="md-fab-wrapper">
-            <a class="md-fab md-fab-small md-fab-success" href="{{ path('manager_index') }}">
-              <i class="material-icons">&#xE88A;</i>
+            <a class="md-fab md-fab-small md-fab-success" href="{{ path('change_password', { 'id': manager.id }) }}">
+              <i class="material-icons">&#xE8B8;</i>
             </a>
           </div>
         </div>
@@ -79,6 +79,7 @@
                   {{ form_errors(form.phone) }}
                 </div>
               </div>
+              {% if form.email is defined %}
               <div class="uk-form-row uk-input-group">
                 <span class="uk-input-group-addon">
                   <i class="md-list-addon-icon material-icons">&#xE0BE;</i>
@@ -89,6 +90,7 @@
                   {{ form_errors(form.email) }}
                 </div>
               </div>
+              {% endif %}
             </div>
             <div class="uk-width-large-1-2">
               <div class="uk-input-group">

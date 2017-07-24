@@ -6,7 +6,8 @@ use Symfony\Component\Validator\Constraints as Assert;
 use Doctrine\ORM\Mapping as ORM;
 use Symfony\Component\HttpFoundation\File\File;
 use Vich\UploaderBundle\Mapping\Annotation as Vich;
-
+use Gedmo\Mapping\Annotation as Gedmo;
+use Doctrine\Common\Collections\ArrayCollection;
 /**
  * About Us
  *
@@ -14,6 +15,7 @@ use Vich\UploaderBundle\Mapping\Annotation as Vich;
  * @ORM\HasLifecycleCallbacks
  * @ORM\Table(name="about_us")
  * @ORM\Entity(repositoryClass="SMS\SchoolBundle\Repository\AboutUsRepository")
+ * @Gedmo\TranslationEntity(class="SMS\SchoolBundle\Entity\Translations\AboutUsTranslation")
  */
 class AboutUs
 {
@@ -30,6 +32,7 @@ class AboutUs
      * @var string
      *
      * @ORM\Column(name="title", type="string", length=100)
+     * @Gedmo\Translatable
      */
     private $title;
 
@@ -37,6 +40,7 @@ class AboutUs
      * @var string
      *
      * @ORM\Column(name="text", type="text")
+     * @Gedmo\Translatable
      */
     private $text;
 
@@ -44,6 +48,7 @@ class AboutUs
      * @var string
      *
      * @ORM\Column(name="icon", type="string", length=50)
+     * @Assert\NotBlank()
      */
     private $icon;
 
@@ -89,6 +94,45 @@ class AboutUs
      * @ORM\Column(type="datetime", nullable = true)
      */
     protected $updated;
+
+    /**
+     * @var ArrayCollection
+     * * @Assert\Valid(deep = true)
+     * @ORM\OneToMany(targetEntity="SMS\SchoolBundle\Entity\Translations\AboutUsTranslation", mappedBy="object", cascade={"persist", "remove"})
+     */
+    private $translations;
+
+    public function __construct()
+    {
+        $this->translations = new ArrayCollection();
+    }
+
+    /**
+     * Get translations.
+     *
+     * @return ArrayCollection
+     */
+    public function getTranslations()
+    {
+        return $this->translations;
+    }
+
+    /**
+     * Add translation.
+     *
+     * @param PostTranslation $translation
+     *
+     * @return $this
+     */
+    public function addTranslation($translation)
+    {
+        if (!$this->translations->contains($translation)) {
+            $this->translations[] = $translation;
+            $translation->setObject($this);
+        }
+
+        return $this;
+    }
 
      /**
      * @ORM\PrePersist
@@ -336,5 +380,20 @@ class AboutUs
     public function getUser()
     {
         return $this->user;
+    }
+
+    /**
+     * Remove translation
+     *
+     * @param \SMS\SchoolBundle\Entity\AboutUsTranslation $translation
+     */
+    public function removeTranslation(\SMS\SchoolBundle\Entity\AboutUsTranslation $translation)
+    {
+        $this->translations->removeElement($translation);
+    }
+
+    public static function getTranslationEntityClass()
+    {
+        return 'SMS\SchoolBundle\Entity\AboutUsTranslation';
     }
 }

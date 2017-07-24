@@ -14,6 +14,8 @@ use SMS\EstablishmentBundle\Entity\Establishment;
 use SMS\SchoolBundle\Entity\AboutUs;
 use Vich\UploaderBundle\Form\Type\VichImageType;
 use Symfony\Component\Form\Extension\Core\Type\TextareaType;
+use SMS\SchoolBundle\Form\FormType\TranslationsType;
+use SMS\SchoolBundle\Entity\Translations\AboutUsTranslation;
 
 class AboutUsType extends AbstractType
 {
@@ -22,6 +24,7 @@ class AboutUsType extends AbstractType
      */
     public function buildForm(FormBuilderInterface $builder, array $options)
     {
+
         $builder
             ->add('imageFile',  VichImageType::class, array(
                     'allow_delete' => true, // not mandatory, default is true
@@ -31,12 +34,19 @@ class AboutUsType extends AbstractType
             ->add('icon' ,TextType::class , array(
                 'label' => 'aboutus.field.icon')
             )
-            ->add('title' ,TextType::class , array(
-                'label' => 'aboutus.field.title')
-            )
-            ->add('text' ,TextareaType::class , array(
-                'label' => 'aboutus.field.text')
-            )
+            ->add('title', 'sms_translatable_field', array(
+                'field'          => 'title',
+                'property_path'  => 'translations',
+                'widget'         => TextType::class,
+                'personal_translation' => AboutUsTranslation::class,
+            ))
+            ->add('text', 'sms_translatable_field', array(
+                'field'          => 'text',
+                'label' => 'aboutus.field.text',
+                'property_path'  => 'translations',
+                'widget'         => TextareaType::class,
+                'personal_translation' => AboutUsTranslation::class,
+            ))
 
             ->add('save', SubmitType::class);
 
@@ -48,8 +58,9 @@ class AboutUsType extends AbstractType
     public function configureOptions(OptionsResolver $resolver)
     {
         $resolver->setDefaults(array(
-            'data_class' => AboutUs::class
+            'data_class' => AboutUs::class,
         ));
+
     }
 
     /**

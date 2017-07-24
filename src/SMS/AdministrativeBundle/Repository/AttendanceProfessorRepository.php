@@ -10,26 +10,49 @@ namespace SMS\AdministrativeBundle\Repository;
  */
 class AttendanceProfessorRepository extends \Doctrine\ORM\EntityRepository
 {
-	/**
-     * Get Attendance By Date and Session and User
-     *
-     * @param date $date
-     * @param Session $session
-     * @param Student $professor
-     * @return array
-     */
-	public function findByDateAndSessionAndUser($professor , $date , $session)
-	{
-		return $this->createQueryBuilder('attendance')
-				->join('attendance.session', 'session')
-				->join('attendance.professor', 'professor')
-				->where("attendance.date = :date")
-				->andWhere('session.id = :session')
-				->andWhere('professor.id = :professor')
-				->setParameter('date', $date, \Doctrine\DBAL\Types\Type::DATE)
-				->setParameter('professor', $professor->getId())
-				->setParameter('session', $session->getId())
-				->getQuery()
-            	->getOneOrNullResult();
-	}
+		/**
+	     * Get Attendance By Date and Session and User
+	     *
+	     * @param date $date
+	     * @param Session $session
+	     * @param Student $professor
+	     * @return array
+	     */
+		public function findByDateAndSessionAndUser($professor , $date , $session)
+		{
+			return $this->createQueryBuilder('attendance')
+					->join('attendance.session', 'session')
+					->join('attendance.professor', 'professor')
+					->where("attendance.date = :date")
+					->andWhere('session.id = :session')
+					->andWhere('professor.id = :professor')
+					->setParameter('date', $date, \Doctrine\DBAL\Types\Type::DATE)
+					->setParameter('professor', $professor->getId())
+					->setParameter('session', $session->getId())
+					->getQuery()
+	        ->getOneOrNullResult();
+		}
+
+		/**
+		 * Get Attendance By Section
+		 *
+		 * @param date $date
+		 * @param Session $session
+		 * @param Student $student
+		 * @return array
+		 */
+		public function findStatsByProfessor($professor)
+		{
+				return $this->createQueryBuilder('attendance')
+									->select("attendance.status as name, MONTH(attendance.date) AS month, count(attendance.id) as value , professor.id , attendance.date")
+									->join('attendance.session', 'session')
+									->join('attendance.course', 'course')
+									->join('attendance.professor', 'professor')
+									->where('professor.id = :professor')
+									->setParameter('professor', $professor->getId())
+									->groupBy('name , professor.id , month')
+									->getQuery()
+					        ->getResult();
+		}
+
 }

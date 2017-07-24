@@ -1,46 +1,114 @@
 {% extends 'layout/base.html.twig' %}
 
-{% block stylesheets %}
-	{{ parent() }}
-	<!-- page specific plugins -->
-  <link rel="stylesheet" href="{{ asset('assets/plugins/bootstrap/css/bootstrap.min.css')}}">
-    <link rel="stylesheet" href="{{ asset('assets/plugins/editable/css/bootstrap-editable.css')}}">
-    <link rel="stylesheet" type="text/css" href="{{ asset('assets/css/daterangepicker.css')}}" />
-{% endblock %}
-{% block sticky_button %}
-<a class="md-fab md-fab-primary" href="{{ path('attendanceprofessor_index') }}">
-    <i class="material-icons">&#xE145;</i>
-</a>
-{% endblock %}
-{% block heading_actions %}
-<a  data-uk-tooltip="{pos:'bottom'}" title="{{'action.help'|trans }}" id="tour" href="#">
-	<i class="md-icon material-icons">&#xE887;</i>
-</a>
-<a href="#" data-uk-tooltip="{pos:'bottom'}" title="{{'action.print'|trans }}">
-	<i class="md-icon material-icons">&#xE8AD;</i>
-</a>
-{% endblock %}
 {% block title_page %}
- {{ 'attendanceprofessor.list.title'|trans }}
+  {{ 'attendanceprofessor.list.title'|trans }}
 {% endblock %}
-
-
 
 {% block body %}
-    <div class="md-card uk-margin-medium-bottom">
-        <div class="md-card-content">
-            {{ datatable_render(attendanceProfessors) }}
+  <div class="md-card">
+    <div class="md-card-content">
+      {{ form_start(form) }}
+      <div class="uk-grid" data-uk-grid-margin="">
+        <div class="uk-width-medium-1-2">
+          <div class="uk-vertical-align">
+            <div class="uk-vertical-align-middle">
+              <ul id="contact_list_filter" class="uk-subnav uk-subnav-pill uk-margin-remove">
+                <li {% if pagination.isSorted('professor.firstName') %} class="uk-active" {% endif %}>
+                  {{ knp_pagination_sortable(pagination, 'professor.field.firstName'|trans , 'professor.firstName') }}
+                </li>
+                <li {% if pagination.isSorted('professor.lastName') %} class="uk-active" {% endif %}>
+                  {{ knp_pagination_sortable(pagination, 'professor.field.lastName'|trans , 'professor.lastName') }}
+                </li>
+                <li {% if pagination.isSorted('professor.email') %} class="uk-active" {% endif %}>
+                  {{ knp_pagination_sortable(pagination, 'user.field.email'|trans , 'professor.email') }}
+                </li>
+                <li {% if pagination.isSorted('professor.phone') %} class="uk-active" {% endif %}>
+                  {{ knp_pagination_sortable(pagination, 'professor.field.phone'|trans , 'professor.phone') }}
+                </li>
+                <li {% if pagination.isSorted('professor.gender') %} class="uk-active" {% endif %}>
+                  {{ knp_pagination_sortable(pagination, 'user.field.gender'|trans , 'professor.gender') }}
+                </li>
+                <li {% if pagination.isSorted('professor.birthday') %} class="uk-active" {% endif %}>
+                  {{ knp_pagination_sortable(pagination, 'user.field.age'|trans , 'professor.birthday') }}
+                </li>
+              </ul>
+            </div>
+          </div>
         </div>
+        <div class="uk-width-medium-1-2">
+          {{ form_label(form.textField)}}
+          {{ form_widget(form.textField)}}
+        </div>
+      </div>
+      {{ form_end(form) }}
     </div>
-{% endblock %}
-{% block head_javascripts %}
-	{{ parent() }}
-	<!-- page specific plugins -->
-    <!--  form file input functions -->
+  </div>
+  <!-- info cards -->
+  {% if pagination is empty %}
+    <div class="uk-alert uk-alert-large" data-uk-alert="">
+      <h4 class="heading_b">{{ "search.result_not_found.title"|trans}}</h4>
+      <p>
+        <h4 class="heading_a">{{ "search.result_not_found.sub-title"|trans}}
+          :</h4>
+        {{ "search.result_not_found.text_professor"|trans}}
+      </p>
+    </div>
+  {% else %}
+    <div class="uk-grid uk-grid-medium uk-grid-width-medium-1-3 uk-grid-width-large-1-4 hierarchical_show" data-uk-grid="{gutter: 20}" data-uk-grid-margin data-uk-grid-match="{target:'.md-card-content'}">
 
-    <script src="{{ asset('assets/plugins/bootstrap/js/bootstrap.min.js')}}"></script>
-    <script src="{{ asset('assets/plugins/editable/js/bootstrap-editable.min.js')}}"></script>
-    <script src="{{ asset('assets/js/moment-with-locales.min.js')}}"></script>
-    <script type="text/javascript" src="{{ asset('assets/js/daterangepicker.js')}}"></script>
-
+      {% for professor in pagination %}
+        <div>
+          <div class="md-card">
+            <div class="md-card-head md-bg-blue-700">
+              <div class="md-card-head-menu" data-uk-dropdown="{pos:'bottom-right'}">
+                <i class="md-icon material-icons md-icon-light">&#xE5D4;</i>
+                <div class="uk-dropdown uk-dropdown-small">
+                  <ul class="uk-nav">
+                    <li>
+                      <a href="{{ path('attendance_professor_show' , { 'id' : professor.id })}}">{{ "attendance.action.show"|trans }}</a>
+                    </li>
+                    <li>
+                      <a href="{{ path('attendanceprofessor_index' , { 'id' : professor.id })}}">{{ "attendance.action.new"|trans }}</a>
+                    </li>
+                  </ul>
+                </div>
+              </div>
+              <div class="uk-text-center">
+                {% if professor.imageName %}
+                  <img class="md-card-head-avatar" src="{{ vich_uploader_asset(professor, 'imageFile') }}" alt="{{ professor.imageName }}"/>
+                {% else %}
+                  <img class="md-card-head-avatar md-bg-grey-50" src="{{ asset('assets/img/avatars/user@2x.png') }}" alt="user avatar"/>
+                {% endif %}
+              </div>
+              <h3 class="md-card-head-text uk-text-center md-color-white">
+                {{ professor.firstName }}
+                {{ professor.lastName }}
+                <span>{{ professor.username }}</span>
+              </h3>
+            </div>
+            <div class="md-card-content">
+              <ul class="md-list">
+                <li>
+                  <div class="md-list-content">
+                    <span class="md-list-heading">{{ professor.email }}</span>
+                    <span class="uk-text-small uk-text-muted">{{'user.field.email'|trans }}</span>
+                  </div>
+                </li>
+                <li>
+                  <div class="md-list-content">
+                    <span class="md-list-heading">{{ professor.phone }}</span>
+                    <span class="uk-text-small uk-text-muted">{{'professor.field.phone'|trans }}</span>
+                  </div>
+                </li>
+              </ul>
+            </div>
+          </div>
+        </div>
+      {% endfor %}
+      <div class="uk-margin-large-top uk-width-medium-3-3 uk-grid-width-large-2-2">
+        {{ knp_pagination_render(pagination) }}
+      </div>
+    </div>
+  {% endif %}
+</div>
 {% endblock %}

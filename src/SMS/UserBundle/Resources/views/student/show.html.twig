@@ -32,20 +32,9 @@
             </h2>
           </div>
           <div class="md-fab-wrapper">
-            <a class="md-fab md-fab-small md-fab-success" href="{{ path('student_index') }}">
-              <i class="material-icons">&#xE88A;</i>
+            <a class="md-fab md-fab-small md-fab-success" href="{{ path('change_password', { 'id': student.id }) }}">
+              <i class="material-icons">&#xE8B8;</i>
             </a>
-          </div>
-          <div class="md-fab-wrapper">
-            {% if app.user.id == student.id %}
-            <a class="md-fab md-fab-small md-fab-success" href="{{ path('student_edit', { 'id': student.id }) }}">
-              <i class="material-icons">&#xE15A;</i>
-            </a>
-            {% else %}
-            <a class="md-fab md-fab-small md-fab-success" href="{{ path('student_index') }}">
-              <i class="material-icons">&#xE88A;</i>
-            </a>
-            {% endif %}
           </div>
         </div>
         <div class="user_content">

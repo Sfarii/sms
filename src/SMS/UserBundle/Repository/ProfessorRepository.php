@@ -20,4 +20,18 @@ class ProfessorRepository extends EntityRepository
         // would use findOneBy() but Symfony expects a Countable object
         return $this->_em->getRepository(User::class)->findBy($criteria);
     }
+
+		/**
+	 * find All Professor By establishment
+	 * @param SMS\EstablishmentBundle\Entity\Establishment $establishment
+	 * @return array
+	 */
+	public function findAllByEstablishment($establishment)
+	{
+			$query = $this->createQueryBuilder('professor')
+				->join('professor.establishment', 'establishment')
+				->where('establishment.id = :establishment')
+				->setParameter('establishment', $establishment->getId());
+			return $query;
+	}
 }

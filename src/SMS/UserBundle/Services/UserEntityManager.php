@@ -143,7 +143,6 @@ class UserEntityManager
       $this->updateCanonicalizer($user);
       // saveUser the user in the database
       $this->_em->flush($user);
-      $this->_mailer->sendRegistrationEmailWithPassword($user);
     }
 
     public function updateStudent(UserInterface $user)
@@ -285,6 +284,19 @@ class UserEntityManager
             // update the user
             $this->saveUser($user);
         }
+    }
+
+    /**
+     * @param SMS\UserBundle\Entity\UserInterface $user
+     * @return void
+     */
+    public function userResettingNewPassword(UserInterface $user)
+    {
+        // encode password
+        $password = $this->_passwordEncoder->encodePassword($user, $user->getPlainPassword());
+        $user->setPassword($password);
+        // update the user
+        $this->saveUser($user);
     }
 
     /**

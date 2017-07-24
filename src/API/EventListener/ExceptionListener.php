@@ -1,10 +1,13 @@
-<?php 
+<?php
 namespace API\EventListener;
 
 use Symfony\Component\HttpKernel\Event\GetResponseForExceptionEvent;
 use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\HttpKernel\Exception\HttpExceptionInterface;
 
+/**
+ * @author Rami Sfari <rami2sfari@gmail.com>
+ */
 class ExceptionListener
 {
     public function onKernelException(GetResponseForExceptionEvent $event)

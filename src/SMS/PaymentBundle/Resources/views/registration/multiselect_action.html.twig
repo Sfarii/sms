@@ -18,10 +18,6 @@
       } else {
         $(".error").css("display", 'none');
       }
-      var months = [];
-      $.each($("#sms_paymentbundle_registration_months option:selected"), function() {
-        months.push($(this).val());
-      });
 
       event.preventDefault();
 
@@ -38,7 +34,6 @@
             type: "POST",
             cache: false,
             data: {
-              'months': months,
               'registered': $("#sms_paymentbundle_registration_registration").val(),
               'data': $("input:checkbox:checked.student_datatable_multiselect_checkbox", oTable.rows().nodes()).serializeArray(),
               'token': '{{ token }}'

@@ -6,7 +6,8 @@ use Symfony\Component\Validator\Constraints as Assert;
 use Doctrine\ORM\Mapping as ORM;
 use Symfony\Component\HttpFoundation\File\File;
 use Vich\UploaderBundle\Mapping\Annotation as Vich;
-
+use Gedmo\Mapping\Annotation as Gedmo;
+use Gedmo\Translatable\Translatable;
 /**
  * Slider
  *
@@ -15,7 +16,7 @@ use Vich\UploaderBundle\Mapping\Annotation as Vich;
  * @ORM\Table(name="slider")
  * @ORM\Entity(repositoryClass="SMS\SchoolBundle\Repository\SliderRepository")
  */
-class Slider
+class Slider implements Translatable
 {
     /**
      * @var int
@@ -52,6 +53,7 @@ class Slider
      * @var string
      *
      * @ORM\Column(name="title", type="string", length=150)
+     * @Gedmo\Translatable
      */
     private $title;
 
@@ -59,8 +61,16 @@ class Slider
      * @var string
      *
      * @ORM\Column(name="subtitle", type="string", length=200)
+     * @Gedmo\Translatable
      */
     private $subtitle;
+
+    /**
+     * @Gedmo\Locale
+     * Used locale to override Translation listener`s locale
+     * this is not a mapped field of entity metadata, just a simple property
+     */
+    private $locale;
 
     /**
      * One User has Many Divivsions.

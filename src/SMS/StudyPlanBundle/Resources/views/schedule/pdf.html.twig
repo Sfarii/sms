@@ -1,0 +1,247 @@
+<!DOCTYPE html>
+<html>
+  <head>
+    <meta charset="utf-8">
+    <title></title>
+    <style>
+      .uk-table {
+        border-collapse: collapse !important;
+      }
+      .uk-table td,
+      .uk-table th {
+        background-color: #fff !important;
+      }
+      .uk-table-bordered td,
+      .uk-table-bordered th {
+        border: 1px solid #ddd !important;
+      }
+      /* tables */
+      .uk-table td {
+        border-bottom-color: rgba(0, 0, 0, 0.12);
+      }
+      .uk-table th {
+        border-bottom: 1px #444;
+      }
+      .uk-table-nowrap td,
+      .uk-table-nowrap th {
+        white-space: nowrap;
+      }
+      .uk-table-align-vertical td,
+      .uk-table-align-vertical th {
+        vertical-align: middle;
+      }
+      .uk-table tr td.small_col,
+      .uk-table tr th.small_col {
+        width: 1%;
+      }
+      .uk-table tr.row_checked td {
+        background: #e3f2fd;
+      }
+      .uk-table-no-border td {
+        border-bottom-color: transparent;
+      }
+      /* tables */
+      .uk-table thead th {
+        border-bottom: 2px solid rgba(0, 0, 0, 0.12);
+      }
+      .uk-table tfoot td,
+      .uk-table tfoot th,
+      .uk-table thead th {
+        font-style: normal;
+        font-weight: 400;
+        color: #727272;
+        font-size: 14px;
+      }
+      .uk-table td {
+        border-bottom-color: #e0e0e0;
+      }
+      .uk-table tfoot td,
+      .uk-table tfoot th {
+        border-top: 2px solid rgba(0, 0, 0, 0.12);
+        border-bottom: none;
+      }
+      .uk-table-striped tbody tr:nth-of-type(odd) {
+        background: rgba(0, 0, 0, 0.085);
+      }
+      .uk-table-hover tbody tr:hover {
+        background: rgba(0, 0, 0, 0.085);
+      }
+      /* list */
+      .md-list {
+        margin: 0;
+        padding: 0;
+        list-style: none;
+        /*&-outside-wrapper {
+              overflow: hidden;
+          }*/
+      }
+      .md-list > li {
+        padding: 0;
+        margin: 0;
+        list-style: none;
+      }
+      .md-list,
+      .md-list:before,
+      .md-list:after,
+      .md-list *,
+      .md-list *:before,
+      .md-list *:after {
+        box-sizing: border-box;
+      }
+      .md-list .uk-nestable-list > li,
+      .md-list > li {
+        min-height: 48px;
+        padding: 8px 4px;
+        box-sizing: border-box;
+        border-bottom: 1px solid rgba(0, 0, 0, 0.12);
+        position: relative;
+      }
+      .md-list .uk-nestable-list > li > .md-list-content,
+      .md-list > li > .md-list-content {
+        overflow: hidden;
+      }
+      .md-list .uk-nestable-list > li > .md-list-content > span,
+      .md-list > li > .md-list-content > span {
+        display: block;
+      }
+      .md-list .uk-nestable-list > li > .md-list-content .md-list-heading,
+      .md-list > li > .md-list-content .md-list-heading {
+        margin: 0;
+        font-weight: 500;
+        display: block;
+        overflow: hidden;
+        padding-bottom: 1px;
+      }
+      .md-list .uk-nestable-list > li > .md-list-content .md-list-menu,
+      .md-list > li > .md-list-content .md-list-menu {
+        float: right;
+      }
+      .md-list .uk-nestable-list > li > .md-list-content .md-list-menu .md-list-menu-toggle,
+      .md-list > li > .md-list-content .md-list-menu .md-list-menu-toggle {
+        display: block;
+        font-size: 18px;
+        color: rgba(0, 0, 0, 0.8);
+        width: 28px;
+        height: 28px;
+        line-height: 28px;
+        border-radius: 14px;
+        text-align: center;
+      }
+      .md-list .uk-nestable-list > li > .md-list-content .uk-badge,
+      .md-list > li > .md-list-content .uk-badge {
+        float: right;
+        color: #fff !important;
+      }
+      .md-list .uk-nestable-list > li > .md-list-content .md-list-action,
+      .md-list > li > .md-list-content .md-list-action {
+        float: right;
+        margin-left: 8px;
+        margin-top: 2px;
+        display: none;
+      }
+      .md-list .uk-nestable-list > li > .md-list-content .md-list-action-placeholder,
+      .md-list > li > .md-list-content .md-list-action-placeholder {
+        float: right;
+        margin-left: 8px;
+        display: none;
+        width: 32px;
+        height: 32px;
+      }
+      .md-list .uk-nestable-list > li .md-list-action-dropdown,
+      .md-list > li .md-list-action-dropdown {
+        position: absolute;
+        right: 16px;
+        top: 10px;
+        display: none;
+      }
+      .md-list .uk-nestable-list > li > a.md-list-content,
+      .md-list > li > a.md-list-content {
+        display: block;
+        color: #212121;
+      }
+      .md-list .uk-nestable-list > li:last-child,
+      .md-list > li:last-child {
+        border-bottom: none;
+      }
+      .md-list .uk-nestable-list > li.md-list-item-active,
+      .md-list > li.md-list-item-active {
+        color: #7cb342;
+        background: #ededed;
+      }
+      .md-list .uk-nestable-list > li.md-list-item-disabled > .md-list-content,
+      .md-list > li.md-list-item-disabled > .md-list-content {
+        color: #bdbdbd;
+      }
+      .md-list .uk-nestable-list > li.md-list-item-disabled > .md-list-content span,
+      .md-list > li.md-list-item-disabled > .md-list-content span {
+        color: #bdbdbd !important;
+      }
+      .md-list .uk-nestable-list > li.heading_list,
+      .md-list > li.heading_list {
+        min-height: 32px;
+        padding: 32px 8px 16px;
+        border-bottom: none;
+        background: transparent !important;
+        text-transform: uppercase;
+      }
+    </style>
+  </head>
+  <body>
+    {% if result is defined %}
+      <table class="uk-table uk-table-hover uk-table-nowrap uk-table-align-vertical">
+        <thead>
+          <tr>
+            <th class="uk-width-1-10"></th>
+            {% for session in result.sessions %}
+              <th class="border-table uk-text-center md-bg-grey-100">
+                <h4 class="heading_d uk-margin-small-bottom">
+                  {{ session.sessionName }}
+                </h4>
+                <p class="uk-margin-remove">
+                  <i class="material-icons">&#xE425;</i>
+                  {{ session.startTime|date('H:i:s') }}
+                  <i class="material-icons">&#xE5C8;</i>
+                  {{ session.endTime|date('H:i:s') }}
+                </p>
+              </th>
+            {% endfor %}
+          </tr>
+        </thead>
+        <tbody>
+          {% for schedule in result.schedules %}
+            <tr>
+              <td class="uk-text-large border-table uk-text-capitalize uk-text-center">
+                {{schedule.day|trans }}
+              </td>
+              {% for session in schedule.sessions %}
+                {% if session.empty == true %}
+                  <td class="uk-text-center uk-text-bold border-table">
+                    --
+                  </td>
+                {% else %}
+                  <td colspan="{{ session.colspan }}" class="border-table">
+                    <ul class="md-list">
+                      <li>
+                        <div class="md-list-content">
+                          <span class="md-list-heading">{{ session.courseName }}</span>
+                          <span class="uk-text-small uk-text-muted">{{ "schedule_view.schedule.course"|trans }}</span>
+                        </div>
+                      </li>
+                      <li>
+                        <div class="md-list-content">
+                          <span class="md-list-heading">{{ session.professor }}</span>
+                          <span class="uk-text-small uk-text-muted">{{ "schedule_view.schedule.professor"|trans }}</span>
+                        </div>
+                      </li>
+                    </ul>
+                  </td>
+                {% endif %}
+
+              {% endfor %}
+            </tr>
+          {% endfor %}
+        </tbody>
+      </table>
+    {% endif %}
+  </body>
+</html>

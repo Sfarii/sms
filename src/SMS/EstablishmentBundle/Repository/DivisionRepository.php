@@ -12,5 +12,19 @@ use Doctrine\ORM\EntityRepository;
  */
 class DivisionRepository extends EntityRepository
 {
-	
+		/**
+		 * Get Divisions By Establishment
+		 *
+		 * @param Establishment $establishment
+		 * @return array
+		 */
+		public function findByEstablishment($establishment)
+		{
+			return $this->createQueryBuilder('grade')
+					->join('grade.establishment', 'establishment')
+					->andWhere('establishment.id = :establishment')
+					->setParameter('establishment', $establishment->getId())
+					->getQuery()
+					->getResult();
+		}
 }

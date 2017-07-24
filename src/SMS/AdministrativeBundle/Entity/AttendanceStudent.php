@@ -3,6 +3,7 @@
 namespace SMS\AdministrativeBundle\Entity;
 
 use Doctrine\ORM\Mapping as ORM;
+use Symfony\Component\Validator\Constraints as Assert;
 
 /**
  * AttendanceStudent
@@ -48,6 +49,14 @@ class AttendanceStudent
      * @ORM\JoinColumn(name="session_id", referencedColumnName="id")
      */
     private $session;
+
+    /**
+     * Many Attendances have One Course.
+     * @ORM\ManyToOne(targetEntity="SMS\StudyPlanBundle\Entity\Course",fetch="EXTRA_LAZY")
+     * @ORM\JoinColumn(name="course_id", referencedColumnName="id")
+     * @Assert\NotBlank()
+     */
+    private $course;
 
     /**
      * @var \DateTime $created
@@ -259,5 +268,29 @@ class AttendanceStudent
     public function getUser()
     {
         return $this->user;
+    }
+
+    /**
+     * Set course
+     *
+     * @param \SMS\StudyPlanBundle\Entity\Course $course
+     *
+     * @return AttendanceStudent
+     */
+    public function setCourse(\SMS\StudyPlanBundle\Entity\Course $course = null)
+    {
+        $this->course = $course;
+
+        return $this;
+    }
+
+    /**
+     * Get course
+     *
+     * @return \SMS\StudyPlanBundle\Entity\Course
+     */
+    public function getCourse()
+    {
+        return $this->course;
     }
 }

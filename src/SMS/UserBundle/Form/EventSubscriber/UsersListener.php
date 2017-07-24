@@ -79,6 +79,7 @@ class UsersListener implements EventSubscriberInterface
             $this->_action = self::ADD ;
         } elseif ($this->tokenStorage->getToken()->getUser()->getId() === $user->getId()) {
             $form->remove('show_username_password')
+                  ->remove('email')
                   ->add('enabled', CheckboxType::class, array(
                       'label' => 'user.field.enabled')
                     );

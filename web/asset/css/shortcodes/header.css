@@ -42,7 +42,7 @@ Top Bar
 
 /*light*/
 .top-bar .social-top.light a i {
-  color: #fff;  
+  color: #fff;
 }
 
 
@@ -73,7 +73,7 @@ Top Bar
 }
 
 
-.menuzord-menu.nav>li>a:focus, 
+.menuzord-menu.nav>li>a:focus,
 .menuzord-menu.nav>li>a:hover {
     background-color: transparent;
 }
@@ -140,7 +140,7 @@ Header
     float: left;
 }
 
-.tt-nav.sticky .logo-brand img, 
+.tt-nav.sticky .logo-brand img,
 .tt-nav.sticky .logo-brand img.retina  {
     height: 30px !important;
 }
@@ -184,7 +184,7 @@ Header
 @media (min-width: 769px) {
     .semi-transparent{
         background: rgba(10,10,10, .5) !important;
-    } 
+    }
 }
 
 .tt-nav .brand-header,
@@ -555,7 +555,6 @@ header.sticky .menuzord-menu>li>a,
 .menuzord-menu>li>a>i {
     margin: 0 5px 0 0;
     font-size: 18px;
-    float: left;
     line-height: 20px;
     font-family: FontAwesome
 }
@@ -834,7 +833,7 @@ Responsive Menu
         margin: 23px 0 0 0;
     }
 
-    .menuzord-menu>li>a, 
+    .menuzord-menu>li>a,
     .tt-nav.sticky .menuzord-menu>li>a {
         padding: 0 5px;
     }
@@ -844,7 +843,7 @@ Responsive Menu
     }
 }
 
-  
+
 @media screen and (max-width: 768px) {
 
     .tt-nav {
@@ -994,9 +993,9 @@ Responsive Menu
         border: none;
     }
 
-    .light.menuzord-menu > li > a, 
-    .light.menuzord-menu > li > a > i, 
-    .tt-nav .dark-header .menuzord-menu > li > a, 
+    .light.menuzord-menu > li > a,
+    .light.menuzord-menu > li > a > i,
+    .tt-nav .dark-header .menuzord-menu > li > a,
     .tt-nav .dark-header .menuzord-menu > li > a > i {
         color: #333;
     }

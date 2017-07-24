@@ -1,8 +1,7 @@
 <!-- main sidebar -->
 <aside id="sidebar_main">
-
     <div class="sidebar_main_header">
-        {% if app.user.establishment is null  %}
+        {% if app.session.get('_logo') is null  %}
         <div class="sidebar_logo">
             <a href="#" class="sSidebar_hide sidebar_logo_large">
                 <img class="logo_regular" src="{{ asset('assets/img/logo_main.png')}}" alt="" height="15" width="71"/>
@@ -16,12 +15,12 @@
         {% else %}
         <div class="sidebar_logo">
             <a href="#" class="sSidebar_hide sidebar_logo_large">
-                <img class="logo_regular" src="{{ vich_uploader_asset(app.user.establishment, 'imageFile') }}" alt="" height="15" width="71"/>
-                <img class="logo_light" src="{{ vich_uploader_asset(app.user.establishment, 'imageFile') }}" alt="" height="15" width="71"/>
+                <img class="logo_regular" src="{{ app.session.get("_logo") }}" alt="" height="15" width="71"/>
+                <img class="logo_light" src="{{ app.session.get("_logo") }}" alt="" height="15" width="71"/>
             </a>
             <a href="#" class="sSidebar_show sidebar_logo_small">
-                <img class="logo_regular" src="{{ vich_uploader_asset(app.user.establishment, 'imageFile') }}" alt="" height="32" width="32"/>
-                <img class="logo_light" src="{{ vich_uploader_asset(app.user.establishment, 'imageFile') }}" alt="" height="32" width="32"/>
+                <img class="logo_regular" src="{{ app.session.get("_logo") }}" alt="" height="32" width="32"/>
+                <img class="logo_light" src="{{ app.session.get("_logo") }}" alt="" height="32" width="32"/>
             </a>
         </div>
         {% endif %}

@@ -11,7 +11,7 @@ use Symfony\Component\Form\Extension\Core\Type\TextareaType;
 use Symfony\Bridge\Doctrine\Form\Type\EntityType;
 use Symfony\Component\Form\Extension\Core\Type\SubmitType;
 use SMS\SchoolBundle\Entity\Feature;
-
+use SMS\SchoolBundle\Entity\Translations\FeatureTranslation;
 class FeatureType extends AbstractType
 {
     /**
@@ -23,12 +23,20 @@ class FeatureType extends AbstractType
               ->add('icon' ,TextType::class , array(
                   'label' => 'feature.field.icon')
               )
-              ->add('title' ,TextType::class , array(
-                  'label' => 'feature.field.title')
-              )
-              ->add('text' ,TextareaType::class , array(
-                  'label' => 'feature.field.text')
-              )
+              ->add('title', 'sms_translatable_field', array(
+                  'field'          => 'title',
+                  'label' => 'feature.field.title',
+                  'property_path'  => 'translations',
+                  'widget'         => TextType::class,
+                  'personal_translation' => FeatureTranslation::class,
+              ))
+              ->add('text', 'sms_translatable_field', array(
+                  'field'          => 'text',
+                  'label' => 'feature.field.text',
+                  'property_path'  => 'translations',
+                  'widget'         => TextareaType::class,
+                  'personal_translation' => FeatureTranslation::class,
+              ))
               ->add('save', SubmitType::class);
 
     }

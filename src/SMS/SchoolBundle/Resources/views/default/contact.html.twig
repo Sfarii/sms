@@ -1,20 +1,6 @@
 {% extends 'frontLayout/base.html.twig' %}
 {% block body %}
-  <section class="page-title ptb-50">
-    <div class="container">
-      <div class="row">
-        <div class="col-md-12">
-          <h2>{{ "contact.title"|trans }}</h2>
-          <ol class="breadcrumb">
-            <li>
-              <a href="{{ path ("home_page")}}">{{"menu.home.title"|trans}}</a>
-            </li>
-            <li class="active">{{ "menu.contact.title"|trans }}</li>
-          </ol>
-        </div>
-      </div>
-    </div>
-  </section>
+
   <!-- contact-form-section -->
   <section id="#contact" class="section-padding" style="background: url({{asset('asset/img/vactor-map.png')}}) no-repeat center center;">
 
@@ -25,6 +11,7 @@
       </div>
       <div class="row">
         <div class="col-md-12">
+
           <!-- main flash success message -->
           {% for flash_message in app.session.flashbag.get(msg_success) %}
             <div class="row mb-40">
@@ -108,10 +95,10 @@
 {% endblock %}
 {% block javascripts %}
   {{ parent() }}
-  <script src="https://maps.googleapis.com/maps/api/js"></script>
+
   <!-- Google Map Customization  -->
   <script type="text/javascript">
-    jQuery(document).ready(function() {
+    function initMap () {
 
       //set your google maps parameters
       var $latitude = 35.813681, //Visit http://www.latlong.net/convert-address-to-lat-long.html for generate your Lat. Long.
@@ -119,7 +106,7 @@
         $map_zoom = 16/* ZOOM SETTING */
 
         //google map custom marker icon
-        var $marker_url = '{{ asset("asset/img/icon-blue.png") }}';
+        var $marker_url = '';
 
         //we define here the style of the map
         var style = [
@@ -156,9 +143,10 @@
         var marker = new google.maps.Marker({
           position: new google.maps.LatLng($latitude, $longitude),
           map: map,
-          visible: true,
-          icon: $marker_url
+          icon: '{{ asset("asset/img/icon-blue.png") }}'
         });
-      });
+      }
+
   </script>
+  <script  async defer src="https://maps.googleapis.com/maps/api/js?key=AIzaSyBz_w0C-nBz7VDFc46PbHBH4dqiyBx-kkE&callback=initMap"></script>
 {% endblock %}

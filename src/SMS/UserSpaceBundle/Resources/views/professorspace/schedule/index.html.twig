@@ -1,23 +1,100 @@
-{% extends 'layout/base.html.twig' %}
+{% extends 'layout/base_no_header.html.twig' %}
 
-{% block title_page %}
-    {{ 'student.schedule.title'|trans }}
-{% endblock %}
+{% block slider %}
+<div id="top_bar">
+        <div class="md-top-bar">
+            <div class="uk-width-large-8-10 uk-container-center">
+                <div class="uk-slidenav-position" data-uk-slider="{infinite: true}">
+                    <div class="uk-slider-container">
+                        <ul class="uk-slider uk-grid-width-small-1-{{ divisions|length}} top_bar_nav">
 
-{% block heading_actions %}
-    <a href="" data-uk-tooltip="{pos:'bottom'}" title="{{ 'action.print'|trans }}">
-        <i class="material-icons">&#xE555;</i>
-    </a>
-    <a href="" data-uk-tooltip="{pos:'bottom'}" title="{{ 'action.picture'|trans }}">
-        <i class="material-icons">&#xE3B0;</i>
-    </a>
+                          {% for division in divisions %}
+                            <li class="{% if app.request.get('index') is empty and loop.first %}uk-active{% endif %} {% if app.request.get('index') == division.id %}uk-active{% endif %}">
+                                <a href="{{ path('attendanceprofessor_index' , { 'id' : professor.id , 'index' : division.id })}}">{{ division.divisionName|capitalize }}</a>
+                            </li>
+                          {% endfor %}
+
+                        </ul>
+                    </div>
+                    <a href="#" class="uk-slidenav uk-slidenav-previous" data-uk-slider-item="previous"></a>
+                    <a href="#" class="uk-slidenav uk-slidenav-next" data-uk-slider-item="next"></a>
+                </div>
+            </div>
+        </div>
+    </div>
 {% endblock %}
 
 {% block body %}
-    {% include 'layout/filter_form_layout.html.twig' with {'form': form , 'form_name' : 'student.schedule.title' } %}
-    {% if sessions is defined and schedules is defined %}
-      <div class="hierarchical_show uk-margin-medium-top" data-uk-grid-margin>
-        {% include 'layout/schedule_view.html.twig' with {'sessions': sessions , 'schedules' : schedules } %}
-      </div>
-    {% endif %}
+    <div id="schedules" class="uk-margin-medium-top">
+        {% if result is defined %}
+        <div id="schedule" class="md-card">
+            <div class="md-card-content">
+                <div class="uk-overflow-container">
+                    <table class="uk-table uk-table-hover uk-table-nowrap uk-table-align-vertical">
+                    <thead>
+                        <tr>
+                            <th class="uk-width-1-10"></th>
+                            {% for session in result.sessions %}
+                                <th class="border-table uk-text-center md-bg-grey-100">
+                                    <h4 class="heading_d uk-margin-small-bottom">
+                                        {{ session.sessionName }}
+                                    </h4>
+                                    <p class="uk-margin-remove">
+                                        <i class="material-icons">&#xE425;</i>
+                                        {{ session.startTime|date('H:i:s') }}
+                                        <i class="material-icons">&#xE5C8;</i>
+                                        {{ session.endTime|date('H:i:s') }}
+                                    </p>
+                                </th>
+                            {% endfor %}
+                        </tr>
+                    </thead>
+                    <tbody>
+                        {% for schedule in result.schedules %}
+                            <tr>
+                                <td class="uk-text-large border-table uk-text-capitalize uk-text-center">
+                                    {{schedule.day|trans }}
+                                 </td>
+                                {% for session in schedule.sessions %}
+                                    {% if session.empty == true %}
+                                        <td class="uk-text-center uk-text-bold border-table">
+                                            --
+                                        </td>
+                                    {% else %}
+                                        <td colspan="{{ session.colspan }}" class="border-table">
+                                          <ul class="md-list">
+                                            <li>
+                                              <div class="md-list-content">
+                                                <span class="md-list-heading">{{ session.courseName }}</span>
+                                                <span class="uk-text-small uk-text-muted">{{ "schedule_view.schedule.course"|trans }}</span>
+                                              </div>
+                                            </li>
+																						<li>
+									                            <div class="md-list-content">
+									                              <span class="md-list-heading">{{ "schedule_view.schedule.section"|trans }}</span>
+									                              <span class="uk-text-small uk-text-muted">{{ session.sectionName }}</span>
+									                            </div>
+									                          </li>
+																						<li>
+									                            <div class="md-list-content">
+									                              <a data-uk-modal="{target:'#modal_full'}">
+									                                <i class="md-24 material-icons">&#xE8D7;</i>
+									                              </a>
+									                            </div>
+									                          </li>
+                                          </ul>
+
+                                        </td>
+                                    {% endif %}
+
+                                {% endfor %}
+                            </tr>
+                        {% endfor %}
+                    </tbody>
+                </table>
+                </div>
+            </div>
+        </div>
+        {% endif %}
+    </div>
 {% endblock %}

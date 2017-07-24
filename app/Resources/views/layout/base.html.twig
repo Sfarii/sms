@@ -7,14 +7,19 @@
     <meta http-equiv="X-UA-Compatible" content="IE=edge">
     <!-- Remove Tap Highlight on Windows Phone IE -->
     <meta name="msapplication-tap-highlight" content="no"/>
-
-    <link rel="icon" type="image/png" href="{{ asset('assets/img/favicon-16x16.png')}}" sizes="16x16">
-    <link rel="icon" type="image/png" href="{{ asset('assets/img/favicon-32x32.png')}}" sizes="32x32">
-
-    <meta name="description" content="School Management System software automates the life cycle of a student from admission to pass-out, maintains academic records, facilitates collaboration, allows schools to collect fees, conduct exams and print report cards.">
-        <meta name="keywords" content="material design, SMS">
-        <meta name="author" content="Rami Sfari">
+    <meta
+      name="description"
+      content="School Management System software automates the life cycle of a student from admission to pass-out, maintains academic records, facilitates collaboration, allows schools to collect fees, conduct exams and print report cards.">
+    <meta name="keywords" content="material design, SMS">
+    <meta name="author" content="Rami Sfari">
     <title>{{ app_name }}</title>
+    <!--  favicon -->
+    <link rel="shortcut icon" href="{{ asset('assets/img/ico/favicon.ico')}}">
+    <!--  apple-touch-icon -->
+    <link rel="apple-touch-icon-precomposed" sizes="144x144" href="{{ asset('assets/img/ico/apple-touch-icon-144-precomposed.png')}}">
+    <link rel="apple-touch-icon-precomposed" sizes="114x114" href="{{ asset('assets/img/ico/apple-touch-icon-114-precomposed.png')}}">
+    <link rel="apple-touch-icon-precomposed" sizes="72x72" href="{{ asset('assets/img/ico/apple-touch-icon-72-precomposed.png')}}">
+    <link rel="apple-touch-icon-precomposed" href="{{ asset('assets/img/ico/apple-touch-icon-57-precomposed.png')}}">
 
     {% block stylesheets %}
       <!-- google web fonts -->
@@ -54,8 +59,8 @@
     <!-- main sidebar -->
     {% include 'layout/sidebar_main.html.twig' %}
     <!-- main sidebar end -->
-    <div id="page_content">
-      <div id="page_heading" data-uk-sticky="{ top: 48, media: 960 }">
+    <div id="page_content" >
+      <div id="page_heading" class="non-printable" data-uk-sticky="{ top: 48, media: 960 }">
         <div class="heading_actions">
           {% block heading_actions %}{% endblock %}
         </div>

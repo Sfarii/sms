@@ -38,6 +38,6 @@ security:
                 login_path: login
                 check_path: login
                 post_only: true
-                default_target_path: user_profile
+                success_handler:     login_success_handler
     access_control:
         - { path: ^/login, roles: IS_AUTHENTICATED_ANONYMOUSLY }

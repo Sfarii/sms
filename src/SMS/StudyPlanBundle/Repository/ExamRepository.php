@@ -13,7 +13,32 @@ use SMS\StudyPlanBundle\Entity\Session;
  */
 class ExamRepository extends EntityRepository
 {
-
+		/**
+		 * Get exam By Section And By Day And By Session And By Division
+		 *
+		 * @param SMS\EstablishmentBundle\Entity\Exam $section
+		 * @param SMS\EstablishmentBundle\Entity\Division $division
+		 * @return array
+		 */
+		public function findBySectionAndDivisionAndEstablishment($section, $division ,$establishment)
+		{
+				return $this->createQueryBuilder('exam')
+								->select("exam.id as examID , exam.examName , exam.dateExam ,exam.startTime , exam.endTime , course.id as courseID , typeExam.id as typeExamID  , establishment.id ,section.id, division.id ")
+								->join('exam.section', 'section')
+								->join('exam.course', 'course')
+								->join('exam.typeExam', 'typeExam')
+								->join('exam.establishment', 'establishment')
+								->join('course.division', 'division')
+								->where('section.id = :section')
+								->andWhere('establishment.id = :establishment')
+								->andWhere('division.id = :division')
+								->groupBy('courseID ,  typeExamID')
+								->setParameter('establishment', $establishment->getId())
+								->setParameter('section', $section->getId())
+								->setParameter('division', $division->getId())
+								->getQuery()
+								->getResult();
+		}
 	/**
      * Get Exam By Course
      *

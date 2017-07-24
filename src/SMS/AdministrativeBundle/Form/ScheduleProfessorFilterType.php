@@ -48,9 +48,9 @@ class ScheduleProfessorFilterType extends AbstractType
                               ->andWhere('establishment.id = :establishment')
                               ->setParameter('establishment', $establishment->getId());
                 },
-                'placeholder'=> 'schedule.field.division',
+                'placeholder'=> 'filter.field.division',
                 'constraints'   => [new NotBlank()],
-                'label' => 'schedule.field.division')
+                'label' => 'filter.field.division')
             )
             ->add('professor' , EntityType::class , array(
                     'class'         => $this->professorClass,
@@ -60,8 +60,8 @@ class ScheduleProfessorFilterType extends AbstractType
                                   ->andWhere('establishment.id = :establishment')
                                   ->setParameter('establishment', $establishment->getId());
                     },
-                    'placeholder'   => 'schedule.field.professor',
-                    'label'         => 'schedule.field.professor',
+                    'placeholder'   => 'filter.field.professor',
+                    'label'         => 'filter.field.professor',
                     'constraints'   => [new NotBlank()],
                     'attr'          => [ 'class'=> 'professorField'])
 

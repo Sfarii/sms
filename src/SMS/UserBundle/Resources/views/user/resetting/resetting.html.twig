@@ -3,13 +3,14 @@
 {% block body %}
   <section class="section-padding gray-bg">
     <div class="container">
-      <div class="login-wrapper">
-        <div class="card-wrapper"></div>
-        <div class="card-wrapper">
-          <h1 class="title">{{ 'reset.title'|trans }}</h1>
+      <div class="col-md-6 col-md-offset-3">
+        <div class="booking-form-wrapper">
+          <div class="card-wrapper"></div>
+          <div class="card-wrapper">
+            <h1 class="title">{{ 'reset.title'|trans }}</h1>
             {{ form_start(form ) }}
             <div class="login-container">
-                {{ form_widget(form) }}
+              {{ form_widget(form) }}
             </div>
             <div class="login-container">
               <button type="submit" class="btn btn-block waves-effect waves-light">
@@ -17,15 +18,10 @@
               </button>
             </div>
             {{ form_end(form) }}
-            <div class="footer">
-              <a href="{{ path('login') }}"><i class="fa fa-arrow-circle-left" aria-hidden="true"></i> {{"login.page_title"|trans}}</a>
-            </div>
           </form>
-        </div>
-        <div class="card-wrapper alt email-icon">
-          <div class="toggle darken-2"></div>
         </div>
       </div>
     </div>
-  </section>
+  </div>
+</section>
 {% endblock %}

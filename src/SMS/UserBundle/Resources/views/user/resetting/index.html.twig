@@ -3,22 +3,24 @@
 {% block body %}
   <section class="section-padding gray-bg">
     <div class="container">
-      <div class="login-wrapper">
-        <div class="card-wrapper"></div>
-        <div class="card-wrapper">
-          <h1 class="title">{{ 'reset.title'|trans }}</h1>
+      <div class="col-md-6 col-md-offset-3">
+        <div class="booking-form-wrapper">
+          <div class="card-wrapper"></div>
+          <div class="card-wrapper">
+            <h1 class="title">{{ 'reset.title'|trans }}</h1>
             <div class="login-container">
-              <p> {{ "reset.send_email"|trans({'%tokenLifetime%': tokenLifetime}) }} </p>
+              <p>
+                {{ "reset.send_email"|trans({'%tokenLifetime%': tokenLifetime}) }}
+              </p>
             </div>
-            <div class="footer">
-              <a href="{{ path('login') }}"><i class="fa fa-arrow-circle-left" aria-hidden="true"></i> {{"login.page_title"|trans}}</a>
+            <div class="login-container">
+              <a class="btn btn-block waves-effect waves-light" href="{{ path('login') }}">
+                {{"login.page_title"|trans}}</a>
             </div>
           </form>
         </div>
-        <div class="card-wrapper alt send-icon">
-          <div class="toggle darken-2"></div>
-        </div>
       </div>
     </div>
-  </section>
+  </div>
+</section>
 {% endblock %}

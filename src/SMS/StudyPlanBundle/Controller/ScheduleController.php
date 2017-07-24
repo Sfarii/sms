@@ -4,16 +4,20 @@ namespace SMS\StudyPlanBundle\Controller;
 
 use SMS\StudyPlanBundle\Entity\Schedule;
 use SMS\StudyPlanBundle\Entity\Session;
+use SMS\EstablishmentBundle\Entity\Section;
+use SMS\EstablishmentBundle\Entity\Division;
 use SMS\StudyPlanBundle\Form\ScheduleType;
 use SMS\StudyPlanBundle\Form\ScheduleStudentFilterType;
 use SMS\StudyPlanBundle\Form\ScheduleProfessorFilterType;
-use API\BaseController\BaseController;
+use SMS\StudyPlanBundle\BaseController\BaseController;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\Method;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\Route;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\Template;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\Security;
+use Sensio\Bundle\FrameworkExtraBundle\Configuration\ParamConverter;
+use Symfony\Component\Security\Core\Exception\AccessDeniedException;
 
 /**
  * Schedule controller.
@@ -28,43 +32,23 @@ use Sensio\Bundle\FrameworkExtraBundle\Configuration\Security;
  */
 class ScheduleController extends BaseController
 {
-    /**
-     * Lists all schedule entities.
-     *
-     * @Route("/", name="schedule_index")
-     * @Method("GET")
-     * @Template("SMSStudyPlanBundle:schedule:index.html.twig")
-     */
-    public function indexAction()
-    {
-        $schedules = $this->getScheduleEntityManager();
-        $schedules->buildDatatable();
-
-        return array('schedules' => $schedules);
-    }
-
-    /**
-     * Lists all schedule by Student entities.
-     *
-     * @Route("/schedule_student", name="schedule_student_index")
-     * @Method({"GET", "POST"})
-     * @Template("SMSStudyPlanBundle:schedule:student.html.twig")
-     */
-    public function scheduleStudentAction(Request $request)
-    {
-        $form = $this->createForm(ScheduleStudentFilterType::class, null, array('establishment' => $this->getUser()->getEstablishment()))->handleRequest($request);
-
-        if ($form->isSubmitted() && $form->isValid()) {
-            $userSpace = $this->getUserSapaceManager();
-            $division = $form->get('division')->getData();
-            $section = $form->get('section')->getData();
-            $result = $userSpace->getSchedule($section,$division);
-            $result['form'] = $form->createView();
-            return $result;
-        }
-
-        return array('form' => $form->createView());
-    }
+  /**
+   * Lists all schedule by Student entities.
+   *
+   * @Route("/schedule_student", name="schedule_student_index")
+   * @Method({"GET", "POST"})
+   * @Template("SMSStudyPlanBundle:schedule:student.html.twig")
+   */
+  public function scheduleStudentAction(Request $request)
+  {
+      $form = $this->createForm(ScheduleStudentFilterType::class, null, array('establishment' => $this->getUser()->getEstablishment()))->handleRequest($request);
+      if ($form->isSubmitted() && $form->isValid()) {
+          $result = $this->getEntityManager()->getSchedule($form->get('section')->getData(),$form->get('division')->getData(), $this->getUser()->getEstablishment());
+          $formSchedule = $this->createForm(ScheduleType::class, new Schedule(), array('section' => $form->get('section')->getData() , 'division' => $form->get('division')->getData() , 'establishment' => $this->getUser()->getEstablishment()))->handleRequest($request);
+          return array('form' => $form->createView() , 'result' => $result , 'formSchedule' => $formSchedule->createView());
+      }
+      return array('form' => $form->createView());
+  }
 
     /**
      * Lists all schedule by Professor entities.
@@ -78,147 +62,66 @@ class ScheduleController extends BaseController
         $form = $this->createForm(ScheduleProfessorFilterType::class,null, array('establishment' => $this->getUser()->getEstablishment()))->handleRequest($request);
 
         if ($form->isSubmitted() && $form->isValid() && $form->get('save')->isClicked()) {
-            $userSpace = $this->getUserSapaceManager();
-            $division = $form->get('division')->getData();
-            $professor = $form->get('professor')->getData();
-            $result = $userSpace->getScheduleByProfessor($professor,$division);
-            $result['form'] = $form->createView();
-            return $result;
+            $result = $this->getEntityManager()->getScheduleByProfessor($form->get('professor')->getData(),$form->get('division')->getData(), $this->getUser()->getEstablishment());
+            return array('form' => $form->createView() , 'result' => $result);
         }
 
         return array('form' => $form->createView());
     }
 
     /**
-     * Lists all schedule entities.
-     *
-     * @Route("/results", name="schedule_results")
-     * @Method("GET")
-     * @return Response
-     */
-    public function indexResultsAction()
-    {
-        $schedules = $this->getScheduleEntityManager();
-        $schedules->buildDatatable();
-
-        $query = $this->getDataTableQuery()->getQueryFrom($schedules);
-
-        return $query->getResponse();
-    }
-    /**
      * Creates a new schedule entity.
      *
-     * @Route("/new", name="schedule_new", options={"expose"=true})
-     * @Method({"GET", "POST"})
-     * @Template("SMSStudyPlanBundle:schedule:new.html.twig")
+     * @Route("/new/{id_section}/{id_division}", name="schedule_new")
+     * @ParamConverter("division", class="SMSEstablishmentBundle:Division", options={"id" = "id_division"})
+     * @ParamConverter("section", class="SMSEstablishmentBundle:Section", options={"id" = "id_section"})
+     * @Method("POST")
      */
-    public function newAction(Request $request)
+    public function newAction(Request $request,Division $division,Section $section)
     {
         $schedule = new Schedule();
-        $form = $this->createForm(ScheduleType::class, $schedule, array('establishment' => $this->getUser()->getEstablishment()));
-        $form->handleRequest($request);
-
-        if ($form->isSubmitted() && $form->isValid() && $form->get('save')->isClicked()) {
+        $form = $this->createForm(ScheduleType::class, $schedule, array('section' => $section , 'division' => $division , 'establishment' => $this->getUser()->getEstablishment()))->handleRequest($request);
+        if ($form->isSubmitted() && $form->isValid()) {
             $this->getEntityManager()->insert($schedule , $this->getUser());
-            $this->flashSuccessMsg('schedule.add.success');
-            return $this->redirectToRoute('schedule_index');
+            return new Response(json_encode(array('success' => $this->get('translator')->trans('schedule.add.success'))), 200);
         }
-
-        return array(
-            'schedule' => $schedule,
-            'form' => $form->createView(),
-        );
-    }
-
-    /**
-     * Finds and displays a schedule entity.
-     *
-     * @Route("/{id}", name="schedule_show", options={"expose"=true})
-     * @Method("GET")
-     */
-    public function showAction(Schedule $schedule)
-    {
-        $deleteForm = $this->createDeleteForm($schedule);
-
-        return $this->render('SMSStudyPlanBundle:schedule:show.html.twig', array(
-            'schedule' => $schedule,
-            'delete_form' => $deleteForm->createView(),
-        ));
+        return new Response(json_encode(array('error' => $this->getErrorMessages($form))), 200);
     }
 
     /**
      * Displays a form to edit an existing schedule entity.
      *
-     * @Route("/{id}/edit", name="schedule_edit", options={"expose"=true})
-     * @Method({"GET", "POST"})
-     * @Template("SMSStudyPlanBundle:schedule:edit.html.twig")
-     */
-    public function editAction(Request $request, Schedule $schedule)
-    {
-        $editForm = $this->createForm(ScheduleType::class, $schedule, array('establishment' => $this->getUser()->getEstablishment()))->handleRequest($request);
-        if ($editForm->isSubmitted() && $editForm->isValid() && $editForm->get('save')->isClicked()) {
-            $this->getEntityManager()->update($schedule);
-            $this->flashSuccessMsg('schedule.edit.success');
-            return $this->redirectToRoute('schedule_index');
-        }
-
-        return array(
-            'schedule' => $schedule,
-            'form' => $editForm->createView(),
-        );
-    }
-
-    /**
-     * Bulk delete action.
-     *
-     * @param Request $request
-     *
-     * @Route("/bulk/delete", name="schedule_bulk_delete")
+     * @Route("/{id_schedule}/{id_division}/edit", name="schedule_edit", options={"expose"=true})
+     * @ParamConverter("division", class="SMSEstablishmentBundle:Division", options={"id" = "id_division"})
+     * @ParamConverter("schedule", class="SMSStudyPlanBundle:Schedule", options={"id" = "id_schedule"})
      * @Method("POST")
-     *
-     * @return Response
      */
-    public function bulkDeleteAction(Request $request)
+    public function editAction(Request $request, Schedule $schedule,Division $division)
     {
-        $isAjax = $request->isXmlHttpRequest();
-
-        if ($isAjax) {
-            $choices = $request->request->get('data');
-            $token = $request->request->get('token');
-
-            if (!$this->isCsrfTokenValid('multiselect', $token)) {
-                throw new AccessDeniedException('The CSRF token is invalid.');
-            }
-
-            try {
-                $this->getEntityManager()->deleteAll(schedule::class ,$choices);
-            } catch (\Exception $e) {
-                return new Response($this->get('translator')->trans('schedule.delete.fail'), 200);
-            }
-
-
-            return new Response($this->get('translator')->trans('schedule.delete.success'), 200);
+        $editForm = $this->createForm(ScheduleType::class, $schedule, array('division' => $division,'section' => $schedule->getSection() ,'establishment' => $this->getUser()->getEstablishment()))->handleRequest($request);
+        if ($editForm->isSubmitted() && $editForm->isValid()) {
+            $this->getEntityManager()->update($schedule);
+            return new Response(json_encode(array('success' => $this->get('translator')->trans('schedule.edit.success'))), 200);
         }
-
-        return new Response('Bad Request', 400);
+        return new Response(json_encode(array('error' => $this->getErrorMessages($editForm))), 200);
     }
 
     /**
      * Deletes a schedule entity.
      *
-     * @Route("/{id}", name="schedule_delete")
+     * @Route("/delete/{id}", name="schedule_delete")
      * @Method("DELETE")
      */
     public function deleteAction(Request $request, Schedule $schedule)
     {
-        $form = $this->createDeleteForm($schedule)->handleRequest($request);
-
-        if ($form->isSubmitted() && $form->isValid()) {
-            $this->getEntityManager()->delete($schedule);
-            $this->flashSuccessMsg('schedule.delete.one.success');
+        $token = $request->query->get('token');
+        if (!$this->isCsrfTokenValid('schedule_delete', $token)) {
+            return new Response($this->get('translator')->trans('schedule.delete.fail'), 200);
+        }else{
+          $this->getEntityManager()->delete($schedule);
+          return new Response($this->get('translator')->trans('schedule.delete.success'), 200);
         }
-
-        return $this->redirectToRoute('schedule_index');
+        return new Response('Bad Request', 400);
     }
 
     /**
@@ -238,9 +141,7 @@ class ScheduleController extends BaseController
     }
 
     /**
-     * Get schedule Entity Manager Service.
-     *
-     * @return API\Services\EntityManager
+     * Get Service.
      *
      * @throws \NotFoundException
      */

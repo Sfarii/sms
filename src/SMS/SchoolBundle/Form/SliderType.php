@@ -11,6 +11,7 @@ use Symfony\Bridge\Doctrine\Form\Type\EntityType;
 use Symfony\Component\Form\Extension\Core\Type\SubmitType;
 use SMS\SchoolBundle\Entity\Slider;
 use Vich\UploaderBundle\Form\Type\VichImageType;
+use SMS\SchoolBundle\Entity\Translations\SliderTranslation;
 
 class SliderType extends AbstractType
 {
@@ -25,12 +26,18 @@ class SliderType extends AbstractType
                       'download_link' => false, // not mandatory, default is true
                       'label' => false )
                   )
-              ->add('title' ,TextType::class , array(
-                  'label' => 'slider.field.title')
-              )
-              ->add('subtitle' ,TextType::class , array(
-                  'label' => 'slider.field.subtitle')
-              )
+                  ->add('title', 'sms_translatable_field', array(
+                      'field'          => 'title',
+                      'property_path'  => 'translations',
+                      'widget'         => TextType::class,
+                      'personal_translation' => SliderTranslation::class,
+                  ))
+                  ->add('subtitle', 'sms_translatable_field', array(
+                      'field'          => 'subtitle',
+                      'property_path'  => 'translations',
+                      'widget'         => TextType::class,
+                      'personal_translation' => SliderTranslation::class,
+                  ))
               ->add('save', SubmitType::class);
 
     }

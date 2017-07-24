@@ -46,30 +46,32 @@ class SearchType extends AbstractType
               )
             ->add('paid', CheckboxType::class, array(
               'label' => 'search.payment.paid',
-                )
-            )
-            ->add('notPaid', CheckboxType::class, array(
-              'label' => 'search.payment.not_paid',
+              'attr' => ['class' => 'paid']
                 )
             )
             ->add('hasCredit', CheckboxType::class, array(
               'label' => 'search.payment.has_credit',
+              'attr' => ['class' => 'hasCredit']
                 )
             )
             ->add('Registred', CheckboxType::class, array(
               'label' => 'search.registration.registred',
+              'attr' => ['class' => 'Registred']
                 )
             )
             ->add('notRegistred', CheckboxType::class, array(
               'label' => 'search.registration.not_registred',
+              'attr' => ['class' => 'notRegistred']
                 )
             )
             ->add('extern', CheckboxType::class, array(
               'label' => 'search.student.extern',
+              'attr' => ['class' => 'extern']
                 )
               )
             ->add('intren', CheckboxType::class, array(
               'label' => 'search.student.intren',
+              'attr' => ['class' => 'intren']
                 )
             );
 

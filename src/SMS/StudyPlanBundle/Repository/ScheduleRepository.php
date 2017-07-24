@@ -13,6 +13,56 @@ use SMS\StudyPlanBundle\Entity\Session;
  */
 class ScheduleRepository extends EntityRepository
 {
+
+
+  /**
+   * @param string[] $criteria format: array('user' => <user_id>, 'name' => <name>)
+   */
+    public function uniqueSectionSchedule(array $criteria)
+    {
+        return $this->createQueryBuilder('schedule')
+                ->join('schedule.section', 'section')
+                ->join('schedule.division', 'division')
+                ->join('schedule.sessions', 'sessions')
+                ->join('schedule.establishment', 'establishment')
+                ->where('section.id = :section')
+                ->andWhere('sessions.id in (:sessions)')
+                ->andWhere('schedule.day = :day')
+                ->andWhere('division.id = :division')
+      					->andWhere('establishment.id = :establishment')
+      					->setParameter('section', $criteria['section'])
+                ->setParameter('day', $criteria['day'])
+                ->setParameter('division', $criteria['division'])
+      					->setParameter('establishment', $criteria['establishment'])
+                ->setParameter('sessions', $criteria['sessions'])
+                ->getQuery()
+                ->getResult();
+    }
+
+    /**
+     * @param string[] $criteria format: array('user' => <user_id>, 'name' => <name>)
+     */
+      public function uniqueProfessorSchedule(array $criteria)
+      {
+          return $this->createQueryBuilder('schedule')
+                  ->join('schedule.professor', 'professor')
+                  ->join('schedule.division', 'division')
+                  ->join('schedule.sessions', 'sessions')
+                  ->join('schedule.establishment', 'establishment')
+                  ->where('professor.id = :professor')
+                  ->andWhere('sessions.id in (:sessions)')
+                  ->andWhere('schedule.day = :day')
+                  ->andWhere('division.id = :division')
+        					->andWhere('establishment.id = :establishment')
+        					->setParameter('professor', $criteria['professor'])
+                  ->setParameter('day', $criteria['day'])
+                  ->setParameter('division', $criteria['division'])
+        					->setParameter('establishment', $criteria['establishment'])
+                  ->setParameter('sessions', $criteria['sessions'])
+                  ->getQuery()
+                  ->getResult();
+      }
+
     /**
      * Get Schedule By Section And By Day And By Session And By Division
      *
@@ -23,19 +73,78 @@ class ScheduleRepository extends EntityRepository
     public function findBySectionAndDivisionAndEstablishment($section, $division ,$establishment)
     {
         return $this->createQueryBuilder('schedule')
-                ->select("section.id as sectionID , section.sectionName as sectionName ,schedule.day, course.id as courseID ,course.courseName as courseName , establishment.id, course.coefficient as coefficient , CONCAT(professor.firstName , professor.lastName) as name ,section.id, division.id ")
+                ->select("schedule.id as scheduleId ,section.id as sectionID , section.sectionName as sectionName ,schedule.day, course.id as courseID ,course.courseName as courseName , establishment.id, course.coefficient as coefficient ,professor.id as professorID, CONCAT(professor.firstName , ' ' , professor.lastName) as name ,section.id, division.id ")
                 ->addSelect(sprintf("(SELECT GROUP_CONCAT(session.id SEPARATOR ', ' ) FROM %s as session  WHERE session MEMBER OF schedule.sessions ) AS sessionIDS", Session::class))
                 ->join('schedule.section', 'section')
                 ->join('schedule.professor', 'professor')
                 ->join('schedule.course', 'course')
                 ->join('schedule.establishment', 'establishment')
                 ->join('course.division', 'division')
-                ->having('section.id = :section')
-      					->andHaving('establishment.id = :establishment')
-      					->setParameter('establishment', $establishment->getId())
-                ->andHaving('division.id = :division')
+                ->where('section.id = :section')
+      					->andWhere('establishment.id = :establishment')
+                ->andWhere('division.id = :division')
+                ->groupBy('schedule.day , courseID ,  sessionIDS')
+                ->setParameter('establishment', $establishment->getId())
+                ->setParameter('section', $section->getId())
+                ->setParameter('division', $division->getId())
+                ->getQuery()
+                ->getResult();
+    }
+
+    /**
+     * Get Schedule By Section And By Day And By Session And By Division
+     *
+     * @param SMS\EstablishmentBundle\Entity\Exam $section
+     * @param SMS\EstablishmentBundle\Entity\Division $division
+     * @return array
+     */
+    public function findBySectionAndDivisionAndEstablishmentAndDay($section, $division ,$establishment,$day)
+    {
+        return $this->createQueryBuilder('schedule')
+                ->select("schedule.id as scheduleId ,section.id as sectionID , section.sectionName as sectionName ,schedule.day, course.id as courseID ,course.courseName as courseName , establishment.id, course.coefficient as coefficient , professor.id as professorID, CONCAT(professor.firstName , ' ' , professor.lastName) as name ,section.id, division.id ")
+                ->addSelect(sprintf("(SELECT GROUP_CONCAT(session.id SEPARATOR ', ' ) FROM %s as session  WHERE session MEMBER OF schedule.sessions ) AS sessionIDS", Session::class))
+                ->join('schedule.section', 'section')
+                ->join('schedule.professor', 'professor')
+                ->join('schedule.course', 'course')
+                ->join('schedule.establishment', 'establishment')
+                ->join('course.division', 'division')
+                ->where('section.id = :section')
+      					->andWhere('establishment.id = :establishment')
+                ->andWhere('schedule.day = :day')
+                ->andWhere('division.id = :division')
                 ->groupBy('schedule.day , courseID ,  sessionIDS')
                 ->setParameter('section', $section->getId())
+                ->setParameter('establishment', $establishment->getId())
+                ->setParameter('division', $division->getId())
+                ->setParameter('day', $day)
+                ->getQuery()
+                ->getResult();
+    }
+
+
+    /**
+     * Get Schedule By Professor And By Division
+     *
+     * @param SMS\UserBundle\Entity\Exam $professor
+     * @param SMS\EstablishmentBundle\Entity\Division $division
+     * @return array
+     */
+    public function findByProfessor($professor, $division, $establishment)
+    {
+        return $this->createQueryBuilder('schedule')
+                ->select("schedule.id as scheduleId ,section.id as sectionID , section.sectionName as sectionName , schedule.day ,course.courseName as courseName , course.coefficient as coefficient ,establishment.id ,professor.id as professorID, CONCAT(professor.firstName , ' ' , professor.lastName) as name ,course.id as courseID,professor.id, division.id ")
+                ->addSelect(sprintf("(SELECT GROUP_CONCAT(session.id SEPARATOR ', ' ) FROM %s as session  WHERE session MEMBER OF schedule.sessions ) AS sessionIDS", Session::class))
+                ->join('schedule.professor', 'professor')
+                ->join('schedule.course', 'course')
+                ->join('schedule.section', 'section')
+                ->join('schedule.establishment', 'establishment')
+                ->join('course.division', 'division')
+                ->where('professor.id = :professor')
+                ->andWhere('division.id = :division')
+                ->andWhere('establishment.id = :establishment')
+      					->setParameter('establishment', $establishment)
+                ->groupBy('schedule.day , schedule.course ,  sessionIDS')
+                ->setParameter('professor', $professor->getId())
                 ->setParameter('division', $division->getId())
                 ->getQuery()
                 ->getResult();
@@ -48,22 +157,24 @@ class ScheduleRepository extends EntityRepository
      * @param SMS\EstablishmentBundle\Entity\Division $division
      * @return array
      */
-    public function findByProfessor($professor, $division, $establishment)
+    public function findByProfessorAndDay($professor, $division, $establishment,$day)
     {
         return $this->createQueryBuilder('schedule')
-                ->select("section.id as sectionID , section.sectionName as sectionName , schedule.day ,course.courseName as courseName , course.coefficient as coefficient ,establishment.id , CONCAT(professor.firstName , professor.lastName) as name ,course.id as courseID,professor.id, division.id ")
+                ->select("schedule.id as scheduleId ,section.id as sectionID , section.sectionName as sectionName , schedule.day ,course.courseName as courseName , course.coefficient as coefficient ,establishment.id , CONCAT(professor.firstName , professor.lastName) as name ,course.id as courseID,professor.id, division.id ")
                 ->addSelect(sprintf("(SELECT GROUP_CONCAT(session.id SEPARATOR ', ' ) FROM %s as session  WHERE session MEMBER OF schedule.sessions ) AS sessionIDS", Session::class))
                 ->join('schedule.professor', 'professor')
                 ->join('schedule.course', 'course')
                 ->join('schedule.section', 'section')
                 ->join('schedule.establishment', 'establishment')
                 ->join('course.division', 'division')
-                ->having('professor.id = :professor')
-                ->andHaving('division.id = :division')
-                ->andHaving('establishment.id = :establishment')
-      					->setParameter('establishment', $establishment)
+                ->where('professor.id = :professor')
+                ->andWhere('division.id = :division')
+                ->andWhere('establishment.id = :establishment')
+                ->andWhere('schedule.day = :day')
                 ->groupBy('schedule.day , schedule.course ,  sessionIDS')
                 ->setParameter('professor', $professor->getId())
+                ->setParameter('day', $day)
+      					->setParameter('establishment', $establishment)
                 ->setParameter('division', $division->getId())
                 ->getQuery()
                 ->getResult();

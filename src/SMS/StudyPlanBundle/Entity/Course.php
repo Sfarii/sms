@@ -344,4 +344,5 @@ class Course
     {
         return $this->establishment;
     }
+
 }

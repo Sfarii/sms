@@ -54,6 +54,14 @@ class AttendanceProfessor
     private $session;
 
     /**
+     * Many Attendances have One Course.
+     * @ORM\ManyToOne(targetEntity="SMS\StudyPlanBundle\Entity\Course",fetch="EXTRA_LAZY")
+     * @ORM\JoinColumn(name="course_id", referencedColumnName="id")
+     * @Assert\NotBlank()
+     */
+    private $course;
+
+    /**
      * @var \DateTime $created
      *
      * @ORM\Column(type="datetime")
@@ -288,5 +296,29 @@ class AttendanceProfessor
     public function getProfessor()
     {
         return $this->professor;
+    }
+
+    /**
+     * Set course
+     *
+     * @param \SMS\StudyPlanBundle\Entity\Course $course
+     *
+     * @return AttendanceProfessor
+     */
+    public function setCourse(\SMS\StudyPlanBundle\Entity\Course $course = null)
+    {
+        $this->course = $course;
+
+        return $this;
+    }
+
+    /**
+     * Get course
+     *
+     * @return \SMS\StudyPlanBundle\Entity\Course
+     */
+    public function getCourse()
+    {
+        return $this->course;
     }
 }

@@ -43,7 +43,7 @@ class CourseType extends AbstractType
                               ->andWhere('establishment.id = :establishment')
                               ->setParameter('establishment', $establishment->getId());
                 },
-                'placeholder'=> 'course.field.division',
+                'placeholder'=> 'filter.field.select_division',
                 'label' => 'course.field.division')
             )
             ->add('grade' , EntityType::class , array(
@@ -55,7 +55,7 @@ class CourseType extends AbstractType
                               ->andWhere('establishment.id = :establishment')
                               ->setParameter('establishment', $establishment->getId());
                 },
-                'placeholder'=> 'course.field.grade',
+                'placeholder'=> 'filter.field.select_grade',
                 'label' => 'course.field.grade')
             )
             ->add('establishment', HiddenEntityType::class, array(

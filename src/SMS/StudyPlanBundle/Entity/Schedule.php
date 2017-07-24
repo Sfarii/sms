@@ -11,6 +11,8 @@ use Symfony\Bridge\Doctrine\Validator\Constraints\UniqueEntity;
  *
  * @ORM\Table(name="schedule")
  * @ORM\Entity(repositoryClass="SMS\StudyPlanBundle\Repository\ScheduleRepository")
+ * @UniqueEntity(fields={"section" , "day" , "division" , "sessions" , "establishment"} , repositoryMethod ="uniqueSectionSchedule", errorPath="sessions")
+* @UniqueEntity(fields={"professor" , "day" , "division" , "sessions" , "establishment"} , repositoryMethod ="uniqueProfessorSchedule", errorPath="professor")
  * @ORM\HasLifecycleCallbacks
  */
 class Schedule
@@ -36,7 +38,7 @@ class Schedule
      * @var string
      *
      * @ORM\Column(name="day", type="string", length=50)
-     * @Assert\Choice({"sunday", "monday", "tuesday","wednesday", "thursday", "friday","saturday"})
+     * @Assert\Choice({"Sunday", "Monday", "Tuesday","Wednesday", "Thursday", "Friday","Saturday"})
      * @Assert\NotBlank()
      */
     private $day;
@@ -93,9 +95,17 @@ class Schedule
      * One establishment has Many Schedules.
      * @ORM\ManyToOne(targetEntity="SMS\EstablishmentBundle\Entity\Establishment" ,fetch="EXTRA_LAZY")
      * @ORM\JoinColumn(name="establishment_id", referencedColumnName="id")
+     * @Assert\NotBlank()
      */
     private $establishment;
 
+    /**
+     * Many Schedules have One Division.
+     * @ORM\ManyToOne(targetEntity="SMS\EstablishmentBundle\Entity\Division",fetch="EXTRA_LAZY")
+     * @ORM\JoinColumn(name="division_id", referencedColumnName="id")
+     * @Assert\NotBlank()
+     */
+    private $division;
 
     /**
      * Constructor
@@ -195,6 +205,29 @@ class Schedule
     public function getSection()
     {
         return $this->section;
+    }
+
+    /**
+     * Set division
+     *
+     * @param \SMS\EstablishmentBundle\Entity\Division $division
+     * @return Course
+     */
+    public function setDivision(\SMS\EstablishmentBundle\Entity\Division $division = null)
+    {
+        $this->division = $division;
+
+        return $this;
+    }
+
+    /**
+     * Get division
+     *
+     * @return \SMS\EstablishmentBundle\Entity\Division
+     */
+    public function getDivision()
+    {
+        return $this->division;
     }
 
     /**

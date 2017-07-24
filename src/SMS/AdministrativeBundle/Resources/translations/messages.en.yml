@@ -4,12 +4,23 @@ action:
     help: Help
     picture: Picture   # FIXME
     print: Print
-
+attendance_action:
+    retard  : Retard
+    present : Present
+    absent  : Absent
+    exclude : Exclude
+search:
+    professor:
+        by_every_thing: Search By AnyThing
+        active: Activated
+    result_not_found:
+      text_section: Make sure you Have section in your establishment.
+      text_professor: Make sure you Have professors in your establishment.
 attendance:
     action:
         close: Close   # FIXME
         new: Adding an Attendance   # FIXME
-
+        show: Attendance info
     field:
         date: Date
         select_status: Select an status   # FIXME
@@ -19,22 +30,27 @@ attendance:
 
 attendance_professor:
     field:
-        date: Date   # FIXME
-        firstName: Professor First Name   # FIXME
-        lastName: Professor Last Name   # FIXME
-        sessionName: Professor Session Name   # FIXME
-        status: Status   # FIXME
-
+        date: Attendance Date   # FIXME
+        sessionName: Session Name   # FIXME
+        status: Status Info  # FIXME
+        courseName: Course Name
+        divisionName: Semester Name
+    stats:
+        name: Professor Attendance stats
+        not_found: Not enough data available yet
 attendance_student:
     field:
-        date: Date  # FIXME
+        date: Attendance Date  # FIXME
         fatherName:  Father Name   # FIXME
         firstName:  First Name   # FIXME
         lastName:  Last Name   # FIXME
         sectionName: Section Name   # FIXME
         sessionName: Session Name   # FIXME
-        status: Status   # FIXME
-
+        status: Status Info   # FIXME
+        courseName: Course Name
+    stats:
+        name: Section Attendance stats
+        not_found: Not enough data available yet
 attendanceprofessor:
     add:
       success: Attendance Professor added successfully
@@ -42,7 +58,8 @@ attendanceprofessor:
       data: Please check the form carefully for errors!
     list:
         title: Attendance Professor List
-
+    edit:
+      success: Attendance Professor edited successfully
     new:
         title: Adding an Attendance Professor
 attendancestudent:
@@ -52,7 +69,8 @@ attendancestudent:
       data: Please check the form carefully for errors!
     list:
         title: Attendance Student List
-
+    edit:
+      success: Attendance Student edited successfully
     new:
         title: Adding an Attendance Student
 author:
@@ -66,6 +84,7 @@ filter:
         all: All
         division: Division
         send: send   # FIXME
+        date: Select Date ..   # FIXME
 
 sanction:
     delete:
@@ -95,7 +114,7 @@ sanction:
         detail: Sanction Details
         title: Sanction
 
-schedule:
+filter:
     field:
         division: Select Division ..  # FIXME
         grade: Select Grade ..  # FIXME

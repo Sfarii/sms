@@ -191,7 +191,8 @@ user:
     active:
         false_label: Désactivé   # FIXME
         true_label: Activé   # FIXME
-
+    edit:
+        password: Le compte utilisateur a été édité avec succès
     activate:
         success: Les comptes utilisateurs spécifiés ont été activés avec succès   # FIXME
     deactivate:
@@ -206,6 +207,7 @@ user:
         section: Section   # FIXME
         show_username_password: Nom d'utilisateur et mot de passe automatique   # FIXME
         username: Nom d'utilisateur   # FIXME
+        age: Age
 
     new_password: Nouveau mot de passe   # FIXME
     new_password_confirmation: Répété le nouveau mot de passe   # FIXME

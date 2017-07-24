@@ -106,13 +106,18 @@ class PaymentEntityManager
           if ($form->get('extern')->getData() && !$form->get('intren')->getData()){
             $query->andWhere('student.studentType = FALSE');
           }
+          if ($form->get('paid')->getData() || $form->get('hasCredit')->getData() || !is_null($form->get('paymentType')->getData()) || !empty($form->get('months')->getData())) {
+
+            $query->join('registrations.paymentType', 'paymentType')
+            ->join('paymentType.payments', 'payment');
+          }
           if ($form->get('paid')->getData() && is_null($form->get('paymentType')->getData())){
-            $query->addSelect(sprintf("(SELECT SUM(payment1.credit) FROM %s as payment1 WHERE payment1.student = student ) AS credit1", Payment::class))
-                  ->andHaving('credit1 = 0');
+            $query->addSelect(sprintf("(SELECT SUM(payment1.credit) FROM %s as payment1 WHERE payment1.student = student ) AS paid", Payment::class))
+                  ->andHaving('paid = 0');
           }
           if ($form->get('hasCredit')->getData() && is_null($form->get('paymentType')->getData())){
-            $query->addSelect(sprintf("(SELECT SUM(payment2.credit) FROM %s as payment2 WHERE payment2.student = student ) AS credit2", Payment::class))
-                  ->andHaving('credit2 > 0');
+            $query->addSelect(sprintf("(SELECT SUM(payment2.credit) FROM %s as payment2 WHERE payment2.student = student ) AS hasCredit", Payment::class))
+                  ->andHaving('hasCredit > 0');
           }
           if ($form->get('paid')->getData() && !is_null($form->get('paymentType')->getData())){
             $query->addSelect(sprintf("(SELECT SUM(payment3.credit) FROM %s as payment3 WHERE payment3 = payment AND payment3.student = student ) AS credit3", Payment::class))
@@ -124,7 +129,7 @@ class PaymentEntityManager
                   ->andHaving('credit4 > 0');
           }
           if (!is_null($form->get('paymentType')->getData())){
-            $query->andHaving('paymentType.id = :paymentType')
+            $query->andWhere('paymentType.id = :paymentType')
                   ->setParameter('paymentType', $form->get('paymentType')->getData()->getId());
           }
           if (!empty($form->get('months')->getData())){

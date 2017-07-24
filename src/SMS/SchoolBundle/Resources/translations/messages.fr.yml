@@ -12,7 +12,7 @@ aboutUs:
         success: Row successfully edited   # FIXME
 aboutu:
     list:
-        title: About Us List   # FIXME
+        title: À propos de nous Liste   # FIXME
 
 aboutus:
     field:

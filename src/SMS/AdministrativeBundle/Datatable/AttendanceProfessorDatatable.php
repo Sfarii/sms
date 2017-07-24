@@ -17,6 +17,7 @@ class AttendanceProfessorDatatable extends AbstractDatatableView
      * @var String Class Names
      */
     protected $sessionClass;
+    protected $divisionClass;
     protected $status;
 
     /**
@@ -27,6 +28,16 @@ class AttendanceProfessorDatatable extends AbstractDatatableView
     function setSessionClass( $sessionClass)
     {
         $this->sessionClass = $sessionClass;
+    }
+
+    /**
+     * Division class
+     *
+     * @param String Class Names
+     */
+    function setDivisionClass( $divisionClass)
+    {
+        $this->divisionClass = $divisionClass;
     }
 
     /**
@@ -50,7 +61,7 @@ class AttendanceProfessorDatatable extends AbstractDatatableView
     {
       $establishment = $this->securityToken->getToken()->getUser()->getEstablishment();
       $sessions = $this->em->getRepository($this->sessionClass)->findBy(array("establishment" => $establishment));
-
+      $divisions = $this->em->getRepository($this->divisionClass)->findBy(array("establishment" => $establishment));
 
         $this->callbacks->set(array(
         'row_callback' => array(
@@ -81,48 +92,92 @@ class AttendanceProfessorDatatable extends AbstractDatatableView
         ));
 
         $this->ajax->set(array(
-            'url' => $this->router->generate('attendanceprofessor_results'),
+            'url' => $this->router->generate('attendanceprofessor_results' , array('id' => $options['id'])),
             'type' => 'GET',
             'pipeline' => 0
         ));
 
         $this->columnBuilder
-
-              ->add('date', 'datetime', array(
+            ->add(null, 'multiselect', array(
+                'actions' => array(
+                    array(
+                        'route' => 'attendance_professor_bulk_update',
+                        'route_parameters' => array(
+                            'status' => 'R'
+                        ),
+                        'icon' => '&#xE923;',
+                        'label' => $this->translator->trans('attendance_action.retard'),
+                        'attributes' => array(
+                            'rel' => 'tooltip',
+                            'title' => $this->translator->trans('attendance_action.retard'),
+                            'class' => 'md-btn buttons-copy buttons-html5',
+                            'role' => 'button'
+                        ),
+                    ),
+                    array(
+                        'route' => 'attendance_professor_bulk_update',
+                        'route_parameters' => array(
+                            'status' => 'P'
+                        ),
+                        'icon' => '&#xE923;',
+                        'label' => $this->translator->trans('attendance_action.present'),
+                        'attributes' => array(
+                            'rel' => 'tooltip',
+                            'title' => $this->translator->trans('attendance_action.present'),
+                            'class' => 'md-btn buttons-copy buttons-html5',
+                            'role' => 'button'
+                        ),
+                    ),
+                    array(
+                        'route' => 'attendance_professor_bulk_update',
+                        'route_parameters' => array(
+                            'status' => 'A'
+                        ),
+                        'icon' => '&#xE923;',
+                        'label' => $this->translator->trans('attendance_action.absent'),
+                        'attributes' => array(
+                            'rel' => 'tooltip',
+                            'title' => $this->translator->trans('attendance_action.absent'),
+                            'class' => 'md-btn buttons-copy buttons-html5',
+                            'role' => 'button'
+                        ),
+                    ),
+                )
+            ))
+            ->add('date', 'datetime', array(
                   'title' => $this->translator->trans('attendance_professor.field.date'),
-                  'date_format' => "DD/MM/YY",
-                  'filter' => array('daterange', array('class' => "md-input"))
+                  'date_format' => "LL",
+                  'filter' => array('daterange', array('class' => "md-input")),
               ))
-            ->add('professor.firstName', 'column', array(
-                    'title' => $this->translator->trans('attendance_professor.field.firstName'),
-                    'filter' => array('text', array(
-                        'search_type' => 'eq',
-                        'class' => "md-input"
-                    ))
-            ))
-            ->add('professor.lastName', 'column', array(
-                'title' => $this->translator->trans('attendance_professor.field.lastName'),
-                'filter' => array('text', array(
-                    'search_type' => 'eq',
-                    'class' => "md-input"
-                ))
-            ))
             ->add('session.sessionName', 'column', array(
                 'title' => $this->translator->trans('attendance_professor.field.sessionName'),
                 'filter' => array('select', array(
                     'search_type' => 'eq',
                     'select_options' => array('' => $this->translator->trans('filter.field.all')) + $this->getCollectionAsOptionsArray($sessions, 'sessionName', 'sessionName'),
+                    'class' => "tablesorter-filter"
+                ))
+            ))
+            ->add('course.courseName', 'column', array(
+                'title' => $this->translator->trans('attendance_professor.field.courseName'),
+                'filter' => array('text', array(
                     'class' => "md-input"
                 ))
             ))
-            ->add('status', new AttendanceColumn(), array(
+            ->add('course.division.divisionName', 'column', array(
+                'title' => $this->translator->trans('attendance_professor.field.divisionName'),
+                'filter' => array('select', array(
+                    'search_type' => 'eq',
+                    'select_options' => array('' => $this->translator->trans('filter.field.all')) + $this->getCollectionAsOptionsArray($divisions, 'divisionName', 'divisionName'),
+                    'class' => "tablesorter-filter"
+                ))
+            ))
+            ->add('status', 'column', array(
                 'title' => $this->translator->trans('attendance_professor.field.status'),
                 'filter' => array('select', array(
                     'search_type' => 'eq',
                     'select_options' => $this->status,
-                    'class' => "md-input"
+                    'class' => "tablesorter-filter"
                 )),
-                'editable' => true,
             ))
         ;
     }

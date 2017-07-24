@@ -4,7 +4,7 @@ namespace SMS\SchoolBundle\Controller;
 
 use SMS\SchoolBundle\Entity\Slider;
 use SMS\SchoolBundle\Form\SliderType;
-use API\BaseController\BaseController;
+use SMS\SchoolBundle\BaseController\BaseController;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\Method;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\Route;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\Template;

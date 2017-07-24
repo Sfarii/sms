@@ -27,8 +27,8 @@ function render_boolean(data, type, row, meta, trueIcon, falseIcon, trueLabel, f
 
 function render_datetime(data, type, row, meta, dateFormat) {
     if (data != null && typeof data.timestamp != "undefined") {
-        moment.locale("{{ app.request.locale }}");
-        return moment.unix(data.timestamp).format(dateFormat);
+        moment.locale("{{ app.session.get('_locale') }}");
+        return moment.unix(data.timestamp).add(1, 'hours').format(dateFormat);
     } else {
         return null;
     }
@@ -136,22 +136,6 @@ function render_editable_boolean(data, type, row, meta, colData, trueLabel, fals
     } else {
         result += falseLabel;
     }
-
-    result += '</span>';
-
-    return result;
-}
-
-function render_editable_choice(data, type, row, meta, colData, colIndex) {
-    if (false == row.sg_datatables_editable[colIndex]) {
-        return data;
-    }
-
-    var spanClass = "sg-editable-" + colData;
-    var result = '<span class="' + spanClass + '"';
-        result += 'data-pk="' + row.id + '"data-type="select"' + 'data-value="' + data + '"' + '>';
-        result += data;
-    
 
     result += '</span>';
 

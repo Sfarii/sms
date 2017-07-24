@@ -2,7 +2,7 @@
 
 {% block body %}
 
-	<div class="uk-width-medium-8-10 uk-container-center">
+  <div class="uk-width-medium-8-10 uk-container-center">
     <div class="md-card md-card-single">
       <div class="md-card-toolbar">
         <a href="{{ path('exam_index') }}">
@@ -13,28 +13,67 @@
         </h3>
       </div>
       <div class="md-card-content">
-        <div class="uk-margin-large-bottom">
-          {{ form_start(form) }}
-          <div class="uk-grid uk-margin-medium-bottom" data-uk-grid-margin>
-            <div class="uk-width-1-2">
-              <div class="uk-form-row">
-                <label class="uk-form-label">{{ form_label(form.section) }}</label>
-                {{ form_widget(form.section)}}
-                <div class="parsley-errors-list filled uk-text-danger">
-                  {{ form_errors(form.section) }}
+        <div class="uk-grid uk-grid-divider uk-margin-medium-bottom" data-uk-grid-margin>
+          <div class="uk-width-large-1-2">
+            <ul class="md-list md-list-addon">
+              <li>
+                <div class="md-list-content">
+
+                  <div class="md-list-addon-element">
+                    <i class="md-list-addon-icon material-icons">&#xE80C;</i>
+                  </div>
+                  <span class="md-list-heading uk-text-large">{{'section.field.grade'|trans }}</span>
+
+                  <span class="uk-text-small uk-text-muted uk-display-block">
+                    {{ exam.section.grade.gradeName }}</span>
                 </div>
-              </div>
-            </div>
-            <div class="uk-width-1-2">
-              <div class="uk-form-row">
-                <label class="uk-form-label">{{ form_label(form.typeExam) }}</label>
-                {{ form_widget(form.typeExam)}}
-                <div class="parsley-errors-list filled uk-text-danger">
-                  {{ form_errors(form.typeExam) }}
+              </li>
+              <li>
+                <div class="md-list-content">
+                  <div class="md-list-addon-element">
+                    <i class="md-list-addon-icon material-icons">&#xE865;</i>
+                  </div>
+                  <span class="md-list-heading uk-text-large">{{'exam.field.course'|trans }}
+                    </span>
                 </div>
-              </div>
-            </div>
+                <span class="uk-text-small uk-text-muted uk-display-block">
+                  {{ exam.course.courseName }}</span>
+              </li>
+
+            </ul>
           </div>
+          <div class="uk-width-large-1-2">
+            <ul class="md-list md-list-addon">
+              <li>
+                <div class="md-list-content">
+
+                  <div class="md-list-addon-element">
+                    <i class="md-list-addon-icon material-icons">&#xE80C;</i>
+                  </div>
+                  <span class="md-list-heading uk-text-large">{{'exam.field.section'|trans }}</span>
+
+                  <span class="uk-text-small uk-text-muted uk-display-block">
+                    {{ exam.section.sectionName }}</span>
+                </div>
+              </li>
+              <li>
+                <div class="md-list-content">
+
+                  <div class="md-list-addon-element">
+                    <i class="md-list-addon-icon material-icons">&#xE85D;</i>
+                  </div>
+                  <span class="md-list-heading uk-text-large">{{'exam.field.typeExam'|trans }}</span>
+
+                  <span class="uk-text-small uk-text-muted uk-display-block">
+                    {{ exam.typeExam.typeExamName }}</span>
+                </div>
+              </li>
+            </ul>
+          </div>
+
+        </div>
+        <div class="">
+          {{ form_start(form) }}
           <div class="uk-form-row uk-input-group">
             <span class="uk-input-group-addon">
               <i class="md-list-addon-icon material-icons md-24">&#xE8CE;</i>
@@ -87,9 +126,9 @@
         </div>
       </div>
     </div>
-{% endblock %}
+  {% endblock %}
 
-{% block javascripts %}
-	{{ parent() }}
-	{% include 'filter/grade_section_course_filter.html.twig' %}
-{% endblock %}
+  {% block javascripts %}
+    {{ parent() }}
+    {% include 'filter/grade_section_course_filter.html.twig' %}
+  {% endblock %}

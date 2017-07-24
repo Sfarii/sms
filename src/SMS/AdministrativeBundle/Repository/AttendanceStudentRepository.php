@@ -13,6 +13,27 @@ use SMS\StudyPlanBundle\Entity\Schedule;
 class AttendanceStudentRepository extends \Doctrine\ORM\EntityRepository
 {
     /**
+     * Get Attendance By Section
+     *
+     * @param date $date
+     * @param Session $session
+     * @param Student $student
+     * @return array
+     */
+    public function findBySection($section)
+    {
+        return $this->createQueryBuilder('attendance')
+                ->select("attendance.date, session.sessionName , course.courseName , session.id as sessionID")
+                ->join('attendance.session', 'session')
+                ->join('attendance.course', 'course')
+                ->join('attendance.student', 'student')
+                ->join('student.section', 'section')
+                ->andWhere('section.id = :section')
+                ->setParameter('section', $section)
+                ->groupBy('attendance.session , attendance.date , section');
+    }
+
+    /**
      * Get Attendance By Date and Session and User
      *œ
      * @param date $date
@@ -23,7 +44,7 @@ class AttendanceStudentRepository extends \Doctrine\ORM\EntityRepository
     public function findByDateAndSessionAndSection($date, $session, $section)
     {
         return $this->createQueryBuilder('attendance')
-                ->select("GROUP_CONCAT(attendance.id SEPARATOR ', ' ) as attendance_ids")
+                ->select("count(student) as countStudents")
                 ->join('attendance.session', 'session')
                 ->join('attendance.student', 'student')
                 ->join('student.section', 'section')
@@ -90,20 +111,17 @@ class AttendanceStudentRepository extends \Doctrine\ORM\EntityRepository
      * @param SMS\EstablishmentBundle\Entity\Division $division
      * @return array
      */
-    public function findStatsBySection($section, $division)
+    public function findStatsBySection($section)
     {
-        return $this->createQueryBuilder('attendance')
-                  ->select("attendance.status as name, count(attendance.id) as value , section.id , attendance.date")
-                  ->join('attendance.student', 'student')
-                  ->join('student.section', 'section')
-                  ->having('section.id = :section')
-                  ->andHaving('attendance.date BETWEEN :startDate AND :endDate')
-                  ->setParameter('startDate', $division->getStartDate()->format('Y-m-d'))
-                  ->setParameter('endDate', $division->getEndDate()->format('Y-m-d'))
-                  ->setParameter('section', $section->getId())
-                  ->groupBy('name , section.id')
-                  ->getQuery()
-                  ->getResult();
+      return $this->createQueryBuilder('attendance')
+                ->select("attendance.status as name, count(attendance.id) as value , section.id , attendance.date")
+                ->join('attendance.session', 'session')
+                ->join('attendance.course', 'course')
+                ->join('attendance.student', 'student')
+                ->join('student.section', 'section')
+                ->where('section.id = :section')
+                ->setParameter('section', $section->getId())
+                ->groupBy('name , section.id');
     }
 
     /**

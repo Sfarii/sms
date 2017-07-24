@@ -1,4 +1,8 @@
 #messages.fr.yml
+error:
+    message: Désolé, mais nous ne pouvons pas trouver la page que vous recherchez.
+    not_found: OOPS! PAGE NON TROUVÉE
+    return: Accueil
 datatables:
     actions:
         title: "Actions"
@@ -64,9 +68,9 @@ menu:
   course: Cours scolaire
   schedule:
     show_schedule: Emploi des études
-    title: Schedule
+    title: Emploi des études
     student: Calendrier des étudiants
-    professor: Programme du professeur
+    professor: Calendrier du professeur
   config_schedule:
     title: Session / Jour
     session: Gestion des sessions

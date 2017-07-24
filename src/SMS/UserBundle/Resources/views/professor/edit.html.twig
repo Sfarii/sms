@@ -40,15 +40,9 @@
             </h2>
           </div>
           <div class="md-fab-wrapper">
-            {% if app.user.id == user.id %}
-            <a class="md-fab md-fab-small md-fab-success" href="{{ path('professor_show', { 'id': user.id }) }}">
-              <i class="material-icons">&#xE166;</i>
+            <a class="md-fab md-fab-small md-fab-success" href="{{ path('change_password', { 'id': user.id }) }}">
+              <i class="material-icons">&#xE8B8;</i>
             </a>
-            {% else %}
-            <a class="md-fab md-fab-small md-fab-success" href="{{ path('professor_index') }}">
-              <i class="material-icons">&#xE88A;</i>
-            </a>
-            {% endif %}
           </div>
         </div>
         <div class="user_content">
@@ -92,6 +86,7 @@
 					<h3 class="full_width_in_card heading_c">{{ 'user.show.contact_info'|trans }}</h3>
           <div class="uk-grid uk-margin-medium-top uk-margin-large-bottom" data-uk-grid-margin>
             <div class="uk-width-large-1-2">
+              {% if form.email is defined %}
               <div class="uk-form-row uk-input-group">
                 <span class="uk-input-group-addon">
                   <i class="md-list-addon-icon material-icons">&#xE0BE;</i>
@@ -102,6 +97,7 @@
                   {{ form_errors(form.email) }}
                 </div>
               </div>
+              {% endif %}
 							<div class="uk-form-row uk-input-group">
                 <span class="uk-input-group-addon">
                   <i class="md-list-addon-icon material-icons">&#xE55F;</i>

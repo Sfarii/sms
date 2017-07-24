@@ -30,39 +30,148 @@
           </h3>
         </div>
         <div class="md-card-content">
-          <ul class="md-list">
-            <li>
-              <div class="md-list-content">
-                <span class="md-list-heading uk-text-large">{{ course.grade.gradeName }}</span>
-              </div>
-              <span class="uk-text-small uk-text-muted uk-display-block">
-                {{'course.field.grade'|trans }}</span>
-            </li>
-            <li>
-              <div class="md-list-content">
-                <span class="md-list-heading uk-text-large">{{ course.division.divisionName }}</span>
-              </div>
-              <span class="uk-text-small uk-text-muted uk-display-block">
-                {{'course.field.division'|trans }}</span>
-            </li>
-            <li>
-              <div class="md-list-content">
-                <span class="md-list-heading uk-text-large">{{ course.courseName }}</span>
-              </div>
-              <span class="uk-text-small uk-text-muted uk-display-block">
-                {{'course.field.courseName'|trans }}</span>
-            </li>
-            <li>
-              <div class="md-list-content">
-                <span class="md-list-heading uk-text-large">{{ course.coefficient }}</span>
-              </div>
-              <span class="uk-text-small uk-text-muted uk-display-block">
-                {{'course.field.coefficient'|trans }}</span>
-            </li>
+          <div class="uk-grid uk-grid-divider" data-uk-grid-margin>
+            <div class="uk-width-1-2">
+              <ul class="md-list">
+                <li>
+                  <div class="md-list-content">
+                    <span class="md-list-heading uk-text-large">{{ course.grade.gradeName }}</span>
+                  </div>
+                  <span class="uk-text-small uk-text-muted uk-display-block">
+                    {{'course.field.grade'|trans }}</span>
+                </li>
+                <li>
+                  <div class="md-list-content">
+                    <span class="md-list-heading uk-text-large">{{ course.division.divisionName }}</span>
+                  </div>
+                  <span class="uk-text-small uk-text-muted uk-display-block">
+                    {{'course.field.division'|trans }}</span>
+                </li>
+              </ul>
+            </div>
+            <div class="uk-width-1-2">
+              <ul class="md-list">
+                <li>
+                  <div class="md-list-content">
+                    <span class="md-list-heading uk-text-large">{{ course.courseName }}</span>
+                  </div>
+                  <span class="uk-text-small uk-text-muted uk-display-block">
+                    {{'course.field.courseName'|trans }}</span>
+                </li>
+                <li>
+                  <div class="md-list-content">
+                    <span class="md-list-heading uk-text-large">{{ course.coefficient }}</span>
+                  </div>
+                  <span class="uk-text-small uk-text-muted uk-display-block">
+                    {{'course.field.coefficient'|trans }}</span>
+                </li>
 
-          </ul>
+              </ul>
+            </div>
+          </div>
         </div>
       </div>
+      {% if course.exams is not empty %}
+      <div class="md-card">
+        <div class="md-card-toolbar">
+          <h3 class="md-card-toolbar-heading-text">
+            {{ 'exam.show.title'|trans }}
+          </h3>
+        </div>
+        <div class="md-card-content uk-margin-medium-bottom">
+          {% for exam in course.exams %}
+            <div class="uk-grid uk-grid-divider" data-uk-grid-margin>
+              <div class="uk-width-1-2">
+                <ul class="md-list md-list-addon">
+
+                  <li>
+                    <div class="md-list-content">
+                      <div class="md-list-addon-element">
+                        <i class="md-list-addon-icon material-icons">&#xE8CE;</i>
+                      </div>
+
+                      <span class="md-list-heading uk-text-large">{{ exam.examName }}</span>
+                    </div>
+                    <span class="uk-text-small uk-text-muted uk-display-block">
+                      {{'exam.field.examName'|trans }}</span>
+                  </li>
+
+                  <li>
+                    <div class="md-list-content">
+                      <div class="md-list-addon-element">
+                        <i class="md-list-addon-icon material-icons">&#xE8DF;</i>
+                      </div>
+                      <span class="md-list-heading uk-text-large">
+                        {% if exam.dateExam %}{{ exam.dateExam|date('Y/m/d') }}{% endif %}
+                      </span>
+
+                      <span class="uk-text-small uk-text-muted uk-display-block">
+                        {{'exam.field.dateExam'|trans }}</span>
+                    </div>
+                  </li>
+                  <li>
+                    <div class="md-list-content">
+                      <div class="md-list-addon-element">
+                        <i class="md-list-addon-icon material-icons">&#xE425;</i>
+                      </div>
+                      <span class="md-list-heading uk-text-large">{{ exam.startTime|date('H:i:s') }}</span>
+
+                      <span class="uk-text-small uk-text-muted uk-display-block">
+                        {{'exam.field.startTime'|trans }}</span>
+                    </div>
+                  </li>
+                </ul>
+              </div>
+              <div class="uk-width-1-2">
+                <ul class="md-list  md-list-addon">
+
+                  <li>
+                    <div class="md-list-content">
+                      <div class="md-list-addon-element">
+                        <i class="md-list-addon-icon material-icons">&#xE14C;</i>
+                      </div>
+                      <span class="md-list-heading uk-text-large">
+                        {{ exam.typeExam.factor }}</span>
+                    </div>
+                    <span class="uk-text-small uk-text-muted uk-display-block">
+                      {{'typeexam.field.factor'|trans }}</span>
+                  </li>
+
+                  <li>
+                    <div class="md-list-content">
+
+                      <div class="md-list-addon-element">
+                        <i class="md-list-addon-icon material-icons">&#xE165;</i>
+                      </div>
+                      <span class="md-list-heading uk-text-large">{{ exam.typeExam.typeExamName }}</span>
+
+                      <span class="uk-text-small uk-text-muted uk-display-block">
+                        {{'exam.field.typeExam'|trans }}</span>
+                    </div>
+                  </li>
+                  <li>
+                    <div class="md-list-content">
+
+                      <div class="md-list-addon-element">
+                        <i class="md-list-addon-icon material-icons">&#xE426;</i>
+                      </div>
+                      <span class="md-list-heading uk-text-large">{{ exam.endTime|date('H:i:s') }}</span>
+
+                      <span class="uk-text-small uk-text-muted uk-display-block">
+                        {{'exam.field.endTime'|trans }}</span>
+                    </div>
+                  </li>
+                </ul>
+              </div>
+
+            </div>
+            {% if not loop.last %}
+              <hr class="uk-grid-divider">
+            {% endif %}
+          {% endfor %}
+        </div>
+      </div>
+      {% endif %}
     </div>
     <div class="uk-width-xLarge-2-10 uk-width-large-3-10">
       <div class="md-card">

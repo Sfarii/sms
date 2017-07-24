@@ -17,6 +17,6 @@
 		<script src="{{ asset('assets/plugins/dropify/dist/js/dropify.min.js')}}"></script>
     <script>
 		$(function(){
-			$(".dropify").dropify({'defaultFile' : "{{ vich_uploader_asset(slider, 'imageFile') }}" , messages:{"default":"{{ 'file.upload_file'|trans }}",replace:"{{ 'file.upload_file'|trans }}",remove:"{{ 'delete'|trans }}"}});
+			$(".dropify").dropify({'defaultFile' : "{{ vich_uploader_asset(schoolTestimonial, 'imageFile') }}" , messages:{"default":"{{ 'file.upload_file'|trans }}",replace:"{{ 'file.upload_file'|trans }}",remove:"{{ 'delete'|trans }}"}});
 		});</script>
 {% endblock %}

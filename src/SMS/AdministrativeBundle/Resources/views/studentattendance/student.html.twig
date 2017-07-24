@@ -4,13 +4,10 @@
   {{ 'schedule.student.title'|trans }}
 {% endblock %}
 
-{% block heading_actions %}
-  <a href="" data-uk-tooltip="{pos:'bottom'}" title="{{ 'action.print'|trans }}">
-    <i class="material-icons">&#xE555;</i>
-  </a>
-  <a href="" data-uk-tooltip="{pos:'bottom'}" title="{{ 'action.picture'|trans }}">
-    <i class="material-icons">&#xE3B0;</i>
-  </a>
+{% block sticky_button %}
+<a class="md-fab md-fab-primary" href="{{ url('attendance_student_show' , {'id' : section.id}) }}">
+	<i class="material-icons">&#xE879;</i>
+</a>
 {% endblock %}
 
 {% block body %}
@@ -18,31 +15,24 @@
     <div class="md-card-content">
       {{ form_start(form) }}
       <div class="uk-grid" data-uk-grid-margin>
-        <div class="uk-width-medium-3-10">
+        <div class="uk-width-medium-4-10">
           <div class="uk-form-row">
             {{ form_widget(form.division)}}
-            <div class="parsley-errors-list filled uk-text-danger">
+            <div class="parsley-errors-list  uk-margin-small-top filled uk-text-danger">
               {{ form_errors(form.division) }}
             </div>
           </div>
         </div>
-        <div class="uk-width-medium-3-10">
+        <div class="uk-width-medium-4-10">
           <div class="uk-form-row">
-            {{ form_widget(form.grade)}}
+            <label class="uk-form-label">{{ form_label(form.date)}}</label>
+            {{ form_widget(form.date)}}
             <div class="parsley-errors-list filled uk-text-danger">
-              {{ form_errors(form.grade) }}
+              {{ form_errors(form.date) }}
             </div>
           </div>
         </div>
-        <div class="uk-width-medium-3-10">
-          <div class="uk-form-row">
-            {{ form_widget(form.section)}}
-            <div class="parsley-errors-list filled uk-text-danger">
-              {{ form_errors(form.section) }}
-            </div>
-          </div>
-        </div>
-        <div class="uk-width-medium-1-10 uk-text-center uk-margin-small-top">
+        <div class="uk-width-medium-2-10 uk-text-center uk-margin-small-top">
           {{ form_widget(form.save)}}
         </div>
       </div>
@@ -50,7 +40,7 @@
     </div>
   </div>
   <div id="schedules" class="uk-margin-medium-top">
-    {% if sessions is defined and schedules is defined %}
+    {% if result is defined %}
       <div id="schedule" class="md-card">
         <div class="md-card-content">
           <div class="uk-overflow-container">
@@ -58,7 +48,7 @@
               <thead>
                 <tr>
                   <th class="uk-width-1-10"></th>
-                  {% for session in sessions %}
+                  {% for session in result.sessions %}
                     <th class="border-table uk-text-center md-bg-grey-100">
                       <h4 class="heading_d uk-margin-small-bottom">
                         {{ session.sessionName }}
@@ -74,12 +64,11 @@
                 </tr>
               </thead>
               <tbody>
-                {% for schedule in schedules %}
+                {% for schedule in result.schedules %}
                   <tr >
                     <td  class="uk-width-2-10 uk-text-bold border-table md-bg-grey-100">
                       <h1 class="heading_a uk-text-large uk-text-capitalize " >
                         {{ schedule.day|trans }}
-
                       </h3>
                     </td>
                     {% for session in schedule.sessions %}
@@ -104,13 +93,13 @@
                             </li>
                             <li>
                               <div class="md-list-content">
-                                <a data-uk-modal="{target:'#modal_full'}">
+                                <a data-uk-modal="{target:'#{{ session.sessionID }}'}">
                                   <i class="md-24 material-icons">&#xE8D7;</i>
                                 </a>
                               </div>
                             </li>
                           </ul>
-                          <div class="uk-modal" id="modal_full">
+                          <div class="uk-modal" id="{{ session.sessionID }}">
                             <div class="uk-modal-dialog">
                               <div class="uk-modal-header">
                                 <h3 class="uk-modal-title">{{ 'attendancestudent.new.title'|trans }}</h3>
@@ -119,30 +108,22 @@
                                 <div class="uk-margin-bottom uk-margin-medium-top">
                                   <div class="uk-input-group">
                                     <span class="uk-input-group-addon">
-                                      <i class="uk-input-group-icon uk-icon-calendar"></i>
-                                    </span>
-                                    <label>{{ "attendance.field.date"|trans }}</label>
-                                    <input class="md-input" name="attendance_date" type="text" data-uk-datepicker="{format:'YYYY-MM-DD', minDate: '2017-08-01' }">
-                                  </div>
-                                </div>
-                                <div class="uk-margin-bottom">
-                                  <div class="uk-input-group">
-                                    <span class="uk-input-group-addon">
                                       <i class="material-icons md-24">&#xE152;</i>
                                     </span>
-                                    <select name="attendance_status" class="md-input status md-input-width-large">
+                                    <select data-md-selectize name="attendance_status" class="md-input status md-input-width-large">
                                       <option value="" selected="selected">{{ 'attendance.field.select_status'|trans }}</option>
-                                      {% for key, val in status %}
-                                        <option value="{{key}}">
+                                      {% for key, val in attendance_section %}
+                                        <option value="{{ key }}">
                                           {{ val|trans }}
                                         </option>
                                       {% endfor %}
                                     </select>
                                   </div>
                                 </div>
-                                <input name="attendance_section" value="{{ session.sectionID }}" type="hidden"/>
                                 <input name="attendance_session" value="{{ session.sessionID }}" type="hidden"/>
-                                <input name="attendance_division" value="{{ division.id }}" type="hidden"/>
+                                <input name="attendance_course" value="{{ session.courseID }}" type="hidden"/>
+                                <input name="attendance_date" value="{{ form.vars.value.date|date('Y-m-d') }}" type="hidden"/>
+                                <input name="attendance_division" value="{{ form.vars.value.division.id }}" type="hidden"/>
                                 <div class="uk-modal-footer uk-text-right">
                                   <button type="button" class="md-btn md-btn-flat uk-modal-close">{{ "attendance.action.close"|trans }}</button>
                                   <button type="submit" class="md-btn md-btn-flat md-btn-flat-primary">{{ "attendance.action.new"|trans }}</button>
@@ -163,9 +144,4 @@
       </div>
     {% endif %}
   </div>
-{% endblock %}
-
-{% block javascripts %}
-  {{ parent() }}
-  {% include '@SMSAdministrative/studentattendance/filter.html.twig' %}
 {% endblock %}

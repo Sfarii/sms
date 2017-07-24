@@ -31,10 +31,8 @@ class StudentRepository extends EntityRepository
     {
         $query = $this->createQueryBuilder('student')
           ->join('student.registrations', 'registrations')
-          ->join('registrations.paymentType', 'paymentType')
-          ->join('paymentType.payments', 'payment')
           ->join('student.establishment', 'establishment')
-          ->select("payment.month , paymentType.id , partial student.{id ,imageName , username , firstName , lastName , phone , email} as studentInfo")
+          ->select("partial student.{id ,imageName , username , firstName , lastName , phone , email} as studentInfo")
           ->where('establishment.id = :establishment')
           ->setParameter('establishment', $establishment->getId());
         return $query;

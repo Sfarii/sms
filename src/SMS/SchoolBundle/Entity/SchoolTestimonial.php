@@ -6,7 +6,7 @@ use Doctrine\ORM\Mapping as ORM;
 use Symfony\Component\HttpFoundation\File\File;
 use Vich\UploaderBundle\Mapping\Annotation as Vich;
 use Symfony\Component\Validator\Constraints as Assert;
-
+use Gedmo\Mapping\Annotation as Gedmo;
 /**
  * Testimonial
  *
@@ -14,6 +14,7 @@ use Symfony\Component\Validator\Constraints as Assert;
  * @ORM\HasLifecycleCallbacks
  * @ORM\Table(name="school_testimonial")
  * @ORM\Entity(repositoryClass="SMS\SchoolBundle\Repository\SchoolTestimonialRepository")
+ * @Gedmo\TranslationEntity(class="SMS\SchoolBundle\Entity\Translations\SchoolTestimonialTranslation")
  */
 class SchoolTestimonial
 {
@@ -45,6 +46,7 @@ class SchoolTestimonial
      * @var string
      *
      * @ORM\Column(name="title", type="string", length=150)
+     * @Gedmo\Translatable
      */
     private $title;
 
@@ -52,6 +54,7 @@ class SchoolTestimonial
      * @var string
      *
      * @ORM\Column(name="subtitle", type="string", length=150)
+     * @Gedmo\Translatable
      */
     private $subtitle;
 
@@ -59,6 +62,7 @@ class SchoolTestimonial
      * @var string
      *
      * @ORM\Column(name="text", type="text")
+     * @Gedmo\Translatable
      */
     private $text;
 
@@ -82,6 +86,45 @@ class SchoolTestimonial
      * @ORM\Column(type="datetime", nullable = true)
      */
     protected $updated;
+
+    /**
+     * @var ArrayCollection
+     * * @Assert\Valid(deep = true)
+     * @ORM\OneToMany(targetEntity="SMS\SchoolBundle\Entity\Translations\SchoolTestimonialTranslation", mappedBy="object", cascade={"persist", "remove"})
+     */
+    private $translations;
+
+    public function __construct()
+    {
+        $this->translations = new \Doctrine\Common\Collections\ArrayCollection();
+    }
+
+    /**
+     * Get translations.
+     *
+     * @return ArrayCollection
+     */
+    public function getTranslations()
+    {
+        return $this->translations;
+    }
+
+    /**
+     * Add translation.
+     *
+     * @param PostTranslation $translation
+     *
+     * @return $this
+     */
+    public function addTranslation($translation)
+    {
+        if (!$this->translations->contains($translation)) {
+            $this->translations[] = $translation;
+            $translation->setObject($this);
+        }
+
+        return $this;
+    }
 
      /**
      * @ORM\PrePersist

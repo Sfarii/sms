@@ -90,7 +90,7 @@ echarts_bar = {
               this_data = $($this).data('values');
             var $myChart = echarts.init($this);
             option = {
-              color: ['#3398DB'],
+              color: ['#e53935','#3398DB'],
               tooltip: {
                 trigger: 'axis',
                 axisPointer: { // 坐标轴指示器，坐标轴触发有效
@@ -147,6 +147,7 @@ echarts_bar = {
               this_data = $($this).data('values');
             var $myChart = echarts.init($this);
             option = {
+              color: ['#39f' ,  '#00bfa5' , '#80d8ff' , '#00b8d4'],
               title: {
                 text: this_title,
                 left: 'center',

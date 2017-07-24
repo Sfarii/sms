@@ -32,22 +32,29 @@
                                     --
                                 </td>
                             {% else %}
-                                <td colspan="{{ session.colspan }}" class="border-table uk-text-center">
-                                    <h4 class="heading_c uk-margin-small-bottom">
-                                        {{ session.courseName }}
-                                    </h4>
-                                    <p class="uk-margin-remove">
-                                        <span class="uk-text-muted">
-                                            {{ "schedule_view.schedule.professor"|trans }} :
-                                        </span>
-                                        {{ session.professor }}
-                                    </p>
-                                    <p class="uk-margin-remove">
-                                        <span class="uk-text-muted">
-                                            {{ "schedule_view.schedule.coefficient"|trans }} :
-                                        </span>
-                                        {{ session.coefficient}}
-                                    </p>
+                                <td colspan="{{ session.colspan }}" class="border-table">
+                                  <ul class="md-list">
+                                    <li>
+                                      <div class="md-list-content">
+                                        <span class="md-list-heading">{{ session.courseName }}</span>
+                                        <span class="uk-text-small uk-text-muted">{{ "schedule_view.schedule.course"|trans }}</span>
+                                      </div>
+                                    </li>
+                                    <li>
+                                      <div class="md-list-content">
+                                        <span class="md-list-heading">{{ session.professor }}</span>
+                                        <span class="uk-text-small uk-text-muted">{{ "schedule_view.schedule.professor"|trans }}</span>
+                                      </div>
+                                    </li>
+                                    <li>
+                                      <div class="md-list-content">
+                                        <a href="{{ path("schedule_edit" , {"id" : session.scheduleId })}}">
+                                          <i class="md-24 material-icons">&#xE150;</i>
+                                        </a>
+                                      </div>
+                                    </li>
+                                  </ul>
+
                                 </td>
                             {% endif %}
 

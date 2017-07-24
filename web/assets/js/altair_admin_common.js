@@ -33,7 +33,7 @@
         // material design
         altair_md.init();
 
-        
+
 
     });
 

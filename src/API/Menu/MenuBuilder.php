@@ -112,15 +112,15 @@ class MenuBuilder
       $menu->addChild('schedule', array('label' => 'menu.schedule.title'))
           ->setAttribute('dropdown', true)
           ->setAttribute('icon', '&#xE8B5;');
-      $menu['schedule']->addChild('menu.schedule.title', array('route' => 'schedule_index'));
-      $menu['schedule']->addChild('menu.schedule.professor', array('route' => 'schedule_professor_index'));
       $menu['schedule']->addChild('menu.schedule.student', array('route' => 'schedule_student_index'));
+      $menu['schedule']->addChild('menu.schedule.professor', array('route' => 'schedule_professor_index'));
 
       $menu->addChild('exam', array('label' => 'menu.exam.title'))
           ->setAttribute('dropdown', true)
           ->setAttribute('icon', '&#xE14F;');
           $menu['exam']->addChild('menu.exam.examType', array('route' => 'typeexam_index'));
           $menu['exam']->addChild('menu.exam.title', array('route' => 'exam_index'));
+          $menu['exam']->addChild('menu.exam.student', array('route' => 'exam_students_index'));
 
       $menu->addChild('store', array('label' => 'menu.store.title'))
           ->setAttribute('dropdown', true)
@@ -291,10 +291,6 @@ class MenuBuilder
                               ->setChildrenAttribute('class', 'nav menuzord-menu pull-right');
         $menu->addChild('menu.login.title', array('route' => 'login'));
         $menu->addChild('menu.contact.title', array('route' => 'contact_page'));
-        $menu->addChild('lang', array('label' => 'menu.lang.title'))
-            ->setChildrenAttribute('class', 'dropdown');
-            $menu['lang']->addChild('menu.lang.french', array('route' => 'translate_index' , 'routeParameters' => array( "lang" => "fr")));
-            $menu['lang']->addChild('menu.lang.english', array('route' => 'translate_index', 'routeParameters' => array( "lang" => "en")));
         return $menu;
     }
 }

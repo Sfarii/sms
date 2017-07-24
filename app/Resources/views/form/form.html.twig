@@ -9,7 +9,6 @@
     </div>
   {% endspaceless %}
 {% endblock form_row %}
-
 {%- block choice_widget -%}
   {% if expanded %}
     {{- block('choice_widget_expanded') -}}
@@ -34,11 +33,9 @@
       </div>
     </div>
   {% else %}
-    <div class="uk-form-row">
-      <button type="{{ type|default('button') }}" class="md-btn md-btn-primary md-btn-wave-light" {{ block('button_attributes') }}>
-        <i class="material-icons">&#xE8B6;</i>
-      </button>
-    </div>
+    <button type="{{ type|default('button') }}" class="md-btn save md-btn-primary md-btn-wave-light md-btn-icon" {{ block('button_attributes') }}>
+      <i class="uk-icon-{{attr.icon}} no_margin"></i>
+    </button>
   {% endif %}
 {%- endblock button_widget -%}
 
@@ -46,7 +43,7 @@
   {%- if required and placeholder is none and not placeholder_in_choices and not multiple and (attr.size is not defined or attr.size <= 1) -%}
     {% set required = false %}
   {%- endif -%}
-  <select data-md-selectize {{ block('widget_attributes') }} {% if multiple %} multiple="multiple" {% endif %}>
+  <select data-md-selectize data-md-selectize-bottom {{ block('widget_attributes') }} {% if multiple %} multiple="multiple" {% endif %}>
     {%- if placeholder is not none -%}
       <option value="" {% if required and value is empty %} selected="selected" {% endif %}>{{ placeholder != '' ? (translation_domain is same as(false) ? placeholder : placeholder|trans({}, translation_domain)) }}</option>
     {%- endif -%}
@@ -79,7 +76,8 @@
     <input type="{{ type }}" {{ block('widget_attributes') }} {% if value is not empty %} {% endif %}/>
 
   {% else %}
-    <input class="md-input" type="{{ type }}" {{ block('widget_attributes') }} {% if value is not empty %} value="{{ value }}" {% endif %}/>
+  {% set attr = attr|merge({ 'class': (attr.class|default('') ~ ' md-input')|trim }) %}
+    <input type="{{ type }}" {{ block('widget_attributes') }} {% if value is not empty %} value="{{ value }}" {% endif %}/>
 
   {% endif %}
 
@@ -98,17 +96,26 @@
 {%- endblock textarea_widget -%}
 
 {% block form_errors %}
-  {% spaceless %}
-    {% if errors | length > 0 %}
-      {% for error in errors %}
-        <span class="parsley-required">{{ error.message }}</span>
-      {% endfor %}
-    {% endif %}
+{% spaceless %}
+      {% if errors|length > 0 %}
+          {% if compound %}
+              <ul class="parsley-errors-list">
+                  {% for error in errors %}
+                      <li>{{ error.message }}</li>
+                  {% endfor %}
+              </ul>
+          {% else %}
+              {% for error in errors %}
+                <span class="parsley-required">
+                  {{ error.message }}</span>
+              {% endfor %}
+          {% endif %}
+      {% endif %}
   {% endspaceless %}
 {% endblock form_errors %}
 
 {%- block checkbox_widget -%}
-  <input type="checkbox" {{ block('widget_attributes') }} {% if value is defined %} value="{{ value }}" {% endif %} {% if checked %} checked="checked" {% endif %} />
+  <input type="checkbox" {{ block('widget_attributes') }} {% if value is defined %} value="{{ value }}" {% endif %} {% if checked %} checked="checked" {% endif %}/>
 {%- endblock checkbox_widget -%}
 
 {%- block form -%}
@@ -192,14 +199,42 @@
 
   {% block vich_image_widget %}
     {% spaceless %}
-        {{ form_widget(form.file , {"attr" :  {'class' : "dropify" }}) }}
-        {% if form.delete is defined %}
-          {{ form_row(form.delete) }}
-        {% endif %}
+      {{ form_widget(form.file , {"attr" :  {'class' : "dropify" }}) }}
+      {% if form.delete is defined %}
+        {{ form_row(form.delete) }}
+      {% endif %}
 
-        {% if show_download_link and download_uri is defined and download_uri %}
-          <a href="{{ download_uri }}">{{ 'download'|trans({}, 'VichUploaderBundle') }}</a>
-        {% endif %}
+      {% if show_download_link and download_uri is defined and download_uri %}
+        <a href="{{ download_uri }}">{{ 'download'|trans({}, 'VichUploaderBundle') }}</a>
+      {% endif %}
 
     {% endspaceless %}
+  {% endblock %}
+  {% block sms_translatable_field_widget %}
+    {{ form_errors(form) }}
+    <div class="sms_translations tabbable">
+      <ul class="uk-tab" data-uk-tab="{connect:'#{{ form.vars.field }}'}" >
+        {% for translationsFields in form.vars.locales %}
+          {% set locale = translationsFields %}
+
+          <li class="{% if app.request.locale == locale %}uk-active{% endif %}">
+            <a href="#" data-toggle="tab">
+              {{ locale|capitalize }} {% if locale == form.vars.default_locale %}[*]{% endif %}
+            </a>
+          </li>
+        {% endfor %}
+      </ul>
+
+      <ul id="{{ form.vars.field }}" class="uk-switcher uk-margin">
+        {% for translationsFields in form %}
+          {% set locale = translationsFields.vars.name %}
+
+          <li class="uk-margin-small-top {% if app.request.locale == locale %}uk-active{% endif %}">
+            {{ form_label(form) }}
+            {{ form_widget(translationsFields) }}
+            {{ form_errors(translationsFields) }}
+          </li>
+        {% endfor %}
+      </ul>
+    </div>
   {% endblock %}

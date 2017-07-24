@@ -2,7 +2,7 @@
 
 namespace SMS\SchoolBundle\Controller;
 
-use API\BaseController\BaseController;
+use SMS\SchoolBundle\BaseController\BaseController;
 use SMS\SchoolBundle\Entity\Contact;
 use SMS\SchoolBundle\Form\ContactType;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\Method;
@@ -14,9 +14,11 @@ use SMS\SchoolBundle\Entity\Pricing;
 use SMS\SchoolBundle\Entity\SchoolTestimonial;
 use SMS\SchoolBundle\Entity\Slider;
 use SMS\SchoolBundle\Entity\AboutUs;
+use Sensio\Bundle\FrameworkExtraBundle\Configuration\Cache;
 
 class DefaultController extends BaseController
 {
+
     /**
      * @Route("/translate/{lang}" , name="translate_index")
      * @Method("GET")
@@ -44,7 +46,6 @@ class DefaultController extends BaseController
       $aboutus = $this->getDoctrine()->getRepository(AboutUs::class)->findAll();
       $pricings = $this->getDoctrine()->getRepository(Pricing::class)->findAll();
       $features = $this->getDoctrine()->getRepository(Feature::class)->findAll();
-
       return array("sliders" => $sliders , "features" => $features ,"testimonials" => $testimonials ,"aboutus" => $aboutus,"pricings" => $pricings );
     }
 
@@ -52,6 +53,7 @@ class DefaultController extends BaseController
      * @Route("/contact_us" , name="contact_page")
      * @Method({"GET", "POST"})
      * @Template("SMSSchoolBundle:default:contact.html.twig")
+
      */
 
     public function contactAction(Request $request)

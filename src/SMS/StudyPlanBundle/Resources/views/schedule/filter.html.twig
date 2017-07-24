@@ -1,0 +1,244 @@
+<script>
+  // search Form
+  var $division = $('.divisionField');
+  var $grade = $('.gradeField');
+  var $section = $('.sectionField');
+  var $href_new = "";
+  // When grade gets selected ...
+  $(document).on('change', '.gradeField', function() {
+    // show preloader
+    altair_helpers.content_preloader_show('md');
+    // ... retrieve the corresponding form.
+    if ($(this).val() !== null || $(this).val() !== "") {
+      $(this).parent(".uk-form-row").find('.parsley-errors-list').hide();
+    } else {
+      $(this).parent(".uk-form-row").find('.parsley-errors-list').show();
+    }
+    var $form = $(this).closest('form');
+    // Simulate form data, but only include the selected grade value.
+    var data = {};
+    data[$grade.attr('name')] = $grade.val();
+    // Submit data via AJAX to the form's action path.
+    $.ajax({
+      url: $form.attr('action'),
+      type: $form.attr('method'),
+      data: data,
+      cache: false,
+      timeout: 3000,
+      success: function(html) {
+        // hide preloader
+        altair_helpers.content_preloader_hide();
+        // Replace current position field ...
+        $('.sectionField').parent(".uk-form-row").empty().append(
+        // ... with the returned one from the AJAX response.
+        $(html).find('.sectionField').parent());
+        altair_forms.init();
+        // Position field now displays the appropriate positions.
+      }
+    });
+  });
+  $(document).on('change', '.sectionField', function() {
+    $section = $(this);
+    if ($section.val() !== null || $section.val() !== "") {
+      $section.parent(".uk-form-row").find('.parsley-errors-list').hide();
+    } else {
+      $section.parent(".uk-form-row").find('.parsley-errors-list').show();
+    }
+  });
+  $(document).on('change', '.divisionField', function() {
+    $division = $(this);
+    if ($division.val() !== null || $division.val() !== "") {
+      $division.parent(".uk-form-row").find('.parsley-errors-list').hide();
+    } else {
+      $division.parent(".uk-form-row").find('.parsley-errors-list').show();
+    }
+  });
+  $(document).on('click', '.save', function(e) {
+    e.preventDefault();
+    // show preloader
+    altair_helpers.content_preloader_show('md');
+    var $form = $(this).closest('form');
+    // Simulate form data, but only include the selected grade value.
+    var data = {};
+    data[$grade.attr('name')] = $grade.val();
+    data[$section.attr('name')] = $section.val();
+    data[$division.attr('name')] = $division.val();
+    data[$form.find('input[type="hidden"]').attr('name')] = $form.find('input[type="hidden"]').val();
+    // Submit data via AJAX to the form's action path.
+    $.ajax({
+      url: $form.attr('action'),
+      type: $form.attr('method'),
+      data: data,
+      cache: false,
+      timeout: 3000,
+      success: function(html) {
+        // hide preloader
+        altair_helpers.content_preloader_hide();
+        // Replace current position field ...
+        $division.parent(".uk-form-row").find('.parsley-errors-list').empty().append(
+        // ... with the returned one from the AJAX response.
+        $(html).find('.divisionField').parent(".uk-form-row").find('.parsley-errors-list'));
+        // Replace current position field ...
+        $grade.parent(".uk-form-row").find('.parsley-errors-list').empty().append(
+        // ... with the returned one from the AJAX response.
+        $(html).find('.gradeField').parent(".uk-form-row").find('.parsley-errors-list'));
+        // Replace current position field ...
+        $section.parent(".uk-form-row").find('.parsley-errors-list').empty().append(
+        // ... with the returned one from the AJAX response.
+        $(html).find('.sectionField').parent(".uk-form-row").find('.parsley-errors-list'));
+        // Replace current position field ...
+        $('#schedules').empty().append(
+        // ... with the returned one from the AJAX response.
+        $(html).find('#schedules').find('.md-card'));
+        $('#form_new').empty().append(
+        // ... with the returned one from the AJAX response.
+        $(html).find('#form_new'));
+        $href_new = $('#form_schedule').attr('action');
+        altair_forms.init();
+        // Position field now displays the appropriate positions.
+      }
+    });
+  });
+  $(document).on('click', '.delete', function(e) {
+    altair_helpers.content_preloader_show('md');
+    var modalDelete = UIkit.modal($(this).data('modal'));
+    if (modalDelete.isActive()) {
+      modalDelete.hide();
+    }
+    $.ajax({
+      url: $(this).data('href'),
+      type: 'DELETE',
+      cache: false,
+      timeout: 3000,
+
+      success: function(msg) {
+        altair_helpers.content_preloader_hide();
+        new UIkit.notify({
+          message: "<a href='#' class='notify-action'><span class='uk-icon-times'></span></a>" + msg,
+          status: "error",
+          timeout: 5000,
+          group: null,
+          pos: 'top-right'
+        });
+        $('.save').trigger("click");
+
+      },
+      error: function(XMLHttpRequest, textStatus, errorThrown) {
+        console.log(XMLHttpRequest + ' ' + textStatus + ' ' + errorThrown);
+        new UIkit.notify({
+          message: "<a href='#' class='notify-action'><span class='uk-icon-times'></span></a>" + textStatus,
+          status: "error",
+          timeout: 5000,
+          group: null,
+          pos: 'top-right'
+        });
+      }
+    });
+  });
+  $(document).on('click', '#new-schedule', function(e) {
+    $('#form-title').empty().append($(this).data('title'));
+
+    if ($href_new !== "" && $href_new !== $('#form_schedule').attr('action')) {
+      var $session = $('.sessions');
+      var $day = $('.day');
+      var $course = $('.course');
+      var $professor = $('.professor');
+      $session[0].selectize.setValue("");
+      $course[0].selectize.setValue("");
+      $day[0].selectize.setValue("");
+      $professor[0].selectize.setValue("");
+      $('#form_schedule').attr('action', $href_new);
+    }
+
+  });
+  $(document).on('click', '#submit_schedule', function(e) {
+    var $form = $(this).closest('form');
+    // Simulate form data, but only include the selected grade value.
+    var data = {};
+    var $session = $('.sessions');
+    var $day = $('.day');
+    var $course = $('.course');
+    var $professor = $('.professor');
+    var $establishment = $('.establishment');
+    var $section = $('.section');
+    var $division = $('.division');
+
+    e.preventDefault();
+    // show preloader
+    altair_helpers.content_preloader_show('md');
+    var modal = UIkit.modal("#new");
+    data[$session.attr('name')] = $session.val();
+    data[$section.attr('name')] = $section.val();
+    data[$course.attr('name')] = $course.val();
+    data[$day.attr('name')] = $day.val();
+    data[$form.find('.token').attr('name')] = $form.find('.token').val();
+    data[$professor.attr('name')] = $professor.val();
+    data[$division.attr('name')] = $division.val();
+    data[$establishment.attr('name')] = $establishment.val();
+    // Submit data via AJAX to the form's action path.
+    $.ajax({
+      url: $form.attr('action'),
+      type: $form.attr('method'),
+      data: data,
+      cache: false,
+      timeout: 3000,
+
+      success: function(msg) {
+        var obj = JSON.parse(msg);
+        if (typeof obj.error !== "undefined") {
+          $session.parent(".md-input-wrapper").parent(".uk-form-row").find('.parsley-errors-list').empty().append(obj.error.sessions);
+          $day.parent(".md-input-wrapper").parent(".uk-form-row").find('.parsley-errors-list').empty().append(obj.error.day);
+          $professor.parent(".md-input-wrapper").parent(".uk-form-row").find('.parsley-errors-list').empty().append(obj.error.professor);
+          $course.parent(".md-input-wrapper").parent(".uk-form-row").find('.parsley-errors-list').empty().append(obj.error.course);
+          // hide preloader
+          altair_helpers.content_preloader_hide();
+        } else {
+          if (modal.isActive()) {
+            modal.hide();
+          }
+          new UIkit.notify({
+            message: "<a href='#' class='notify-action'><span class='uk-icon-times'></span></a>" + obj.success,
+            status: "error",
+            timeout: 5000,
+            group: null,
+            pos: 'top-right'
+          });
+          $('.save').trigger("click");
+        }
+
+      },
+      error: function(XMLHttpRequest, textStatus, errorThrown) {
+        console.log(XMLHttpRequest + ' ' + textStatus + ' ' + errorThrown);
+        new UIkit.notify({
+          message: "<a href='#' class='notify-action'><span class='uk-icon-times'></span></a>" + textStatus,
+          status: "error",
+          timeout: 5000,
+          group: null,
+          pos: 'top-right'
+        });
+      }
+    });
+  });
+  $(document).on('click', '.editSchedule', function(e) {
+    var $form = $(this).closest('form');
+    var $session = $('.sessions');
+    var $day = $('.day');
+    var $course = $('.course');
+    var $professor = $('.professor');
+    $('#form-title').empty().append($(this).data('title'));
+    if ($(this).data('sessions').toString().indexOf(', ') >= 0) {
+      $session[0].selectize.setValue($(this).data('sessions').split(", "));
+    } else {
+      $session[0].selectize.setValue($(this).data('sessions'));
+    }
+    $course[0].selectize.setValue($(this).data('course'), false);
+    $day[0].selectize.setValue($(this).data('day'));
+    $professor[0].selectize.setValue($(this).data('professor'));
+    $('#form_schedule').attr('action', $(this).data('href'));
+    e.preventDefault();
+    // show preloader
+    var modal = UIkit.modal("#new");
+    modal.show();
+
+  });
+</script>

@@ -6,7 +6,8 @@ use Symfony\Component\Validator\Constraints as Assert;
 use Doctrine\ORM\Mapping as ORM;
 use Symfony\Component\HttpFoundation\File\File;
 use Vich\UploaderBundle\Mapping\Annotation as Vich;
-
+use Gedmo\Mapping\Annotation as Gedmo;
+use Doctrine\Common\Collections\ArrayCollection;
 /**
  * About Us
  *
@@ -14,6 +15,7 @@ use Vich\UploaderBundle\Mapping\Annotation as Vich;
  * @ORM\HasLifecycleCallbacks
  * @ORM\Table(name="about_us")
  * @ORM\Entity(repositoryClass="SMS\SchoolBundle\Repository\AboutUsRepository")
+ * @Gedmo\TranslationEntity(class="SMS\SchoolBundle\Entity\AboutUsTranslation")
  */
 class AboutUs
 {
@@ -30,6 +32,7 @@ class AboutUs
      * @var string
      *
      * @ORM\Column(name="title", type="string", length=100)
+     * @Gedmo\Translatable
      */
     private $title;
 
@@ -37,6 +40,7 @@ class AboutUs
      * @var string
      *
      * @ORM\Column(name="text", type="text")
+     * @Gedmo\Translatable
      */
     private $text;
 
@@ -89,6 +93,45 @@ class AboutUs
      * @ORM\Column(type="datetime", nullable = true)
      */
     protected $updated;
+
+    /**
+     * @var ArrayCollection
+     *
+     * @ORM\OneToMany(targetEntity="SMS\SchoolBundle\Entity\AboutUsTranslation", mappedBy="object", cascade={"persist", "remove"})
+     */
+    private $translations;
+
+    public function __construct()
+    {
+        $this->translations = new ArrayCollection();
+    }
+
+    /**
+     * Get translations.
+     *
+     * @return ArrayCollection
+     */
+    public function getTranslations()
+    {
+        return $this->translations;
+    }
+
+    /**
+     * Add translation.
+     *
+     * @param PostTranslation $translation
+     *
+     * @return $this
+     */
+    public function addTranslation($translation)
+    {
+        if (!$this->translations->contains($translation)) {
+            $this->translations[] = $translation;
+            $translation->setObject($this);
+        }
+
+        return $this;
+    }
 
      /**
      * @ORM\PrePersist
@@ -240,5 +283,101 @@ class AboutUs
     public function getImageName()
     {
         return $this->imageName;
+    }
+
+    /**
+     * Set updatedAt
+     *
+     * @param \DateTime $updatedAt
+     *
+     * @return AboutUs
+     */
+    public function setUpdatedAt($updatedAt)
+    {
+        $this->updatedAt = $updatedAt;
+
+        return $this;
+    }
+
+    /**
+     * Get updatedAt
+     *
+     * @return \DateTime
+     */
+    public function getUpdatedAt()
+    {
+        return $this->updatedAt;
+    }
+
+    /**
+     * Set created
+     *
+     * @param \DateTime $created
+     *
+     * @return AboutUs
+     */
+    public function setCreated($created)
+    {
+        $this->created = $created;
+
+        return $this;
+    }
+
+    /**
+     * Get created
+     *
+     * @return \DateTime
+     */
+    public function getCreated()
+    {
+        return $this->created;
+    }
+
+    /**
+     * Set updated
+     *
+     * @param \DateTime $updated
+     *
+     * @return AboutUs
+     */
+    public function setUpdated($updated)
+    {
+        $this->updated = $updated;
+
+        return $this;
+    }
+
+    /**
+     * Get updated
+     *
+     * @return \DateTime
+     */
+    public function getUpdated()
+    {
+        return $this->updated;
+    }
+
+    /**
+     * Set user
+     *
+     * @param \SMS\UserBundle\Entity\User $user
+     *
+     * @return AboutUs
+     */
+    public function setUser(\SMS\UserBundle\Entity\User $user = null)
+    {
+        $this->user = $user;
+
+        return $this;
+    }
+
+    /**
+     * Get user
+     *
+     * @return \SMS\UserBundle\Entity\User
+     */
+    public function getUser()
+    {
+        return $this->user;
     }
 }

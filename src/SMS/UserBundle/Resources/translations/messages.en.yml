@@ -85,7 +85,7 @@ professor:
         firstName: First Name   # FIXME
         gender: Gender   # FIXME
         grade: School Grade   # FIXME
-        lastName: LastName   # FIXME
+        lastName: Last Name   # FIXME
         phone: Phone   # FIXME
 
     list:
@@ -197,7 +197,8 @@ user:
     active:
         false_label: Deactivated   # FIXME
         true_label: Activated   # FIXME
-
+    edit:
+        password: User account successfully edited
     activate:
         success: The specified Users accounts successfully activated   # FIXME
     deactivate:
@@ -212,6 +213,7 @@ user:
         section: Section   # FIXME
         show_username_password: Auto username and password   # FIXME
         username: Username   # FIXME
+        age: Age
 
     new_password: New password   # FIXME
     new_password_confirmation: Repeat new password   # FIXME

@@ -6,6 +6,7 @@ use SMS\AdministrativeBundle\Entity\AttendanceProfessor;
 use SMS\AdministrativeBundle\Form\ProfessorAttendanceType;
 use SMS\AdministrativeBundle\Form\ScheduleStudentFilterType;
 use SMS\AdministrativeBundle\Form\ScheduleProfessorFilterType;
+use SMS\AdministrativeBundle\Form\SearchType;
 use SMS\AdministrativeBundle\BaseController\BaseController;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\Method;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\Route;
@@ -13,6 +14,9 @@ use Sensio\Bundle\FrameworkExtraBundle\Configuration\Template;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\Security;
+use SMS\UserBundle\Entity\Professor;
+use SMS\AdministrativeBundle\Form\AttendanceFilterType;
+use SMS\EstablishmentBundle\Entity\Division;
 
 /**
  * Attendanceprofessor controller.
@@ -30,24 +34,21 @@ class AttendanceProfessorController extends BaseController
     /**
      * Lists all schedule by Professor entities.
      *
-     * @Route("/schedule_professor", name="attendanceprofessor_index")
+     * @Route("/schedule_professor/{id}", name="attendanceprofessor_index")
      * @Method({"GET", "POST"})
      * @Template("SMSAdministrativeBundle:attendanceprofessor:professor.html.twig")
      */
-    public function scheduleProfessorAction(Request $request)
+    public function scheduleProfessorAction(Request $request,Professor $professor)
     {
-        $form = $this->createForm(ScheduleProfessorFilterType::class,null, array('establishment' => $this->getUser()->getEstablishment()))->handleRequest($request);
+      $form = $this->createForm(AttendanceFilterType::class, null, array('establishment' => $this->getUser()->getEstablishment()))->handleRequest($request);
 
-        if ($form->isSubmitted() && $form->isValid() && $form->get('save')->isClicked()) {
-            $result = $this->getEntityManager()->getScheduleByProfessor($form->get('professor')->getData(),$form->get('division')->getData(), $this->getUser()->getEstablishment());
-            $result['form'] = $form->createView();
-            $result['division'] = $form->get('division')->getData();
-            $result['professor'] = $form->get('professor')->getData();
-            $result['status'] = $this->getParameter("attendance");
-            return $result;
-        }
+      if ($form->isSubmitted() && $form->isValid()) {
+          $result = $this->getEntityManager()->getScheduleByProfessor($professor,$form->get('division')->getData(),$form->get('date')->getData(), $this->getUser()->getEstablishment());
+          $result['form'] = $form->createView();
+          return array('result' => $result , 'form' => $form->createView() , 'professor' => $professor);
+      }
 
-        return array('form' => $form->createView());
+      return array('form' => $form->createView()  , 'professor' => $professor);
     }
 
     /**
@@ -57,28 +58,61 @@ class AttendanceProfessorController extends BaseController
      * @Method("GET")
      * @Template("SMSAdministrativeBundle:attendanceprofessor:index.html.twig")
      */
-    public function indexAction()
+    public function indexAction(Request $request)
+    {
+        $form = $this->createForm(SearchType::class,null, array('method' => 'GET'))->handleRequest($request);
+
+        $pagination = $this->getPaginator()->paginate(
+            $this->getEntityManager()->getAllProfessors($form , $this->getUser()->getEstablishment()), /* query NOT result */
+            $request->query->getInt('page', 1)/*page number*/,
+            12/*limit per page*/
+        );
+        $sort = $request->query->get('sort', 'empty');
+        if ($sort == "empty"){
+          $pagination->setParam('sort', 'professor.firstName');
+          $pagination->setParam('direction', 'asc');
+        }
+        // parameters to template
+        return array('pagination' => $pagination , 'form' => $form->createView());
+    }
+
+    /**
+     * Finds and displays a attendanceProfessor entity.
+     *
+     * @Route("/show/{id}", name="attendance_professor_show")
+     * @Method("GET")
+     * @Template("SMSAdministrativeBundle:attendanceprofessor:show.html.twig")
+     */
+    public function showAction(Professor $professor)
     {
         $attendanceProfessors = $this->getAttendanceProfessorEntityManager();
-        $attendanceProfessors->buildDatatable();
+        $attendanceProfessors->buildDatatable(array('id' => $professor->getId()));
 
-        return array('attendanceProfessors' => $attendanceProfessors);
+        return array('professor' => $professor, 'echarts' => $this->getEntityManager()->getStatsProfessor($professor), 'attendanceProfessors' => $attendanceProfessors);
     }
 
     /**
      * Lists all attendance Professor entities.
      *
-     * @Route("/results", name="attendanceprofessor_results")
+     * @Route("/results/{id}", name="attendanceprofessor_results")
      * @Method("GET")
      * @return Response
      */
-    public function indexResultsAction()
+    public function indexResultsAction(Professor $professor)
     {
         $attendanceProfessors = $this->getAttendanceProfessorEntityManager();
-        $attendanceProfessors->buildDatatable();
+        $attendanceProfessors->buildDatatable(array('id' => $professor->getId()));
 
         $query = $this->getDataTableQuery()->getQueryFrom($attendanceProfessors);
+        $function = function($qb) use ($professor)
+        {
+            $qb->join('course.division', 'division')
+                ->join('attendance_professor.professor', 'professor')
+                ->andWhere('professor.id = :professor')
+        				->setParameter('professor', $professor->getId());
+        };
 
+        $query->addWhereAll($function);
         return $query->getResponse();
     }
     /**
@@ -111,24 +145,29 @@ class AttendanceProfessorController extends BaseController
      *
      * @param Request $request
      *
-     * @Route("/add", name="attendance_professor_add")
+     * @Route("/new/attendance", name="attendance_professor_add", options={"expose"=true})
      * @Method("POST")
      *
      * @return Response
      */
     public function addAction(Request $request)
     {
-          $data = array("professor" => $request->request->get('attendance_professor', NULL),
-                        "session" => $request->request->get('attendance_session', NULL),
-                        "date"    => $request->request->get('attendance_date', NULL),
-                        "division"=> $request->request->get('attendance_division', NULL),
-                        "status"  => $request->request->get('attendance_status', NULL));
-          if ($this->getEntityManager()->addProfessorAttendance($data, $this->getUser())){
-            $this->flashSuccessMsg('attendanceprofessor.add.success');
-          }else{
-            $this->flashErrorMsg('attendanceprofessor.check.data');
-          }
-          return $this->redirectToRoute('attendance_professor_new');
+        $isAjax = $request->isXmlHttpRequest();
+        if ($isAjax) {
+            $data = $request->request->get('data');
+            $token = $request->request->get('token');
+
+            if (!$this->isCsrfTokenValid('attendance_professor', $token)) {
+                throw new AccessDeniedException('The CSRF token is invalid.');
+            }
+            if ($this->getEntityManager()->addProfessorAttendance($data, $this->getUser())){
+                return new Response($this->get('translator')->trans('attendanceprofessor.add.success'), 200);
+            }else{
+              return new Response($this->get('translator')->trans('attendanceprofessor.check.data'), 200);
+            }
+        }
+
+        return new Response('Bad Request', 400);
     }
 
     /**
@@ -145,4 +184,35 @@ class AttendanceProfessorController extends BaseController
       }
 
       return $this->get('sms.datatable.attendance_professor');
-    }}
+    }
+
+    /**
+     * Bulk delete action.
+     *
+     * @param Request $request
+     *
+     * @Route("/bulk/update/{status}", name="attendance_professor_bulk_update")
+     * @Method("POST")
+     *
+     * @return Response
+     */
+    public function bulkDeleteAction(Request $request, $status)
+    {
+        $isAjax = $request->isXmlHttpRequest();
+
+        if ($isAjax) {
+            $choices = $request->request->get('data');
+            $token = $request->request->get('token');
+
+            if (!$this->isCsrfTokenValid('multiselect', $token)) {
+                throw new AccessDeniedException('The CSRF token is invalid.');
+            }
+            $this->getEntityManager()->updateAll(Attendanceprofessor::class ,$choices, $status);
+            return new Response($this->get('translator')->trans('attendanceprofessor.edit.success'), 200);
+        }
+
+        return new Response('Bad Request', 400);
+    }
+
+
+}

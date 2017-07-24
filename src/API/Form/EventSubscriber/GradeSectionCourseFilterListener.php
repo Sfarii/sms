@@ -82,20 +82,21 @@ class GradeSectionCourseFilterListener implements EventSubscriberInterface
                     'label'         => 'course.field.grade',
                     'attr'          => [ 'class'=> 'gradeField'])
         );
-        // Section are empty, unless we actually supplied a grade
-        $sections = array();
-        if ($grade) {
-            // Fetch the section from specified grade
-            $sections = $this->em->getRepository(Section::class)->findByGrade($grade);
-        }
-
         // Add the Section element
         $form->add('section' , EntityType::class , array(
                     'class'         => Section::class,
                     'property'      => 'sectionName',
+                    'query_builder' => function (EntityRepository $er) use ($establishment , $grade) {
+                        return $er->createQueryBuilder('section')
+                                  ->join('section.grade', 'grade')
+                                  ->andWhere('grade.id = :grade')
+                                  ->setParameter('grade', $grade)
+                                  ->join('section.establishment', 'establishment')
+                                  ->andWhere('establishment.id = :establishment')
+                                  ->setParameter('establishment', $establishment->getId());
+                    },
                     'placeholder'   => 'filter.field.section',
                     'label'         => 'filter.field.section',
-                    'choices'       => $sections,
                     'attr'          => [ 'class'=> 'sectionField']
                     )
                 );
@@ -115,23 +116,22 @@ class GradeSectionCourseFilterListener implements EventSubscriberInterface
                     'label'         => 'filter.field.division',
                     'attr'          => [ 'class'=> 'divisionField'])
         );
-
-        $courses = array();
-        if ($grade && $division) {
-            // Fetch the course from specified grade
-            $courses = $this->em->getRepository(Course::class)->findByGradeAndDivision($grade , $division);
-        }
         // Add the Course element
         $form->add('course' , EntityType::class , array(
                     'class' => Course::class,
                     'property' => 'courseName',
-                    'query_builder' => function (EntityRepository $er) use ($establishment) {
-                        return $er->createQueryBuilder('division')
-                                  ->join('division.establishment', 'establishment')
+                    'query_builder' => function (EntityRepository $er) use ($establishment, $grade,$division) {
+                        return $er->createQueryBuilder('course')
+                                  ->join('course.grade', 'grade')
+                                  ->join('course.establishment', 'establishment')
+                                  ->join('course.division', 'division')
                                   ->andWhere('establishment.id = :establishment')
-                                  ->setParameter('establishment', $establishment->getId());
+                                  ->setParameter('establishment', $establishment->getId())
+                                  ->andWhere('grade.id = :grade')
+                                  ->setParameter('grade', $grade)
+                                  ->andWhere('division.id = :division')
+                                  ->setParameter('division', $division);
                     },
-                    'choices'       => $courses,
                     'placeholder'=> 'filter.field.course',
                     'label' => 'filter.field.course',
                     'attr'          => [ 'class'=> 'courseField'])

@@ -14,6 +14,25 @@ use DatatablesBundle\DataTable\AttendanceColumn;
 class AttendanceStudentDatatable extends AbstractDatatableView
 {
     /**
+     * @var String Class Names
+     */
+    protected $status;
+
+    /**
+     * status
+     *
+     * @param Status
+     */
+    public function setStatus($status)
+    {
+        $this->status = array('' => $this->translator->trans('filter.field.all') );
+
+        foreach ($status as $key => $value) {
+          $this->status[$key] = $this->translator->trans($value);
+        }
+    }
+
+    /**
      * {@inheritdoc}
      */
     public function buildDatatable(array $options = array())
@@ -47,40 +66,97 @@ class AttendanceStudentDatatable extends AbstractDatatableView
         ));
 
         $this->ajax->set(array(
-            'url' => $this->router->generate('attendance_results'),
+            'url' => $this->router->generate('attendance_results' , array('id_section'=> $options['id_section'] ,'date' => $options['date'] ,'id_session' => $options['id_session'])),
             'type' => 'GET',
             'pipeline' => 0
         ));
 
         $this->columnBuilder
+              ->add(null, 'multiselect', array(
+                  'actions' => array(
+                      array(
+                          'route' => 'attendance_student_bulk_update',
+                          'route_parameters' => array(
+                              'status' => 'R'
+                          ),
+                          'icon' => '&#xE923;',
+                          'label' => $this->translator->trans('attendance_action.retard'),
+                          'attributes' => array(
+                              'rel' => 'tooltip',
+                              'title' => $this->translator->trans('attendance_action.retard'),
+                              'class' => 'md-btn buttons-copy buttons-html5',
+                              'role' => 'button'
+                          ),
+                      ),
+                      array(
+                          'route' => 'attendance_student_bulk_update',
+                          'route_parameters' => array(
+                              'status' => 'P'
+                          ),
+                          'icon' => '&#xE923;',
+                          'label' => $this->translator->trans('attendance_action.present'),
+                          'attributes' => array(
+                              'rel' => 'tooltip',
+                              'title' => $this->translator->trans('attendance_action.present'),
+                              'class' => 'md-btn buttons-copy buttons-html5',
+                              'role' => 'button'
+                          ),
+                      ),
+                      array(
+                          'route' => 'attendance_student_bulk_update',
+                          'route_parameters' => array(
+                              'status' => 'A'
+                          ),
+                          'icon' => '&#xE923;',
+                          'label' => $this->translator->trans('attendance_action.absent'),
+                          'attributes' => array(
+                              'rel' => 'tooltip',
+                              'title' => $this->translator->trans('attendance_action.absent'),
+                              'class' => 'md-btn buttons-copy buttons-html5',
+                              'role' => 'button'
+                          ),
+                      ),
+                      array(
+                          'route' => 'attendance_student_bulk_update',
+                          'route_parameters' => array(
+                              'status' => 'E'
+                          ),
+                          'icon' => '&#xE923;',
+                          'label' => $this->translator->trans('attendance_action.exclude'),
+                          'attributes' => array(
+                              'rel' => 'tooltip',
+                              'title' => $this->translator->trans('attendance_action.exclude'),
+                              'class' => 'md-btn buttons-copy buttons-html5',
+                              'role' => 'button'
+                          ),
+                      ),
+                  )
+              ))
             ->add('student.firstName', 'column', array(
                 'title' => $this->translator->trans('attendance_student.field.firstName'),
                 'filter' => array('text', array(
-                    'search_type' => 'eq',
                     'class' => "md-input"
                 ))
             ))
             ->add('student.studentParent.fatherName', 'column', array(
                 'title' => $this->translator->trans('attendance_student.field.fatherName'),
                 'filter' => array('text', array(
-                    'search_type' => 'eq',
                     'class' => "md-input"
                 ))
             ))
             ->add('student.lastName', 'column', array(
                 'title' => $this->translator->trans('attendance_student.field.lastName'),
                 'filter' => array('text', array(
-                    'search_type' => 'eq',
                     'class' => "md-input"
                 ))
             ))
-            ->add('status', new AttendanceColumn(), array(
+            ->add('status', 'column', array(
                 'title' => $this->translator->trans('attendance_student.field.status'),
-                'filter' => array('text', array(
+                'filter' => array('select', array(
                     'search_type' => 'eq',
-                    'class' => "md-input"
+                    'select_options' => $this->status,
+                    'class' => "tablesorter-filter"
                 )),
-                'editable' => true,
             ))
         ;
     }

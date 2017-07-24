@@ -1,12 +1,11 @@
 {% extends 'layout/base_header_double_height.html.twig' %}
 
-
 {% block body %}
 
   <div class="uk-width-medium-8-10 uk-container-center">
     <div class="md-card md-card-single">
       <div class="md-card-toolbar">
-        <a href="{{ path('schedule_index') }}">
+        <a href="{{ path('schedule_student_index') }}">
           <span class="md-icon md-card-fullscreen-deactivate material-icons uk-float-left">&#xE5C4;</span>
         </a>
         <h3 class="md-card-toolbar-heading-text large uk-margin-small-left">
@@ -22,20 +21,11 @@
                 <span class="uk-input-group-addon">
                   <i class="md-list-addon-icon material-icons md-24">&#xE3D0;</i>
                 </span>
-                <label class="uk-form-label">{{ form_label(form.grade) }}</label>
-                {{ form_widget(form.grade)}}
+                <div class="md-input-wrapper">{{ form_widget(form.course)}}</div>
+
+                <span class="uk-form-help-block">{{ form_label(form.course) }}</span>
                 <div class="parsley-errors-list filled uk-text-danger">
-                  {{ form_errors(form.grade) }}
-                </div>
-              </div>
-							<div class="uk-form-row uk-input-group">
-                <span class="uk-input-group-addon">
-                  <i class="md-list-addon-icon material-icons md-24">&#xE3D2;</i>
-                </span>
-                <label class="uk-form-label">{{ form_label(form.division) }}</label>
-                {{ form_widget(form.division)}}
-                <div class="parsley-errors-list filled uk-text-danger">
-                  {{ form_errors(form.division) }}
+                  {{ form_errors(form.course) }}
                 </div>
               </div>
             </div>
@@ -44,69 +34,44 @@
                 <span class="uk-input-group-addon">
                   <i class="md-list-addon-icon material-icons md-24">&#xE3D1;</i>
                 </span>
-                <label class="uk-form-label">{{ form_label(form.section) }}</label>
-                {{ form_widget(form.section)}}
+                {{ form_widget(form.professor)}}
+                <span class="uk-form-help-block">{{ form_label(form.professor) }}</span>
                 <div class="parsley-errors-list filled uk-text-danger">
-                  {{ form_errors(form.section) }}
+                  {{ form_errors(form.professor) }}
                 </div>
               </div>
-							<div class="uk-form-row uk-input-group">
-                <span class="uk-input-group-addon">
-                  <i class="md-list-addon-icon material-icons md-24">&#xE3D4;</i>
-                </span>
-                <label class="uk-form-label">{{ form_label(form.course) }}</label>
-                {{ form_widget(form.course)}}
-                <div class="parsley-errors-list filled uk-text-danger">
-                  {{ form_errors(form.course) }}
-                </div>
-              </div>
+
             </div>
           </div>
-					<div class="uk-form-row uk-input-group">
-            <span class="uk-input-group-addon">
-              <i class="md-list-addon-icon material-icons md-24">&#xE3D5;</i>
-            </span>
-						<label class="uk-form-label">{{ form_label(form.professor) }}</label>
-						{{ form_widget(form.professor)}}
-						<div class="parsley-errors-list filled uk-text-danger">
-							{{ form_errors(form.professor) }}
-						</div>
-					</div>
           <div class="uk-grid uk-margin-medium-top uk-margin-large-bottom" data-uk-grid-margin>
             <div class="uk-width-1-2">
               <div class="uk-form-row uk-input-group">
                 <span class="uk-input-group-addon">
-                  <i class="md-list-addon-icon material-icons md-24">&#xE3D6;</i>
+                  <i class="md-list-addon-icon material-icons md-24">&#xE3D2;</i>
                 </span>
-                <label class="uk-form-label">{{ form_label(form.day) }}</label>
                 {{ form_widget(form.day)}}
+                <span class="uk-form-help-block">{{ form_label(form.day) }}</span>
                 <div class="parsley-errors-list filled uk-text-danger">
                   {{ form_errors(form.day) }}
                 </div>
               </div>
             </div>
-            <div class="uk-width-1-2">
-              <div class="uk-form-row uk-input-group">
-                <span class="uk-input-group-addon">
-                  <i class="md-list-addon-icon material-icons md-24">&#xE3D7;</i>
-                </span>
-                <label class="uk-form-label">{{ form_label(form.sessions) }}</label>
-                {{ form_widget(form.sessions)}}
-                <div class="parsley-errors-list filled uk-text-danger">
-                  {{ form_errors(form.sessions) }}
-                </div>
-              </div>
-            </div>
-            {{ form_widget(form) }}
-
-            {{ form_end(form) }}
           </div>
+          <div class="uk-form-row uk-input-group">
+            <span class="uk-input-group-addon">
+              <i class="md-list-addon-icon material-icons md-24">&#xE3D4;</i>
+            </span>
+            <label class="uk-form-label">{{ form_label(form.sessions) }}</label>
+            {{ form_widget(form.sessions)}}
+
+            <div class="parsley-errors-list filled uk-text-danger">
+              {{ form_errors(form.sessions) }}
+            </div>
+          </div>
+          {{ form_widget(form) }}
+
+          {{ form_end(form) }}
         </div>
       </div>
     </div>
   {% endblock %}
-
-	{% block javascripts %}
-		{{ parent() }}
-		{% include 'filter/grade_section_course_filter.html.twig' %}
-	{% endblock %}

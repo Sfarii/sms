@@ -4,7 +4,7 @@ namespace SMS\StudyPlanBundle\Controller;
 
 use SMS\StudyPlanBundle\Entity\TypeExam;
 use SMS\StudyPlanBundle\Form\TypeExamType;
-use API\BaseController\BaseController;
+use SMS\StudyPlanBundle\BaseController\BaseController;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\Method;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\Route;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\Template;
@@ -197,9 +197,7 @@ class TypeExamController extends BaseController
     }
 
     /**
-     * Get typeExam Entity Manager Service.
-     *
-     * @return API\Services\EntityManager
+     * Get Service.
      *
      * @throws \NotFoundException
      */

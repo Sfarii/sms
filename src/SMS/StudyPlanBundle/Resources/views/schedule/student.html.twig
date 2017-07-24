@@ -1,62 +1,218 @@
 {% extends 'layout/base.html.twig' %}
 
 {% block title_page %}
-    {{ 'schedule.list.title'|trans }}
+  {{ 'schedule.list.student'|trans }}
+{% endblock %}
+
+{% block sticky_button %}
+<a class="md-fab md-fab-primary" id="new-schedule" data-title="{{ 'schedule.new.title'|trans }}" data-uk-modal="{target:'#new'}">
+    <i class="material-icons">&#xE145;</i>
+</a>
 {% endblock %}
 
 {% block heading_actions %}
-    <a href="" data-uk-tooltip="{pos:'bottom'}" title="{{ 'action.print'|trans }}">
-        <i class="material-icons">&#xE555;</i>
-    </a>
-    <a href="" data-uk-tooltip="{pos:'bottom'}" title="{{ 'action.picture'|trans }}">
-        <i class="material-icons">&#xE3B0;</i>
-    </a>
+  <a id="page_print" data-uk-tooltip="{pos:'bottom'}" title="{{ 'action.print'|trans }}">
+    <i class="material-icons">&#xE555;</i>
+  </a>
 {% endblock %}
 
 {% block body %}
-    <div class="filter md-card">
-        <div class="md-card-content">
-            {{ form_start(form) }}
-                <div class="uk-grid" data-uk-grid-margin>
-                    <div class="uk-width-medium-3-10">
-                        <div class="uk-form-row">
-                            {{ form_widget(form.division)}}
-                            <div class="parsley-errors-list filled uk-text-danger">
-                                {{ form_errors(form.division) }}
-                            </div>
-                        </div>
-                    </div>
-                    <div class="uk-width-medium-3-10">
-                        <div class="uk-form-row">
-                            {{ form_widget(form.grade)}}
-                            <div class="parsley-errors-list filled uk-text-danger">
-                                {{ form_errors(form.grade) }}
-                            </div>
-                        </div>
-                    </div>
-                    <div class="uk-width-medium-3-10">
-                        <div class="uk-form-row">
-                            {{ form_widget(form.section)}}
-                            <div class="parsley-errors-list filled uk-text-danger">
-                                {{ form_errors(form.section) }}
-                            </div>
-                        </div>
-                    </div>
-                    <div class="uk-width-medium-1-10 uk-text-center uk-margin-small-top">
-                        {{ form_widget(form.save)}}
-                    </div>
-                </div>
-             {{ form_end(form) }}
+  <div class="filter md-card non-printable">
+    <div class="md-card-content">
+      {{ form_start(form) }}
+      <div class="uk-grid uk-grid-small" data-uk-grid-margin>
+        <div class="uk-width-medium-3-10">
+          <div class="uk-form-row">
+            {{ form_widget(form.division)}}
+            <div class="parsley-errors-list uk-margin-small-top filled uk-text-danger">
+              {{ form_errors(form.division) }}
+            </div>
+          </div>
         </div>
+        <div class="uk-width-medium-3-10">
+          <div class="uk-form-row">
+            {{ form_widget(form.grade)}}
+            <div class="parsley-errors-list uk-margin-small-top filled uk-text-danger">
+              {{ form_errors(form.grade) }}
+            </div>
+          </div>
+        </div>
+        <div class="uk-width-medium-3-10  uk-margin-small-bottom">
+          <div class="uk-form-row">
+            {{ form_widget(form.section)}}
+            <div class="parsley-errors-list uk-margin-small-top filled uk-text-danger">
+              {{ form_errors(form.section) }}
+            </div>
+          </div>
+        </div>
+        <div class="uk-width-medium-1-10 uk-text-center uk-margin-button-top">
+          {{ form_widget(form.save)}}
+        </div>
+      </div>
+      {{ form_end(form) }}
     </div>
-    <div id="schedules" class="uk-margin-medium-top">
-        {% if sessions is defined and schedules is defined %}
-            {% include 'layout/schedule_view.html.twig' with {'sessions': sessions , 'schedules' : schedules } %}
-        {% endif %}
-    </div>
-{% endblock %}
+  </div>
+  <div id="schedules" class="uk-margin-medium-top">
+    {% if result is defined %}
+      <div class="md-card">
+        <div class="md-card-content">
+          <div class="uk-overflow-container">
+            <table class="uk-table uk-table-hover uk-table-nowrap uk-table-align-vertical">
+              <thead>
+                <tr>
+                  <th class="uk-width-1-10"></th>
+                  {% for session in result.sessions %}
+                    <th class="border-table uk-text-center md-bg-grey-100">
+                      <h4 class="heading_d uk-margin-small-bottom">
+                        {{ session.sessionName }}
+                      </h4>
+                      <p class="uk-margin-remove">
+                        <i class="material-icons">&#xE425;</i>
+                        {{ session.startTime|date('H:i:s') }}
+                        <i class="material-icons">&#xE5C8;</i>
+                        {{ session.endTime|date('H:i:s') }}
+                      </p>
+                    </th>
+                  {% endfor %}
+                </tr>
+              </thead>
+              <tbody>
+                {% for schedule in result.schedules %}
+                  <tr>
+                    <td class="uk-text-large border-table uk-text-capitalize uk-text-center">
+                      {{schedule.day|trans }}
+                    </td>
+                    {% for session in schedule.sessions %}
+                      {% if session.empty == true %}
+                        <td class="uk-text-center uk-text-bold border-table">
+                          --
+                        </td>
+                      {% else %}
+                      <div class="uk-modal" id="{{session.scheduleId}}">
+                        <div class="uk-modal-dialog non-printable">
+                          <button type="button" class="uk-modal-close uk-close"></button>
+                          <div class="uk-modal-header">
+                            <h3 class="uk-modal-title">{{ 'schedule.delete.title'|trans }}</h3>
+                          </div>
+                          <p>{{ 'schedule.delete.message'|trans }}</p>
+                          <div class="uk-modal-footer uk-text-right">
+                            <button type="button" class="md-btn md-btn-flat uk-modal-close">{{ "schedule.modal.close"|trans }}</button>
+                            <a data-modal="#{{session.scheduleId}}" data-href="{{ path('schedule_delete' , {'id' : session.scheduleId , 'token' : csrf_token('schedule_delete') })}}" class="delete md-btn md-btn-flat md-btn-flat-primary">{{ "schedule.delete.submit"|trans }}</a>
+                          </div>
+                        </div>
+                      </div>
+                        <td colspan="{{ session.colspan }}" class="border-table">
+                          <ul class="md-list">
+                            <li>
+                              <div class="md-list-content">
+                                <span class="md-list-heading">{{ session.courseName }}</span>
+                                <span class="uk-text-small uk-text-muted">{{ "schedule_view.schedule.course"|trans }}</span>
+                              </div>
+                            </li>
+                            <li>
+                              <div class="md-list-content">
+                                <span class="md-list-heading">{{ session.professor }}</span>
+                                <span class="uk-text-small uk-text-muted">{{ "schedule_view.schedule.professor"|trans }}</span>
+                              </div>
+                            </li>
+                            <li class="non-printable">
+                              <div class="md-list-content">
+                                <span class="md-list-heading">
+                                  <a data-title="{{'schedule.edit.title'|trans }}" class="editSchedule" data-day='{{schedule.day_key }}' data-course='{{session.courseID }}' data-sessions='{{session.sessionIDS }}' data-professor='{{ session.professorID }}' data-href="{{ path('schedule_edit' , {'id_schedule' : session.scheduleId , 'id_division' : form.vars.value.division.id })}}">
+                                    <i class="material-icons">&#xE150;</i>
+                                  </a>
+                                  <a data-uk-modal="{target:'#{{session.scheduleId}}'}">
+                                    <i class="material-icons">&#xE872;</i>
+                                  </a>
+                                </span>
+                                <span class="uk-text-small uk-text-muted">{{ "datatables.actions.title"|trans }}</span>
 
+                              </div>
+                            </li>
+                          </ul>
+                        </td>
+                      {% endif %}
+
+                    {% endfor %}
+                  </tr>
+                {% endfor %}
+              </tbody>
+            </table>
+          </div>
+        </div>
+      </div>
+    {% endif %}
+  </div>
+  <div class="uk-modal" id="new">
+    <div class="uk-modal-dialog non-printable">
+      <button type="button" class="uk-modal-close uk-close"></button>
+      <div class="uk-modal-header">
+        <h3 class="uk-modal-title" id="form-title"></h3>
+      </div>
+      <div id="form_new" class="uk-margin-small-top">
+        {% if formSchedule is defined %}
+        {{ form_start(formSchedule, {'attr' : {'id' : 'form_schedule'} , 'action': path('schedule_new' , {'id_section' : form.vars.value.section.id  , 'id_division' : form.vars.value.division.id } )}) }}
+        <div class="uk-grid  uk-margin-medium-bottom" data-uk-grid-margin>
+          <div class="uk-width-medium-1-2 uk-margin-small-bottom">
+            <div class="uk-form-row">
+              <span class="uk-form-help-block">{{ form_label(formSchedule.course) }}</span>
+              <div class="md-input-wrapper">{{ form_widget(formSchedule.course)}}</div>
+              <div class="parsley-errors-list filled uk-margin-small-top uk-text-danger">
+                {{ form_errors(formSchedule.course) }}
+              </div>
+            </div>
+          </div>
+          <div class="uk-width-medium-1-2">
+            <div class="uk-form-row">
+              <span class="uk-form-help-block">{{ form_label(formSchedule.professor) }}</span>
+              <div class="md-input-wrapper">{{ form_widget(formSchedule.professor)}}</div>
+
+              <div class="parsley-errors-list filled uk-margin-small-top uk-text-danger">
+                {{ form_errors(formSchedule.professor) }}
+              </div>
+            </div>
+
+          </div>
+        </div>
+        <div class="uk-grid  uk-margin-medium-bottom" data-uk-grid-margin>
+          <div class="uk-width-medium-1-2">
+            <div class="uk-form-row">
+              <span class="uk-form-help-block">{{ form_label(formSchedule.day) }}</span>
+              <div class="md-input-wrapper">{{ form_widget(formSchedule.day)}}</div>
+              <div class="parsley-errors-list filled uk-margin-small-top uk-text-danger">
+                {{ form_errors(formSchedule.day) }}
+              </div>
+            </div>
+          </div>
+          <div class="uk-width-medium-1-2">
+            <div class="uk-form-row">
+              <span class="uk-form-help-block uk-margin-small-bottom">{{ form_label(formSchedule.sessions) }}</span>
+              <div class="md-input-wrapper">{{ form_widget(formSchedule.sessions)}}</div>
+              <div class="parsley-errors-list filled uk-margin-small-top uk-text-danger">
+                {{ form_errors(formSchedule.sessions) }}
+              </div>
+            </div>
+          </div>
+        </div>
+        {{ form_widget(formSchedule._token , { 'attr' : { ' class' : 'token'}})}}
+        {{ form_widget(formSchedule) }}
+        {% else %}
+          <p>{{ 'schedule.new.message'|trans }}</p>
+        {% endif %}
+        <div class="uk-modal-footer uk-text-right">
+          <button type="button" class="md-btn md-btn-flat uk-modal-close">{{ "schedule.modal.close"|trans }}</button>
+          {% if formSchedule is defined %}
+          <button type="button" id="submit_schedule" class="md-btn md-btn-flat md-btn-flat-primary">{{ "schedule.new.submit"|trans }}</button>
+          {{ form_end(formSchedule) }}
+          {% endif %}
+        </div>
+      </div>
+
+    </div>
+  </div>
+
+{% endblock %}
 {% block javascripts %}
-    {{ parent() }}
-    {% include 'filter/grade_section_filter.html.twig' %}
+  {{ parent() }}
+  {% include '@SMSStudyPlan/schedule/filter.html.twig' %}
 {% endblock %}

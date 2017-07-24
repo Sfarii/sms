@@ -3,13 +3,15 @@
 namespace SMS\SchoolBundle\Entity;
 
 use Doctrine\ORM\Mapping as ORM;
-
+use Gedmo\Mapping\Annotation as Gedmo;
+use Symfony\Component\Validator\Constraints as Assert;
 /**
  * PricingFeature
  *
  * @ORM\Table(name="pricing_feature")
  * @ORM\HasLifecycleCallbacks
  * @ORM\Entity(repositoryClass="SMS\SchoolBundle\Repository\PricingFeatureRepository")
+ * @Gedmo\TranslationEntity(class="SMS\SchoolBundle\Entity\Translations\PricingFeatureTranslation")
  */
 class PricingFeature
 {
@@ -26,6 +28,7 @@ class PricingFeature
      * @var string
      *
      * @ORM\Column(name="text", type="string", length=100)
+     * @Gedmo\Translatable
      */
     private $text;
 
@@ -64,6 +67,44 @@ class PricingFeature
      */
     protected $updated;
 
+    /**
+     * @var ArrayCollection
+     * * @Assert\Valid(deep = true)
+     * @ORM\OneToMany(targetEntity="SMS\SchoolBundle\Entity\Translations\PricingFeatureTranslation", mappedBy="object", cascade={"persist", "remove"})
+     */
+    private $translations;
+
+    public function __construct()
+    {
+        $this->translations = new \Doctrine\Common\Collections\ArrayCollection();
+    }
+
+    /**
+     * Get translations.
+     *
+     * @return ArrayCollection
+     */
+    public function getTranslations()
+    {
+        return $this->translations;
+    }
+
+    /**
+     * Add translation.
+     *
+     * @param PostTranslation $translation
+     *
+     * @return $this
+     */
+    public function addTranslation($translation)
+    {
+        if (!$this->translations->contains($translation)) {
+            $this->translations[] = $translation;
+            $translation->setObject($this);
+        }
+
+        return $this;
+    }
      /**
      * @ORM\PrePersist
      * @ORM\PreUpdate

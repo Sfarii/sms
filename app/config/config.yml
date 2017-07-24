@@ -1,5 +1,5 @@
 imports:
-    - { resource: sms_parameters.yml }
+    - { resource: parameters.yml }
     - { resource: security.yml }
     - { resource: services.yml }
     - { resource: sms_param.yml }
@@ -36,13 +36,15 @@ twig:
         app_name: '%app_name%'
         msg_success: '%flash_msg_success%'
         msg_danger: '%flash_msg_error%'
-        attendance: '%attendance%'
+        attendance_professor: '%attendance_professor%'
+        attendance_section: '%attendance_section%'
+        logo: '%logo%'
     debug: '%kernel.debug%'
     strict_variables: '%kernel.debug%'
     form_themes:
         - "form/form.html.twig"
-
 # Doctrine Configuration
+
 doctrine:
     dbal:
         default_connection: default
@@ -68,7 +70,20 @@ doctrine:
                 GROUP_CONCAT: API\DoctrineExtensions\GroupConcat
                 DATE_FORMAT: API\DoctrineExtensions\DateFormat
                 CONCAT_WS: API\DoctrineExtensions\ConcatWs
-
+                MONTH: API\DoctrineExtensions\Month
+        mappings:
+            translatable:
+                type: annotation
+                is_bundle: false
+                prefix: Gedmo\Translatable\Entity
+                dir: "%kernel.root_dir%/../vendor/gedmo/doctrine-extensions/lib/Gedmo/Translatable/Entity"
+                alias: GedmoTranslatable
+            translator:
+                type: annotation
+                prefix: Gedmo\Translator\Entity
+                dir: "%kernel.root_dir%/../vendor/gedmo/doctrine-extensions/lib/Gedmo/Translator/Entity"
+                alias: GedmoTranslator # (optional) it will default to the name set for the mapping
+                is_bundle: false
 # Swiftmailer Configuration
 swiftmailer:
     transport: "%mailer_transport%"
@@ -137,3 +152,13 @@ knp_snappy:
         enabled:    true
         binary:     %kernel.root_dir%/../vendor/h4cc/wkhtmltopdf-amd64/bin/wkhtmltopdf-amd64 #"\"C:\\Program Files\\wkhtmltopdf\\bin\\wkhtmltoimage.exe\"" for Windows users
         options:    []
+stof_doctrine_extensions:
+    default_locale: '%locale%'
+    translation_fallback: true
+    orm:
+        default:
+            translatable: true
+sg_datatables:
+    datatable:
+        query:
+            translation_query_hints: true

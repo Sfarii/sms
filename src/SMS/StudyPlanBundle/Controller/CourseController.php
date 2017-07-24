@@ -4,7 +4,7 @@ namespace SMS\StudyPlanBundle\Controller;
 
 use SMS\StudyPlanBundle\Entity\Course;
 use SMS\StudyPlanBundle\Form\CourseType;
-use API\BaseController\BaseController;
+use SMS\StudyPlanBundle\BaseController\BaseController;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\Method;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\Route;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\Template;use Symfony\Component\HttpFoundation\Request;
@@ -154,7 +154,6 @@ class CourseController extends BaseController
                 return new Response($this->get('translator')->trans('course.delete.fail'), 200);
             }
 
-
             return new Response($this->get('translator')->trans('course.delete.success'), 200);
         }
 
@@ -196,9 +195,7 @@ class CourseController extends BaseController
     }
 
     /**
-     * Get course Entity Manager Service.
-     *
-     * @return API\Services\EntityManager
+     * Get Service.
      *
      * @throws \NotFoundException
      */

@@ -12,6 +12,7 @@ use Symfony\Component\Form\Extension\Core\Type\SubmitType;
 use SMS\SchoolBundle\Entity\SchoolTestimonial;
 use Vich\UploaderBundle\Form\Type\VichImageType;
 use Symfony\Component\Form\Extension\Core\Type\TextareaType;
+use SMS\SchoolBundle\Entity\Translations\SchoolTestimonialTranslation;
 
 class SchoolTestimonialType extends AbstractType
 {
@@ -26,15 +27,25 @@ class SchoolTestimonialType extends AbstractType
                       'download_link' => false, // not mandatory, default is true
                       'label' => false )
                   )
-              ->add('title' ,TextType::class , array(
-                  'label' => 'schooltestimonial.field.title')
-              )
-              ->add('subtitle' ,TextType::class , array(
-                  'label' => 'schooltestimonial.field.subtitle')
-              )
-              ->add('text' ,TextareaType::class , array(
-                  'label' => 'schooltestimonial.field.text')
-              )
+              ->add('title', 'sms_translatable_field', array(
+                  'field'          => 'title',
+                  'property_path'  => 'translations',
+                  'widget'         => TextType::class,
+                  'personal_translation' => SchoolTestimonialTranslation::class,
+              ))
+              ->add('subtitle', 'sms_translatable_field', array(
+                  'field'          => 'subtitle',
+                  'property_path'  => 'translations',
+                  'widget'         => TextType::class,
+                  'personal_translation' => SchoolTestimonialTranslation::class,
+              ))
+              ->add('text', 'sms_translatable_field', array(
+                  'field'          => 'text',
+                  'label' => 'aboutus.field.text',
+                  'property_path'  => 'translations',
+                  'widget'         => TextareaType::class,
+                  'personal_translation' => SchoolTestimonialTranslation::class,
+              ))
               ->add('save', SubmitType::class);
 
     }

@@ -3,7 +3,8 @@
 namespace SMS\SchoolBundle\Entity;
 
 use Doctrine\ORM\Mapping as ORM;
-
+use Gedmo\Mapping\Annotation as Gedmo;
+use Gedmo\Translatable\Translatable;
 /**
  * Pricing
  *
@@ -11,7 +12,7 @@ use Doctrine\ORM\Mapping as ORM;
  * @ORM\HasLifecycleCallbacks
  * @ORM\Entity(repositoryClass="SMS\SchoolBundle\Repository\PricingRepository")
  */
-class Pricing
+class Pricing implements Translatable
 {
     /**
      * @var int
@@ -33,6 +34,7 @@ class Pricing
      * @var string
      *
      * @ORM\Column(name="unitPrice", type="string", length=100)
+     * @Gedmo\Translatable
      */
     private $unitPrice;
 
@@ -40,6 +42,7 @@ class Pricing
      * @var string
      *
      * @ORM\Column(name="pricingName", type="string", length=100)
+     * @Gedmo\Translatable
      */
     private $pricingName;
 
@@ -69,6 +72,13 @@ class Pricing
      * @ORM\Column(type="datetime", nullable = true)
      */
     protected $updated;
+
+    /**
+     * @Gedmo\Locale
+     * Used locale to override Translation listener`s locale
+     * this is not a mapped field of entity metadata, just a simple property
+     */
+    private $locale;
 
      /**
      * @ORM\PrePersist

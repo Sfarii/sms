@@ -44,10 +44,6 @@
                 <label class="inline-label">{{ form_label(form.paid) }}</label>
               </div>
               <div class="uk-form-row uk-form-label">
-                {{ form_widget(form.notPaid) }}
-                <label class="inline-label">{{ form_label(form.notPaid) }}</label>
-              </div>
-              <div class="uk-form-row uk-form-label">
                 {{ form_widget(form.hasCredit) }}
                 <label class="inline-label">{{ form_label(form.hasCredit) }}</label>
               </div>
@@ -180,6 +176,44 @@
       var mdCheckbox = $(":checkbox");
       mdCheckbox.each(function() {
         $(this).iCheck({checkboxClass: 'icheckbox_md', radioClass: 'iradio_md', increaseArea: '20%'});
+      });
+      $(".paid").on('ifChecked', function(event){
+          $(".hasCredit").iCheck('uncheck');
+      });
+      $(".paid").on('ifUnchecked', function(event){
+        $(".hasCredit").iCheck('check');
+      });
+      $(".hasCredit").on('ifChecked', function(event){
+          $(".paid").iCheck('uncheck');
+      });
+      $(".hasCredit").on('ifUnchecked', function(event){
+        $(".paid").iCheck('check');
+      });
+
+      $(".notRegistred").on('ifChecked', function(event){
+          $(".Registred").iCheck('uncheck');
+      });
+      $(".notRegistred").on('ifUnchecked', function(event){
+        $(".Registred").iCheck('check');
+      });
+      $(".Registred").on('ifChecked', function(event){
+          $(".notRegistred").iCheck('uncheck');
+      });
+      $(".Registred").on('ifUnchecked', function(event){
+        $(".notRegistred").iCheck('check');
+      });
+
+      $(".extern").on('ifChecked', function(event){
+          $(".intren").iCheck('uncheck');
+      });
+      $(".extern").on('ifUnchecked', function(event){
+        $(".intren").iCheck('check');
+      });
+      $(".intren").on('ifChecked', function(event){
+          $(".extern").iCheck('uncheck');
+      });
+      $(".intren").on('ifUnchecked', function(event){
+        $(".extern").iCheck('check');
       });
     </script>
   {% endblock %}

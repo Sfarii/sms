@@ -2,28 +2,32 @@ parameters:
     flash_msg_success: '_msg_success'
     flash_msg_error: '_msg_error'
     tokenLifetime: 21600
-    app_name: 'SMS v0.1'
-    Establishment: EstablishmentEntity
+    app_name: 'schoolarz v0.1'
+    logo: establishmentLogo
     # mailer
     mailer_transport: smtp
     mailer_host: 127.0.0.1
     mailer_user: ramisfari22@gmail.com
     mailer_password: ramisfari123
     # attendance status
-    attendance:
-        Retard  : Retard
-        Present : Present
-        Absent  : Absent
-        Exclude : Exclude
+    attendance_section:
+        R  : Retard
+        P  : Present
+        A  : Absent
+        E  : Exclude
+    attendance_professor:
+        R  : Retard
+        P  : Present
+        A  : Absent
     # days
     days:
-      monday: day.monday
-      tuesday: day.tuesday
-      wednesday: day.wednesday
-      thursday: day.thursday
-      friday: day.friday
-      saturday: day.saturday
-      sunday: day.sunday
+      Monday: day.monday
+      Tuesday: day.tuesday
+      Wednesday: day.wednesday
+      Thursday: day.thursday
+      Friday: day.friday
+      Saturday: day.saturday
+      Sunday: day.sunday
     months:
       01: month.january
       02: month.february

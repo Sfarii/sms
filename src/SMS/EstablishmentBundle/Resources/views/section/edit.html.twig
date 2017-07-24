@@ -16,18 +16,24 @@
 	        <div class="uk-margin-small-top">
 	          {{ form_start(form) }}
 
-						<div class="uk-form-row">
-	            <label class="uk-form-label">{{ form_label(form.grade) }}</label>
-	            {{ form_widget(form.grade)}}
-	            <div class="parsley-errors-list filled uk-text-danger">
-	              {{ form_errors(form.grade) }}
-	            </div>
-	          </div>
-	          <div class="uk-form-row">
+						<div class="uk-form-row uk-input-group">
+	            <span class="uk-input-group-addon">
+	              <i class="md-list-addon-icon material-icons md-24">&#xE8CE;</i>
+	            </span>
 	            <label class="uk-form-label">{{ form_label(form.sectionName) }}</label>
 	            {{ form_widget(form.sectionName)}}
 	            <div class="parsley-errors-list filled uk-text-danger">
 	              {{ form_errors(form.sectionName) }}
+	            </div>
+	          </div>
+						<div class="uk-form-row  uk-input-group">
+							<span class="uk-input-group-addon">
+								<i class="md-list-addon-icon material-icons md-24">&#xE3D0;</i>
+							</span>
+	            {{ form_widget(form.grade)}}
+							<span class="uk-form-help-block">{{ form_label(form.grade) }}</span>
+	            <div class="parsley-errors-list filled uk-text-danger">
+	              {{ form_errors(form.grade) }}
 	            </div>
 	          </div>
 	            {{ form_widget(form) }}

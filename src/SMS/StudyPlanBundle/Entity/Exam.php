@@ -4,12 +4,13 @@ namespace SMS\StudyPlanBundle\Entity;
 
 use Doctrine\ORM\Mapping as ORM;
 use Symfony\Component\Validator\Constraints as Assert;
-
+use Symfony\Bridge\Doctrine\Validator\Constraints\UniqueEntity;
 /**
  * Exam
  *
  * @ORM\Table(name="exam")
  * @ORM\Entity(repositoryClass="SMS\StudyPlanBundle\Repository\ExamRepository")
+ * @UniqueEntity(fields={"section" , "course" , "typeExam" , "establishment"}, errorPath="typeExam")
  * @ORM\HasLifecycleCallbacks
  */
 class Exam
@@ -33,8 +34,6 @@ class Exam
      */
     private $examName;
 
-
-
     /**
      * @var \DateTime
      *
@@ -42,7 +41,7 @@ class Exam
      * @Assert\NotBlank()
      * @Assert\Date()
      */
-    private $dateExam;
+     private $dateExam;
 
     /**
      * Many Exams have One TypeExam.
@@ -50,7 +49,7 @@ class Exam
      * @ORM\JoinColumn(name="type_exam_id", referencedColumnName="id")
      * @Assert\NotBlank()
      */
-    private $typeExam;
+     private $typeExam;
 
     /**
      * @var \DateTime
@@ -59,7 +58,7 @@ class Exam
      * @Assert\NotBlank()
      * @Assert\Time()
      */
-    private $startTime;
+     private $startTime;
 
     /**
      * @var \DateTime
@@ -69,18 +68,15 @@ class Exam
      * @Assert\Expression(expression="this.getStartTime() < value")
      * @Assert\Time()
      */
-    private $endTime;
+     private $endTime;
 
     /**
-     * Many Exams have Many Section.
-     * @ORM\ManyToMany(targetEntity="SMS\EstablishmentBundle\Entity\Section" ,fetch="EXTRA_LAZY")
-     * @ORM\JoinTable(name="exams_section",
-     *      joinColumns={@ORM\JoinColumn(name="exam_id", referencedColumnName="id")},
-     *      inverseJoinColumns={@ORM\JoinColumn(name="section_id", referencedColumnName="id")}
-     *      )
+     * Many Exams have One Section.
+     * @ORM\ManyToOne(targetEntity="SMS\EstablishmentBundle\Entity\Section" ,fetch="EXTRA_LAZY")
+     * @ORM\JoinColumn(name="section_id", referencedColumnName="id")
      * @Assert\NotBlank()
      */
-    private $section;
+     private $section;
 
     /**
      * Many Exams have One Course.
@@ -92,7 +88,7 @@ class Exam
 
     /**
      * One Exam has Many Notes.
-     * @ORM\OneToMany(targetEntity="Note", mappedBy="exam",fetch="EXTRA_LAZY")
+     * @ORM\OneToMany(targetEntity="Note", mappedBy="exam",fetch="EXTRA_LAZY" , cascade={"persist", "remove"})
      */
     private $notes;
 
@@ -170,14 +166,6 @@ class Exam
     public function getDateExam()
     {
         return $this->dateExam;
-    }
-    /**
-     * Constructor
-     */
-    public function __construct()
-    {
-        $this->notes = new \Doctrine\Common\Collections\ArrayCollection();
-        $this->section = new \Doctrine\Common\Collections\ArrayCollection();
     }
 
     /**
@@ -400,37 +388,27 @@ class Exam
     }
 
     /**
-     * Add section
+     * Get section
+     *
+     * @return \SMS\EstablishmentBundle\Entity\Section
+     */
+    public function getSection()
+    {
+        return $this->section;
+    }
+
+    /**
+     * Set section
      *
      * @param \SMS\EstablishmentBundle\Entity\Section $section
      *
      * @return Exam
      */
-    public function addSection(\SMS\EstablishmentBundle\Entity\Section $section)
+    public function setSection(\SMS\EstablishmentBundle\Entity\Section $section)
     {
-        $this->section[] = $section;
+        $this->section = $section;
 
         return $this;
-    }
-
-    /**
-     * Remove section
-     *
-     * @param \SMS\EstablishmentBundle\Entity\Section $section
-     */
-    public function removeSection(\SMS\EstablishmentBundle\Entity\Section $section)
-    {
-        $this->section->removeElement($section);
-    }
-
-    /**
-     * Get section
-     *
-     * @return \Doctrine\Common\Collections\Collection
-     */
-    public function getSection()
-    {
-        return $this->section;
     }
 
     /**

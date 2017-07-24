@@ -4,7 +4,7 @@ namespace SMS\StudyPlanBundle\Controller;
 
 use SMS\StudyPlanBundle\Entity\Session;
 use SMS\StudyPlanBundle\Form\SessionType;
-use API\BaseController\BaseController;
+use SMS\StudyPlanBundle\BaseController\BaseController;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\Method;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\Route;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\Template;
@@ -195,9 +195,7 @@ class SessionController extends BaseController
     }
 
     /**
-     * Get session Entity Manager Service.
-     *
-     * @return API\Services\EntityManager
+     * Get Service.
      *
      * @throws \NotFoundException
      */

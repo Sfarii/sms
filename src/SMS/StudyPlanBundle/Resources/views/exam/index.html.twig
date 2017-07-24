@@ -1,19 +1,262 @@
 {% extends 'layout/base.html.twig' %}
 
+{% block heading_actions %}
+  <a id="page_print" data-uk-tooltip="{pos:'bottom'}" title="{{ 'action.print'|trans }}">
+    <i class="material-icons">&#xE555;</i>
+  </a>
+{% endblock %}
+
 {% block sticky_button %}
-<a class="md-fab md-fab-primary" href="{{ path('course_index') }}">
+  <a class="md-fab md-fab-primary" id="new-exam" data-title="{{ 'exam.new.title'|trans }}" data-uk-modal="{target:'#new'}">
     <i class="material-icons">&#xE145;</i>
-</a>
+  </a>
 {% endblock %}
 
 {% block title_page %}
- {{ 'exam.list.title'|trans }}
+  {{ 'exam.list.title'|trans }}
 {% endblock %}
 
 {% block body %}
-    <div class="md-card uk-margin-medium-bottom">
-        <div class="md-card-content">
-            {{ datatable_render(exams) }}
+  <div class="filter md-card non-printable">
+    <div class="md-card-content">
+      {{ form_start(form) }}
+      <div class="uk-grid uk-grid-small" data-uk-grid-margin>
+        <div class="uk-width-medium-3-10">
+          <div class="uk-form-row">
+            {{ form_widget(form.division)}}
+            <div class="parsley-errors-list uk-margin-small-top filled uk-text-danger">
+              {{ form_errors(form.division) }}
+            </div>
+          </div>
         </div>
+        <div class="uk-width-medium-3-10">
+          <div class="uk-form-row">
+            {{ form_widget(form.grade)}}
+            <div class="parsley-errors-list uk-margin-small-top filled uk-text-danger">
+              {{ form_errors(form.grade) }}
+            </div>
+          </div>
+        </div>
+        <div class="uk-width-medium-3-10">
+          <div class="uk-form-row">
+            {{ form_widget(form.section)}}
+            <div class="parsley-errors-list uk-margin-small-top filled uk-text-danger">
+              {{ form_errors(form.section) }}
+            </div>
+          </div>
+        </div>
+        <div class="uk-width-medium-1-10 uk-text-center uk-margin-button-top">
+          {{ form_widget(form.save)}}
+        </div>
+      </div>
+      {{ form_end(form) }}
     </div>
-{% endblock %}
+  </div>
+  <div id="exam" class="hierarchical_show uk-margin-medium-top">
+    {% if result is defined %}
+      <div class="md-card">
+        <div class="md-card-content">
+          <div class="uk-overflow-container">
+            <table class="uk-table uk-table-nowrap uk-table-align-vertical">
+              <thead>
+                <tr>
+                  <th class="uk-width-1-10"></th>
+                  <th class="uk-width-1-10 border-table-left border-table-right uk-text-center md-bg-grey-100">
+                    <h4 class="heading_d uk-margin-small-bottom">
+                      {{ "course.field.coefficient"|trans }}
+                    </h4>
+                  </th>
+                  {% for typeExam in result.typeExams %}
+                    <th class="uk-width-1-10 border-table-left uk-text-center md-bg-grey-100">
+                      <h4 class="heading_d uk-margin-small-bottom">
+                        {{ typeExam.typeExamName }}
+                      </h4>
+                    </th>
+                  {% endfor %}
+                </tr>
+              </thead>
+              <tbody>
+                {% for mark in result.marks %}
+                  <tr>
+                    <td class="uk-text-large md-bg-grey-100 uk-text-center border-table">
+                      {{ mark.courseName }}
+                    </td>
+                    <td data-coefficient="{{mark.coefficient}}" class=" uk-text-center border-table">
+                      {{mark.coefficient }}
+                    </td>
+                    {% for typeExam in mark.typeExams %}
+                      <td class="border-table-left   {% if typeExam.exams is empty %} uk-text-center {% endif %}">
+                        {% if typeExam.exams is empty %}
+                          <p class="uk-text-center uk-text-bold border-table">
+                            --
+                          </p>
+                        {% else %}
+                          {% for exam in typeExam.exams %}
+                            <p class="uk-margin-remove">
+                              <div class="uk-modal non-printable" id="{{ exam.courseID ~ exam.examID}}">
+                                <div class="uk-modal-dialog">
+                                  <button type="button" class="uk-modal-close uk-close"></button>
+                                  <div class="uk-modal-header">
+                                    <h3 class="uk-modal-title">{{ 'exam.delete.title'|trans }}</h3>
+                                  </div>
+                                  <p>{{ 'exam.delete.message'|trans }}</p>
+                                  <div class="uk-modal-footer uk-text-right">
+                                    <button type="button" class="md-btn md-btn-flat uk-modal-close">{{ "exam.modal.close"|trans }}</button>
+                                    <a data-modal="#{{ exam.courseID ~ exam.examID}}" data-href="{{ path('exam_delete' , {'id' : exam.examID , 'token' : csrf_token('exam_delete') })}}" class="delete md-btn md-btn-flat md-btn-flat-primary">{{ "examForm.delete.submit"|trans }}</a>
+                                  </div>
+                                </div>
+                              </div>
+                              <ul class="md-list">
+                                <li>
+                                  <div class="md-list-content">
+                                    <span class="md-list-heading">{{ exam.examName }}</span>
+                                    <span class="uk-text-small uk-text-muted">{{ "exam.field.examName"|trans }}</span>
+                                  </div>
+                                </li>
+                                <li>
+                                  <div class="md-list-content">
+                                    <span class="md-list-heading">{{ exam.dateExam|date("m/d/Y") }}</span>
+                                    <span class="uk-text-small uk-text-muted">{{ "exam.field.dateExam"|trans }}</span>
+                                  </div>
+                                </li>
+                                <li class="non-printable">
+                                  <div class="md-list-content">
+
+                                    <span class="md-list-heading">
+                                      <a href="{{ path('exam_show' , {'id' : exam.examID})}}">
+                                        <i class="material-icons">&#xE417;</i>
+                                      </a>
+                                      <a
+                                        data-course="{{ exam.courseID }}"
+                                        data-type-exam="{{ exam.typeExamID }}"
+                                        class="editExam"
+                                        data-href="{{ path('exam_edit' , {'id_exam' : exam.examID , 'id_division' : form.vars.value.division.id})}}"
+                                        data-title="{{ 'exam.edit.title'|trans }}"
+                                        data-start-time="{{ exam.startTime|date('H:i') }}"
+                                        data-end-time="{{ exam.endTime|date('H:i') }}"
+                                        data-date-exam="{{ exam.dateExam|date('Y-m-d') }}"
+                                        data-exam-name="{{ exam.examName }}"
+                                        >
+                                        <i class="material-icons">&#xE150;</i>
+                                      </a>
+                                      <a data-uk-modal="{target:'#{{ exam.courseID ~ exam.examID}}'}">
+                                        <i class="material-icons">&#xE872;</i>
+                                      </a>
+                                    </span>
+                                    <span class="uk-text-small uk-text-muted">{{ "datatables.actions.title"|trans }}</span>
+
+                                  </div>
+                                </li>
+                              </ul>
+                            </p>
+                          {% endfor %}
+                        </td>
+                      {% endif %}
+                    {% endfor %}
+                  </tr>
+                {% endfor %}
+              </tbody>
+            </table>
+          </div>
+        </div>
+
+      {% endif %}
+    </div>
+    <div class="uk-modal" id="new">
+      <div class="uk-modal-dialog non-printable">
+        <button type="button" class="uk-modal-close uk-close"></button>
+        <div class="uk-modal-header">
+          <h3 class="uk-modal-title" id="form-title"></h3>
+        </div>
+        <div id="form_new" class="uk-margin-small-top">
+          {% if examForm is defined %}
+            {{ form_start(examForm, {'attr' : {'id' : 'form_examForm'} , 'action': path('exam_new' , {'id_section' : form.vars.value.section.id  , 'id_division' : form.vars.value.division.id } )}) }}
+            <div class="uk-grid  uk-margin-medium-bottom" data-uk-grid-margin>
+              <div class="uk-width-medium-1-2 uk-margin-small-bottom">
+                <div class="uk-form-row">
+                  <span class="uk-form-help-block">{{ form_label(examForm.course) }}</span>
+                  <div class="md-input-wrapper">{{ form_widget(examForm.course)}}</div>
+                  <div class="parsley-errors-list filled uk-margin-small-top uk-text-danger">
+                    {{ form_errors(examForm.course) }}
+                  </div>
+                </div>
+              </div>
+              <div class="uk-width-medium-1-2">
+                <div class="uk-form-row">
+                  <span class="uk-form-help-block">{{ form_label(examForm.typeExam) }}</span>
+                  <div class="md-input-wrapper">{{ form_widget(examForm.typeExam)}}</div>
+
+                  <div class="parsley-errors-list filled uk-margin-small-top uk-text-danger">
+                    {{ form_errors(examForm.typeExam) }}
+                  </div>
+                </div>
+
+              </div>
+            </div>
+
+            <div class="uk-grid  uk-margin-medium-bottom" data-uk-grid-margin>
+              <div class="uk-width-medium-1-2  uk-margin-medium-bottom">
+                <div class="uk-form-row">
+                  <div class="md-input-wrapper">
+                    <label class="uk-form-label">{{ form_label(examForm.examName) }}</label>
+                    {{ form_widget(examForm.examName)}}
+                  </div>
+                  <div class="parsley-errors-list filled uk-text-danger">
+                    {{ form_errors(examForm.examName) }}
+                  </div>
+                </div>
+
+                <div class="uk-form-row">
+                  <div class="md-input-wrapper">
+                    <label class="uk-form-label">{{ form_label(examForm.startTime) }}</label>
+                    {{ form_widget(examForm.startTime)}}
+                  </div>
+                  <div class="parsley-errors-list filled uk-text-danger">
+                    {{ form_errors(examForm.startTime) }}
+                  </div>
+                </div>
+              </div>
+              <div class="uk-width-medium-1-2  uk-margin-medium-bottom">
+                <div class="uk-form-row">
+                  <div class="md-input-wrapper">
+                    <label class="uk-form-label">{{ form_label(examForm.dateExam) }}</label>
+                    {{ form_widget(examForm.dateExam)}}
+                  </div>
+                  <div class="parsley-errors-list filled uk-text-danger">
+                    {{ form_errors(examForm.dateExam) }}
+                  </div>
+
+                </div>
+                <div class="uk-form-row">
+                  <div class="md-input-wrapper">
+                    <label class="uk-form-label">{{ form_label(examForm.endTime) }}</label>
+                    {{ form_widget(examForm.endTime)}}
+                  </div>
+                  <div class="parsley-errors-list filled uk-text-danger">
+                    {{ form_errors(examForm.endTime) }}
+                  </div>
+                </div>
+              </div>
+
+            </div>
+            {{ form_widget(examForm._token , { 'attr' : { ' class' : 'token'}})}}
+            {{ form_widget(examForm) }}
+          {% else %}
+            <p>{{ 'exam.new.message'|trans }}</p>
+          {% endif %}
+          <div class="uk-modal-footer uk-text-right">
+            <button type="button" class="md-btn md-btn-flat uk-modal-close">{{ "exam.modal.close"|trans }}</button>
+            {% if examForm is defined %}
+              <button type="button" id="submit_examForm" class="md-btn md-btn-flat md-btn-flat-primary">{{ "exam.new.submit"|trans }}</button>
+              {{ form_end(examForm) }}
+            {% endif %}
+          </div>
+        </div>
+
+      </div>
+    </div>
+  {% endblock %}
+  {% block javascripts %}
+    {{ parent() }}
+    {% include '@SMSStudyPlan/exam/filter.html.twig' %}
+  {% endblock %}

@@ -1,47 +1,46 @@
 {% extends 'layout/base.html.twig' %}
 
 {% block title_page %}
-  {{ 'schedule.professor.title'|trans }}
+  {{ 'attendanceprofessor.new.title'|trans }}
 {% endblock %}
 
-{% block heading_actions %}
-  <a href="" data-uk-tooltip="{pos:'bottom'}" title="{{ 'action.print'|trans }}">
-    <i class="material-icons">&#xE555;</i>
-  </a>
-  <a href="" data-uk-tooltip="{pos:'bottom'}" title="{{ 'action.picture'|trans }}">
-    <i class="material-icons">&#xE3B0;</i>
-  </a>
+{% block sticky_button %}
+<a class="md-fab md-fab-primary" href="{{ url('attendance_professor_show' , {'id' : professor.id}) }}">
+	<i class="material-icons">&#xE879;</i>
+</a>
 {% endblock %}
 
 {% block body %}
-  <div class="filter md-card">
-    <div class="md-card-content">
-      {{ form_start(form) }}
-      <div class="uk-grid" data-uk-grid-margin>
-        <div class="uk-width-medium-4-10">
-          <div class="uk-form-row">
-            {{ form_widget(form.division)}}
-            <div class="parsley-errors-list filled uk-text-danger">
-              {{ form_errors(form.division) }}
-            </div>
+<div class="filter md-card">
+  <div class="md-card-content">
+    {{ form_start(form) }}
+    <div class="uk-grid" data-uk-grid-margin>
+      <div class="uk-width-medium-4-10">
+        <div class="uk-form-row">
+          {{ form_widget(form.division)}}
+          <div class="parsley-errors-list  uk-margin-small-top filled uk-text-danger">
+            {{ form_errors(form.division) }}
           </div>
-        </div>
-        <div class="uk-width-medium-4-10">
-          <div class="uk-form-row">
-            {{ form_widget(form.professor)}}
-            <div class="parsley-errors-list filled uk-text-danger">
-              {{ form_errors(form.professor) }}
-            </div>
-          </div>
-        </div>
-        <div class="uk-width-medium-2-10 uk-text-center uk-margin-small-top">
-          {{ form_widget(form.save)}}
         </div>
       </div>
-      {{ form_end(form) }}
+      <div class="uk-width-medium-4-10">
+        <div class="uk-form-row">
+          <label class="uk-form-label">{{ form_label(form.date)}}</label>
+          {{ form_widget(form.date)}}
+          <div class="parsley-errors-list filled uk-text-danger">
+            {{ form_errors(form.date) }}
+          </div>
+        </div>
+      </div>
+      <div class="uk-width-medium-2-10 uk-text-center uk-margin-small-top">
+        {{ form_widget(form.save)}}
+      </div>
     </div>
+    {{ form_end(form) }}
   </div>
-  {% if sessions is defined and schedules is defined %}
+</div>
+<div id="schedules" class="uk-margin-medium-top">
+  {% if result is defined %}
     <div id="schedule" class="md-card">
       <div class="md-card-content">
         <div class="uk-overflow-container">
@@ -49,7 +48,7 @@
             <thead>
               <tr>
                 <th class="uk-width-1-10"></th>
-                {% for session in sessions %}
+                {% for session in result.sessions %}
                   <th class="border-table uk-text-center md-bg-grey-100">
                     <h4 class="heading_d uk-margin-small-bottom">
                       {{ session.sessionName }}
@@ -65,10 +64,10 @@
               </tr>
             </thead>
             <tbody>
-              {% for schedule in schedules %}
-                <tr>
-                  <td class="uk-width-2-10 uk-text-bold border-table md-bg-grey-100">
-                    <h1 class="heading_a uk-text-large uk-text-capitalize ">
+              {% for schedule in result.schedules %}
+                <tr >
+                  <td  class="uk-width-2-10 uk-text-bold border-table md-bg-grey-100">
+                    <h1 class="heading_a uk-text-large uk-text-capitalize " >
                       {{ schedule.day|trans }}
 
                     </h3>
@@ -95,48 +94,39 @@
                           </li>
                           <li>
                             <div class="md-list-content">
-                              <a data-uk-modal="{target:'#modal_full'}">
+                              <a data-uk-modal="{target:'#{{ session.sessionID }}'}">
                                 <i class="md-24 material-icons">&#xE8D7;</i>
                               </a>
                             </div>
                           </li>
                         </ul>
-                        <div class="uk-modal" id="modal_full">
+                        <div class="uk-modal" id="{{ session.sessionID }}">
                           <div class="uk-modal-dialog">
                             <div class="uk-modal-header">
-                              <h3 class="uk-modal-title">{{ 'attendancestudent.new.title'|trans }}</h3>
+                              <h3 class="uk-modal-title">{{ 'attendanceprofessor.new.title'|trans }}</h3>
                             </div>
-                            <form action="{{ path ("attendance_professor_add")}}" method="post">
+                            <form method="post">
                               <div class="uk-margin-bottom uk-margin-medium-top">
                                 <div class="uk-input-group">
                                   <span class="uk-input-group-addon">
-                                    <i id="icon" class="uk-input-group-icon uk-icon-calendar"></i>
+                                    <i class="material-icons md-24">&#xE152;</i>
                                   </span>
-                                  <label>{{ "attendance.field.date"|trans }}</label>
-                                  <input data-required class="md-input" name="attendance_date" type="text" data-uk-datepicker="{format:'YYYY-MM-DD', minDate: '2017-08-01' }">
-                                </div>
-                              </div>
-                              <div class="uk-margin-bottom">
-                                <div class="uk-input-group">
-                                  <span class="uk-input-group-addon">
-                                    <i id="icon" class="material-icons md-24">&#xE152;</i>
-                                  </span>
-                                  <select name="attendance_status" data-required class="md-input status md-input-width-large">
+                                  <select data-md-selectize id="status-{{ session.sessionID }}" name="attendance_status" class="md-input status md-input-width-large">
                                     <option value="" selected="selected">{{ 'attendance.field.select_status'|trans }}</option>
-                                    {% for key, val in status %}
-                                      <option value="{{key}}">
+                                    {% for key, val in attendance_professor %}
+                                      <option value="{{ key }}">
                                         {{ val|trans }}
                                       </option>
                                     {% endfor %}
                                   </select>
+                                  <div style="display:none;" class="error-{{ session.sessionID }} uk-margin-small-top parsley-errors-list filled uk-text-danger">
+                                    {{ "registration.paymenttype.error"|trans }}
+                                  </div>
                                 </div>
                               </div>
-                              <input name="attendance_session" value="{{ session.sessionID }}" type="hidden"/>
-                              <input name="attendance_professor" value="{{ professor.id }}" type="hidden"/>
-                              <input name="attendance_division" value="{{ division.id }}" type="hidden"/>
                               <div class="uk-modal-footer uk-text-right">
                                 <button type="button" class="md-btn md-btn-flat uk-modal-close">{{ "attendance.action.close"|trans }}</button>
-                                <button type="submit" class="save md-btn md-btn-flat md-btn-flat-primary">{{ "attendance.action.new"|trans }}</button>
+                                <button type="button" data-session="{{ session.sessionID }}" data-course="{{ session.courseID }}" data-error="error-{{ session.sessionID }}" data-status="status-{{ session.sessionID }}" class="new-action md-btn md-btn-flat md-btn-flat-primary">{{ "attendance.action.new"|trans }}</button>
                               </div>
                             </form>
                           </div>
@@ -153,4 +143,9 @@
       </div>
     </div>
   {% endif %}
+</div>
+{% endblock %}
+{% block javascripts %}
+  {{ parent() }}
+  {% include '@SMSAdministrative/attendanceprofessor/new_action.html.twig' %}
 {% endblock %}

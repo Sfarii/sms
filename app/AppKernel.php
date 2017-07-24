@@ -31,6 +31,7 @@ class AppKernel extends Kernel
             new SMS\PaymentBundle\SMSPaymentBundle(),
             new SMS\StoreBundle\SMSStoreBundle(),
             new Knp\Bundle\SnappyBundle\KnpSnappyBundle(),
+            new Stof\DoctrineExtensionsBundle\StofDoctrineExtensionsBundle(),
         );
 
         if (in_array($this->getEnvironment(), array('dev', 'test'), true)) {

@@ -12,6 +12,7 @@ use Symfony\Bridge\Doctrine\Form\Type\EntityType;
 use Symfony\Component\Form\Extension\Core\Type\SubmitType;
 use SMS\SchoolBundle\Entity\PricingFeature;
 use SMS\SchoolBundle\Entity\Pricing;
+use SMS\SchoolBundle\Entity\Translations\PricingFeatureTranslation;
 
 class PricingFeatureType extends AbstractType
 {
@@ -27,12 +28,17 @@ class PricingFeatureType extends AbstractType
                   'label' => 'pricingfeature.field.pricing',
                   'placeholder' => 'pricingfeature.field.pricing')
               )
-              ->add('text' ,TextType::class , array(
-                  'label' => 'pricingfeature.field.text')
-              )
               ->add('state' ,CheckboxType::class , array(
                   'label' => 'pricingfeature.field.state')
               )
+
+              ->add('text', 'sms_translatable_field', array(
+                  'field'          => 'text',
+                  'label' => 'feature.field.text',
+                  'property_path'  => 'translations',
+                  'widget'         => TextareaType::class,
+                  'personal_translation' => PricingFeatureTranslation::class,
+              ))
               ->add('save', SubmitType::class);
 
     }

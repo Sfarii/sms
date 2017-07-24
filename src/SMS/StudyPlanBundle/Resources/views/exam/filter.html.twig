@@ -1,0 +1,254 @@
+<script>
+	// search Form
+	var $token = $('input[type="hidden"]');
+	var $division = $('.divisionField');
+	var $grade = $('.gradeField');
+	var $section = $('.sectionField');
+	var $href_new = "";
+	// When grade gets selected ...
+	$(document).on('change' , '.gradeField', function () {
+		altair_helpers.content_preloader_show('md');
+	  // ... retrieve the corresponding form.
+	  if ($(this).val() !== null || $(this).val() !== ""){
+		$(this).parent(".uk-form-row").find('.parsley-errors-list').hide();
+	}else{
+		$(this).parent(".uk-form-row").find('.parsley-errors-list').show();
+	}
+	  var $grade = $('.gradeField');
+	  var $form = $(this).closest('form');
+	  // Simulate form data, but only include the selected grade value.
+	  var data = {};
+	  data[$grade.attr('name')] = $grade.val();
+	  // Submit data via AJAX to the form's action path.
+	  $.ajax({
+	    url : $form.attr('action'),
+	    type: $form.attr('method'),
+	    data : data,
+        cache: false,
+        timeout: 3000,
+	    success: function(html) {
+				altair_helpers.content_preloader_hide();
+	      // Replace current position field ...
+	      $('.sectionField').parent(".uk-form-row").empty().append(
+	        // ... with the returned one from the AJAX response.
+	        $(html).find('.sectionField').parent()
+	      );
+	      altair_forms.init();
+	      // Position field now displays the appropriate positions.
+	    }
+	  });
+	});
+	$(document).on('change' , '.sectionField', function () {
+		$section = $(this);
+		if ($(this).val() !== null || $(this).val() !== ""){
+			$(this).parent(".uk-form-row").find('.parsley-errors-list').hide();
+		}else{
+			$(this).parent(".uk-form-row").find('.parsley-errors-list').show();
+		}
+	});
+  $(document).on('change' , '.divisionField', function () {
+		if ($(this).val() !== null || $(this).val() !== ""){
+			$(this).parent(".uk-form-row").find('.parsley-errors-list').hide();
+		}else{
+			$(this).parent(".uk-form-row").find('.parsley-errors-list').show();
+		}
+	});
+
+	$(document).on('click', '.save', function(e) {
+    e.preventDefault();
+    // show preloader
+    altair_helpers.content_preloader_show('md');
+    var $form = $(this).closest('form');
+    // Simulate form data, but only include the selected grade value.
+    var data = {};
+    data[$grade.attr('name')] = $grade.val();
+    data[$section.attr('name')] = $section.val();
+    data[$division.attr('name')] = $division.val();
+    data[$token.attr('name')] = $token.val();
+    // Submit data via AJAX to the form's action path.
+    $.ajax({
+      url: $form.attr('action'),
+      type: $form.attr('method'),
+      data: data,
+      cache: false,
+      timeout: 3000,
+      success: function(html) {
+        // hide preloader
+        altair_helpers.content_preloader_hide();
+        // Replace current position field ...
+        $division.parent(".uk-form-row").find('.parsley-errors-list').empty().append(
+        // ... with the returned one from the AJAX response.
+        $(html).find('.divisionField').parent(".uk-form-row").find('.parsley-errors-list'));
+        // Replace current position field ...
+        $grade.parent(".uk-form-row").find('.parsley-errors-list').empty().append(
+        // ... with the returned one from the AJAX response.
+        $(html).find('.gradeField').parent(".uk-form-row").find('.parsley-errors-list'));
+        // Replace current position field ...
+        $section.parent(".uk-form-row").find('.parsley-errors-list').empty().append(
+        // ... with the returned one from the AJAX response.
+        $(html).find('.sectionField').parent(".uk-form-row").find('.parsley-errors-list'));
+        // Replace current position field ...
+        $('#exam').empty().append(
+        // ... with the returned one from the AJAX response.
+        $(html).find('#exam').find('.md-card'));
+				$('#form_new').empty().append(
+        // ... with the returned one from the AJAX response.
+        $(html).find('#form_new'));
+        $href_new = $('#form_examForm').attr('action');
+        altair_forms.init();
+        // Position field now displays the appropriate positions.
+      }
+    });
+  });
+	$(document).on('click', '.delete', function(e) {
+    altair_helpers.content_preloader_show('md');
+    var modalDelete = UIkit.modal($(this).data('modal'));
+    if (modalDelete.isActive()) {
+      modalDelete.hide();
+    }
+    $.ajax({
+      url: $(this).data('href'),
+      type: 'DELETE',
+      cache: false,
+      timeout: 3000,
+
+      success: function(msg) {
+        altair_helpers.content_preloader_hide();
+        new UIkit.notify({
+          message: "<a href='#' class='notify-action'><span class='uk-icon-times'></span></a>" + msg,
+          status: "error",
+          timeout: 5000,
+          group: null,
+          pos: 'top-right'
+        });
+        $('.save').trigger("click");
+
+      },
+      error: function(XMLHttpRequest, textStatus, errorThrown) {
+        console.log(XMLHttpRequest + ' ' + textStatus + ' ' + errorThrown);
+        new UIkit.notify({
+          message: "<a href='#' class='notify-action'><span class='uk-icon-times'></span></a>" + textStatus,
+          status: "error",
+          timeout: 5000,
+          group: null,
+          pos: 'top-right'
+        });
+      }
+    });
+  });
+  $(document).on('click', '#new-exam', function(e) {
+    $('#form-title').empty().append($(this).data('title'));
+
+    if ($href_new !== "" && $href_new !== $('#form_examForm').attr('action')) {
+      var $course = $('.course');
+      var $typeExam = $('.typeExam');
+      $typeExam[0].selectize.setValue("");
+      $course[0].selectize.setValue("");
+			$('.examName').parent(".md-input-wrapper").removeClass("md-input-filled");
+			$('.examName').val("");
+			$('.dateExam').parent(".md-input-wrapper").removeClass("md-input-filled");
+	    $('.dateExam').val("");
+			$('.startTime').parent(".md-input-wrapper").removeClass("md-input-filled");
+	    $('.startTime').val("");
+			$('.endTime').parent(".md-input-wrapper").removeClass("md-input-filled");
+	    $('.endTime').val("");
+      $('#form_examForm').attr('action', $href_new);
+    }
+
+  });
+  $(document).on('click', '#submit_examForm', function(e) {
+    var $form = $(this).closest('form');
+    // Simulate form data, but only include the selected grade value.
+    var data = {};
+		var $examName = $('.examName');
+    var $dateExam = $('.dateExam');
+    var $startTime = $('.startTime');
+    var $endTime = $('.endTime');
+    var $typeExam = $('.typeExam');
+		var $course = $('.course');
+    var $establishment = $('.establishment');
+    var $section = $('.section');
+    var $division = $('.division');
+
+    e.preventDefault();
+    // show preloader
+    altair_helpers.content_preloader_show('md');
+    var modal = UIkit.modal("#new");
+    data[$examName.attr('name')] = $examName.val();
+    data[$dateExam.attr('name')] = $dateExam.val();
+    data[$startTime.attr('name')] = $startTime.val();
+    data[$endTime.attr('name')] = $endTime.val();
+		data[$course.attr('name')] = $course.val();
+    data[$typeExam.attr('name')] = $typeExam.val();
+    data[$division.attr('name')] = $division.val();
+		data[$form.find('.token').attr('name')] = $form.find('.token').val();
+		data[$section.attr('name')] = $section.val();
+    data[$establishment.attr('name')] = $establishment.val();
+    // Submit data via AJAX to the form's action path.
+    $.ajax({
+      url: $form.attr('action'),
+      type: $form.attr('method'),
+      data: data,
+      cache: false,
+      timeout: 3000,
+
+      success: function(msg) {
+        var obj = JSON.parse(msg);
+        if (typeof obj.error !== "undefined") {
+          $examName.parent(".md-input-wrapper").parent(".uk-form-row").find('.parsley-errors-list').empty().append(obj.error.examName);
+          $dateExam.parent(".md-input-wrapper").parent(".uk-form-row").find('.parsley-errors-list').empty().append(obj.error.dateExam);
+          $startTime.parent(".md-input-wrapper").parent(".uk-form-row").find('.parsley-errors-list').empty().append(obj.error.startTime);
+					$endTime.parent(".md-input-wrapper").parent(".uk-form-row").find('.parsley-errors-list').empty().append(obj.error.endTime);
+          $typeExam.parent(".md-input-wrapper").parent(".uk-form-row").find('.parsley-errors-list').empty().append(obj.error.typeExam);
+					$course.parent(".md-input-wrapper").parent(".uk-form-row").find('.parsley-errors-list').empty().append(obj.error.course);
+          // hide preloader
+          altair_helpers.content_preloader_hide();
+        } else {
+          if (modal.isActive()) {
+            modal.hide();
+          }
+          new UIkit.notify({
+            message: "<a href='#' class='notify-action'><span class='uk-icon-times'></span></a>" + obj.success,
+            status: "error",
+            timeout: 5000,
+            group: null,
+            pos: 'top-right'
+          });
+          $('.save').trigger("click");
+        }
+
+      },
+      error: function(XMLHttpRequest, textStatus, errorThrown) {
+        console.log(XMLHttpRequest + ' ' + textStatus + ' ' + errorThrown);
+        new UIkit.notify({
+          message: "<a href='#' class='notify-action'><span class='uk-icon-times'></span></a>" + textStatus,
+          status: "error",
+          timeout: 5000,
+          group: null,
+          pos: 'top-right'
+        });
+      }
+    });
+  });
+  $(document).on('click', '.editExam', function(e) {
+		$('.examName').parent(".md-input-wrapper").addClass("md-input-filled");
+		$('.examName').val($(this).data('exam-name'));
+		$('.dateExam').parent(".md-input-wrapper").addClass("md-input-filled");
+    $('.dateExam').val($(this).data('date-exam'));
+		$('.startTime').parent(".md-input-wrapper").addClass("md-input-filled");
+    $('.startTime').val($(this).data('start-time'));
+		$('.endTime').parent(".md-input-wrapper").addClass("md-input-filled");
+    $('.endTime').val($(this).data('end-time'));
+    var $typeExam = $('.typeExam');
+		var $course = $('.course');
+    $('#form-title').empty().append($(this).data('title'));
+    $typeExam[0].selectize.setValue($(this).data('type-exam'));
+    $course[0].selectize.setValue($(this).data('course'));
+    $('#form_examForm').attr('action', $(this).data('href'));
+    e.preventDefault();
+    // show preloader
+    var modal = UIkit.modal("#new");
+    modal.show();
+
+  });
+</script>
