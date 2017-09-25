@@ -3,7 +3,6 @@
 namespace SMS\EstablishmentBundle\Services;
 
 use Doctrine\ORM\EntityManager;
-use Symfony\Component\Translation\DataCollectorTranslator;
 /**
  * @author Rami Sfari <rami2sfari@gmail.com>
  * @copyright Copyright (c) 2017, SMS
@@ -33,7 +32,7 @@ class EstablishmentEntityManager
     * @param Doctrine\ORM\EntityManager $em
     * @param Symfony\Component\Translation\DataCollectorTranslator $translator
     */
-    public function __construct(EntityManager $em , DataCollectorTranslator $translator)
+    public function __construct(EntityManager $em , $translator)
     {
         $this->_em = $em;
         $this->_translator = $translator;

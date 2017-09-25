@@ -3,7 +3,6 @@
 namespace SMS\StoreBundle\Services;
 
 use Doctrine\ORM\EntityManager;
-use Symfony\Component\Translation\DataCollectorTranslator;
 
 /**
  * @author Rami Sfari <rami2sfari@gmail.com>
@@ -46,7 +45,7 @@ class ShopEntityManager
     /**
     * @param Doctrine\ORM\EntityManager $em
     */
-    public function __construct(EntityManager $em, DataCollectorTranslator $_translator)
+    public function __construct(EntityManager $em, $_translator)
     {
         $this->_em = $em;
         $this->_translator = $_translator;
