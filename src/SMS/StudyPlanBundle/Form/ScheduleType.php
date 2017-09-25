@@ -61,8 +61,6 @@ class ScheduleType extends AbstractType
                 )
                 ->add('sessions' , EntityType::class , array(
                     'class'         => Session::class,
-                    'property'      => 'sessionName',
-
                     'multiple'      => true,
                     'query_builder' => function (EntityRepository $er) use ($establishment) {
                         return $er->createQueryBuilder('sessions')
@@ -72,7 +70,7 @@ class ScheduleType extends AbstractType
                     },
                     'label' => 'schedule.field.session',
                     'choice_label' => function ($session) {
-                        return sprintf("%s : %s => %s",$session->getSessionName(),$session->getStartTime()->format('H:i:s') ,$session->getEndTime()->format('H:i:s'));
+                        return sprintf("%s",$session->getSessionName());
                     },
                     'attr'          => [ 'class'=> 'sessions' ,'placeholder'   => 'schedule.field.select_session' ],)
                 )

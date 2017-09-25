@@ -15,56 +15,63 @@ use Symfony\Bridge\Doctrine\Validator\Constraints\UniqueEntity;
  */
 class OrderProvider
 {
-    /**
-     * @var int
-     *
-     * @ORM\Column(name="id", type="integer")
-     * @ORM\Id
-     * @ORM\GeneratedValue(strategy="AUTO")
-     */
-    private $id;
+  /**
+   * @var int
+   *
+   * @ORM\Column(name="id", type="integer")
+   * @ORM\Id
+   * @ORM\GeneratedValue(strategy="AUTO")
+   */
+  private $id;
+
+  /**
+   * @var string
+   *
+   * @ORM\Column(name="reference", type="string", length=150)
+   */
+  protected $reference;
+
+  /**
+   * One order has Many OrderLine.
+   * @ORM\OneToMany(targetEntity="StoreOrderLine", mappedBy="orders",fetch="EXTRA_LAZY")
+   */
+  protected $orderLines;
+
+  /**
+   * @var datetime $created
+   *
+   * @ORM\Column(type="datetime")
+   */
+  protected $created;
+
+  /**
+   * @var datetime $updated
+   *
+   * @ORM\Column(type="datetime", nullable = true)
+   */
+  protected $updated;
+
+  /**
+   * One User has Many Payments.
+   * @ORM\ManyToOne(targetEntity="SMS\UserBundle\Entity\User" ,fetch="EXTRA_LAZY")
+   * @ORM\JoinColumn(name="author_id", referencedColumnName="id")
+   */
+  protected $author;
+
+  /**
+   * One establishment has Many Delivery.
+   * @ORM\ManyToOne(targetEntity="SMS\EstablishmentBundle\Entity\Establishment" ,fetch="EXTRA_LAZY")
+   * @ORM\JoinColumn(name="establishment_id", referencedColumnName="id")
+   */
+  protected $establishment;
 
     /**
      * Many Provider have One OrederProvider.
-     * @ORM\ManyToOne(targetEntity="Provider" ,fetch="EXTRA_LAZY")
+     * @ORM\ManyToOne(targetEntity="Provider" , inversedBy="orders" ,fetch="EXTRA_LAZY")
      * @ORM\JoinColumn(name="provider_id", referencedColumnName="id")
+     * @Assert\NotBlank()
      */
     private $provider;
-
-    /**
-     * One User has Many Payments.
-     * @ORM\ManyToOne(targetEntity="SMS\UserBundle\Entity\User" ,fetch="EXTRA_LAZY")
-     * @ORM\JoinColumn(name="user_id", referencedColumnName="id")
-     */
-    private $user;
-
-    /**
-     * One orderProvider has Many OrderLines.
-     * @ORM\OneToMany(targetEntity="OrderLine", mappedBy="orderProvider",fetch="EXTRA_LAZY")
-     */
-    private $orderLines;
-
-    /**
-     * One establishment has Many OrederLines.
-     * @ORM\ManyToOne(targetEntity="SMS\EstablishmentBundle\Entity\Establishment" ,fetch="EXTRA_LAZY")
-     * @ORM\JoinColumn(name="establishment_id", referencedColumnName="id")
-     */
-    private $establishment;
-
-    /**
-     * @var datetime $created
-     *
-     * @ORM\Column(type="datetime")
-     */
-    protected $created;
-
-    /**
-     * @var datetime $updated
-     *
-     * @ORM\Column(type="datetime", nullable = true)
-     */
-    protected $updated;
-
 
 
     /**
@@ -80,14 +87,201 @@ class OrderProvider
        }
    }
 
+    /**
+     * Constructor
+     */
+    public function __construct()
+    {
+        $this->orderLines = new \Doctrine\Common\Collections\ArrayCollection();
+    }
+
+    
 
     /**
      * Get id
      *
-     * @return int
+     * @return integer
      */
     public function getId()
     {
         return $this->id;
+    }
+
+    /**
+     * Set reference
+     *
+     * @param string $reference
+     *
+     * @return OrderProvider
+     */
+    public function setReference($reference)
+    {
+        $this->reference = $reference;
+
+        return $this;
+    }
+
+    /**
+     * Get reference
+     *
+     * @return string
+     */
+    public function getReference()
+    {
+        return $this->reference;
+    }
+
+    /**
+     * Set created
+     *
+     * @param \DateTime $created
+     *
+     * @return OrderProvider
+     */
+    public function setCreated($created)
+    {
+        $this->created = $created;
+
+        return $this;
+    }
+
+    /**
+     * Get created
+     *
+     * @return \DateTime
+     */
+    public function getCreated()
+    {
+        return $this->created;
+    }
+
+    /**
+     * Set updated
+     *
+     * @param \DateTime $updated
+     *
+     * @return OrderProvider
+     */
+    public function setUpdated($updated)
+    {
+        $this->updated = $updated;
+
+        return $this;
+    }
+
+    /**
+     * Get updated
+     *
+     * @return \DateTime
+     */
+    public function getUpdated()
+    {
+        return $this->updated;
+    }
+
+    /**
+     * Add orderLine
+     *
+     * @param \SMS\StoreBundle\Entity\StoreOrderLine $orderLine
+     *
+     * @return OrderProvider
+     */
+    public function addOrderLine(\SMS\StoreBundle\Entity\StoreOrderLine $orderLine)
+    {
+        $this->orderLines[] = $orderLine;
+
+        return $this;
+    }
+
+    /**
+     * Remove orderLine
+     *
+     * @param \SMS\StoreBundle\Entity\StoreOrderLine $orderLine
+     */
+    public function removeOrderLine(\SMS\StoreBundle\Entity\StoreOrderLine $orderLine)
+    {
+        $this->orderLines->removeElement($orderLine);
+    }
+
+    /**
+     * Get orderLines
+     *
+     * @return \Doctrine\Common\Collections\Collection
+     */
+    public function getOrderLines()
+    {
+        return $this->orderLines;
+    }
+
+    /**
+     * Set author
+     *
+     * @param \SMS\UserBundle\Entity\User $author
+     *
+     * @return OrderProvider
+     */
+    public function setAuthor(\SMS\UserBundle\Entity\User $author = null)
+    {
+        $this->author = $author;
+
+        return $this;
+    }
+
+    /**
+     * Get author
+     *
+     * @return \SMS\UserBundle\Entity\User
+     */
+    public function getAuthor()
+    {
+        return $this->author;
+    }
+
+    /**
+     * Set establishment
+     *
+     * @param \SMS\EstablishmentBundle\Entity\Establishment $establishment
+     *
+     * @return OrderProvider
+     */
+    public function setEstablishment(\SMS\EstablishmentBundle\Entity\Establishment $establishment = null)
+    {
+        $this->establishment = $establishment;
+
+        return $this;
+    }
+
+    /**
+     * Get establishment
+     *
+     * @return \SMS\EstablishmentBundle\Entity\Establishment
+     */
+    public function getEstablishment()
+    {
+        return $this->establishment;
+    }
+
+    /**
+     * Set provider
+     *
+     * @param \SMS\StoreBundle\Entity\Provider $provider
+     *
+     * @return OrderProvider
+     */
+    public function setProvider(\SMS\StoreBundle\Entity\Provider $provider = null)
+    {
+        $this->provider = $provider;
+
+        return $this;
+    }
+
+    /**
+     * Get provider
+     *
+     * @return \SMS\StoreBundle\Entity\Provider
+     */
+    public function getProvider()
+    {
+        return $this->provider;
     }
 }

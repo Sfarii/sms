@@ -15,28 +15,69 @@ use Symfony\Bridge\Doctrine\Validator\Constraints\UniqueEntity;
  */
 class OrderUser
 {
-    /**
-     * @var int
-     *
-     * @ORM\Column(name="id", type="integer")
-     * @ORM\Id
-     * @ORM\GeneratedValue(strategy="AUTO")
-     */
-    private $id;
+  /**
+   * @var int
+   *
+   * @ORM\Column(name="id", type="integer")
+   * @ORM\Id
+   * @ORM\GeneratedValue(strategy="AUTO")
+   */
+  private $id;
+
+  /**
+   * @var string
+   *
+   * @ORM\Column(name="reference", type="string", length=150)
+   */
+  protected $reference;
+
+  /**
+   * One order has Many OrderLine.
+   * @ORM\OneToMany(targetEntity="OrderLine", mappedBy="orders",fetch="EXTRA_LAZY")
+   */
+  protected $orderLines;
+
+  /**
+   * @var datetime $created
+   *
+   * @ORM\Column(type="datetime")
+   */
+  protected $created;
+
+  /**
+   * @var datetime $updated
+   *
+   * @ORM\Column(type="datetime", nullable = true)
+   */
+  protected $updated;
+
+  /**
+   * One User has Many Payments.
+   * @ORM\ManyToOne(targetEntity="SMS\UserBundle\Entity\User" ,fetch="EXTRA_LAZY")
+   * @ORM\JoinColumn(name="author_id", referencedColumnName="id")
+   */
+  protected $author;
+
+  /**
+   * One establishment has Many Delivery.
+   * @ORM\ManyToOne(targetEntity="SMS\EstablishmentBundle\Entity\Establishment" ,fetch="EXTRA_LAZY")
+   * @ORM\JoinColumn(name="establishment_id", referencedColumnName="id")
+   */
+  protected $establishment;
 
     /**
-     * @var int
-     *
-     * @ORM\Column(name="price", type="integer")
+     * One Student has Many Order.
+     * @ORM\ManyToOne(targetEntity="SMS\UserBundle\Entity\User" ,fetch="EXTRA_LAZY")
+     * @ORM\JoinColumn(name="user_id", referencedColumnName="id")
      */
-    private $price;
+    private $userOrder;
 
     /**
-     * @var int
+     * @var \DateTime
      *
-     * @ORM\Column(name="quantity", type="integer")
+     * @ORM\Column(name="orderDate", type="datetime")
      */
-    private $quantity;
+    private $orderDate;
 
     /**
      * @var bool
@@ -44,49 +85,6 @@ class OrderUser
      * @ORM\Column(name="state", type="boolean")
      */
     private $state;
-
-    /**
-     * Many Products have One OrederUser.
-     * @ORM\ManyToOne(targetEntity="Product" ,fetch="EXTRA_LAZY")
-     * @ORM\JoinColumn(name="product_id", referencedColumnName="id")
-     * @Assert\NotBlank()
-     */
-    private $product;
-
-    /**
-     * One Student has Many Order.
-     * @ORM\ManyToOne(targetEntity="SMS\UserBundle\Entity\Student" ,fetch="EXTRA_LAZY")
-     * @ORM\JoinColumn(name="student_id", referencedColumnName="id")
-     */
-    private $student;
-
-    /**
-     * @var datetime $created
-     *
-     * @ORM\Column(type="datetime")
-     */
-    protected $created;
-
-    /**
-     * @var datetime $updated
-     *
-     * @ORM\Column(type="datetime", nullable = true)
-     */
-    protected $updated;
-
-    /**
-     * One User has Many Payments.
-     * @ORM\ManyToOne(targetEntity="SMS\UserBundle\Entity\User" ,fetch="EXTRA_LAZY")
-     * @ORM\JoinColumn(name="user_id", referencedColumnName="id")
-     */
-    private $user;
-
-    /**
-     * One establishment has Many Users orders.
-     * @ORM\ManyToOne(targetEntity="SMS\EstablishmentBundle\Entity\Establishment" ,fetch="EXTRA_LAZY")
-     * @ORM\JoinColumn(name="establishment_id", referencedColumnName="id")
-     */
-    private $establishment;
 
     /**
     * @ORM\PrePersist
@@ -100,11 +98,18 @@ class OrderUser
            $this->setCreated(new \DateTime('now'));
        }
    }
+    /**
+     * Constructor
+     */
+    public function __construct()
+    {
+        $this->orderLines = new \Doctrine\Common\Collections\ArrayCollection();
+    }
 
     /**
      * Get id
      *
-     * @return int
+     * @return integer
      */
     public function getId()
     {
@@ -112,75 +117,27 @@ class OrderUser
     }
 
     /**
-     * Set price
+     * Set reference
      *
-     * @param integer $price
+     * @param string $reference
      *
      * @return OrderUser
      */
-    public function setPrice($price)
+    public function setReference($reference)
     {
-        $this->price = $price;
+        $this->reference = $reference;
 
         return $this;
     }
 
     /**
-     * Get price
+     * Get reference
      *
-     * @return int
+     * @return string
      */
-    public function getPrice()
+    public function getReference()
     {
-        return $this->price;
-    }
-
-    /**
-     * Set quantity
-     *
-     * @param integer $quantity
-     *
-     * @return OrderUser
-     */
-    public function setQuantity($quantity)
-    {
-        $this->quantity = $quantity;
-
-        return $this;
-    }
-
-    /**
-     * Get quantity
-     *
-     * @return int
-     */
-    public function getQuantity()
-    {
-        return $this->quantity;
-    }
-
-    /**
-     * Set state
-     *
-     * @param boolean $state
-     *
-     * @return OrderUser
-     */
-    public function setState($state)
-    {
-        $this->state = $state;
-
-        return $this;
-    }
-
-    /**
-     * Get state
-     *
-     * @return bool
-     */
-    public function getState()
-    {
-        return $this->state;
+        return $this->reference;
     }
 
     /**
@@ -232,75 +189,109 @@ class OrderUser
     }
 
     /**
-     * Set product
+     * Set orderDate
      *
-     * @param \SMS\StoreBundle\Entity\Product $product
+     * @param \DateTime $orderDate
      *
      * @return OrderUser
      */
-    public function setProduct(\SMS\StoreBundle\Entity\Product $product = null)
+    public function setOrderDate($orderDate)
     {
-        $this->product = $product;
+        $this->orderDate = $orderDate;
 
         return $this;
     }
 
     /**
-     * Get product
+     * Get orderDate
      *
-     * @return \SMS\StoreBundle\Entity\Product
+     * @return \DateTime
      */
-    public function getProduct()
+    public function getOrderDate()
     {
-        return $this->product;
+        return $this->orderDate;
     }
 
     /**
-     * Set student
+     * Set state
      *
-     * @param \SMS\UserBundle\Entity\Student $student
+     * @param boolean $state
      *
      * @return OrderUser
      */
-    public function setStudent(\SMS\UserBundle\Entity\Student $student = null)
+    public function setState($state)
     {
-        $this->student = $student;
+        $this->state = $state;
 
         return $this;
     }
 
     /**
-     * Get student
+     * Get state
      *
-     * @return \SMS\UserBundle\Entity\Student
+     * @return boolean
      */
-    public function getStudent()
+    public function getState()
     {
-        return $this->student;
+        return $this->state;
     }
 
     /**
-     * Set user
+     * Add orderLine
      *
-     * @param \SMS\UserBundle\Entity\User $user
+     * @param \SMS\StoreBundle\Entity\OrderLine $orderLine
      *
      * @return OrderUser
      */
-    public function setUser(\SMS\UserBundle\Entity\User $user = null)
+    public function addOrderLine(\SMS\StoreBundle\Entity\OrderLine $orderLine)
     {
-        $this->user = $user;
+        $this->orderLines[] = $orderLine;
 
         return $this;
     }
 
     /**
-     * Get user
+     * Remove orderLine
+     *
+     * @param \SMS\StoreBundle\Entity\OrderLine $orderLine
+     */
+    public function removeOrderLine(\SMS\StoreBundle\Entity\OrderLine $orderLine)
+    {
+        $this->orderLines->removeElement($orderLine);
+    }
+
+    /**
+     * Get orderLines
+     *
+     * @return \Doctrine\Common\Collections\Collection
+     */
+    public function getOrderLines()
+    {
+        return $this->orderLines;
+    }
+
+    /**
+     * Set author
+     *
+     * @param \SMS\UserBundle\Entity\User $author
+     *
+     * @return OrderUser
+     */
+    public function setAuthor(\SMS\UserBundle\Entity\User $author = null)
+    {
+        $this->author = $author;
+
+        return $this;
+    }
+
+    /**
+     * Get author
      *
      * @return \SMS\UserBundle\Entity\User
      */
-    public function getUser()
+    public function getAuthor()
     {
-        return $this->user;
+        return $this->author;
     }
 
     /**
@@ -325,5 +316,29 @@ class OrderUser
     public function getEstablishment()
     {
         return $this->establishment;
+    }
+
+    /**
+     * Set userOrder
+     *
+     * @param \SMS\UserBundle\Entity\User $userOrder
+     *
+     * @return OrderUser
+     */
+    public function setUserOrder(\SMS\UserBundle\Entity\User $userOrder = null)
+    {
+        $this->userOrder = $userOrder;
+
+        return $this;
+    }
+
+    /**
+     * Get userOrder
+     *
+     * @return \SMS\UserBundle\Entity\User
+     */
+    public function getUserOrder()
+    {
+        return $this->userOrder;
     }
 }

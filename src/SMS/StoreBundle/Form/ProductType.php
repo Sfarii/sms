@@ -15,6 +15,7 @@ use SMS\EstablishmentBundle\Entity\Establishment;
 use SMS\StoreBundle\Entity\Product;
 use SMS\StoreBundle\Entity\ProductType as TypeProduct;
 use Vich\UploaderBundle\Form\Type\VichImageType;
+use Symfony\Component\Form\Extension\Core\Type\TextareaType;
 
 class ProductType extends AbstractType
 {
@@ -36,14 +37,11 @@ class ProductType extends AbstractType
             ->add('price' ,TextType::class , array(
                 'label' => 'product.field.price')
             )
-            ->add('stock' ,TextType::class , array(
-                'label' => 'product.field.stock')
+            ->add('description' ,TextareaType::class , array(
+                'label' => 'product.field.description')
             )
             ->add('active' , CheckboxType::class , array(
                 'label' => 'product.field.active')
-            )
-            ->add('status' ,TextType::class , array(
-                'label' => 'product.field.status')
             )
             ->add('productType' , EntityType::class , array(
                 "class" => TypeProduct::class,
@@ -54,14 +52,14 @@ class ProductType extends AbstractType
                               ->andWhere('establishment.id = :establishment')
                               ->setParameter('establishment', $establishment->getId());
                 },
-                'placeholder' => 'product.field.productType',
+                'placeholder' => 'product.field.select_productType',
                 'label' => 'product.field.productType')
             )
             ->add('establishment', HiddenEntityType::class, array(
                 'class' => Establishment::class,
                 'data' =>  $establishment, // Field value by default
                 ))
-            ->add('save', SubmitType::class);
+            ->add('save', SubmitType::class  , array ("label" => "md-fab"));
 
     }
 

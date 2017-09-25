@@ -9,7 +9,7 @@ use Symfony\Bridge\Doctrine\Validator\Constraints\UniqueEntity;
 /**
  * Division
  * @ORM\HasLifecycleCallbacks
- * @UniqueEntity("divisionName")
+ * @UniqueEntity(fields={"divisionName", "establishment"})
  * @ORM\Table(name="division")
  * @ORM\Entity(repositoryClass="SMS\EstablishmentBundle\Repository\DivisionRepository")
  */
@@ -27,7 +27,7 @@ class Division
     /**
      * @var string
      *
-     * @ORM\Column(name="division_name", type="string", length=100, unique=true)
+     * @ORM\Column(name="division_name", type="string", length=100)
      * @Assert\NotBlank()
      * @Assert\Length(min = 2, max = 99)
      * @Assert\Regex(pattern="/^[a-z0-9 .\-]+$/i" ,match=true)
@@ -250,5 +250,29 @@ class Division
     public function __toString()
     {
         return sprintf("%s",$this->divisionName);
+    }
+
+    /**
+     * Set establishment
+     *
+     * @param \SMS\EstablishmentBundle\Entity\Establishment $establishment
+     *
+     * @return Division
+     */
+    public function setEstablishment(\SMS\EstablishmentBundle\Entity\Establishment $establishment = null)
+    {
+        $this->establishment = $establishment;
+
+        return $this;
+    }
+
+    /**
+     * Get establishment
+     *
+     * @return \SMS\EstablishmentBundle\Entity\Establishment
+     */
+    public function getEstablishment()
+    {
+        return $this->establishment;
     }
 }

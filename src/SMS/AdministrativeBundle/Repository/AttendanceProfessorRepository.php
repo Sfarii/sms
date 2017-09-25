@@ -44,13 +44,13 @@ class AttendanceProfessorRepository extends \Doctrine\ORM\EntityRepository
 		public function findStatsByProfessor($professor)
 		{
 				return $this->createQueryBuilder('attendance')
-									->select("attendance.status as name, MONTH(attendance.date) AS month, count(attendance.id) as value , professor.id , attendance.date")
+									->select("attendance.status as name, count(attendance.id) as value , professor.id , attendance.date as date")
 									->join('attendance.session', 'session')
 									->join('attendance.course', 'course')
 									->join('attendance.professor', 'professor')
 									->where('professor.id = :professor')
 									->setParameter('professor', $professor->getId())
-									->groupBy('name , professor.id , month')
+									->groupBy('name , date')
 									->getQuery()
 					        ->getResult();
 		}

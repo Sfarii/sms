@@ -108,12 +108,12 @@
                 {% for about in aboutus %}
                 <div role="tabpanel" class="tab-pane {% if loop.first %}active{% endif %}" id="icontab-{{ about.id }}">
                   <div class="row">
-                    <div class="col-md-6">
+                    <div class="col-md-8">
                       <h2 class="text-bold mb-40">{{ about.title }}</h2>
                       <p>{{ about.text }}</p>
                     </div>
 
-                    <div class="col-md-6">
+                    <div class="col-md-4">
                       <img src="{{ vich_uploader_asset(about, 'imageFile') }}" alt="{{ about.title }}" class="img-responsive">
                     </div>
                   </div>

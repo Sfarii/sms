@@ -101,7 +101,7 @@
                                 <span class="uk-text-small uk-text-muted">{{ "schedule_view.schedule.section"|trans }}</span>
                               </div>
                             </li>
-                            
+
                           </ul>
                         </td>
                       {% endif %}
@@ -116,4 +116,34 @@
       </div>
     {% endif %}
   </div>
+{% endblock %}
+
+{% block javascripts %}
+  {{ parent() }}
+  <script>
+  $(document).on('submit', 'form', function(e) {
+    e.preventDefault();
+    // show preloader
+    altair_helpers.content_preloader_show('md');
+    var $form = $(this).closest('form');
+    // Submit data via AJAX to the form's action path.
+    $.ajax({
+      url: $form.attr('action'),
+      type: $form.attr('method'),
+      data: $form.serializeObject(),
+      cache: false,
+      timeout: 3000,
+      success: function(html) {
+        console.log('hey');
+        $('#schedules').empty().append($(html).find('#schedules').html());
+        // Replace current position field ...
+        $('.professorField').parent(".uk-form-row").find('.parsley-errors-list').empty().append($(html).find('.professorField').parent(".uk-form-row").find('.parsley-errors-list').html());
+        altair_forms.init();
+        // hide preloader
+        altair_helpers.content_preloader_hide();
+        // Position field now displays the appropriate positions.
+      }
+    });
+  });
+  </script>
 {% endblock %}

@@ -4,7 +4,7 @@ namespace SMS\EstablishmentBundle\Controller;
 
 use SMS\EstablishmentBundle\Entity\Section;
 use SMS\EstablishmentBundle\Form\SectionType;
-use API\BaseController\BaseController;
+use SMS\EstablishmentBundle\BaseController\BaseController;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\Method;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\Route;
 use Symfony\Component\HttpFoundation\Request;
@@ -153,7 +153,7 @@ class SectionController extends BaseController
     /**
      * get section Entity Manager Service.
      *
-     * @return API\Services\EntityManager
+     * @return SMS\EstablishmentBundle\Services\EntityManager
      *
      * @throws \NotFoundException
      */

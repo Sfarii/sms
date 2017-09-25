@@ -1,68 +1,77 @@
 services:
   #Services
   sms.administration.entity_manager:
-      class: %entity_manager%
-      arguments: ["@doctrine.orm.entity_Manager" , "@translator" ]
+      class: SMS\AdministrativeBundle\Services\AdministrationManager
+      arguments: [@doctrine.orm.entity_Manager , @translator ]
       calls:
-          - [ setDays , ["%days%"]]
-          - [ setAttendanceStudent , ["%attendance_student_class%"]]
-          - [ setAttendanceProfessor , ["%attendance_professor_class%"]]
-          - [ setSectionClass , ["%section_class%"]]
-          - [ setSessionClass , ["%session_class%"]]
-          - [ setScheduleClass , ["%schedule_class%"]]
-          - [ setStudentClass , ["%student_class%"]]
-          - [ setProfessorClass , ["%professor_class%"]]
-          - [ setCourseClass , ["%course_class%"]]
-          - [ setAttendanceProfessorStatus , ["%attendance_professor%"]]
-          - [ setAttendanceStudentStatus , ["%attendance_section%"]]
+          - [ setDays , [%days%]]
+          - [ setAttendanceStudent , [SMS\AdministrativeBundle\Entity\AttendanceStudent]]
+          - [ setAttendanceSection , [SMS\AdministrativeBundle\Entity\AttendanceSection]]
+          - [ setAttendanceProfessor , [SMS\AdministrativeBundle\Entity\AttendanceProfessor]]
+          - [ setSectionClass , [SMS\EstablishmentBundle\Entity\Section]]
+          - [ setSessionClass , [SMS\StudyPlanBundle\Entity\Session]]
+          - [ setScheduleClass , [SMS\StudyPlanBundle\Entity\Schedule]]
+          - [ setStudentClass , [SMS\UserBundle\Entity\Student]]
+          - [ setProfessorClass , [SMS\UserBundle\Entity\Professor]]
+          - [ setCourseClass , [SMS\StudyPlanBundle\Entity\Course]]
+          - [ setAttendanceProfessorStatus , [%attendance_professor%]]
+          - [ setAttendanceStudentStatus , [%attendance_section%]]
 
   #Datatable
   sms.datatable.attendance_student:
-      class: %attendance_student_datatable%
+      class: SMS\AdministrativeBundle\Datatable\AttendanceStudentDatatable
       parent: sg_datatables.datatable.abstract
       calls:
-          - [ setStatus , ["%attendance_section%"]]
-  sms.datatable.attendance:
-      class: %attendance_section_datatable%
+          - [ setStatus , [%attendance_section%]]
+  sms.datatable.student_attendance:
+      class: SMS\AdministrativeBundle\Datatable\StudentAttendanceDatatable
       parent: sg_datatables.datatable.abstract
       calls:
-          - [ setSectionClass , ["%section_class%"]]
-          - [ setSessionClass , ["%session_class%"]]
-          - [ setStatus , ["%attendance_section%"]]
+          - [ setStatus , [%attendance_section%]]
+          - [ setDivisionClass , [SMS\EstablishmentBundle\Entity\Division]]
+          - [ setSessionClass , [SMS\StudyPlanBundle\Entity\Session]]
+  sms.datatable.attendance_section:
+      class: SMS\AdministrativeBundle\Datatable\AttendanceSectionDatatable
+      parent: sg_datatables.datatable.abstract
+      calls:
+          - [ setDivisionClass , [SMS\EstablishmentBundle\Entity\Division]]
+          - [ setSessionClass , [SMS\StudyPlanBundle\Entity\Session]]
+
   sms.datatable.attendance_professor:
-      class: %attendance_professor_datatable%
+      class: SMS\AdministrativeBundle\Datatable\AttendanceProfessorDatatable
       parent: sg_datatables.datatable.abstract
       calls:
-          - [ setSessionClass , ["%session_class%"]]
-          - [ setDivisionClass , ["%division_class%"]]
-          - [ setStatus , ["%attendance_professor%"]]
+          - [ setSessionClass , [SMS\StudyPlanBundle\Entity\Session]]
+          - [ setDivisionClass , [SMS\EstablishmentBundle\Entity\Division]]
+          - [ setStatus , [%attendance_professor%]]
   sms.datatable.sanction:
-      class: %sanction_datatable%
+      class: SMS\AdministrativeBundle\Datatable\SanctionDatatable
       parent: sg_datatables.datatable.abstract
       calls:
-          - [ setSectionClass , ["%section_class%"]]
+          - [ setSectionClass , [SMS\EstablishmentBundle\Entity\Section]]
+  #form
   sms.form.type.sanction:
-      class: %sanction_form%
-      arguments: ['@doctrine.orm.entity_Manager' , %student_class% , %grade_class% , %section_class% ]
+      class: SMS\AdministrativeBundle\Form\SanctionType
+      arguments: ['@doctrine.orm.entity_Manager' , SMS\UserBundle\Entity\Student , SMS\EstablishmentBundle\Entity\Grade , SMS\EstablishmentBundle\Entity\Section ]
       tags:
           - { name: form.type }
   sms.form.type.attendance.professor:
-      class: %attendance_professor_form%
-      arguments: ['@doctrine.orm.entity_Manager' , %division_class% , %professor_class% ]
+      class: SMS\AdministrativeBundle\Form\ScheduleProfessorFilterType
+      arguments: ['@doctrine.orm.entity_Manager' , SMS\EstablishmentBundle\Entity\Division , SMS\UserBundle\Entity\Professor ]
       tags:
           - { name: form.type }
   sms.form.type.attendance.search:
-      class: %attendance_search_form%
-      arguments: ['@doctrine.orm.entity_Manager' , %division_class% ]
+      class: SMS\AdministrativeBundle\Form\AttendanceFilterType
+      arguments: ['@doctrine.orm.entity_Manager' , SMS\EstablishmentBundle\Entity\Division ]
       tags:
           - { name: form.type }
   sms.form.type.attendance.student:
-      class: %attendance_student_form%
-      arguments: ['@doctrine.orm.entity_Manager' , %grade_class% , %section_class%, %division_class% ]
+      class: SMS\AdministrativeBundle\Form\ScheduleStudentFilterType
+      arguments: ['@doctrine.orm.entity_Manager' , SMS\EstablishmentBundle\Entity\Grade , SMS\EstablishmentBundle\Entity\Section, SMS\EstablishmentBundle\Entity\Division ]
       tags:
           - { name: form.type }
   sms.form.type.attendance.section:
-      class: %attendance_section_form%
-      arguments: ['@doctrine.orm.entity_Manager' , %session_class%  , %course_class%]
+      class: SMS\AdministrativeBundle\Form\AttendanceSectionFilterType
+      arguments: ['@doctrine.orm.entity_Manager' , SMS\StudyPlanBundle\Entity\Session  , SMS\StudyPlanBundle\Entity\Course]
       tags:
           - { name: form.type }

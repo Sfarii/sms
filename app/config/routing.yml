@@ -1,3 +1,7 @@
+sms_payment_catch_up_lesson:
+    resource: "@SMSPaymentBundle/Controller/CatchUpLessonController.php"
+    type:     annotation
+
 sms_store:
     resource: "@SMSStoreBundle/Controller/"
     type:     annotation

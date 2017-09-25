@@ -5,7 +5,7 @@ namespace SMS\StoreBundle\Controller;
 use SMS\StoreBundle\Entity\OrderProvider;
 use SMS\StoreBundle\Entity\ProductType;
 use SMS\StoreBundle\Form\OrderProviderType;
-use API\BaseController\BaseController;
+use SMS\StoreBundle\BaseController\BaseController;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\Method;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\Route;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\Template;
@@ -67,29 +67,47 @@ class OrderProviderController extends BaseController
     }
 
     /**
-     * Creates a new orderProvider entity.
+     * Finds and displays a order_provider entity.
      *
-     * @Route("/new", name="orderprovider_new", options={"expose"=true})
-     * @Method({"GET" , "POST"})
-     * @Template("SMSStoreBundle:orderprovider:new.html.twig")
+     * @Route("/pdf/{id}", name="order_provider_pdf", options={"expose"=true})
+     * @Method("GET")
      */
-    public function newAction(Request $request)
+    public function pdfAction(OrderProvider $orderProvider)
     {
-        $orderProvider = new OrderProvider();
-        $form = $this->createForm(OrderProviderType::class, $orderProvider, array('establishment' => $this->getUser()->getEstablishment()));
-        $form->handleRequest($request);
+      $html = $this->renderView('SMSStoreBundle:pdf:order_provider.html.twig', array(
+          'order_provider'  => $orderProvider
+      ));
 
-        if ($form->isSubmitted() && $form->isValid()) {
-            $this->getStoreManager()->addOrderProvider($orderProvider , $this->getUser(), $form->getExtraData());
-            $this->flashSuccessMsg('orderProvider.add.success');
-            return $this->redirectToRoute('orderprovider_index');
-        }
+      return new Response(
+          $this->get('knp_snappy.pdf')->getOutputFromHtml($html),
+          200,
+          array(
+              'Content-Type'          => 'application/pdf',
+              'Content-Disposition'   => sprintf('attachment; filename="%s.pdf"' , $orderProvider->getReference())
+          )
+      );
+    }
 
-        return array(
-            'productTypes' => $this->getDoctrine()->getRepository(ProductType::class)->findByEstablishment($this->getUser()->getEstablishment()),
-            'orderProvider' => $orderProvider,
-            'form' => $form->createView(),
-        );
+    /**
+     * Finds and displays a order_provider entity.
+     *
+     * @Route("/img/{id}", name="order_provider_img", options={"expose"=true})
+     * @Method("GET")
+     */
+    public function imgAction(OrderProvider $orderProvider)
+    {
+      $html = $this->renderView('SMSStoreBundle:pdf:order_provider.html.twig', array(
+          'order_provider'  => $orderProvider
+      ));
+
+      return new Response(
+          $this->get('knp_snappy.image')->getOutputFromHtml($html),
+          200,
+          array(
+              'Content-Type'          => 'image/jpg',
+              'Content-Disposition'   => sprintf('attachment; filename="%s.jpg"' , $orderProvider->getReference())
+          )
+      );
     }
 
     /**
@@ -100,20 +118,20 @@ class OrderProviderController extends BaseController
      */
     public function showAction(OrderProvider $orderProvider)
     {
-        $deleteForm = $this->createDeleteForm($orderProvider);
+        $lineOrder = $this->getOrderLineEntityManager();
+        $lineOrder->buildDatatable(array('id' => $orderProvider->getId()));
 
         return $this->render('SMSStoreBundle:orderprovider:show.html.twig', array(
             'orderProvider' => $orderProvider,
-            'delete_form' => $deleteForm->createView(),
+            'lineOrder' => $lineOrder
         ));
     }
 
     /**
-     * Displays a form to edit an existing orderProvider entity.
+     * edit and displays a orderProvider entity.
      *
-     * @Route("/{id}/edit", name="orderprovider_edit", options={"expose"=true})
-     * @Method({"GET", "POST"})
-     * @Template("SMSStoreBundle:orderprovider:edit.html.twig")
+     * @Route("edit/{id}", name="orderprovider_edit", options={"expose"=true})
+     * @Method({ "GET" , "POST"})
      */
     public function editAction(Request $request, OrderProvider $orderProvider)
     {
@@ -121,13 +139,17 @@ class OrderProviderController extends BaseController
         if ($editForm->isSubmitted() && $editForm->isValid() && $editForm->get('save')->isClicked()) {
             $this->getEntityManager()->update($orderProvider);
             $this->flashSuccessMsg('orderProvider.edit.success');
-            return $this->redirectToRoute('orderprovider_index');
+            return $this->redirectToRoute('orderprovider_show' , array('id' => $orderProvider->getId()));
         }
 
-        return array(
+        $products = $this->getProductEntityManager();
+        $products->buildDatatable();
+
+        return $this->render('SMSStoreBundle:orderprovider:edit.html.twig', array(
             'orderProvider' => $orderProvider,
+            'products' => $products,
             'form' => $editForm->createView(),
-        );
+        ));
     }
 
     /**
@@ -166,37 +188,19 @@ class OrderProviderController extends BaseController
     }
 
     /**
-     * Deletes a orderProvider entity.
+     * Get orderLine Entity Manager Service.
      *
-     * @Route("/{id}", name="orderprovider_delete")
-     * @Method("DELETE")
+     * @return SMS\Classes\Services\EntityManager
+     *
+     * @throws \NotFoundException
      */
-    public function deleteAction(Request $request, OrderProvider $orderProvider)
+    protected function getOrderLineEntityManager()
     {
-        $form = $this->createDeleteForm($orderProvider)->handleRequest($request);
-
-        if ($form->isSubmitted() && $form->isValid()) {
-            $this->getEntityManager()->delete($orderProvider);
-            $this->flashSuccessMsg('orderProvider.delete.one.success');
+        if (!$this->has('sms.datatable.store_order_line')){
+           throw $this->createNotFoundException('Service Not Found');
         }
 
-        return $this->redirectToRoute('orderprovider_index');
-    }
-
-    /**
-     * Creates a form to delete a orderProvider entity.
-     *
-     * @param OrderProvider $orderProvider The orderProvider entity
-     *
-     * @return \Symfony\Component\Form\Form The form
-     */
-    private function createDeleteForm(OrderProvider $orderProvider)
-    {
-        return $this->createFormBuilder()
-            ->setAction($this->generateUrl('orderprovider_delete', array('id' => $orderProvider->getId())))
-            ->setMethod('DELETE')
-            ->getForm()
-        ;
+        return $this->get('sms.datatable.store_order_line');
     }
 
     /**
@@ -213,4 +217,21 @@ class OrderProviderController extends BaseController
         }
 
         return $this->get('sms.datatable.orderProvider');
-    }}
+    }
+
+    /**
+     * Get product Entity Manager Service.
+     *
+     * @return SMS\Classes\Services\EntityManager
+     *
+     * @throws \NotFoundException
+     */
+    protected function getProductEntityManager()
+    {
+        if (!$this->has('sms.datatable.form.product')){
+           throw $this->createNotFoundException('Service Not Found');
+        }
+
+        return $this->get('sms.datatable.form.product');
+    }
+}

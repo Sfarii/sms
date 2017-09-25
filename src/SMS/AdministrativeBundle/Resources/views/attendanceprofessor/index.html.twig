@@ -1,7 +1,7 @@
-{% extends 'layout/base.html.twig' %}
+{% extends 'layout/base_no_header.html.twig' %}
 
 {% block title_page %}
-  {{ 'attendanceprofessor.list.title'|trans }}
+  {{ 'professor.list.title'|trans }}
 {% endblock %}
 
 {% block body %}
@@ -80,7 +80,7 @@
                   <img class="md-card-head-avatar md-bg-grey-50" src="{{ asset('assets/img/avatars/user@2x.png') }}" alt="user avatar"/>
                 {% endif %}
               </div>
-              <h3 class="md-card-head-text uk-text-center md-color-white">
+              <h3 class="md-card-head-text uk-text-center md-color-white ">
                 {{ professor.firstName }}
                 {{ professor.lastName }}
                 <span>{{ professor.username }}</span>

@@ -12,3 +12,12 @@ services:
   sms.datatable.establishment:
       class: SMS\EstablishmentBundle\EstablishmentDatatable\EstablishmentDatatable
       parent: sg_datatables.datatable.abstract
+  #Services
+  sms.establishment.entity_manager:
+      class: SMS\EstablishmentBundle\Services\EstablishmentEntityManager
+      arguments: [@doctrine.orm.entity_Manager , @translator ]
+      calls:
+          - [ setSectionClass , [SMS\EstablishmentBundle\Entity\Section]]
+          - [ setStudentClass , [SMS\UserBundle\Entity\Student]]
+          - [ setProfessorClass , [SMS\UserBundle\Entity\Professor]]
+          - [ setCourseClass , [SMS\StudyPlanBundle\Entity\Course]]

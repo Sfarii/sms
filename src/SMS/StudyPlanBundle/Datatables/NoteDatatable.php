@@ -19,7 +19,7 @@ class NoteDatatable extends AbstractDatatableView
     {
         $this->callbacks->set(array(
         'row_callback' => array(
-            'template' => 'Pagination/editable_callback.js.twig',
+            'template' => 'dataTable/editable_callback.js.twig',
             )
         ));
 

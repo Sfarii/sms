@@ -1,0 +1,87 @@
+<div class="md-card-content uk-margin-medium-bottom">
+  <div class="uk-overflow-container" data-uk-grid-margin>
+    <div id="division_datatable_multiselect_actions">
+      <div class="dt_colVis_buttons">
+        <a rel="tooltip" title="{{ 'action.delete'|trans }}" class="md-btn-danger md-btn md-btn-primary md-btn-wave-light waves-effect waves-button waves-light cart_delete" role="button">
+          <i class="material-icons">&#xE92B;</i>{{ 'action.delete'|trans }}</a>
+      </div>
+    </div>
+    <div class="dataTables_scrollBody" style="position: relative; overflow: auto; height: 200px; width: 100%;">
+      <table id="cart" class="uk-table uk-table-striped uk-table-align-vertical table_check uk-margin-medium-bottom">
+        <thead>
+          <tr class="uk-text-large">
+            <th class="uk-width-1-10 uk-text-center small_col md-bg-grey-100"><input type="checkbox" class="check_all wizard-icheck"></th>
+
+            <th class="uk-text-center md-bg-grey-100">{{ 'product.field.productName'|trans }}</th>
+            <th class="uk-text-center md-bg-grey-100">{{ 'product.field.price'|trans }}</th>
+            <th class="uk-text-center md-bg-grey-100">{{ 'cart.quantity.title'|trans }}</th>
+            <th class="uk-text-center md-bg-grey-100">{{ 'cart.total.title'|trans }}</th>
+            <th class="uk-text-center md-bg-grey-100">{{ 'datatables.actions.title'|trans }}</th>
+          </tr>
+        </thead>
+        <tbody>
+          {% for line in result %}
+            <tr id="{{ line.id }}">
+              <td class="uk-text-center uk-table-middle small_col">
+                <input type="checkbox" value="{{ line.id }}" class="check_row wizard-icheck">
+              </td>
+              <td class="uk-text-large uk-text-center uk-text-nowrap">
+                {{ line.product.productName }}
+              </td>
+              <td class="uk-text-nowrap uk-text-center">
+                {{ line.price|price }}
+                {{ 'store.unit.price'|trans }}
+              </td>
+              <td class="uk-text-nowrap uk-text-center">
+                {{ line.quantity }}
+                {{ 'store.unit.elem'|trans }}
+              </td>
+              <td class="uk-text-nowrap uk-text-center">
+                {% set total = line.quantity * line.price %}
+                <span class="total" id="total_{{ line.id }}" data-price='{{ line.price }}'>
+                  {{ total|price }}
+                </span>
+                {{ 'store.unit.price'|trans }}
+              </td>
+              <td class="uk-text-nowrap">
+                <a data-id="{{ line.product.id }}" data-price="{{ line.price|price }}" data-quantity="{{ line.quantity }}" id="edit">
+                  <i class="material-icons md-icon">&#xE150;</i>
+                </a>
+              </td>
+            </tr>
+          {% else %}
+            <tr>
+              <td colspan="6" class="uk-text-center">
+                {{ 'datatables.datatable.zeroRecords'|trans }}
+              </td>
+            </tr>
+
+          {% endfor %}
+        </tbody>
+      </table>
+    </div>
+  </div>
+  <div class="uk-width-medium-1-2 uk-push-1-2 uk-margin-medium-top">
+    <table class="uk-table uk-table-align-vertical ">
+      <thead>
+        <tr class="uk-text-large">
+          <th colspan="2" class="uk-width-1-10 uk-text-center md-bg-grey-100">{{ 'cart.total.title'|trans }}</th>
+        </tr>
+      </thead>
+      <tbody class="uk-text-nowrap uk-text-center">
+        <tr >
+          <td>{{ 'store.total.quantity'|trans }}</td>
+          <td>
+            <span id="totalQuantity">{{ totalQuantity }}</span>
+            {{ 'store.unit.elem'|trans }}</td>
+        </tr>
+        <tr>
+          <td>{{ 'store.total.price'|trans }}</td>
+          <td>
+            <span id="totalPrice">{{ totalPrice|price }}</span>
+            {{ 'store.unit.price'|trans }}</td>
+        </tr>
+      </tbody>
+    </table>
+  </div>
+</div>

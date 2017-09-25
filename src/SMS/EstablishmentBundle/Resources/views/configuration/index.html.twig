@@ -1,0 +1,263 @@
+{% extends 'layout/base_no_header.html.twig' %}
+{% block stylesheets %}
+  {{ parent() }}
+  <!-- dropify -->
+  <link rel="stylesheet" href="{{ asset('assets/skins/dropify/css/dropify.css')}}">
+  <!-- additional styles for plugins -->
+  <link rel="stylesheet" href="{{ asset('assets/css/style_switcher.min.css')}}">
+{% endblock %}
+
+{% block body %}
+  {{ form_start(form) }}
+  <h4 class="heading_a uk-margin-bottom">{{ 'configuration.basic_settings'|trans }}</h4>
+  <form action="" class="uk-form-stacked" id="page_settings">
+    <div class="uk-grid" data-uk-grid-margin>
+      <div class="uk-width-large-1-2 uk-width-medium-1-2">
+        <div class="md-card">
+          <div class="md-card-content">
+            <div class="uk-margin-medium-top uk-margin-medium-bottom">
+              <div class="uk-form-row">
+                <label class="uk-form-label">{{ form_label(form.establishmentName) }}</label>
+                {{ form_widget(form.establishmentName )}}
+                <div class="parsley-errors-list filled uk-text-danger">
+                  {{ form_errors(form.establishmentName) }}
+                </div>
+              </div>
+              <div class="uk-form-row ">
+                <label class="uk-form-label">{{ form_label(form.email) }}</label>
+                {{ form_widget(form.email)}}
+                <div class="parsley-errors-list filled uk-text-danger">
+                  {{ form_errors(form.email) }}
+                </div>
+              </div>
+              <div class="uk-form-row">
+                <label class="uk-form-label">{{ form_label(form.phone) }}</label>
+                {{ form_widget(form.phone)}}
+                <div class="parsley-errors-list filled uk-text-danger">
+                  {{ form_errors(form.phone) }}
+                </div>
+              </div>
+
+              <div class="uk-form-row">
+                <label class="uk-form-label">{{ form_label(form.address) }}</label>
+                {{ form_widget(form.address)}}
+                <div class="parsley-errors-list filled uk-text-danger">
+                  {{ form_errors(form.address) }}
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+      <div class="uk-width-large-1-2 uk-width-medium-1-2">
+        <div class="md-card">
+          <div class="md-card-content">
+            <div class="uk-margin-bottom uk-text-center uk-position-relative">
+              {{ form_widget(form.imageFile)}}
+              <div class="parsley-errors-list filled uk-text-danger">
+                {{ form_errors(form.imageFile) }}
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <h3 class="heading_a">{{ 'configuration.other_settings'|trans }}</h3>
+
+    <div class="uk-grid" data-uk-grid-margin>
+      <div class="uk-width-medium-1-2">
+        <div class="md-card">
+          <div class="md-card-content">
+            <div class="uk-form-row">
+              <label for="settings_visitors_languages">{{ 'configuration.languages'|trans }}</label>
+              <select id="settings_visitors_languages" name="settings_visitors_languages">
+                <option value="{{app.session.get('_locale') == 'en' or app.session.get('_locale') == '' ? 'gb' : app.session.get('_locale')}}" selected="selected"></option>
+              </select>
+            </div>
+          </div>
+        </div>
+      </div>
+      <div class="uk-width-medium-1-2">
+        <div class="md-card">
+          <div class="md-card-content">
+            <div id="style_switcher">
+              <h4 class="heading_c uk-margin-bottom">
+                <label for="sms_schoolbundle_establishment_theme" class="required">
+                  {{ 'configuration.theme'|trans }}</label>
+              </h4>
+
+              <div style="display:none" class="uk-form-row">
+                <label class="uk-form-label">{{ form_label(form.theme) }}</label>
+                {{ form_widget(form.theme)}}
+                <div class="parsley-errors-list filled uk-text-danger">
+                  {{ form_errors(form.theme) }}
+                </div>
+              </div>
+              <ul class="switcher_app_themes" id="theme_switcher">
+                <li class="app_style_default active_theme" data-app-theme="default">
+                  <span class="app_color_main"></span>
+                  <span class="app_color_accent"></span>
+                </li>
+                <li class="switcher_theme_a " data-app-theme="app_theme_a">
+                  <span class="app_color_main"></span>
+                  <span class="app_color_accent"></span>
+                </li>
+                <li class="switcher_theme_b " data-app-theme="app_theme_b">
+                  <span class="app_color_main"></span>
+                  <span class="app_color_accent"></span>
+                </li>
+                <li class="switcher_theme_c " data-app-theme="app_theme_c">
+                  <span class="app_color_main"></span>
+                  <span class="app_color_accent"></span>
+                </li>
+                <li class="switcher_theme_d " data-app-theme="app_theme_d">
+                  <span class="app_color_main"></span>
+                  <span class="app_color_accent"></span>
+                </li>
+                <li class="switcher_theme_e " data-app-theme="app_theme_e">
+                  <span class="app_color_main"></span>
+                  <span class="app_color_accent"></span>
+                </li>
+                <li class="switcher_theme_f " data-app-theme="app_theme_f">
+                  <span class="app_color_main"></span>
+                  <span class="app_color_accent"></span>
+                </li>
+                <li class="switcher_theme_g " data-app-theme="app_theme_g">
+                  <span class="app_color_main"></span>
+                  <span class="app_color_accent"></span>
+                </li>
+                <li class="switcher_theme_h " data-app-theme="app_theme_h">
+                  <span class="app_color_main"></span>
+                  <span class="app_color_accent"></span>
+                </li>
+                <li class="switcher_theme_i " data-app-theme="app_theme_i">
+                  <span class="app_color_main"></span>
+                  <span class="app_color_accent"></span>
+                </li>
+                <li class="switcher_theme_dark " data-app-theme="app_theme_dark">
+                  <span class="app_color_main"></span>
+                  <span class="app_color_accent"></span>
+                </li>
+              </ul>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    {{ form_widget(form) }}
+    {{ form_end(form) }}
+  {% endblock %}
+
+  {% block javascripts %}
+    {{ parent() }}
+    <!-- page specific plugins -->
+    <script>
+      var $theme_switcher = $('#theme_switcher'),
+        $html = $('html'),
+        $body = $('body');
+
+      $theme_switcher.children('li').click(function(e) {
+        e.preventDefault();
+        var $this = $(this),
+          this_theme = $this.attr('data-app-theme');
+
+        $theme_switcher.children('li').removeClass('active_theme');
+        $(this).addClass('active_theme');
+        $html.removeClass('app_theme_a app_theme_b app_theme_c app_theme_d app_theme_e app_theme_f app_theme_g app_theme_h app_theme_i app_theme_dark').addClass(this_theme);
+
+        if (this_theme == '') {
+          localStorage.removeItem('altair_theme');
+        } else {
+          $('.theme').val(this_theme);
+          localStorage.setItem("altair_theme", this_theme);
+        }
+
+      });
+    </script>
+    <!-- page specific plugins -->
+    <!-- file input -->
+    <script src="{{ asset('assets/plugins/dropify/dist/js/dropify.min.js')}}"></script>
+    <script>
+      $(function() {
+        $(".dropify").dropify({
+        {% if establishment.imageName %}
+            'defaultFile': "{{ vich_uploader_asset(establishment, 'imageFile') }}",
+          {% else %}
+            'defaultFile': "/assets/img/logo_main.png",
+          {% endif %}
+
+          "height": 300,
+          "width": 240,
+          messages: {
+            "default": "{{ 'file.upload_file'|trans }}",
+            replace: "{{ 'file.upload_file'|trans }}",
+            remove: "{{ 'delete'|trans }}"
+          }
+        });
+      });
+    </script>
+    <script>
+      $(function() {
+        altair_page_settings.init()
+      }),
+      altair_page_settings = {
+        init: function() {
+          $("#settings_visitors_languages").selectize({
+            plugins: {
+              remove_button: {
+                label: ""
+              }
+            },
+            options: [
+              {
+                id: 1,
+                title: "English",
+                value: "gb"
+              }, {
+                id: 2,
+                title: "French",
+                value: "fr"
+              }, {
+                id: 3,
+                title: "Arabic",
+                value: "tn"
+              }
+            ],
+            render: {
+              option: function(i, e) {
+                return '<div class="option"><i class="item-icon flag-' + e(i.value).toUpperCase() + '"></i><span> ' + e(i.title) + "</span></div>"
+              },
+              item: function(i, e) {
+                return '<div class="item"><i class="item-icon flag-' + e(i.value).toUpperCase() + '"></i> ' + e(i.title) + "</div>"
+              }
+            },
+            valueField: 'value',
+            labelField: 'title',
+            searchField: 'title',
+            create: false,
+            hideSelected: true,
+            onDropdownOpen: function(i) {
+              i.hide().velocity("slideDown", {
+                begin: function() {
+                  i.css({"margin-top": "0"})
+                },
+                duration: 200,
+                easing: easing_swiftOut
+              })
+            },
+            onDropdownClose: function(i) {
+              i.show().velocity("slideUp", {
+                complete: function() {
+                  i.css({"margin-top": ""})
+                },
+                duration: 200,
+                easing: easing_swiftOut
+              })
+            }
+          })
+        }
+      };
+    </script>
+  {% endblock %}

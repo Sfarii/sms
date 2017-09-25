@@ -4,11 +4,11 @@ namespace SMS\StoreBundle\Entity;
 
 use Doctrine\ORM\Mapping as ORM;
 
-
 /**
  * OrderLine
  *
  * @ORM\Table(name="order_line")
+ * @ORM\HasLifecycleCallbacks
  * @ORM\Entity(repositoryClass="SMS\StoreBundle\Repository\OrderLineRepository")
  */
 class OrderLine
@@ -25,33 +25,71 @@ class OrderLine
     /**
      * @var int
      *
+     * @ORM\Column(name="price", type="float")
+     */
+    private $price;
+
+    /**
+     * @var int
+     *
      * @ORM\Column(name="quantity", type="integer")
      */
     private $quantity;
 
     /**
-     * Many Products have One OrederLine.
-     * @ORM\ManyToOne(targetEntity="Product" ,fetch="EXTRA_LAZY")
+     * Many Products have One OrederLines.
+     * @ORM\ManyToOne(targetEntity="Product" , inversedBy="usersOrders" ,fetch="EXTRA_LAZY")
      * @ORM\JoinColumn(name="product_id", referencedColumnName="id")
      */
     private $product;
 
     /**
-     * Many OrderLines have One orderProvider.
-     * @ORM\ManyToOne(targetEntity="OrderProvider", inversedBy="orderLines" ,fetch="EXTRA_LAZY")
-     * @ORM\JoinColumn(name="order_provider_id", referencedColumnName="id")
+     * One order has Many OrederLine.
+     * @ORM\ManyToOne(targetEntity="OrderUser", inversedBy="orderLines",fetch="EXTRA_LAZY")
+     * @ORM\JoinColumn(name="order_id", referencedColumnName="id")
      */
-    private $orderProvider;
+    private $orders;
+
+    /**
+     * @var bool
+     *
+     * @ORM\Column(name="state", type="boolean")
+     */
+    private $state;
 
 
     /**
      * Get id
      *
-     * @return int
+     * @return integer
      */
     public function getId()
     {
         return $this->id;
+    }
+
+    /**
+     * Set price
+     *
+     * @param float $price
+     *
+     * @return OrderLine
+     */
+    public function setPrice($price)
+    {
+        $this->price = $price;
+
+        return $this;
+    }
+
+    /**
+     * Get price
+     *
+     * @return float
+     */
+    public function getPrice()
+    {
+        return $this->price;
     }
 
     /**
@@ -71,7 +109,7 @@ class OrderLine
     /**
      * Get quantity
      *
-     * @return int
+     * @return integer
      */
     public function getQuantity()
     {
@@ -79,51 +117,27 @@ class OrderLine
     }
 
     /**
-     * Set created
+     * Set state
      *
-     * @param \DateTime $created
+     * @param boolean $state
      *
      * @return OrderLine
      */
-    public function setCreated($created)
+    public function setState($state)
     {
-        $this->created = $created;
+        $this->state = $state;
 
         return $this;
     }
 
     /**
-     * Get created
+     * Get state
      *
-     * @return \DateTime
+     * @return boolean
      */
-    public function getCreated()
+    public function getState()
     {
-        return $this->created;
-    }
-
-    /**
-     * Set updated
-     *
-     * @param \DateTime $updated
-     *
-     * @return OrderLine
-     */
-    public function setUpdated($updated)
-    {
-        $this->updated = $updated;
-
-        return $this;
-    }
-
-    /**
-     * Get updated
-     *
-     * @return \DateTime
-     */
-    public function getUpdated()
-    {
-        return $this->updated;
+        return $this->state;
     }
 
     /**
@@ -151,98 +165,26 @@ class OrderLine
     }
 
     /**
-     * Set provider
+     * Set orders
      *
-     * @param \SMS\StoreBundle\Entity\Provider $provider
+     * @param \SMS\StoreBundle\Entity\OrderUser $orders
      *
      * @return OrderLine
      */
-    public function setProvider(\SMS\StoreBundle\Entity\Provider $provider = null)
+    public function setOrders(\SMS\StoreBundle\Entity\OrderUser $orders = null)
     {
-        $this->provider = $provider;
+        $this->orders = $orders;
 
         return $this;
     }
 
     /**
-     * Get provider
+     * Get orders
      *
-     * @return \SMS\StoreBundle\Entity\Provider
+     * @return \SMS\StoreBundle\Entity\OrderUser
      */
-    public function getProvider()
+    public function getOrders()
     {
-        return $this->provider;
-    }
-
-    /**
-     * Set user
-     *
-     * @param \SMS\UserBundle\Entity\User $user
-     *
-     * @return OrderLine
-     */
-    public function setUser(\SMS\UserBundle\Entity\User $user = null)
-    {
-        $this->user = $user;
-
-        return $this;
-    }
-
-    /**
-     * Get user
-     *
-     * @return \SMS\UserBundle\Entity\User
-     */
-    public function getUser()
-    {
-        return $this->user;
-    }
-
-    /**
-     * Set establishment
-     *
-     * @param \SMS\EstablishmentBundle\Entity\Establishment $establishment
-     *
-     * @return OrderLine
-     */
-    public function setEstablishment(\SMS\EstablishmentBundle\Entity\Establishment $establishment = null)
-    {
-        $this->establishment = $establishment;
-
-        return $this;
-    }
-
-    /**
-     * Get establishment
-     *
-     * @return \SMS\EstablishmentBundle\Entity\Establishment
-     */
-    public function getEstablishment()
-    {
-        return $this->establishment;
-    }
-
-    /**
-     * Set orderProvider
-     *
-     * @param \SMS\StoreBundle\Entity\OrderProvider $orderProvider
-     *
-     * @return OrderLine
-     */
-    public function setOrderProvider(\SMS\StoreBundle\Entity\OrderProvider $orderProvider = null)
-    {
-        $this->orderProvider = $orderProvider;
-
-        return $this;
-    }
-
-    /**
-     * Get orderProvider
-     *
-     * @return \SMS\StoreBundle\Entity\OrderProvider
-     */
-    public function getOrderProvider()
-    {
-        return $this->orderProvider;
+        return $this->orders;
     }
 }

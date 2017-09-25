@@ -1,0 +1,225 @@
+cart:
+    title: Panier
+    note_user: Les Commandes Clients sont en attente (en attente d'état).
+    note_provider: Les commande fournisseur (statut Commandé).
+    order:
+        title: Cliquez sur Suivant si vous souhaitez continuer
+    sub-title: Sortir à tout moment si vous ne souhaitez pas continuer
+    edit:
+        success: Votre panier a été mis à jour avec succès   # FIXME
+    finish: Terminer
+    new:
+        fail: Impossible d'ajouter dans le panier d'achat spécifié.   # FIXME
+        success: Produit ajouté avec succès à votre panier.   # FIXME
+    delete:
+        fail: Impossible de supprimer du produit spécifié   # FIXME
+        success: Les produits spécifiés ont été supprimés avec succès dans votre panier   # FIXME
+    quantity:
+        selectError: Vérifiez votre quantité   # FIXME
+        title: Quantité   # FIXME
+    total:
+        title: Total
+purchase_items:
+    new:
+        title: Achat Items
+        success: Vos éléments d'achat ont été créés avec succès.   # FIXME
+    save: Sauvegarder
+    edit:
+        success: Vos éléments d'achat ont été mis à jour avec succès.   # FIXME
+    delete:
+        success: Les éléments d'achat spécifiés ont été supprimés avec succès.   # FIXME
+order_items:
+    new:
+        title: Items commandés
+        success: Vos éléments de commande ont été créés avec succès.   # FIXME
+    save: Sauvegarder
+    edit:
+        success: Vos éléments de commande ont été mis à jour avec succès.   # FIXME
+    delete:
+        success: Les éléments de commande spécifiés ont été supprimés avec succès.   # FIXME
+order:
+    new:
+        success: Commandes créées avec succès.   # FIXME
+    field:
+        provider: Sélectionnez Fournisseurs ..
+        student: Sélectionnez des étudiants ..
+        professor: Sélectionnez des professeurs ..
+purchase:
+    delete:
+        fail: Impossible de supprimer des achats spécifiés   # FIXME
+        success: les achats spécifiés ont été supprimés avec succès   # FIXME
+    field:
+        provider: Fournisseurs d'achat   # FIXME
+        state: Etat
+        reference: Référence
+        purchaseDate: Date d'achat
+        select_provider: Sélectionnez Fournisseurs ..
+    list:
+        title: Liste des achats   # FIXME
+    add:
+        success: Achat créé avec succès   # FIXME
+    new:
+        title: Ajouter un nouvel achat   # FIXME
+    edit:
+        title: Modifier l'achat   # FIXME
+        success: Achat mis à jour avec succès   # FIXME
+        fail: Impossible de mettre à jour le statut, il y a eu un problème lors de la mise à jour de votre achat.
+    show:
+        detail: Détail de l'achat   # FIXME
+        title: Information d'achat   # FIXME
+orderProvider:
+    delete:
+        fail: Impossible de supprimer les Commandes spécifiées aux fournisseurs   # FIXME
+        success: les commandes spécifiées aux fournisseurs ont été supprimées avec succès   # FIXME
+    edit:
+        success: Commande au fournisseur mise à jour avec succès   # FIXME
+    add:
+        success: Commande au fournisseur créée avec succès   # FIXME
+
+orderUser:
+    delete:
+        fail: Impossible de supprimer les commandes des clients spécifiques   # FIXME
+        success: Les commandes des clients spécifiés ont été supprimés avec succès   # FIXME
+    edit:
+        success: le commande de client ont été mises à jour avec succès   # FIXME
+    add:
+        success: le commande de client ont été créée avec succès   # FIXME
+
+orderprovider:
+    field:
+        provider: Commande au fournisseur   # FIXME
+        reference: Référence   # FIXME
+        created: Date de création
+    edit:
+        title: Modifier le commande du fournisseur   # FIXME
+    list:
+        title: Liste des commandes aux fournisseurs   # FIXME
+    show:
+        detail: Ordre du fournisseur Détail   # FIXME
+        title: Ordre du fournisseur Information   # FIXME
+
+orderuser:
+    field:
+        state: Statut   # FIXME
+        userorder: Client   # FIXME
+        reference: Référence
+        orderDate: Date de commande
+
+    list:
+        title: Liste des commandes clients   # FIXME
+    edit:
+        title: Modifier l'ordre du client   # FIXME
+    show:
+        detail: Détail de la commande du client   # FIXME
+        title: Informations sur la commande du Client   # FIXME
+
+product:
+    delete:
+        fail: Impossible de supprimer des produits spécifiés   # FIXME
+        success: les produits spécifiés ont été supprimés avec succès   # FIXME
+    edit:
+        title: Modifier le produit   # FIXME
+        success: Produit mis à jour avec succès   # FIXME
+
+    field:
+        active: Produit actif   # FIXME
+        active_true_label: Activé
+        active_false_label: Désactivé
+        data: Données   # FIXME
+        description: Description   # FIXME
+        image: Image   # FIXME
+        price: Prix   # FIXME
+        productName: Nom du produit   # FIXME
+        productType: Catégorie de produit   # FIXME
+        select_productType: Sélectionnez la catégorie de produit ...
+        sku: SKU   # FIXME
+        stock: Stock   # FIXME
+        status: Statut   # FIXME
+        quantity: Quantité   # FIXME
+
+    list:
+        title: Listes de produits   # FIXME
+    add:
+        success: Produit créé avec succès   # FIXME
+    new:
+        title: Ajout un produit   # FIXME
+    show:
+        title: Détail du produit   # FIXME
+
+productType:
+    delete:
+        fail: Impossible de supprimer les catégories de produits spécifiés   # FIXME
+        success: Les catégories de produits spécifiés ont été supprimés avec succès   # FIXME
+    edit:
+        success: La catégorie de produit mis à jour avec succès   # FIXME
+    add:
+        success: La catégorie de produit créé avec succès   # FIXME
+
+producttype:
+    edit:
+        title: Modifier la catégorie de produit   # FIXME
+
+    field:
+        productTypeName: Nom de la catégorie de produit   # FIXME
+
+    list:
+        title: Listes de la catégorie de produit   # FIXME
+
+    new:
+        title: Ajout d'une catégorie de produit   # FIXME
+
+provider:
+    delete:
+        fail: Impossible de supprimer des fournisseurs spécifiés   # FIXME
+        success: Les fournisseurs spécifiés ont supprimé avec succès  # FIXME
+    edit:
+        title: Editer le fournisseur  # FIXME
+        success: Fournisseur mis à jour avec succès   # FIXME
+    field:
+        address: Adresse   # FIXME
+        email: Email   # FIXME
+        fax: Fax   # FIXME
+        phone: Téléphone   # FIXME
+        socialReason: Raison social   # FIXME
+
+    list:
+        title: Listes des fournisseurs   # FIXME
+    add:
+        success: Fournisseur créé avec succès   # FIXME
+    new:
+        title: Ajouter un fournisseur   # FIXME
+    show:
+        detail: Détails du fournisseur   # FIXME
+        title: Informations sur le fournisseur   # FIXME
+        order: Bon de commande
+        purchase: Bon de livraison
+
+search:
+    result_not_found:
+        sub-title:  Suggestions  # FIXME
+        text: Assurez-vous d'avoir des produits enregistrés.   # FIXME
+        title: Oops! Aucun résultat trouvé   # FIXME
+
+store:
+    unit:
+        elem: Élément   # FIXME
+        price: TND   # FIXME
+        order: Orders
+        purchase: Achats
+    email:
+        order_to: Ordre de
+        footer: © Copyright Texhnolyze Solution All Rights Reserved
+        purchase_to: Achat à partir de
+    total:
+        quantity: Quantité totale
+        price: Prix total
+    notification : Notification
+    order_provider: bon de commande
+    order_user: bon de livraison
+    purchase: Facture d'achat
+    state:
+        padding: En attente
+        valid: Valider
+        placeholder: Sélectionnez l'état ...
+in_stock: En stock
+out_of_stock: Hors stocks

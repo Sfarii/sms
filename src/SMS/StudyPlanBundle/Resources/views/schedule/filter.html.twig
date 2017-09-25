@@ -26,14 +26,15 @@
       cache: false,
       timeout: 3000,
       success: function(html) {
-        // hide preloader
-        altair_helpers.content_preloader_hide();
+
         // Replace current position field ...
         $('.sectionField').parent(".uk-form-row").empty().append(
         // ... with the returned one from the AJAX response.
-        $(html).find('.sectionField').parent());
+        $(html).find('.sectionField').parent().html());
         altair_forms.init();
         // Position field now displays the appropriate positions.
+        // hide preloader
+        altair_helpers.content_preloader_hide();
       }
     });
   });
@@ -72,29 +73,30 @@
       cache: false,
       timeout: 3000,
       success: function(html) {
-        // hide preloader
-        altair_helpers.content_preloader_hide();
+
         // Replace current position field ...
         $division.parent(".uk-form-row").find('.parsley-errors-list').empty().append(
         // ... with the returned one from the AJAX response.
-        $(html).find('.divisionField').parent(".uk-form-row").find('.parsley-errors-list'));
+        $(html).find('.divisionField').parent(".uk-form-row").find('.parsley-errors-list').html());
         // Replace current position field ...
         $grade.parent(".uk-form-row").find('.parsley-errors-list').empty().append(
         // ... with the returned one from the AJAX response.
-        $(html).find('.gradeField').parent(".uk-form-row").find('.parsley-errors-list'));
+        $(html).find('.gradeField').parent(".uk-form-row").find('.parsley-errors-list').html());
         // Replace current position field ...
         $section.parent(".uk-form-row").find('.parsley-errors-list').empty().append(
         // ... with the returned one from the AJAX response.
-        $(html).find('.sectionField').parent(".uk-form-row").find('.parsley-errors-list'));
+        $(html).find('.sectionField').parent(".uk-form-row").find('.parsley-errors-list').html());
         // Replace current position field ...
         $('#schedules').empty().append(
         // ... with the returned one from the AJAX response.
-        $(html).find('#schedules').find('.md-card'));
+        $(html).find('#schedules').html());
         $('#form_new').empty().append(
         // ... with the returned one from the AJAX response.
         $(html).find('#form_new'));
         $href_new = $('#form_schedule').attr('action');
         altair_forms.init();
+        // hide preloader
+        altair_helpers.content_preloader_hide();
         // Position field now displays the appropriate positions.
       }
     });
@@ -112,7 +114,6 @@
       timeout: 3000,
 
       success: function(msg) {
-        altair_helpers.content_preloader_hide();
         new UIkit.notify({
           message: "<a href='#' class='notify-action'><span class='uk-icon-times'></span></a>" + msg,
           status: "error",
@@ -122,6 +123,7 @@
         });
         $('.save').trigger("click");
 
+          altair_helpers.content_preloader_hide();
       },
       error: function(XMLHttpRequest, textStatus, errorThrown) {
         console.log(XMLHttpRequest + ' ' + textStatus + ' ' + errorThrown);
@@ -190,8 +192,7 @@
           $day.parent(".md-input-wrapper").parent(".uk-form-row").find('.parsley-errors-list').empty().append(obj.error.day);
           $professor.parent(".md-input-wrapper").parent(".uk-form-row").find('.parsley-errors-list').empty().append(obj.error.professor);
           $course.parent(".md-input-wrapper").parent(".uk-form-row").find('.parsley-errors-list').empty().append(obj.error.course);
-          // hide preloader
-          altair_helpers.content_preloader_hide();
+
         } else {
           if (modal.isActive()) {
             modal.hide();
@@ -205,7 +206,8 @@
           });
           $('.save').trigger("click");
         }
-
+        // hide preloader
+        altair_helpers.content_preloader_hide();
       },
       error: function(XMLHttpRequest, textStatus, errorThrown) {
         console.log(XMLHttpRequest + ' ' + textStatus + ' ' + errorThrown);

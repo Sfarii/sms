@@ -1,0 +1,239 @@
+cart:
+    title: Shopping Cart
+    note_user: Clients Orders set on hold (in pending status).
+    note_provider: Orders To Provider Has no status.
+    order:
+        title: Click Next if you wish to continue
+    sub-title: Exit at any time if you do not wish to continue
+    edit:
+        success: Your shopping cart was successfully updated   # FIXME
+    finish: Finish
+    new:
+        fail: Could not Add from the specified shopping cart   # FIXME
+        success: Product successfully added to your shopping cart.   # FIXME
+    delete:
+        fail: Could not delete from the specified Product   # FIXME
+        success: The specified Products successfully deleted from your shopping cart   # FIXME
+    quantity:
+        selectError: Please check your Quantity   # FIXME
+        title: Quantity   # FIXME
+    total:
+        title: Total
+purchase_items:
+    new:
+        title: Purchase Items
+        success: Your Purchase Items was successfully created.   # FIXME
+    save: Save
+    edit:
+        success: Your Purchase Items was successfully updated.   # FIXME
+    delete:
+        success: The specified Purchase Items successfully deleted.   # FIXME
+        fail: Couldn't update status, there was a problem deleting The specified Purchase Items.   # FIXME
+order_items:
+    new:
+        title: Order Items
+        success: Your Order Items was successfully created.   # FIXME
+    save: Save
+    edit:
+        success: Your Order Items was successfully updated.   # FIXME
+    delete:
+        success: The specified Order Items successfully deleted.   # FIXME
+order:
+    new:
+        success: Orders successfully created.   # FIXME
+    field:
+        provider: Select Providers ..
+        student: Select Students ..
+        professor: Select professors ..
+purchase:
+    delete:
+        fail: Could not delete from the specified Purchases   # FIXME
+        success: the specified Purchases successfully deleted   # FIXME
+    field:
+        provider: Purchase Providers   # FIXME
+        state: Status
+        reference: Reference
+        purchaseDate: Purchase Date
+        select_provider: Select Providers ..
+    list:
+        title: List of Purchases   # FIXME
+    add:
+        success: Purchase successfully created   # FIXME
+    new:
+        title: Add a new purchase   # FIXME
+    edit:
+        title: Edit Purchase   # FIXME
+        success: Purchase successfully updated   # FIXME
+        fail: Couldn't update status, there was a problem updating Your Purchase.
+    show:
+        detail: Purchase Detail   # FIXME
+        title: Purchase Information   # FIXME
+
+order:
+    field:
+        provider: Select Provider ..
+        student: Select Student ..
+        professor: Select Professor ..
+        studentparent: Select Student Parent ..
+orderProvider:
+    delete:
+        fail: Could not delete from the specified Orders To Providers   # FIXME
+        success: the specified Orders To Providers successfully deleted   # FIXME
+    edit:
+        success: Order To Provider successfully updated   # FIXME
+    add:
+        success: Order To Provider successfully created   # FIXME
+
+orderUser:
+    delete:
+        fail: Could not delete from the specified Clients Orders   # FIXME
+        success: the specified Clients Orders successfully deleted   # FIXME
+    edit:
+        success: Clients Orders successfully updated   # FIXME
+    add:
+        success: Clients Orders successfully created   # FIXME
+
+orderprovider:
+    field:
+        provider: Order To Provider   # FIXME
+        reference: Reference   # FIXME
+        created: Creation Date
+    edit:
+        title: Edit Order To Provider   # FIXME
+    list:
+        title: List Of Orders To Providers   # FIXME
+    show:
+        detail: Order To Provider Detail   # FIXME
+        title: Order To Provider Information   # FIXME
+
+orderuser:
+    field:
+        state: Status   # FIXME
+        userorder: Client   # FIXME
+        reference: Reference
+        orderDate: Order Date
+
+    list:
+        title: List Of Clients Orders   # FIXME
+    edit:
+        title: Edit Client Order   # FIXME
+    show:
+        detail: Client Order Detail   # FIXME
+        title: Client Order Information   # FIXME
+
+product:
+    delete:
+        fail: Could not delete from the specified Products   # FIXME
+        success: the specified Products successfully deleted   # FIXME
+    edit:
+        title: Edit Product   # FIXME
+        success: Product successfully updated   # FIXME
+
+    field:
+        active: Active Product   # FIXME
+        active_true_label: Activated
+        active_false_label: Deactivated
+        data: Data   # FIXME
+        description: Description   # FIXME
+        image: Image   # FIXME
+        price: Price   # FIXME
+        productName: Product Name   # FIXME
+        productType: Product Category   # FIXME
+        select_productType: Select Product Category ...
+        sku: SKU   # FIXME
+        stock: Stock   # FIXME
+        status: Status   # FIXME
+        quantity: Quantity   # FIXME
+
+    list:
+        title: Lists of Products   # FIXME
+    add:
+        success: Product successfully created   # FIXME
+    new:
+        title: Adding an Product   # FIXME
+    show:
+        title: Product detail   # FIXME
+
+productType:
+    delete:
+        fail: Could not delete from the specified Products Types   # FIXME
+        success: the specified Products Types successfully deleted   # FIXME
+    edit:
+        success: Product Type successfully updated   # FIXME
+    add:
+        success: Product Type successfully created   # FIXME
+
+producttype:
+    edit:
+        title: Edit Product Category   # FIXME
+
+    field:
+        productTypeName: Product Category Name   # FIXME
+
+    list:
+        title: Lists of Product Category   # FIXME
+
+    new:
+        title: Adding an Product Category   # FIXME
+
+provider:
+    delete:
+        fail: Could not delete from the specified providers   # FIXME
+        success: The specified providers successfully deleted   # FIXME
+    edit:
+        title: Edit Provider  # FIXME
+        success: Provider successfully updated   # FIXME
+    field:
+        address: Address   # FIXME
+        email: Email   # FIXME
+        fax: Fax   # FIXME
+        phone: Phone   # FIXME
+        socialReason: Social Reason   # FIXME
+
+    list:
+        title: Lists of providers   # FIXME
+    add:
+        success: Provider successfully created   # FIXME
+    new:
+        title: Adding an Provider   # FIXME
+    show:
+        detail: Provider detail   # FIXME
+        title: Provider Information   # FIXME
+search:
+    result_not_found:
+        sub-title:  Suggestions  # FIXME
+        text: Make sure you Have registred Products.   # FIXME
+        title: OOps! No Results Found   # FIXME
+
+store:
+    unit:
+        elem: Element   # FIXME
+        price: TND   # FIXME
+        order: Orders
+        purchase: Purchases
+    email:
+        order_to: Order To
+        footer: © Copyright Texhnolyze Solution All Rights Reserved
+        purchase_to: Purchase From
+    total:
+        quantity: Total Quantity
+        price: Total Price
+    title:
+        order_user: Users Orders
+        order_provider: Store Orders
+        purchase: Store Purchases
+    notification : Notification
+    order_provider: Order purchase
+    order_user: Order
+    purchase: Inovice
+    statistics:
+        purchase: Purchase
+        orderUser: Order
+        by_month: Store Statistics By Month
+        by_day: Store Statistics By Day
+    state:
+        padding: Padding
+        valid: Validate
+        placeholder: Select status ..
+in_stock: In stock
+out_of_stock: Out Of Stock

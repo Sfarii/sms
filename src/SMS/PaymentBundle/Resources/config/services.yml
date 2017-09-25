@@ -1,43 +1,45 @@
 services:
   #PaymentDatatable
   sms.datatable.payment:
-      class: %payment_datatable%
+      class: SMS\PaymentBundle\PaymentDatatable\PaymentDatatable
       parent: sg_datatables.datatable.abstract
       calls:
-          - [ setPaymentTypeClass , ["%payment_type_class%"]]
+          - [ setPaymentTypeClass , [SMS\PaymentBundle\Entity\PaymentType]]
           - [ setMonth , ["%months%"]]
   sms.datatable.paymentType:
-      class: %payment_type_datatable%
+      class: SMS\PaymentBundle\PaymentDatatable\PaymentTypeDatatable
       parent: sg_datatables.datatable.abstract
-  sms.datatable.registration:
-      class: %registration_datatable%
+  sms.datatable.catchUp.lesson:
+      class: SMS\PaymentBundle\PaymentDatatable\CatchUpLessonDatatable
       parent: sg_datatables.datatable.abstract
-      calls:
-          - [ setPaymentTypeClass , ["%payment_type_class%"]]
   sms.datatable.registration.students:
-      class: %registration_users_datatable%
+      class: SMS\PaymentBundle\PaymentDatatable\StudentDatatable
       parent: sg_datatables.datatable.abstract
   #Services
   sms.payment.entity_manager:
-      class: %payment_entity_manager%
-      arguments: ["@doctrine.orm.entity_Manager"]
+      class: SMS\PaymentBundle\Services\PaymentEntityManager
+      arguments: ["@doctrine.orm.entity_Manager", "@translator"]
       calls:
         - [setMailer, ['@sms.payment.mailer']]
+        - [setDays, [%days%]]
+        - [setCatchUpLessonSechduleClass, [SMS\PaymentBundle\Entity\CatchUpLessonSechdule]]
+        - [setStudentClass, [SMS\UserBundle\Entity\Student]]
+        - [setPaymentClass, [SMS\PaymentBundle\Entity\Payment]]
   sms.payment.mailer:
-      class: %payment_mail_manager%
+      class: SMS\PaymentBundle\Services\Mailer
       arguments: ["@mailer" , "@templating"]
       calls:
         - [setEmail, ["%mailer_user%"]]
-        - [setPaymentTemplatePath, ["%payment_template%"]]
-        - [setRegistrationTemplatePath, ["%registration_template%"]]
+        - [setPaymentTemplatePath, [SMSPaymentBundle:email:payment.html.twig]]
+        - [setRegistrationTemplatePath, [SMSPaymentBundle:email:registration.html.twig]]
   #Form
   sms.form.type.payment:
-      class: %payment_form%
-      arguments: [ %student_class% , %establishment_class% ]
+      class: SMS\PaymentBundle\Form\PaymentType
+      arguments: [ SMS\UserBundle\Entity\Student , "@doctrine.orm.entity_Manager"]
       tags:
           - { name: form.type }
   sms.form.type.registration:
-      class: %registration_form%
-      arguments: [ %establishment_class% ]
+      class: SMS\PaymentBundle\Form\RegistrationType
+      arguments: [ SMS\EstablishmentBundle\Entity\Establishment ]
       tags:
           - { name: form.type }

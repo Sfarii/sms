@@ -22,20 +22,100 @@ class StudentRepository extends EntityRepository
         return $this->_em->getRepository(User::class)->findBy($criteria);
     }
 
-      /**
+    /**
+     * Get All registred Student
+     *
+     * @return array
+     */
+    public function findAllRegistredStudent($catchUpLesson)
+    {
+        $query = $this->createQueryBuilder('student')
+          ->join('student.registrations', 'registrations')
+          ->select("partial student.{id ,imageName , username , firstName , lastName , phone , email} as studentInfo")
+          ->where('registrations.id = :catchUpLesson')
+          ->setParameter('catchUpLesson', $catchUpLesson->getId());
+        return $query;
+    }
+
+    /**
+     * Get one registred Student
+     *
+     * @return array
+     */
+    public function findRegistredStudent($student, $catchUpLesson)
+    {
+        $query = $this->createQueryBuilder('student')
+          ->join('student.registrations', 'registrations')
+          ->where('registrations.id = :catchUpLesson')
+          ->andWhere('student.id = :student')
+          ->setParameter('student', $student)
+          ->setParameter('catchUpLesson', $catchUpLesson);
+        return $query;
+    }
+
+    /**
      * Get All registred users
      *
      * @return array
      */
-    public function findAllRegistredStudent($establishment)
+    public function findAllRegistredStudentByEstablishment($establishment)
     {
         $query = $this->createQueryBuilder('student')
           ->join('student.registrations', 'registrations')
-          ->join('student.establishment', 'establishment')
           ->select("partial student.{id ,imageName , username , firstName , lastName , phone , email} as studentInfo")
-          ->where('establishment.id = :establishment')
-          ->setParameter('establishment', $establishment->getId());
+          ->where('student.establishment = :establishment')
+          ->setParameter('establishment', $establishment);
         return $query;
+    }
+
+    /**
+     * Get Student By establishment
+     *
+     * @param integer $establishment
+     * @return array
+     */
+    public function findAllByEstablishment($establishment)
+    {
+        return $this->createQueryBuilder('student')
+                ->select("partial student.{id ,imageName , username , firstName , lastName , phone , email}")
+                ->join('student.section', 'section')
+                ->join('student.establishment', 'establishment')
+                ->andWhere('establishment.id = :establishment')
+                ->setParameter('establishment', $establishment);
+    }
+
+    /**
+     * Get Student By establishment
+     *
+     * @param integer $establishment
+     * @return array
+     */
+    public function findAllInternStudentByEstablishment($establishment)
+    {
+        return $this->createQueryBuilder('student')
+                ->select("partial student.{id ,imageName , username , firstName , lastName , phone , email}")
+                ->join('student.section', 'section')
+                ->join('student.establishment', 'establishment')
+                ->andWhere('establishment.id = :establishment')
+                ->setParameter('establishment', $establishment);
+    }
+
+    /**
+     * Get Student By establishment
+     *
+     * @param integer $establishment
+     * @return array
+     */
+    public function findStatsByEstablishment($establishment)
+    {
+        return $this->createQueryBuilder('student')
+                ->select("Count(student) as value , student.gender as name")
+                ->join('student.establishment', 'establishment')
+                ->andWhere('establishment.id = :establishment')
+                ->setParameter('establishment', $establishment->getId())
+                ->groupBy('name')
+                ->getQuery()
+                ->getResult();
     }
 
     /**

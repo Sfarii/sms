@@ -1,105 +1,121 @@
-{% extends 'layout/base_header_double_height.html.twig' %}
+{% extends 'layout/base.html.twig' %}
+{% block sub_title_page %}
+  <a href="{{ path('product_index') }}">
+    {{ 'product.list.title'|trans }}
+  </a>
+  /
+  <a href="#">
+    {{ 'product.new.title'|trans }}
+  </a>
+{% endblock %}
+{% block title_page %}
+  {{ 'product.new.title'|trans }}
+{% endblock %}
 {% block stylesheets %}
-	{{ parent() }}
-	<!-- additional styles for plugins -->
-    <!-- dropify -->
-    <link rel="stylesheet" href="{{ asset('assets/skins/dropify/css/dropify.css')}}">
+  {{ parent() }}
+  <!-- additional styles for plugins -->
+  <!-- dropify -->
+  <link rel="stylesheet" href="{{ asset('assets/skins/dropify/css/dropify.css')}}">
 {% endblock %}
 {% block body %}
-  <div class="uk-width-medium-8-10 uk-container-center">
-    <div class="md-card md-card-single">
-      <div class="md-card-toolbar">
-        <a href="{{ path('product_index') }}">
-          <span class="md-icon md-card-fullscreen-deactivate material-icons uk-float-left">&#xE5C4;</span>
-        </a>
-        <h3 class="md-card-toolbar-heading-text large uk-margin-small-left">
-          {{ 'product.new.title'|trans }}
-        </h3>
-      </div>
-      <div class="md-card-content">
-        <div class="uk-margin-small-top">
+  {{ form_start(form) }}
+  <div class="uk-grid uk-grid-medium" data-uk-grid-margin>
+    <div class="uk-width-xLarge-2-10 uk-width-large-3-10">
+      <div class="md-card">
+        <div class="md-card-content">
+          <div class="uk-float-right">
+            {{ form_widget(form.active) }}
 
-          {{ form_start(form) }}
-					<div class="uk-form-row">
-						{{ form_widget(form.imageFile)}}
-						<div class="parsley-errors-list filled uk-text-danger">
-							{{ form_errors(form.imageFile) }}
-						</div>
-					</div>
-					<div class="uk-grid uk-margin-medium-top uk-margin-medium-bottom" data-uk-grid-margin>
-            <div class="uk-width-1-2">
-							<div class="uk-form-row uk-input-group">
-                <span class="uk-input-group-addon">
-                  <i class="md-list-addon-icon material-icons md-24">&#xE8CE;</i>
-                </span>
+          </div>
+          <label class="uk-display-block uk-margin-small-top">
+            {{ 'product.field.active'|trans }}
+          </label>
+        </div>
+      </div>
+      <div class="md-card">
+        <div class="md-card-toolbar">
+          <h3 class="md-card-toolbar-heading-text">
+            {{ "product.field.image"|trans }}
+          </h3>
+        </div>
+        <div class="md-card-content">
+          <div class="uk-margin-bottom uk-text-center uk-position-relative">
+            {{ form_widget(form.imageFile)}}
+            <div class="parsley-errors-list filled uk-text-danger">
+              {{ form_errors(form.imageFile) }}
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+    <div class="uk-width-xLarge-8-10  uk-width-large-7-10">
+      <div class="md-card">
+        <div class="md-card-toolbar">
+          <h3 class="md-card-toolbar-heading-text">
+            {{ "product.show.title"|trans }}
+          </h3>
+        </div>
+        <div class="md-card-content large-padding">
+          <div class="uk-grid uk-grid-divider uk-grid-medium" data-uk-grid-margin>
+            <div class="uk-width-large-1-2">
+              <div class="uk-form-row">
                 <label class="uk-form-label">{{ form_label(form.productName) }}</label>
                 {{ form_widget(form.productName)}}
                 <div class="parsley-errors-list filled uk-text-danger">
                   {{ form_errors(form.productName) }}
                 </div>
               </div>
-
-							<div class="uk-form-row uk-input-group">
-								<span class="uk-input-group-addon">
-									<i class="md-list-addon-icon material-icons md-24">&#xE227;</i>
-								</span>
-								<label class="uk-form-label">{{ form_label(form.price) }}</label>
-								{{ form_widget(form.price)}}
-								<div class="parsley-errors-list filled uk-text-danger">
-									{{ form_errors(form.price) }}
-								</div>
-							</div>
-							<div class="uk-form-row uk-input-group">
-								<span class="uk-input-group-addon">
-									<i class="md-list-addon-icon material-icons md-24">&#xE873;</i>
-								</span>
-								<label class="uk-form-label">{{ form_label(form.status) }}</label>
-								{{ form_widget(form.status)}}
-								<div class="parsley-errors-list filled uk-text-danger">
-									{{ form_errors(form.status) }}
-								</div>
-							</div>
+              <div class="uk-form-row">
+                <label class="uk-form-label">{{ form_label(form.price) }}</label>
+                {{ form_widget(form.price)}}
+                <div class="parsley-errors-list filled uk-text-danger">
+                  {{ form_errors(form.price) }}
+                </div>
+              </div>
+              <div class="uk-form-row">
+                {{ form_widget(form.productType)}}
+                <span class="uk-form-help-block">{{ form_label(form.productType) }}</span>
+                <div class="parsley-errors-list filled uk-text-danger">
+                  {{ form_errors(form.productType) }}
+                </div>
+              </div>
             </div>
-            <div class="uk-width-1-2">
-							<div class="uk-form-row uk-input-group">
-								<span class="uk-input-group-addon">
-                    <i class="uk-icon-cubes"></i>
-                </span>
-								<label class="uk-form-label">{{ form_label(form.stock) }}</label>
-								{{ form_widget(form.stock)}}
-								<div class="parsley-errors-list filled uk-text-danger">
-									{{ form_errors(form.stock) }}
-								</div>
-							</div>
-							<div class="uk-form-row ">
-								{{ form_widget(form.productType)}}
-								<span class="uk-form-help-block">{{ form_label(form.productType) }}</span>
-								<div class="parsley-errors-list filled uk-text-danger">
-									{{ form_errors(form.productType) }}
-								</div>
-							</div>
-							<div class="uk-form-row">
-		            {{ form_widget(form.active, { 'attr': {'data-switchery-color': '#1976d2' , "data-switchery-size" : "medium" , "class" : "show_username_password" ,  "data-switchery" : ""} }) }}
-		            <label for="show_username_password" class="inline-label">{{ form_label(form.active) }}</label>
-		          </div>
+            <div class="uk-width-large-1-2">
+              <div class="uk-form-row">
+                <label class="uk-form-label">{{ form_label(form.description) }}</label>
+                {{ form_widget(form.description)}}
+                <div class="parsley-errors-list filled uk-text-danger">
+                  {{ form_errors(form.description) }}
+                </div>
+              </div>
             </div>
+          </div>
 
-					</div>
-          {{ form_widget(form) }}
-
-          {{ form_end(form) }}
         </div>
       </div>
+
     </div>
   </div>
+  {{ form_widget(form) }}
+
+  {{ form_end(form) }}
 {% endblock %}
 {% block javascripts %}
-	{{ parent() }}
-	<!-- page specific plugins -->
-    <!-- file input -->
-		<script src="{{ asset('assets/plugins/dropify/dist/js/dropify.min.js')}}"></script>
-    <script>
-		$(function(){
-			$(".dropify").dropify({messages:{"default":"{{ 'file.upload_file'|trans }}",replace:"{{ 'file.upload_file'|trans }}",remove:"{{ 'delete'|trans }}"}});
-		});</script>
+  {{ parent() }}
+  <!-- page specific plugins -->
+  <!-- file input -->
+  <script src="{{ asset('assets/plugins/dropify/dist/js/dropify.min.js')}}"></script>
+  <script>
+    $(function() {
+      $(".dropify").dropify({
+        'defaultFile': "/assets/img/avatars/product.png",
+        "height" : 200 ,
+        messages: {
+          "default": "{{ 'file.upload_file'|trans }}",
+          replace: "{{ 'file.upload_file'|trans }}",
+          remove: "{{ 'delete'|trans }}"
+        }
+      });
+    });
+  </script>
 {% endblock %}

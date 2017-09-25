@@ -10,6 +10,8 @@ use Sensio\Bundle\FrameworkExtraBundle\Configuration\Route;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\Template;use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\Security;
+use SMS\StudyPlanBundle\Form\SimpleSearchType;
+use SMS\EstablishmentBundle\Entity\Grade;
 
 /**
  * Course controller.
@@ -24,38 +26,69 @@ use Sensio\Bundle\FrameworkExtraBundle\Configuration\Security;
  */
 class CourseController extends BaseController
 {
+
     /**
-     * Lists all course entities.
+     * Lists all grades entities.
      *
      * @Route("/", name="course_index")
      * @Method("GET")
-     * @Template("SMSStudyPlanBundle:course:index.html.twig")
+     * @Template("SMSStudyPlanBundle:course:grade.html.twig")
      */
-    public function indexAction()
+    public function indexGradeAction(Request $request)
     {
-        $courses = $this->getCourseEntityManager();
-        $courses->buildDatatable();
+        $form = $this->createForm(SimpleSearchType::class,null, array('method' => 'GET'))->handleRequest($request);
 
-        return array('courses' => $courses);
-    } /**
+        $pagination = $this->getPaginator()->paginate(
+            $this->getEntityManager()->getAllGrades($form , $this->getUser()->getEstablishment()), /* query NOT result */
+            $request->query->getInt('page', 1)/*page number*/,
+            12/*limit per page*/
+        );
+        $sort = $request->query->get('sort', 'empty');
+        if ($sort == "empty"){
+          $pagination->setParam('sort', 'grade.gradeName');
+          $pagination->setParam('direction', 'asc');
+        }
+        // parameters to template
+        return array('pagination' => $pagination , 'form' => $form->createView());
+    }
+
+    /**
      * Lists all course entities.
      *
-     * @Route("/results", name="course_results")
+     * @Route("/grade/{id}", name="course_grade_index")
+     * @Method("GET")
+     * @Template("SMSStudyPlanBundle:course:index.html.twig")
+     */
+    public function indexAction(Grade $grade)
+    {
+        $courses = $this->getCourseEntityManager();
+        $courses->buildDatatable(array('id' => $grade->getId()));
+
+        return array('courses' => $courses);
+    }
+
+     /**
+     * Lists all course entities.
+     *
+     * @Route("/results/{id}", name="course_results")
      * @Method("GET")
      * @return Response
      */
-    public function indexResultsAction()
+    public function indexResultsAction(Grade $grade)
     {
         $courses = $this->getCourseEntityManager();
-        $courses->buildDatatable();
+        $courses->buildDatatable(array('id' => $grade->getId()));
 
         $query = $this->getDataTableQuery()->getQueryFrom($courses);
 
         $user = $this->getUser();
-        $function = function($qb) use ($user)
+        $function = function($qb) use ($user , $grade)
         {
             $qb->join('course.establishment', 'establishment')
+                ->join('course.grade', 'grade')
                 ->andWhere('establishment.id = :establishment')
+                ->andWhere('grade.id = :grade')
+                ->setParameter('grade', $grade->getId())
         				->setParameter('establishment', $user->getEstablishment()->getId());
         };
 
@@ -79,7 +112,7 @@ class CourseController extends BaseController
         if ($form->isSubmitted() && $form->isValid() && $form->get('save')->isClicked()) {
             $this->getEntityManager()->insert($course , $this->getUser());
             $this->flashSuccessMsg('course.add.success');
-            return $this->redirectToRoute('course_index');
+            return $this->redirectToRoute('course_new');
         }
 
         return array(

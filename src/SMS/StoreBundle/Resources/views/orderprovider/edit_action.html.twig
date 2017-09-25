@@ -1,0 +1,156 @@
+<script type="text/javascript">
+  $(function() {
+    show();
+    var a = UIkit.modal("#modal_new_product", {
+      center: !0
+    });
+    function show() {
+      // show preloader
+      altair_helpers.content_preloader_show('md');
+      $.ajax({
+        url: Routing.generate('store_order_line_show', {id: '{{ orderProvider.id }}'}),
+        type: "GET",
+        cache: false,
+        success: function(html) {
+          $('#purchase_line').empty().append(html);
+          // reinitialize checkboxes
+          altair_md.checkbox_radio($(".wizard-icheck"));
+          // reinitialize table check all
+          $table_check = $('.table_check');
+          $table_check.each(function() {
+              var $this = $(this),
+                  $checkAll = $this.find('.check_all'),
+                  $checkRow = $this.find('.check_row');
+
+              $checkAll
+                  .on('ifChecked',function() {
+                      $checkRow.iCheck('check');
+                  })
+                  .on('ifUnchecked',function() {
+                      $checkRow.iCheck('uncheck');
+                  });
+
+              $checkRow
+                  .on('ifChecked',function(event) {
+                      $(event.currentTarget).closest('tr').addClass('row_checked');
+                  })
+                  .on('ifUnchecked',function(event) {
+                      $(event.currentTarget).closest('tr').removeClass('row_checked');
+                  })
+          });
+          // hide preloader
+          altair_helpers.content_preloader_hide();
+        },
+        error: function(XMLHttpRequest, textStatus, errorThrown) {
+          console.log(XMLHttpRequest + ' ' + textStatus + ' ' + errorThrown);
+          new UIkit.notify({
+            message: "<a href='#' class='notify-action'><span class='uk-icon-times'></span></a>" + textStatus,
+            status: "error",
+            timeout: 5000,
+            group: null,
+            pos: 'top-right'
+          });
+        }
+      });
+    }
+    $(document).on('click', '#new_purchase_line', function(event) {
+      a.isActive()
+        ? a.hide()
+        : a.show();
+      $('#product').empty().append($(this).data('id'));
+      $('#quantity').val('');
+      $('#quantity_elem').find('.md-input-wrapper').removeClass('md-input-filled');
+    });
+    $(document).on('click', '#edit', function(event) {
+      a.isActive()
+        ? a.hide()
+        : a.show();
+      $('#product').empty().append($(this).data('id'));
+      $('#quantity').val($(this).data('quantity'));
+      $('#quantity_elem').find('.md-input-wrapper').addClass('md-input-filled');
+    });
+    $(document).on('click', '#new_action', function(event) {
+      var $productID = $('#product').html();
+      var $quantity = $('#quantity').val();
+      {% set token = csrf_token('order') %}
+      $.ajax({
+        url: Routing.generate('bulk_store_order_db_crud', {id: '{{ orderProvider.id }}'}),
+        type: "POST",
+        cache: false,
+        data: {
+          'token': '{{ token }}',
+          'quantity': $quantity,
+          'action' : 'new_edit',
+          'product' : $productID
+        },
+        success: function(success) {
+          var result = JSON.parse(success);
+          new UIkit.notify({
+            message: "<a href='#' class='notify-action'><span class='uk-icon-times'></span></a>" + result.msg,
+            status: "success",
+            timeout: 100,
+            group: null,
+            pos: 'top-right'
+          });
+          show();
+        },
+        error: function(XMLHttpRequest, textStatus, errorThrown) {
+          console.log(XMLHttpRequest + ' ' + textStatus + ' ' + errorThrown);
+          new UIkit.notify({
+            message: "<a href='#' class='notify-action'><span class='uk-icon-times'></span></a>" + textStatus,
+            status: "error",
+            timeout: 5000,
+            group: null,
+            pos: 'top-right'
+          });
+        }
+      });
+      a.hide();
+    });
+
+    $(document).on('click', '.cart_delete', function(event) {
+      var $this = $(this);
+      var length = $("input.check_row:checkbox:checked").length;
+      if (length > 0) {
+        UIkit.modal.confirm("{{ 'datatables.bulk.confirmMsg'|trans({}, 'messages') }} ", function() {
+          var checkValues = $('input.check_row:checkbox:checked').map(function() {
+            return {'value' : $(this).val()};
+          }).get();
+          {% set token = csrf_token('multiselect') %}
+          $.ajax({
+            url: Routing.generate('store_order_line_bulk_delete'),
+            type: "POST",
+            cache: false,
+            data: {
+              'token': '{{ token }}',
+              'data': checkValues ,
+            },
+            success: function(success) {
+              new UIkit.notify({
+                message: "<a href='#' class='notify-action'><span class='uk-icon-times'></span></a>" + success,
+                status: "error",
+                timeout: 5000,
+                group: null,
+                pos: 'top-right'
+              });
+              show();
+            },
+            error: function(XMLHttpRequest, textStatus, errorThrown) {
+              console.log(XMLHttpRequest + ' ' + textStatus + ' ' + errorThrown);
+              new UIkit.notify({
+                message: "<a href='#' class='notify-action'><span class='uk-icon-times'></span></a>" + textStatus,
+                status: "error",
+                timeout: 5000,
+                group: null,
+                pos: 'top-right'
+              });
+            }
+          });
+
+        });
+      } else {
+        UIkit.modal.alert("{{ 'datatables.bulk.selectError'|trans({}, 'messages') }}");
+      }
+    });
+  });
+</script>

@@ -152,4 +152,5 @@ class ScheduleController extends BaseController
         }
 
         return $this->get('sms.datatable.schedule');
-    }}
+    }
+}

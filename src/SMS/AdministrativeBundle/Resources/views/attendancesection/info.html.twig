@@ -1,0 +1,25 @@
+{% extends 'layout/base.html.twig' %}
+
+{% block sub_title_page %}
+	<p class="uk-text-bold uk-margin-small-top">
+		<i class="uk-input-group-icon uk-icon-calendar"></i> {{attendance_date|date("d/m/Y")}}
+	</p>
+{% endblock %}
+
+{% block sticky_button %}
+<a class="md-fab md-fab-accent md-fab-wave waves-effect waves-button" href="{{ url('attendance_section_show' , {'id' : section.id}) }}">
+	<i class="material-icons">&#xE879;</i>
+</a>
+{% endblock %}
+
+{% block title_page %}
+ {{ section.grade }} ({{ section.sectionName }})
+{% endblock %}
+
+{% block body %}
+    <div class="md-card uk-margin-medium-bottom">
+        <div class="md-card-content">
+            {{ datatable_render(attendances) }}
+        </div>
+    </div>
+{% endblock %}

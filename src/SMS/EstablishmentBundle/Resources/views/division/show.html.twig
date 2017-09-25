@@ -1,16 +1,17 @@
 {% extends 'layout/base.html.twig' %}
 
-{% block heading_actions %}
+{% block sub_title_page %}
   <a href="{{ path('division_index') }}">
-    <i class="md-icon material-icons">&#xE5C4;</i>
+    {{ 'division.list.title'|trans }}
   </a>
-  <a href="{{ path('division_new') }}">
-    <i class="md-icon material-icons">&#xE5C8;</i>
+  /
+  <a href="#">
+    {{ 'division.show.title'|trans }}
   </a>
 {% endblock %}
 
 {% block sticky_button %}
-  <a class="md-fab md-fab-primary" href="{{ path('division_edit', { 'id': division.id }) }}">
+  <a class="md-fab md-fab-accent md-fab-wave waves-effect waves-button" href="{{ path('division_edit', { 'id': division.id }) }}">
     <i class="material-icons">&#xE254;</i>
   </a>
 {% endblock %}
@@ -20,16 +21,17 @@
 {% endblock %}
 
 {% block body %}
-  <div class="uk-grid uk-grid-medium" data-uk-grid-margin>
+  <div class="md-card">
+    <div class="md-card-toolbar">
+      <h3 class="md-card-toolbar-heading-text">
+        {{ 'division.show.detail'|trans }}
+      </h3>
+    </div>
+    <div class="md-card-content">
 
-    <div class="uk-width-xLarge-8-10  uk-width-large-7-10">
-      <div class="md-card">
-        <div class="md-card-toolbar">
-          <h3 class="md-card-toolbar-heading-text">
-            {{ 'division.show.detail'|trans }}
-          </h3>
-        </div>
-        <div class="md-card-content">
+      <div class="uk-grid  uk-grid-divider" data-uk-grid-margin>
+
+        <div class="uk-width-xLarge-8-10  uk-width-large-7-10">
           <ul class="md-list">
             <li>
               <div class="md-list-content">
@@ -66,16 +68,11 @@
             </li>
           </ul>
         </div>
-      </div>
-    </div>
-    <div class="uk-width-xLarge-2-10 uk-width-large-3-10">
-      <div class="md-card">
-        <div class="md-card-toolbar">
-          <h3 class="md-card-toolbar-heading-text">
+
+        <div class="uk-width-xLarge-2-10 uk-width-large-3-10">
+          <h3 class="heading_c uk-margin-small-bottom uk-margin-small-top">
             {{ 'author.info'|trans }}
           </h3>
-        </div>
-        <div class="md-card-content">
           <ul class="md-list md-list-addon">
             <li>
               <div class="md-list-addon-element">

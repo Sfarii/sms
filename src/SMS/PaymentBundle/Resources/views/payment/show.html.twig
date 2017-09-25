@@ -1,7 +1,7 @@
 {% extends 'layout/base_no_header.html.twig' %}
 
 {% block sticky_button %}
-  <a class="md-fab md-fab-primary" href="{{ path("payment_new" , { "id" : student.id })}}">
+  <a class="md-fab md-fab-accent md-fab-wave waves-effect waves-button" href="{{ path('payment_new' , { 'id' : student.id })}}">
     <i class="material-icons">&#xE145;</i>
   </a>
 {% endblock %}
@@ -11,93 +11,99 @@
 {% endblock %}
 
 {% block body %}
-  <div class="uk-grid" data-uk-grid-margin data-uk-grid-match id="user_profile">
-    <div class="uk-width-large-7-10">
+  <!-- statistics (small charts) -->
+  <div id="info" class="uk-grid uk-grid-width-large-1-3 uk-grid-width-medium-1-3 uk-grid-medium uk-sortable sortable-handler" data-uk-grid-margin>
+    <div>
       <div class="md-card">
-        <div class="user_heading">
-          <div class="user_heading_avatar">
-            <div class="fileinput-new thumbnail">
-              {% if student.imageName %}
-                <img src="{{ vich_uploader_asset(student, 'imageFile') }}" alt="{{ student.imageName }}"/>
-              {% else %}
-                <img src="{{ asset('assets/img/avatars/user@2x.png') }}" alt="user avatar"/>
-              {% endif %}
-            </div>
+        <div class="md-card-content">
+          <div class="uk-float-right uk-margin-top uk-margin-small-right">
+            <i class="material-icons  md-36">&#xE8A1;</i>
           </div>
-          <div class="user_heading_content">
-            <h2 class="heading_b uk-margin-bottom">
-              <span class="uk-text-truncate">{{ student.username }}</span>
-              <span class="sub-heading">{{ student.firstName }}
-                {{ student.lastName }}</span>
-            </h2>
-          </div>
-          <div class="md-fab-wrapper">
-            <a class="md-fab md-fab-small md-fab-success" href="{{ path('payment_index') }}">
-              <i class="material-icons">&#xE88A;</i>
-            </a>
-          </div>
-        </div>
-        <div class="user_content">
-          <div class="uk-margin-medium-bottom">
-            <ul class="uk-tab">
-              <li>
-                <a href="{{ path("student_show" , { "id" : student.id})}}">{{ "student.show.title"|trans}}</a>
-              </li>
-              <li class="uk-active">
-                <a href="{{ path("user_payment_show" , { "id" : student.id})}}">{{ "payment.show.detail"|trans}}</a>
-              </li>
-              <li>
-                <a href="{{ path("user_registration_show" , { "id" : student.id})}}">{{ "registration.show.detail"|trans}}</a>
-              </li>
-            </ul>
-          </div>
-          <div class="uk-margin-medium-bottom uk-margin-medium-top">
-            {{ datatable_render(payments) }}
-          </div>
+          <span class=" uk-text-large  uk-text-bold">{{'payment.field.totalRegistration'|trans }}</span>
+          <h2 class="uk-margin-remove">
+            <span id="student">
+              {{ student.registrations|length }}
+              {{ 'payment.unit.registration'|trans }}
+            </span>
+          </h2>
         </div>
       </div>
     </div>
-    <div class="uk-width-xLarge-2-10 uk-width-large-3-10">
+    <div>
       <div class="md-card">
         <div class="md-card-content">
-          <ul class="md-list md-list-addon">
-            <li>
-              <div class="md-list-addon-element">
-                <i class="md-list-addon-icon material-icons">&#xE25C;</i>
-              </div>
-              <div class="md-list-content">
-                <span class="md-list-heading">
-                  {% if paymentsInfo.credit %}
-                    {{ paymentsInfo.credit }}
-                  {% else %}
-                    0
-                  {% endif %}
-                  {{ 'payment.unit.price'|trans }}
-                </span>
-                <span class="uk-text-small uk-text-muted">{{ 'payment.field.credit'|trans }}</span>
-              </div>
-            </li>
-            <li>
-              <div class="md-list-addon-element">
-                <i class="md-list-addon-icon material-icons">&#xE227;</i>
-              </div>
-              <div class="md-list-content">
-                <span class="md-list-heading">
-                  {% if paymentsInfo.price %}
-                    {{ paymentsInfo.price }}
-                  {% else %}
-                    0
-                  {% endif %}
-                  {{ 'payment.unit.price'|trans }}
-                </span>
-                <span class="uk-text-small uk-text-muted">{{ 'payment.field.price'|trans }}</span>
-              </div>
-            </li>
-          </ul>
+          <div class="uk-float-right uk-margin-top uk-margin-small-right">
+            <i class="material-icons  md-36">&#xE227;</i>
+          </div>
+          <span class=" uk-text-large  uk-text-bold">{{'payment.field.totalPrice'|trans }}</span>
+          <h2 class="uk-margin-remove" id="registrationFee">
+            {% if stats.paymentsInfo.price %}
+              {{ stats.paymentsInfo.price|price }}
+            {% else %}
+              0
+            {% endif %}
+            {{ 'payment.unit.price'|trans }}
+          </h2>
+        </div>
+      </div>
+    </div>
+    <div>
+      <div class="md-card">
+        <div class="md-card-content">
+          <div class="uk-float-right uk-margin-top uk-margin-small-right">
+            <i class="material-icons  md-36">&#xE25C;</i>
+          </div>
+          <span class=" uk-text-large  uk-text-bold">{{'payment.field.totalCredit'|trans }}</span>
+          <h2 class="uk-margin-remove" id="registrationFee">
+            {% if stats.paymentsInfo.credit %}
+              {{ stats.paymentsInfo.credit|price }}
+            {% else %}
+              0
+            {% endif %}
+            {{ 'payment.unit.price'|trans }}
+          </h2>
         </div>
       </div>
     </div>
   </div>
+
+  <div class="md-card">
+    <div class="user_heading">
+      <div class="user_heading_avatar">
+        <div class="fileinput-new thumbnail">
+          <a href="{{ path('student_show', { 'id' : student.id})}}">
+            {% if student.imageName %}
+              <img src="{{ vich_uploader_asset(student, 'imageFile') }}" alt="{{ student.imageName }}"/>
+            {% else %}
+              <img src="{{ asset('assets/img/avatars/user@2x.png') }}" alt="user avatar"/>
+            {% endif %}
+          </a>
+        </div>
+      </div>
+      <div class="user_heading_content">
+        <h2 class="heading_b uk-margin-bottom">
+          <span class="uk-text-truncate">{{ student.username }}</span>
+          <a href="{{ path('student_show', { 'id' : student.id})}}">
+            <span class="sub-heading">{{ student.firstName }}
+              {{ student.lastName }}</span>
+          </a>
+        </h2>
+      </div>
+      <div class="md-fab-wrapper">
+        <a class="md-fab md-fab-small md-fab-accent" href="{{ path('payment_index') }}">
+          <i class="material-icons">&#xE7EF;</i>
+        </a>
+      </div>
+    </div>
+    <div class="user_content">
+
+      <div class="uk-margin-medium-top">
+        {{ datatable_render(payments) }}
+      </div>
+
+    </div>
+  </div>
+
 {% endblock %}
 {% block head_javascripts %}
   {{ parent() }}
@@ -116,4 +122,7 @@
   <!-- datatables custom integration -->
   <script src="{{ asset('assets/js/custom/datatables/datatables.uikit.min.js')}}"></script>
   <script src="{{ asset('assets/js/uikit_custom_dataTable.js')}}"></script>
+  <!-- page specific plugins -->
+  <script src="{{ asset('assets/plugins/chart/echarts.min.js')}}"></script>
+  {% include '@SMSPayment/js/echarts.html.twig' %}
 {% endblock %}

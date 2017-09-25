@@ -38,9 +38,23 @@ class Product
     /**
      * @var string
      *
-     * @ORM\Column(name="status", type="string", length=150)
+     * @ORM\Column(name="status", type="string", length=100, nullable=true)
      */
     private $status;
+
+    /**
+     * @var string
+     *
+     * @ORM\Column(name="sku", type="string", length=150 , nullable=true)
+     */
+    private $sku;
+
+    /**
+     * @var string
+     *
+     * @ORM\Column(name="description", type="text")
+     */
+    private $description;
 
     /**
      * @var string
@@ -62,6 +76,9 @@ class Product
      * @ORM\Column(name="stock", type="integer")
      */
     private $stock;
+    private $quantity;
+
+
 
     /**
      * Many Products have One ProductType.
@@ -97,7 +114,7 @@ class Product
      * @ORM\ManyToOne(targetEntity="SMS\UserBundle\Entity\User" ,fetch="EXTRA_LAZY")
      * @ORM\JoinColumn(name="user_id", referencedColumnName="id")
      */
-    private $user;
+    private $author;
 
     /**
      * NOTE: This is not a mapped field of entity metadata, just a simple property.
@@ -126,6 +143,24 @@ class Product
     protected $updatedAt;
 
     /**
+     * One Product has Many OrderLine.
+     * @ORM\OneToMany(targetEntity="OrderLine", mappedBy="product",fetch="EXTRA_LAZY")
+     */
+    private $usersOrders;
+
+    /**
+     * One Product has Many StoreOrderLine.
+     * @ORM\OneToMany(targetEntity="StoreOrderLine", mappedBy="product",fetch="EXTRA_LAZY")
+     */
+    private $providersOrders;
+
+    /**
+     * One Product has Many PurchaseLine.
+     * @ORM\OneToMany(targetEntity="PurchaseLine", mappedBy="product",fetch="EXTRA_LAZY")
+     */
+    private $purchases;
+
+    /**
     * @ORM\PrePersist
     * @ORM\PreUpdate
     */
@@ -138,207 +173,6 @@ class Product
        }
    }
 
-    /**
-     * Get id
-     *
-     * @return int
-     */
-    public function getId()
-    {
-        return $this->id;
-    }
-
-    /**
-     * Set productName
-     *
-     * @param string $productName
-     *
-     * @return Product
-     */
-    public function setProductName($productName)
-    {
-        $this->productName = $productName;
-
-        return $this;
-    }
-
-    /**
-     * Get productName
-     *
-     * @return string
-     */
-    public function getProductName()
-    {
-        return $this->productName;
-    }
-
-    /**
-     * Set price
-     *
-     * @param float $price
-     *
-     * @return Product
-     */
-    public function setPrice($price)
-    {
-        $this->price = $price;
-
-        return $this;
-    }
-
-    /**
-     * Get price
-     *
-     * @return float
-     */
-    public function getPrice()
-    {
-        return $this->price;
-    }
-
-    /**
-     * Set stock
-     *
-     * @param integer $stock
-     *
-     * @return Product
-     */
-    public function setStock($stock)
-    {
-        $this->stock = $stock;
-
-        return $this;
-    }
-
-    /**
-     * Get stock
-     *
-     * @return int
-     */
-    public function getStock()
-    {
-        return $this->stock;
-    }
-
-    /**
-     * Set created
-     *
-     * @param \DateTime $created
-     *
-     * @return Product
-     */
-    public function setCreated($created)
-    {
-        $this->created = $created;
-
-        return $this;
-    }
-
-    /**
-     * Get created
-     *
-     * @return \DateTime
-     */
-    public function getCreated()
-    {
-        return $this->created;
-    }
-
-    /**
-     * Set updated
-     *
-     * @param \DateTime $updated
-     *
-     * @return Product
-     */
-    public function setUpdated($updated)
-    {
-        $this->updated = $updated;
-
-        return $this;
-    }
-
-    /**
-     * Get updated
-     *
-     * @return \DateTime
-     */
-    public function getUpdated()
-    {
-        return $this->updated;
-    }
-
-    /**
-     * Set productType
-     *
-     * @param \SMS\StoreBundle\Entity\ProductType $productType
-     *
-     * @return Product
-     */
-    public function setProductType(\SMS\StoreBundle\Entity\ProductType $productType = null)
-    {
-        $this->productType = $productType;
-
-        return $this;
-    }
-
-    /**
-     * Get productType
-     *
-     * @return \SMS\StoreBundle\Entity\ProductType
-     */
-    public function getProductType()
-    {
-        return $this->productType;
-    }
-
-    /**
-     * Set establishment
-     *
-     * @param \SMS\EstablishmentBundle\Entity\Establishment $establishment
-     *
-     * @return Product
-     */
-    public function setEstablishment(\SMS\EstablishmentBundle\Entity\Establishment $establishment = null)
-    {
-        $this->establishment = $establishment;
-
-        return $this;
-    }
-
-    /**
-     * Get establishment
-     *
-     * @return \SMS\EstablishmentBundle\Entity\Establishment
-     */
-    public function getEstablishment()
-    {
-        return $this->establishment;
-    }
-
-    /**
-     * Set user
-     *
-     * @param \SMS\UserBundle\Entity\User $user
-     *
-     * @return Product
-     */
-    public function setUser(\SMS\UserBundle\Entity\User $user = null)
-    {
-        $this->user = $user;
-
-        return $this;
-    }
-
-    /**
-     * Get user
-     *
-     * @return \SMS\UserBundle\Entity\User
-     */
-    public function getUser()
-    {
-        return $this->user;
-    }
 
     /**
      * If manually uploading a file (i.e. not using Symfony Form) ensure an instance
@@ -454,5 +288,390 @@ class Product
     public function getActive()
     {
         return $this->active;
+    }
+
+    /**
+     * Set description
+     *
+     * @param string $description
+     *
+     * @return Product
+     */
+    public function setDescription($description)
+    {
+        $this->description = $description;
+
+        return $this;
+    }
+
+    /**
+     * Get description
+     *
+     * @return string
+     */
+    public function getDescription()
+    {
+        return $this->description;
+    }
+
+    /**
+     * Set sku
+     *
+     * @param string $sku
+     *
+     * @return Product
+     */
+    public function setSku($sku)
+    {
+        $this->sku = $sku;
+
+        return $this;
+    }
+
+    /**
+     * Get sku
+     *
+     * @return string
+     */
+    public function getSku()
+    {
+        return $this->sku;
+    }
+
+    /**
+     * Get id
+     *
+     * @return integer
+     */
+    public function getId()
+    {
+        return $this->id;
+    }
+
+    /**
+     * Set productName
+     *
+     * @param string $productName
+     *
+     * @return Product
+     */
+    public function setProductName($productName)
+    {
+        $this->productName = $productName;
+
+        return $this;
+    }
+
+    /**
+     * Get productName
+     *
+     * @return string
+     */
+    public function getProductName()
+    {
+        return $this->productName;
+    }
+
+    /**
+     * Set price
+     *
+     * @param float $price
+     *
+     * @return Product
+     */
+    public function setPrice($price)
+    {
+        $this->price = $price;
+
+        return $this;
+    }
+
+    /**
+     * Get price
+     *
+     * @return float
+     */
+    public function getPrice()
+    {
+        return $this->price;
+    }
+
+    /**
+     * Set stock
+     *
+     * @param integer $stock
+     *
+     * @return Product
+     */
+    public function setStock($stock)
+    {
+        $this->stock = $stock;
+
+        return $this;
+    }
+
+    /**
+     * Get stock
+     *
+     * @return integer
+     */
+    public function getStock()
+    {
+        return $this->stock;
+    }
+
+    /**
+     * Set Quantity
+     *
+     * @param integer $Quantity
+     *
+     * @return Product
+     */
+    public function setQuantity($quantity)
+    {
+        $this->quantity = $quantity;
+
+        return $this;
+    }
+
+    /**
+     * Get Quantity
+     *
+     * @return integer
+     */
+    public function getQuantity()
+    {
+        return $this->quantity;
+    }
+
+    /**
+     * Set created
+     *
+     * @param \DateTime $created
+     *
+     * @return Product
+     */
+    public function setCreated($created)
+    {
+        $this->created = $created;
+
+        return $this;
+    }
+
+    /**
+     * Get created
+     *
+     * @return \DateTime
+     */
+    public function getCreated()
+    {
+        return $this->created;
+    }
+
+    /**
+     * Set updated
+     *
+     * @param \DateTime $updated
+     *
+     * @return Product
+     */
+    public function setUpdated($updated)
+    {
+        $this->updated = $updated;
+
+        return $this;
+    }
+
+    /**
+     * Get updated
+     *
+     * @return \DateTime
+     */
+    public function getUpdated()
+    {
+        return $this->updated;
+    }
+
+    /**
+     * Set productType
+     *
+     * @param \SMS\StoreBundle\Entity\ProductType $productType
+     *
+     * @return Product
+     */
+    public function setProductType(\SMS\StoreBundle\Entity\ProductType $productType = null)
+    {
+        $this->productType = $productType;
+
+        return $this;
+    }
+
+    /**
+     * Get productType
+     *
+     * @return \SMS\StoreBundle\Entity\ProductType
+     */
+    public function getProductType()
+    {
+        return $this->productType;
+    }
+
+    /**
+     * Set establishment
+     *
+     * @param \SMS\EstablishmentBundle\Entity\Establishment $establishment
+     *
+     * @return Product
+     */
+    public function setEstablishment(\SMS\EstablishmentBundle\Entity\Establishment $establishment = null)
+    {
+        $this->establishment = $establishment;
+
+        return $this;
+    }
+
+    /**
+     * Get establishment
+     *
+     * @return \SMS\EstablishmentBundle\Entity\Establishment
+     */
+    public function getEstablishment()
+    {
+        return $this->establishment;
+    }
+
+    /**
+     * Set author
+     *
+     * @param \SMS\UserBundle\Entity\User $author
+     *
+     * @return Product
+     */
+    public function setAuthor(\SMS\UserBundle\Entity\User $author = null)
+    {
+        $this->author = $author;
+
+        return $this;
+    }
+
+    /**
+     * Get author
+     *
+     * @return \SMS\UserBundle\Entity\User
+     */
+    public function getAuthor()
+    {
+        return $this->author;
+    }
+    /**
+     * Constructor
+     */
+    public function __construct()
+    {
+        $this->usersOrders = new \Doctrine\Common\Collections\ArrayCollection();
+        $this->providersOrders = new \Doctrine\Common\Collections\ArrayCollection();
+        $this->purchases = new \Doctrine\Common\Collections\ArrayCollection();
+    }
+
+    /**
+     * Add usersOrder
+     *
+     * @param \SMS\StoreBundle\Entity\OrderLine $usersOrder
+     *
+     * @return Product
+     */
+    public function addUsersOrder(\SMS\StoreBundle\Entity\OrderLine $usersOrder)
+    {
+        $this->usersOrders[] = $usersOrder;
+
+        return $this;
+    }
+
+    /**
+     * Remove usersOrder
+     *
+     * @param \SMS\StoreBundle\Entity\OrderLine $usersOrder
+     */
+    public function removeUsersOrder(\SMS\StoreBundle\Entity\OrderLine $usersOrder)
+    {
+        $this->usersOrders->removeElement($usersOrder);
+    }
+
+    /**
+     * Get usersOrders
+     *
+     * @return \Doctrine\Common\Collections\Collection
+     */
+    public function getUsersOrders()
+    {
+        return $this->usersOrders;
+    }
+
+    /**
+     * Add providersOrder
+     *
+     * @param \SMS\StoreBundle\Entity\StoreOrderLine $providersOrder
+     *
+     * @return Product
+     */
+    public function addProvidersOrder(\SMS\StoreBundle\Entity\StoreOrderLine $providersOrder)
+    {
+        $this->providersOrders[] = $providersOrder;
+
+        return $this;
+    }
+
+    /**
+     * Remove providersOrder
+     *
+     * @param \SMS\StoreBundle\Entity\StoreOrderLine $providersOrder
+     */
+    public function removeProvidersOrder(\SMS\StoreBundle\Entity\StoreOrderLine $providersOrder)
+    {
+        $this->providersOrders->removeElement($providersOrder);
+    }
+
+    /**
+     * Get providersOrders
+     *
+     * @return \Doctrine\Common\Collections\Collection
+     */
+    public function getProvidersOrders()
+    {
+        return $this->providersOrders;
+    }
+
+    /**
+     * Add purchase
+     *
+     * @param \SMS\StoreBundle\Entity\PurchaseLine $purchase
+     *
+     * @return Product
+     */
+    public function addPurchase(\SMS\StoreBundle\Entity\PurchaseLine $purchase)
+    {
+        $this->purchases[] = $purchase;
+
+        return $this;
+    }
+
+    /**
+     * Remove purchase
+     *
+     * @param \SMS\StoreBundle\Entity\PurchaseLine $purchase
+     */
+    public function removePurchase(\SMS\StoreBundle\Entity\PurchaseLine $purchase)
+    {
+        $this->purchases->removeElement($purchase);
+    }
+
+    /**
+     * Get purchases
+     *
+     * @return \Doctrine\Common\Collections\Collection
+     */
+    public function getPurchases()
+    {
+        return $this->purchases;
     }
 }

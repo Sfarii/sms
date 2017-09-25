@@ -80,6 +80,8 @@ echarts_table_pie = {
   }
 }
 
+
+
 echarts_bar = {
     init: function() {
       var $elem = $("[data-echarts-bar],.data-echarts-bar");

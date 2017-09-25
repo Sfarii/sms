@@ -12,7 +12,7 @@ use Symfony\Bridge\Doctrine\Validator\Constraints\UniqueEntity;
  * @ORM\Table(name="schedule")
  * @ORM\Entity(repositoryClass="SMS\StudyPlanBundle\Repository\ScheduleRepository")
  * @UniqueEntity(fields={"section" , "day" , "division" , "sessions" , "establishment"} , repositoryMethod ="uniqueSectionSchedule", errorPath="sessions")
-* @UniqueEntity(fields={"professor" , "day" , "division" , "sessions" , "establishment"} , repositoryMethod ="uniqueProfessorSchedule", errorPath="professor")
+ * @UniqueEntity(fields={"professor" , "day" , "division" , "sessions" , "establishment"} , repositoryMethod ="uniqueProfessorSchedule", errorPath="professor")
  * @ORM\HasLifecycleCallbacks
  */
 class Schedule
@@ -56,7 +56,7 @@ class Schedule
 
     /**
      * Many Schedules have One Course.
-     * @ORM\ManyToOne(targetEntity="Course",fetch="EXTRA_LAZY")
+     * @ORM\ManyToOne(targetEntity="Course", inversedBy="schedules",fetch="EXTRA_LAZY")
      * @ORM\JoinColumn(name="course_id", referencedColumnName="id")
      * @Assert\NotBlank()
      */

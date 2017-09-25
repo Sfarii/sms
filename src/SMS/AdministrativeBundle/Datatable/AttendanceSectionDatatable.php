@@ -16,9 +16,8 @@ class AttendanceSectionDatatable extends AbstractDatatableView
     /**
      * @var String Class Names
      */
-    protected $sectionClass;
+    protected $divisionClass;
     protected $sessionClass;
-    protected $status;
 
     /**
      * Session class
@@ -31,27 +30,13 @@ class AttendanceSectionDatatable extends AbstractDatatableView
     }
 
     /**
-     * status
-     *
-     * @param Status
-     */
-    public function setStatus($status)
-    {
-        $this->status = array('' => $this->translator->trans('filter.field.all') );
-
-        foreach ($status as $key => $value) {
-          $this->status[$key] = $this->translator->trans($value);
-        }
-    }
-
-    /**
      * Section class
      *
      * @param String Class Names
      */
-    function setSectionClass( $sectionClass)
+    function setDivisionClass( $divisionClass)
     {
-        $this->sectionClass = $sectionClass;
+        $this->divisionClass = $divisionClass;
     }
 
     /**
@@ -60,7 +45,7 @@ class AttendanceSectionDatatable extends AbstractDatatableView
     public function buildDatatable(array $options = array())
     {
       $establishment = $this->securityToken->getToken()->getUser()->getEstablishment();
-      $sections = $this->em->getRepository($this->sectionClass)->findBy(array("establishment" => $establishment));
+      $divisions = $this->em->getRepository($this->divisionClass)->findBy(array("establishment" => $establishment));
       $sessions = $this->em->getRepository($this->sessionClass)->findBy(array("establishment" => $establishment));
 
         $this->callbacks->set(array(
@@ -92,7 +77,7 @@ class AttendanceSectionDatatable extends AbstractDatatableView
         ));
 
         $this->ajax->set(array(
-            'url' => $this->router->generate('attendancestudent_results', array('id' => $options['id'])),
+            'url' => $this->router->generate('attendance_section_results', array('id' => $options['id'])),
             'type' => 'GET',
             'pipeline' => 0
         ));
@@ -100,8 +85,17 @@ class AttendanceSectionDatatable extends AbstractDatatableView
         $this->columnBuilder
         ->add('date', 'datetime', array(
             'title' => $this->translator->trans('attendance_student.field.date'),
-            'date_format' => "DD/MM/YY",
+            'date_format' => "LL",
             'filter' => array('daterange', array('class' => "md-input"))
+        ))
+
+        ->add('course.division.divisionName', 'column', array(
+            'title' => $this->translator->trans('attendance_professor.field.divisionName'),
+            'filter' => array('select', array(
+                'search_type' => 'eq',
+                'select_options' => array('' => $this->translator->trans('filter.field.all')) + $this->getCollectionAsOptionsArray($divisions, 'divisionName', 'divisionName'),
+                'class' => "tablesorter-filter"
+            ))
         ))
         ->add('session.sessionName', 'column', array(
             'title' => $this->translator->trans('attendance_student.field.sessionName'),
@@ -117,13 +111,21 @@ class AttendanceSectionDatatable extends AbstractDatatableView
                 'class' => "md-input"
             ))
         ))
-        ->add('status', 'column', array(
-            'title' => $this->translator->trans('attendance_student.field.status'),
-            'filter' => array('select', array(
-                'search_type' => 'eq',
-                'select_options' => $this->status,
-                'class' => "tablesorter-filter"
-            )),
+        ->add(null, 'action', array(
+            'title' => $this->translator->trans('datatables.actions.title'),
+            'actions' => array(
+                array(
+                    'route' => 'attendance_index',
+                    'route_parameters' => array(
+                        'id' => 'id'
+                    ),
+                    'icon' => '&#xE8F4;',
+                    'attributes' => array(
+                        'rel' => 'tooltip',
+                        'title' => $this->translator->trans('datatables.actions.show'),
+                    ),
+                )
+            )
         ))
         ;
     }
@@ -133,7 +135,7 @@ class AttendanceSectionDatatable extends AbstractDatatableView
      */
     public function getEntity()
     {
-        return 'SMS\AdministrativeBundle\Entity\AttendanceStudent';
+        return 'SMS\AdministrativeBundle\Entity\AttendanceSection';
     }
 
     /**

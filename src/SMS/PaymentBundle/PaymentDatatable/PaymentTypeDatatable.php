@@ -61,14 +61,14 @@ class PaymentTypeDatatable extends AbstractDatatableView
                         'attributes' => array(
                             'rel' => 'tooltip',
                             'title' => $this->translator->trans('action.delete'),
-                            'class' => 'md-btn buttons-copy buttons-html5',
+                            'class' => 'md-btn md-btn-primary md-btn-wave-light waves-effect waves-button waves-light',
                             'role' => 'button'
                         ),
                     ),
                 )
             ))
-            ->add('TypePaymentName', 'column', array(
-                'title' => $this->translator->trans('paymenttype.field.TypePaymentName'),
+            ->add('typePaymentName', 'column', array(
+                'title' => $this->translator->trans('paymenttype.field.typePaymentName'),
             ))
             ->add('price', 'column', array(
                 'title' => $this->translator->trans('paymenttype.field.price'),
@@ -78,12 +78,23 @@ class PaymentTypeDatatable extends AbstractDatatableView
                 'title' => $this->translator->trans('paymenttype.field.registrationFee'),
                 "render" => $this->translator->trans('payment.unit.price')
             ))
-            ->add('user.username', 'column', array(
+            ->add('author.username', 'column', array(
                 'title' => $this->translator->trans('author.creator'),
             ))
             ->add(null, 'action', array(
                 'title' => $this->translator->trans('datatables.actions.title'),
                 'actions' => array(
+                    array(
+                        'route' => 'paymenttype_registration_new',
+                        'route_parameters' => array(
+                            'id' => 'id'
+                        ),
+                        'icon' => '&#xE7FE;',
+                        'attributes' => array(
+                            'rel' => 'tooltip',
+                            'title' => $this->translator->trans('paymenttype.registration.title'),
+                        ),
+                    ),
                     array(
                         'route' => 'paymenttype_show',
                         'route_parameters' => array(
@@ -104,6 +115,18 @@ class PaymentTypeDatatable extends AbstractDatatableView
                         'attributes' => array(
                             'rel' => 'tooltip',
                             'title' => $this->translator->trans('datatables.actions.edit'),
+                        ),
+
+                    ),
+                    array(
+                        'route' => 'paymenttype_statistics',
+                        'route_parameters' => array(
+                            'id' => 'id'
+                        ),
+                        'icon' => '&#xE8B8;',
+                        'attributes' => array(
+                            'rel' => 'tooltip',
+                            'title' => $this->translator->trans('datatables.actions.statistics'),
                         ),
                     )
                 )

@@ -24,8 +24,6 @@ class GradeRepository extends EntityRepository
   		return $this->createQueryBuilder('grade')
   				->join('grade.establishment', 'establishment')
   				->andWhere('establishment.id = :establishment')
-  				->setParameter('establishment', $establishment->getId())
-  				->getQuery()
-  				->getResult();
+  				->setParameter('establishment', $establishment->getId());
   	}
 }

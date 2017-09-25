@@ -57,6 +57,20 @@ class PaymentDatatable extends AbstractDatatableView
             )
         ));
 
+        $this->features->set(array(
+            'extensions' => array(
+                'buttons' =>
+                    array(
+                        'excel',
+                        'pdf',
+                        array(
+                            'text' => 'Reload',
+                            'action' => ':dataTable:reload.js.twig'
+                        )
+                    ),
+                'responsive' => true
+            )
+        ));
 
         $this->options->set(array(
             'display_start' => 0,
@@ -86,6 +100,27 @@ class PaymentDatatable extends AbstractDatatableView
         ));
 
         $this->columnBuilder
+            ->add(null, 'multiselect', array(
+                'actions' => array(
+                    array(
+                        'route' => 'payment_bulk_delete',
+                        'icon' => '&#xE872;',
+                        'label' => $this->translator->trans('action.delete'),
+                        'attributes' => array(
+                            'rel' => 'tooltip',
+                            'title' => $this->translator->trans('action.delete'),
+                            'class' => 'md-btn md-btn-primary md-btn-wave-light waves-effect waves-button waves-light',
+                            'role' => 'button'
+                        ),
+                    ),
+                )
+            ))
+            ->add('reference', 'column', array(
+                'title' => $this->translator->trans('payment.field.reference'),
+                'filter' => array('text', array(
+                    'class' => "md-input"
+                )),
+            ))
             ->add('month', 'column', array(
                 'title' => $this->translator->trans('payment.field.month'),
                 'filter' => array('select', array(
@@ -108,7 +143,7 @@ class PaymentDatatable extends AbstractDatatableView
                 )),
                 "render" => $this->translator->trans('payment.unit.price')
             ))
-            ->add('paymentType.TypePaymentName', 'column', array(
+            ->add('paymentType.typePaymentName', 'column', array(
                 'title' => $this->translator->trans('paymentType.field.TypePaymentName'),
                 'filter' => array('select', array(
                     'search_type' => 'eq',
@@ -119,17 +154,6 @@ class PaymentDatatable extends AbstractDatatableView
             ->add(null, 'action', array(
                 'title' => $this->translator->trans('datatables.actions.title'),
                 'actions' => array(
-                    array(
-                        'route' => 'payment_edit',
-                        'route_parameters' => array(
-                            'id' => 'id'
-                        ),
-                        'icon' => '&#xE150;',
-                        'attributes' => array(
-                            'rel' => 'tooltip',
-                            'title' => $this->translator->trans('datatables.actions.edit'),
-                        ),
-                    ),
                     array(
                         'route' => 'payment_pdf',
                         'route_parameters' => array(

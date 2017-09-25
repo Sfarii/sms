@@ -10,4 +10,62 @@ namespace SMS\StoreBundle\Repository;
  */
 class OrderUserRepository extends \Doctrine\ORM\EntityRepository
 {
+  /**
+   * Get orders price by price
+   *
+   * @param SMS/EstablishmentBundle/Entity/Establishment $establishment
+   * @return array
+   */
+  public function findOrderPriceByMonth($establishment)
+  {
+      return $this->createQueryBuilder('user_order')
+                ->select("sum(orderLine.price * orderLine.quantity) as price, MONTH(user_order.orderDate) AS month, establishment.id")
+                ->join('user_order.orderLines', 'orderLine')
+                ->join('user_order.establishment', 'establishment')
+                ->where('establishment.id = :establishment')
+                ->andWhere('user_order.state = 1')
+                ->setParameter('establishment', $establishment->getId())
+                ->groupBy('month')
+                ->getQuery()
+                ->getResult();
+  }
+  /**
+   * Get orders price by price
+   *
+   * @param SMS/EstablishmentBundle/Entity/Establishment $establishment
+   * @return array
+   */
+  public function findOrderPrice($establishment)
+  {
+      return $this->createQueryBuilder('user_order')
+                ->select("sum(orderLine.price * orderLine.quantity) as price, user_order.orderDate AS month, establishment.id")
+                ->join('user_order.orderLines', 'orderLine')
+                ->join('user_order.establishment', 'establishment')
+                ->where('establishment.id = :establishment')
+                ->andWhere('user_order.state = 1')
+                ->setParameter('establishment', $establishment->getId())
+                ->groupBy('user_order.id')
+                ->getQuery()
+                ->getResult();
+  }
+
+  /**
+   * Get orders price by price
+   *
+   * @param SMS/StoreBundle/Entity/Product $product
+   * @return array
+   */
+  public function findOrderPriceByProduct($product)
+  {
+      return $this->createQueryBuilder('user_order')
+                ->select("sum(orderLine.price * orderLine.quantity) as price, user_order.orderDate AS month")
+                ->join('user_order.orderLines', 'orderLine')
+                ->join('orderLine.product', 'product')
+                ->where('product.id = :product')
+                ->andWhere('user_order.state = 1')
+                ->setParameter('product', $product->getId())
+                ->groupBy('user_order.id')
+                ->getQuery()
+                ->getResult();
+  }
 }

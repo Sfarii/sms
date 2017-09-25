@@ -33,20 +33,12 @@ class Registration
     private $registered;
 
     /**
-     * Many Payments have One PaymentType.
-     * @ORM\ManyToOne(targetEntity="PaymentType", inversedBy="payments" ,fetch="EXTRA_LAZY")
+     * Many Registration have One PaymentType.
+     * @ORM\ManyToOne(targetEntity="PaymentType", inversedBy="registrations" ,fetch="EXTRA_LAZY")
      * @ORM\JoinColumn(name="type_payment_id", referencedColumnName="id")
      * @Assert\NotBlank()
      */
     private $paymentType;
-
-    /**
-     * @var array
-     *
-     * @ORM\Column(name="month", type="array")
-     * @Assert\NotBlank()
-     */
-    private $months;
 
     /**
      * @var datetime $created
@@ -71,7 +63,7 @@ class Registration
 
     /**
      * One Student has Many Registrations.
-     * @ORM\ManyToOne(targetEntity="SMS\UserBundle\Entity\Student" ,fetch="EXTRA_LAZY")
+     * @ORM\ManyToOne(targetEntity="SMS\UserBundle\Entity\Student" , inversedBy="registrations" ,fetch="EXTRA_LAZY")
      * @ORM\JoinColumn(name="student_id", referencedColumnName="id")
      */
     private $student;
@@ -88,7 +80,6 @@ class Registration
      */
     public function __construct()
     {
-        $this->registered = true;
     }
 
     /**

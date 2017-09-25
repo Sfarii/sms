@@ -1,109 +1,107 @@
 {% extends 'layout/base_no_header.html.twig' %}
 
 {% block body %}
-<!-- statistics (small charts) -->
-<div class="uk-grid uk-grid-width-large-1-4 uk-grid-width-medium-1-2 uk-grid-medium uk-sortable sortable-handler hierarchical_show" data-uk-grid-margin>
-  <div>
-    <div class="md-card">
-      <div class="md-card-content">
-        <div class="uk-float-right uk-margin-top uk-margin-small-right">
-          <i class="material-icons  md-36">&#xE8D3;</i>
+  <!-- statistics (small charts) -->
+  <div class="uk-grid uk-grid-width-large-1-3 uk-grid-width-medium-1-3 uk-grid-medium uk-sortable sortable-handler hierarchical_show" data-uk-grid-margin>
+    <div>
+      <div class="md-card">
+        <div class="md-card-content">
+          <div class="uk-float-right uk-margin-top uk-margin-small-right">
+            <i class="material-icons  md-36">&#xE8D3;</i>
+          </div>
+          <span class=" uk-text-large  uk-text-bold">{{'dashbord.detail.student'|trans }}</span>
+          <h2 class="uk-margin-remove">
+            <span>
+              {{ info.students }}
+            </span>
+            {{'dashbord.unit.students'|trans }}
+          </h2>
         </div>
-        <span class=" uk-text-large  uk-text-bold">{{'paymenttype.detail.student'|trans }}</span>
-        <h2 class="uk-margin-remove">
-          <span> {{ studentInfo }}
-          </span>
-        </h2>
+      </div>
+    </div>
+    <div>
+      <div class="md-card">
+        <div class="md-card-content">
+          <div class="uk-float-right uk-margin-top uk-margin-small-right">
+            <i class="material-icons md-36">&#xE853;</i>
+          </div>
+          <span class=" uk-text-large  uk-text-bold">{{'dashbord.detail.professor'|trans }}</span>
+          <h2 class="uk-margin-remove">
+            <span>
+              {{ info.professors }}
+            </span>
+            {{'dashbord.unit.professors'|trans }}
+          </h2>
+        </div>
+      </div>
+    </div>
+    <div>
+      <div class="md-card">
+        <div class="md-card-content">
+          <div class="uk-float-right uk-margin-top uk-margin-small-right">
+            <i class="material-icons  md-36">&#xE01B;</i>
+          </div>
+          <span class=" uk-text-large  uk-text-bold">{{'dashbord.detail.session'|trans }}</span>
+          <h2 class="uk-margin-remove">
+            <span>
+              {{ info.courses.totalSessions }}
+            </span>
+            {{'dashbord.unit.sessions'|trans }}
+          </h2>
+        </div>
       </div>
     </div>
   </div>
-  <div>
-    <div class="md-card">
-      <div class="md-card-content">
-        <div class="uk-float-right uk-margin-top uk-margin-small-right">
-          <i class="material-icons md-36">&#xE227;</i>
+  <div class="uk-grid uk-grid-width-large-1-2 uk-grid-width-medium-1-1 uk-grid-medium uk-sortable sortable-handler hierarchical_show" data-uk-grid-margin>
+    <div>
+      <div class="md-card">
+        <div class="md-card-toolbar">
+          <h3 class="md-card-toolbar-heading-text">
+            {{ 'dashbord.stats.professor'|trans }}
+          </h3>
         </div>
-        <span class=" uk-text-large  uk-text-bold">{{'payment.field.totalPrice'|trans }}</span>
-        <h2 class="uk-margin-remove">
-          <span>
-            {% if paymentsInfo.price %}
-              {{ paymentsInfo.price|number_format(3, '.', ',') }}
-            {% else %}
-              0
-            {% endif %}
-            {{ 'payment.unit.price'|trans }}
-          </span>
-        </h2>
-      </div>
-    </div>
-  </div>
-  <div>
-    <div class="md-card">
-      <div class="md-card-content">
-        <div class="uk-float-right uk-margin-top uk-margin-small-right">
-          <i class="material-icons  md-36">&#xE25C;</i>
-        </div>
-        <span class=" uk-text-large  uk-text-bold">{{'payment.field.totalCredit'|trans }}</span>
-        <h2 class="uk-margin-remove">
-          <span class="countUpMe">
-            {% if paymentsInfo.credit %}
-              {{ paymentsInfo.credit|number_format(3, '.', ',') }}
-            {% else %}
-              0
-            {% endif %}
-          </span>{{ 'payment.unit.price'|trans }}</h2>
-      </div>
-    </div>
-  </div>
-  <div>
-    <div class="md-card">
-      <div class="md-card-content">
-        <div class="uk-float-right uk-margin-top uk-margin-small-right">
-          <i class="material-icons  md-36">&#xE263;</i>
-        </div>
-        <span class=" uk-text-large  uk-text-bold">{{'payment.field.totalRegistration'|trans }}</span>
-        <h2 class="uk-margin-remove" id="peity_live_text">
-          {% if paymentsInfo.registrationFee %}
-            {{ paymentsInfo.registrationFee|number_format(3, '.', ',') }}
+        <div class="md-card-content">
+          {% if info.students is empty %}
+            <div class="echart-large uk-container-center">
+              <span class="chart_icon">
+                <i class="material-icons">&#xE88B;</i>
+                <h1 class="uk-text-large">{{ 'dashbord.stats.not_found'|trans }}</h1>
+              </span>
+            </div>
           {% else %}
-            0
+            <div data-echarts-pie data-legend='["{{'gender.male'|trans}}","{{'gender.female'|trans}}","{{'gender.other'|trans}}"]' data-values='{{ info.statsStudents|json_encode|raw }}' class="echart-large"></div>
           {% endif %}
-          {{ 'payment.unit.price'|trans }}
-        </h2>
+        </div>
+      </div>
+    </div>
+    <div>
+      <div class="md-card">
+        <div class="md-card-toolbar">
+          <h3 class="md-card-toolbar-heading-text">
+            {{ 'dashbord.stats.professor'|trans }}
+          </h3>
+        </div>
+        <div class="md-card-content">
+          {% if info.professors is empty %}
+            <div class="echart-large uk-container-center">
+              <span class="chart_icon">
+                <i class="material-icons">&#xE88B;</i>
+                <h1 class="uk-text-large">{{ 'dashbord.stats.not_found'|trans }}</h1>
+              </span>
+            </div>
+          {% else %}
+            <div data-echarts-pie data-legend='["{{'gender.male'|trans}}","{{'gender.female'|trans}}","{{'gender.other'|trans}}"]' data-values='{{ info.statsProfessors|json_encode|raw }}' class="echart-large"></div>
+          {% endif %}
+        </div>
       </div>
     </div>
   </div>
-</div>
-<div class="md-card">
-  <div class="md-card-toolbar">
-    <h3 class="md-card-toolbar-heading-text">
-      {{ 'paymenttype.stats.title'|trans }}
-    </h3>
-  </div>
-  <div class="md-card-content">
-    {% if chart is empty %}
-      <div class="echart-large">
-        <span class="chart_icon">
-          <i class="material-icons">&#xE88B;</i>
-          <h1 class="uk-text-large">{{ 'paymenttype.stats.not_found'|trans }}</h1>
-        </span>
-      </div>
-    {% else %}
-        <div data-echarts-bar data-values='{{ chart|json_encode|raw }}' class="echart-large"></div>
-    {% endif %}
-  </div>
-</div>
 {% endblock %}
 {% block javascripts %}
   {{ parent() }}
   <script src="{{ asset('assets/plugins/chart/echarts.min.js')}}"></script>
   <script src="{{ asset('assets/plugins/easypiechart/jquery.easypiechart.min.js')}}"></script>
-  <script>
-    var month = [];
-    {% for result in chart %}
-      month.push('{{ result.month|trans }}');
-    {% endfor %}
-  </script>
+
   <!-- page specific plugins -->
   {% include '@SMSEstablishment/dashbord/echarts.html.twig' %}
 {% endblock %}

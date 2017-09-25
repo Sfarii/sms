@@ -1,0 +1,19 @@
+{% extends 'layout/base.html.twig' %}
+
+{% block sticky_button %}
+<a class="md-fab md-fab-accent md-fab-wave waves-effect waves-button" href="{{ path('catchuplesson_new') }}">
+    <i class="material-icons">&#xE145;</i>
+</a>
+{% endblock %}
+
+{% block title_page %}
+ {{ 'catchuplesson.list.title'|trans }}
+{% endblock %}
+
+{% block body %}
+    <div class="md-card uk-margin-medium-bottom">
+        <div class="md-card-content">
+            {{ datatable_render(catchUpLessons) }}
+        </div>
+    </div>
+{% endblock %}

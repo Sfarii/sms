@@ -3,7 +3,7 @@
 namespace SMS\StudyPlanBundle\Services;
 
 use Doctrine\ORM\EntityManager;
-use Exception;
+
 /**
  * @author Rami Sfari <rami2sfari@gmail.com>
  * @copyright Copyright (c) 2017, SMS
@@ -29,6 +29,7 @@ class StudyPlanManager
     protected $sessionClass;
     protected $scheduleClass;
     protected $sectionClass;
+    protected $gradeClass;
     protected $professorClass;
     protected $examTypeClass;
     protected $courseClass;
@@ -50,6 +51,14 @@ class StudyPlanManager
     public function setNoteClass($noteClass)
     {
       $this->noteClass = $noteClass;
+    }
+
+    /**
+    * @param String $gradeClass
+    */
+    public function setGradeClass($gradeClass)
+    {
+      $this->gradeClass = $gradeClass;
     }
 
     /**
@@ -173,8 +182,8 @@ class StudyPlanManager
                 if ($object) {
                     $this->_em->remove($object);
                 }
-            } catch (Exception $e) {
-                throw new Exception("Error this Entity has child ", 1);
+            } catch (\Exception $e) {
+                throw new \Exception("Error this Entity has child ", 1);
             }
         }
 
@@ -211,7 +220,7 @@ class StudyPlanManager
     public function addNote($exam, $user = null)
     {
         if (is_null($user)) {
-            throw new Exception("Error No User Found", 1);
+            throw new \Exception("Error No User Found", 1);
         }
         $establishment = $user->getEstablishment()->getId();
         $this->_em->beginTransaction();
@@ -330,6 +339,86 @@ class StudyPlanManager
             array_push($result,array("courseID" => $course->getId() , "courseName" => $course->getCourseName() , "coefficient" => $course->getCoefficient() ,"typeExams" => $resultTypeExam));
         }
         return array("marks" => $result , "typeExams" => $typeExams);
+    }
+
+    /**
+    * get Registred student
+    *
+    * @param SMS\AdministrativeBundle\Form\SearchType $form
+    * @param SMS\EstablishmentBundle\Entity\Establishment $establishment
+    */
+    public function getAllStudents($form , $establishment)
+    {
+      $query = $this->_em->getRepository($this->studentClass)->findAllByEstablishment($establishment->getId());
+      if ($form->isSubmitted()) {
+          if (!empty($form->get('textField')->getData())){
+            $query->andWhere('student.firstName like :search OR student.phone LIKE :search OR student.lastName LIKE :search OR student.email LIKE :search')
+                  ->setParameter('search', '%'.$form->get('textField')->getData().'%');
+          }
+          if ($form->has('garde') && !is_null($form->get('garde')->getData())){
+            $query->join('student.section' , 'section')
+                  ->join('section.grade' , 'grade')
+                  ->andWhere('grade.id = :grade')
+                  ->setParameter('grade', $form->get('grade')->getData()->getId());
+          }
+          if ($form->has('section') && !is_null($form->get('section')->getData())){
+            $query->andWhere('section.id = :section')
+                  ->setParameter('section', $form->get('section')->getData()->getId());
+          }
+      }
+      return $query->getQuery();
+    }
+
+    /**
+    * @param Student $student
+    * @param Division  $division
+    *
+    * @return array
+    */
+    public function getNotes($student ,$division){
+      // get All the type Exams
+      $establishment = $student->getEstablishment();
+      $section = $student->getSection();
+      $typeExams = $this->_em->getRepository($this->examTypeClass)->findBy(array('establishment' => $establishment));
+      // get All the Course by the garde of the student
+      $courses = $this->_em->getRepository($this->courseClass)->findBy(array('grade' => $section->getGrade(),'division' => $division , 'establishment' => $establishment));
+      $exams = $this->_em->getRepository($this->examClass)->findStudentMark($student ,$section, $division ,$establishment);
+
+      // init the result value
+      $result = array();
+      // fetch All the Course
+      foreach ($courses as $course) {
+          $resultTypeExam = array();
+          // fetch All the type Exams
+          foreach ($typeExams as $typeExam) {
+              $resultExam = array_filter($exams, function($value) use ($course, &$typeExam) { return strcasecmp($value['courseID'],$course->getId()) == 0 && strcmp($typeExam->getId(),$value['typeExamID']) == 0;});
+
+              // push the result into the array
+              array_push($resultTypeExam, array( "exams" => $resultExam , "typeExamID" => $typeExam->getId() ));
+          }
+          // push the result into the array
+          array_push($result,array("courseID" => $course->getId() , "courseName" => $course->getCourseName() , "coefficient" => $course->getCoefficient() ,"typeExams" => $resultTypeExam));
+      }
+      return array("marks" => $result , "typeExams" => $typeExams);
+    }
+
+    /**
+    * get Registred section
+    *
+    * @param SMS\AdministrativeBundle\Form\SearchType $form
+    * @param SMS\EstablishmentBundle\Entity\Establishment $establishment
+    */
+    public function getAllGrades($form , $establishment)
+    {
+      $query = $this->_em->getRepository($this->gradeClass)->findByEstablishment($establishment);
+      if ($form->isSubmitted()) {
+          if (!empty($form->get('textField')->getData())){
+            $query->andWhere('grade.code like :search OR grade.gradeName LIKE :search')
+                  ->setParameter('search', '%'.$form->get('textField')->getData().'%');
+          }
+      }
+      return $query->getQuery();
+
     }
 
 }

@@ -1,7 +1,7 @@
 {% extends 'layout/base_no_header.html.twig' %}
 
 {% block sticky_button %}
-  <a class="md-fab md-fab-primary" href="{{ path('manager_edit', { 'id': manager.id }) }}">
+  <a class="md-fab md-fab-accent md-fab-wave waves-effect waves-button" href="{{ path('manager_edit', { 'id': manager.id }) }}">
     <i class="material-icons">&#xE254;</i>
   </a>
 {% endblock %}
@@ -32,8 +32,8 @@
             </h2>
           </div>
           <div class="md-fab-wrapper">
-            <a class="md-fab md-fab-small md-fab-success" href="{{ path('change_password', { 'id': manager.id }) }}">
-              <i class="material-icons">&#xE8B8;</i>
+            <a class="md-fab md-fab-small md-fab-accent" href="{{ path('change_password', { 'id': manager.id }) }}">
+              <i class="material-icons">&#xE898;</i>
             </a>
           </div>
         </div>

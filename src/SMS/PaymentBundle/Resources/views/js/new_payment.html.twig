@@ -1,0 +1,150 @@
+<script>
+  a = UIkit.modal("#new_edit_payment", {
+    center: !0
+  });
+  $(document).on('click', '#payment_new_edit', function() {
+    altair_uikit.reinitialize_grid_margin();
+    $('#new_edit_payment_form').attr('action', $(this).data('href'));
+    a.show();
+    $("#new_edit_payment").resize();
+    $('#select_month')[0].selectize.setValue("");
+    $('#price').val("");
+    altair_md.update_input($('#price'));
+    $('#credit').val("{{ '0'|price }} {{ 'payment.unit.price'|trans }}");
+    $('#paid').val("{{ '0'|price }} {{ 'payment.unit.price'|trans }}");
+  });
+  var $maxPrice = {{ paymentType.price }};
+
+  $(document).on('change', '#select_month', function() {
+    var $form = $(this).closest('form');
+    $('#action').val('info');
+    if ($(this).val() == "") {
+    $('.selectize-input').css('border-color' , '#e53935');
+    }else {
+      $('.selectize-input').css('border-color' , '#7cb342');
+      $.ajax({
+        url: $form.attr('action'),
+        type: "POST",
+        data: $form.serializeObject(),
+        cache: false,
+        timeout: 3000,
+        success: function(html) {
+          var obj = JSON.parse(html);
+          if (typeof obj.result !== "undefined") {
+            $paid = obj.result.paid == null
+              ? 0
+              : parseFloat(obj.result.paid);
+            if ($paid == 0) {
+              $('#credit').val('{{ paymentType.price }} {{ 'payment.unit.price'|trans }}');
+              $('#maxPrice').val('{{ paymentType.price }}').change().blur();
+            } else {
+              $('#maxPrice').val(obj.result.credit == null
+                ? 0
+                : parseFloat(obj.result.credit));
+              $('#credit').val(obj.result.credit == null
+                ? 0
+                : parseFloat(obj.result.credit) + ' {{ 'payment.unit.price'|trans }}');
+            }
+            $('#paid').val($paid + ' {{ 'payment.unit.price'|trans }}');
+          }
+        },
+        error: function(XMLHttpRequest, textStatus, errorThrown) {
+          console.log(XMLHttpRequest + ' ' + textStatus + ' ' + errorThrown);
+          new UIkit.notify({
+            message: "<a href='#' class='notify-action'><span class='uk-icon-times'></span></a>" + textStatus,
+            status: "error",
+            timeout: 5000,
+            group: null,
+            pos: 'top-right'
+          });
+        }
+      });
+    }
+  });
+
+  $('#price').bind("input", function() {
+    var $price = $(this).val();
+    if ($price == "" || $price <= 0 || $price > parseFloat($('#maxPrice').val())|| $('#select_month').val() == "") {
+      $(this).removeClass('md-input-success');
+      $(this).addClass('md-input-danger');
+    }else{
+      $(this).removeClass('md-input-danger');
+      $(this).addClass('md-input-success');
+    }
+  });
+
+  $(document).on('click', '#submit', function() {
+    var $price = $('#price').val();
+    if ($price == "" || $price <= 0 || $price > parseFloat($('#maxPrice').val()) || $('#select_month').val() == "") {
+      $('.selectize-input').css('border-color' , '#e53935');
+      $('#price').addClass('md-input-danger');
+
+      return false;
+    }
+    var $form = $(this).closest('form');
+    $('#action').val('new');
+    $.ajax({
+      url: $form.attr('action'),
+      type: "POST",
+      data: $form.serializeObject(),
+      cache: false,
+      timeout: 5000,
+      success: function(html) {
+        new UIkit.notify({
+          message: "<a href='#' class='notify-action'><span class='uk-icon-times'></span></a>" + html,
+          status: "success",
+          timeout: 100,
+          group: null,
+          pos: 'top-right'
+        });
+        a.hide();
+        $('*[data-month="' + $('#select_month').val() + '"]').trigger('click');
+      },
+      error: function(XMLHttpRequest, textStatus, errorThrown) {
+        console.log(XMLHttpRequest + ' ' + textStatus + ' ' + errorThrown);
+        new UIkit.notify({
+          message: "<a href='#' class='notify-action'><span class='uk-icon-times'></span></a>" + textStatus,
+          status: "error",
+          timeout: 5000,
+          group: null,
+          pos: 'top-right'
+        });
+      }
+    });
+
+  });
+
+  $(document).on('click', '#payment_months', function() {
+    // show preloader
+    altair_helpers.content_preloader_show('md');
+    var $href = $(this).data('href');
+    $('.uk-active').each(function() {
+      $(this).removeClass('uk-active');
+    });
+    $(this).parent('li').addClass('uk-active');
+    $.ajax({
+      url: $href,
+      type: "GET",
+      cache: false,
+      timeout: 5000,
+      success: function(html) {
+        $('#content').empty().append($(html).find('#content').html()).resize();
+        // reinitialize select
+        altair_uikit.reinitialize_grid_margin();
+        // hide preloader
+        altair_helpers.content_preloader_hide();
+      },
+      error: function(XMLHttpRequest, textStatus, errorThrown) {
+        console.log(XMLHttpRequest + ' ' + textStatus + ' ' + errorThrown);
+        new UIkit.notify({
+          message: "<a href='#' class='notify-action'><span class='uk-icon-times'></span></a>" + textStatus,
+          status: "error",
+          timeout: 5000,
+          group: null,
+          pos: 'top-right'
+        });
+      }
+    });
+    $window.resize();
+  });
+</script>

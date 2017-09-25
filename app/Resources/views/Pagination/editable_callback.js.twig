@@ -1,6 +1,0 @@
-function rowCallback(nRow, aData, index) {
-	//make note required
-	$('.sg-editable-mark').editable('option', 'validate', function(v) {
-	    if(!$.isNumeric(v)) return '{{ 'note.validate.mark'|trans({}) }}';
-	});
-}

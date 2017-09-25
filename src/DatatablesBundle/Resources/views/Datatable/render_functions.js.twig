@@ -81,7 +81,7 @@ function render_progress_bar(data, type, row, meta, barClasses, min, max, label,
     return result;
 }
 
-function render_editable_text(data, type, row, meta, colData, colIndex) {
+function render_editable_text(data, type, row, meta, colData, colIndex , colrender) {
     if (false == row.sg_datatables_editable[colIndex]) {
         return data;
     }
@@ -91,7 +91,7 @@ function render_editable_text(data, type, row, meta, colData, colIndex) {
     var spanClass = "sg-editable-" + str;
     var result = '<span class="' + spanClass + '"';
     result += 'data-pk="' + row.id + '"data-type="text"' + '>' + editText + '</span>';
-
+    result += ' ' + colrender ;
     return result;
 }
 

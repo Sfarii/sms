@@ -1,0 +1,117 @@
+<script type="text/javascript">
+  var a = UIkit.modal("#modal_number_range_price", {
+    center: !0
+  });
+  var b = UIkit.modal("#modal_number_range_stock", {
+    center: !0
+  });
+  var o = $("#price_dp_start"),
+      l = $("#price_dp_end");
+
+  $(".number_range_price ").on("focus", function() {
+    var res = $(this).val().split("-");
+    o.val(parseInt(res[0]));
+    l.val(parseInt(res[1]));
+    o.parent('.md-input-wrapper').addClass('md-input-filled');
+    l.parent('.md-input-wrapper').addClass('md-input-filled');
+    a.isActive()
+      ? a.hide()
+      : a.show();
+
+  });
+
+  $("#numberrangepriceApply").on("click", function(e) {
+    if (parseInt(o.val()) > parseInt(l.val())) {
+      return ;
+    }
+
+    e.preventDefault();
+    a.hide();
+    $(".number_range_price ").val(o.val() + " - " + l.val()).change().blur();
+  });
+  $("#numberrangepriceCancel").on("click", function(e) {
+
+    e.preventDefault(),
+    a.hide(),
+    o.val(""),
+    l.val(""),
+    $(".number_range_price ").val(""),
+    $(".number_range_price ").change()
+  });
+
+  var g = $("#stock_dp_start"),
+      h = $("#stock_dp_end");
+
+  $(".number_range_stock ").on("focus", function() {
+    var res = $(this).val().split("-");
+    g.val(parseInt(res[0]));
+    h.val(parseInt(res[1]));
+    g.parent('.md-input-wrapper').addClass('md-input-filled');
+    h.parent('.md-input-wrapper').addClass('md-input-filled');
+    $('#price_elem').find('.md-input-wrapper').removeClass('md-input-filled');
+    b.isActive()
+      ? b.hide()
+      : b.show() ;
+
+  });
+
+  $("#numberrangestockApply").on("click", function(e) {
+    if (parseInt(g.val()) > parseInt(h.val())) {
+      return;
+    }
+    e.preventDefault(),
+    b.hide(),
+    $(".number_range_stock").val(g.val() + " - " + h.val()).change().blur()
+  });
+  $("#numberrangestockCancel").on("click", function(e) {
+    e.preventDefault(),
+    b.hide(),
+    g.val(""),
+    h.val(""),
+    $(".number_range_stock ").val(""),
+    $(".number_range_stock ").change()
+  });
+
+  $(".cart_new").on('click', function(event) {
+    var $this = $(this);
+    UIkit.modal.confirm("{{ 'datatables.bulk.confirmMsg'|trans({}, 'messages') }} ", function() {
+      if ($this.data('stock') >= 1) {
+        {% set token = csrf_token('storeCart') %}
+        $.ajax({
+          url: Routing.generate('store_bulk_cart_new', {id: $this.data('product')}),
+          type: "POST",
+          cache: false,
+          data: {
+            'token': '{{ token }}',
+            'qte': 1
+          },
+          success: function(success) {
+            var result = JSON.parse(success);
+            new UIkit.notify({
+              message: "<a href='#' class='notify-action'><span class='uk-icon-times'></span></a>" + result.msg,
+              status: "error",
+              timeout: 5000,
+              group: null,
+              pos: 'top-right'
+            });
+            $('#cart_num').empty().append(result.num);
+          },
+          error: function(XMLHttpRequest, textStatus, errorThrown) {
+            console.log(XMLHttpRequest + ' ' + textStatus + ' ' + errorThrown);
+            new UIkit.notify({
+              message: "<a href='#' class='notify-action'><span class='uk-icon-times'></span></a>" + textStatus,
+              status: "error",
+              timeout: 5000,
+              group: null,
+              pos: 'top-right'
+            });
+          }
+        });
+
+      } else {
+        UIkit.modal.alert("{{ 'cart.quantity.selectError'|trans }}");
+      }
+    });
+  });
+
+</script>

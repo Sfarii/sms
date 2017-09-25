@@ -66,7 +66,7 @@ class AttendanceStudentDatatable extends AbstractDatatableView
         ));
 
         $this->ajax->set(array(
-            'url' => $this->router->generate('attendance_results' , array('id_section'=> $options['id_section'] ,'date' => $options['date'] ,'id_session' => $options['id_session'])),
+            'url' => $this->router->generate('attendance_results' , array('id'=> $options['id'])),
             'type' => 'GET',
             'pipeline' => 0
         ));
@@ -84,7 +84,7 @@ class AttendanceStudentDatatable extends AbstractDatatableView
                           'attributes' => array(
                               'rel' => 'tooltip',
                               'title' => $this->translator->trans('attendance_action.retard'),
-                              'class' => 'md-btn buttons-copy buttons-html5',
+                              'class' => 'md-btn md-btn-primary md-btn-wave-light waves-effect waves-button waves-light',
                               'role' => 'button'
                           ),
                       ),
@@ -98,7 +98,7 @@ class AttendanceStudentDatatable extends AbstractDatatableView
                           'attributes' => array(
                               'rel' => 'tooltip',
                               'title' => $this->translator->trans('attendance_action.present'),
-                              'class' => 'md-btn buttons-copy buttons-html5',
+                              'class' => 'md-btn md-btn-primary md-btn-wave-light waves-effect waves-button waves-light',
                               'role' => 'button'
                           ),
                       ),
@@ -112,7 +112,7 @@ class AttendanceStudentDatatable extends AbstractDatatableView
                           'attributes' => array(
                               'rel' => 'tooltip',
                               'title' => $this->translator->trans('attendance_action.absent'),
-                              'class' => 'md-btn buttons-copy buttons-html5',
+                              'class' => 'md-btn md-btn-primary md-btn-wave-light waves-effect waves-button waves-light',
                               'role' => 'button'
                           ),
                       ),
@@ -126,12 +126,13 @@ class AttendanceStudentDatatable extends AbstractDatatableView
                           'attributes' => array(
                               'rel' => 'tooltip',
                               'title' => $this->translator->trans('attendance_action.exclude'),
-                              'class' => 'md-btn buttons-copy buttons-html5',
+                              'class' => 'md-btn md-btn-primary md-btn-wave-light waves-effect waves-button waves-light',
                               'role' => 'button'
                           ),
                       ),
                   )
               ))
+            
             ->add('student.firstName', 'column', array(
                 'title' => $this->translator->trans('attendance_student.field.firstName'),
                 'filter' => array('text', array(

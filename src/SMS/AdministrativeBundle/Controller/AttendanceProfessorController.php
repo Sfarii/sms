@@ -19,9 +19,9 @@ use SMS\AdministrativeBundle\Form\AttendanceFilterType;
 use SMS\EstablishmentBundle\Entity\Division;
 
 /**
- * Attendanceprofessor controller.
+ * Attendance Professor controller.
  *
- * @Route("attendanceprofessor")
+ * @Route("attendance_professor")
  * @Security("has_role('ROLE_ADMIN')")
  *
  * @author Rami Sfari <rami2sfari@gmail.com>
@@ -115,6 +115,7 @@ class AttendanceProfessorController extends BaseController
         $query->addWhereAll($function);
         return $query->getResponse();
     }
+    
     /**
      * Creates a new attendanceProfessor entity.
      *

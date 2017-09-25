@@ -4,7 +4,7 @@ namespace SMS\EstablishmentBundle\Controller;
 
 use SMS\EstablishmentBundle\Entity\Division;
 use SMS\EstablishmentBundle\Form\DivisionType;
-use API\BaseController\BaseController;
+use SMS\EstablishmentBundle\BaseController\BaseController;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\Method;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\Route;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\Template;
@@ -199,7 +199,7 @@ class DivisionController extends BaseController
     /**
      * Get division Entity Manager Service.
      *
-     * @return API\Services\EntityManager
+     * @return SMS\EstablishmentBundle\Services\EntityManager
      *
      * @throws \NotFoundException
      */

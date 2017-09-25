@@ -1,0 +1,168 @@
+{% extends 'layout/base_no_header.html.twig' %}
+
+{% block sticky_button %}
+  <a class="md-fab md-fab-accent md-fab-wave waves-effect waves-button" href="{{ path('shop_index') }}">
+    <i class="material-icons">&#xE8D1;</i>
+  </a>
+{% endblock %}
+
+{% block body %}
+
+  <div class="md-card uk-margin-large-bottom">
+    <div class="md-card-content clearfix">
+      {{ form_start(form , { 'attr' : { 'id' : 'wizard_advanced_form'}}) }}
+      <div id="wizard_advanced">
+        <!-- first section -->
+        <h3>{{ 'cart.title'|trans }}</h3>
+        <section>
+          <h2 class="heading_a">
+            {{ 'cart.title'|trans }}
+            <span class="sub-heading">{{ 'cart.sub-title'|trans }}</span>
+          </h2>
+          <hr class="md-hr"/>
+          <div class="uk-overflow-container" data-uk-grid-margin>
+            <div id="division_datatable_multiselect_actions">
+              <div class="dt_colVis_buttons">
+                <a rel="tooltip" title="{{ 'action.delete'|trans }}" class="md-btn-danger md-btn md-btn-primary md-btn-wave-light waves-effect waves-button waves-light cart_delete" role="button">
+                  <i class="material-icons">&#xE92B;</i>{{ 'action.delete'|trans }}</a>
+              </div>
+            </div>
+            <table id="cart" class="uk-table uk-table-align-vertical table_check">
+              <thead>
+                <tr class="uk-text-large">
+                  <th class="uk-width-1-10 uk-text-center small_col md-bg-grey-100"><input type="checkbox" class="check_all wizard-icheck"></th>
+                  <th class="uk-width-1-10 uk-text-center md-bg-grey-100">{{ 'product.field.image'|trans }}</th>
+                  <th class="uk-width-2-10 uk-text-center md-bg-grey-100">{{ 'product.field.productName'|trans }}</th>
+                  <th class="uk-width-1-10 uk-text-center md-bg-grey-100">{{ 'product.field.price'|trans }}</th>
+                  <th class="uk-width-4-10 uk-text-center md-bg-grey-100">{{ 'cart.quantity.title'|trans }}</th>
+                  <th class="uk-width-1-10 uk-text-center md-bg-grey-100">{{ 'cart.total.title'|trans }}</th>
+                </tr>
+              </thead>
+              <tbody>
+                {% for product in result %}
+                  <tr id="{{ product.id }}">
+                    <td class="uk-text-center uk-table-middle small_col">
+                      <input type="checkbox" value="{{ product.id }}" class="check_row wizard-icheck"></td>
+                    <td class="uk-text-center">
+                      {% if product.imageName %}
+                        <img class="img_thumb" src="{{ vich_uploader_asset(product, 'imageFile') }}" alt="{{ product.imageName }}"/>
+                      {% else %}
+                        <img class="img_thumb" src="{{ asset('assets/img/avatars/product.png') }}" alt="product"/>
+                      {% endif %}
+
+                    </td>
+                    <td class="uk-text-large uk-text-center uk-text-nowrap">
+                      {{ product.productName }}
+                    </td>
+                    <td class="uk-text-nowrap uk-text-center">
+                      {{ product.price|price }}
+                      {{ 'store.unit.price'|trans }}
+                    </td>
+                    <td class="uk-text-center">
+                      <div class="uk-width-1-2 uk-container-center">
+                        <input type="text" data-product='{{ product.id }}' class="ion-slider" data-max="{{ product.stock }}" data-from="{{ product.quantity }}"/>
+                      </div>
+                    </td>
+                    <td class="uk-text-nowrap uk-text-center">
+                      {% set total = product.quantity * product.price %}
+                      <span class="total" id="total_{{ product.id }}" data-price='{{ product.price }}'>
+                        {{ total|price }}
+                      </span>
+                      {{ 'store.unit.price'|trans }}
+                    </td>
+                  </tr>
+                {% else %}
+                  <tr>
+                    <td colspan="6" class="uk-text-center">
+                      {{ 'datatables.datatable.zeroRecords'|trans }}
+                    </td>
+                  </tr>
+
+                {% endfor %}
+              </tbody>
+            </table>
+            <div class="uk-width-medium-1-2 uk-push-1-2">
+              <table class="uk-table uk-table-align-vertical ">
+                <thead>
+                  <tr class="uk-text-large">
+                    <th colspan="2" class="uk-width-1-10 uk-text-center md-bg-grey-100">{{ 'cart.total.title'|trans }}</th>
+                  </tr>
+                </thead>
+                <tbody class="uk-text-nowrap uk-text-center">
+                  <tr >
+                    <td>{{ 'cart.quantity.title'|trans }}</td>
+                    <td>
+                      <span id="totalQuantity">{{ totalQuantity }}</span>
+                      {{ 'store.unit.elem'|trans }}</td>
+                  </tr>
+                  <tr>
+                    <td>{{ 'product.field.price'|trans }}</td>
+                    <td>
+                      <span id="totalPrice">{{ totalPrice|price }}</span>
+                      {{ 'store.unit.price'|trans }}</td>
+                  </tr>
+                </tbody>
+              </table>
+            </div>
+          </div>
+
+        </section>
+
+        <!-- second section -->
+        <h3>{{ 'cart.finish'|trans }}</h3>
+        <section>
+          <h2 class="heading_a">
+            {{ 'cart.finish'|trans }}
+            <span class="sub-heading">{{ 'cart.sub-title'|trans }}</span>
+          </h2>
+          <hr class="md-hr"/>
+          <div class="uk-grid uk-margin-medium-top uk-grid-divider" data-uk-grid-margin>
+            <div class="uk-width-1-2">
+              <h2 class="heading_a">
+                {{ 'menu.store_managment.order'|trans }}
+                <span class="sub-heading">{{ 'cart.note_provider'|trans }}</span>
+              </h2>
+              <hr class="uk-grid-divider">
+              <div class="uk-form-row parsley-row">
+                {{ form_widget(form.provider)}}
+                <div class="parsley-errors-list filled uk-text-danger">
+                  {{ form_errors(form.provider) }}
+                </div>
+              </div>
+            </div>
+            <div class="uk-width-1-2">
+              <h2 class="heading_a">
+                {{ 'menu.store_managment.order_managment'|trans }}
+                <span class="sub-heading">{{ 'cart.note_user'|trans }}</span>
+              </h2>
+              <hr class="uk-grid-divider">
+              <div class="uk-form-row parsley-row">
+                {{ form_widget(form.student)}}
+                <div class="parsley-errors-list filled uk-text-danger">
+                  {{ form_errors(form.student) }}
+                </div>
+              </div>
+              <div class="uk-form-row parsley-row">
+                {{ form_widget(form.professor)}}
+                <div class="parsley-errors-list filled uk-text-danger">
+                  {{ form_errors(form.professor) }}
+                </div>
+              </div>
+            </div>
+            {{ form_widget(form) }}
+
+          </div>
+        </section>
+      </div>
+      {{ form_end(form) }}
+    </div>
+  </div>
+{% endblock %}
+{% block javascripts %}
+  {{ parent()}}
+  <!-- ionrangeslider -->
+  <script src="{{ asset('assets/plugins/ion.rangeslider/js/ion.rangeSlider.min.js') }}"></script>
+  <script src="{{ asset('assets/js/wizard_steps.min.js') }}"></script>
+  <script src="{{ asset('assets/js/parsley.min.js') }}"></script>
+  {% include '@SMSStore/shop/cart_action.html.twig' %}
+{% endblock %}

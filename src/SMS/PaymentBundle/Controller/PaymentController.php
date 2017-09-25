@@ -3,9 +3,11 @@
 namespace SMS\PaymentBundle\Controller;
 
 use SMS\PaymentBundle\Entity\Payment;
-use SMS\PaymentBundle\Entity\Registration;
+use Symfony\Component\Security\Core\Exception\AccessDeniedException;
+use SMS\PaymentBundle\Entity\PaymentType;
 use SMS\UserBundle\Entity\Student;
-use SMS\PaymentBundle\Form\PaymentType;
+use SMS\PaymentBundle\Form\PaymentType as PaymentTypeForm;
+use SMS\PaymentBundle\Form\AjaxPaymentType;
 use SMS\PaymentBundle\BaseController\BaseController;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\Method;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\Route;
@@ -13,7 +15,10 @@ use Sensio\Bundle\FrameworkExtraBundle\Configuration\Template;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
 use SMS\PaymentBundle\Form\SearchType;
+use Symfony\Component\Form\FormError;
+use Sensio\Bundle\FrameworkExtraBundle\Configuration\ParamConverter;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\Security;
+use Sg\DatatablesBundle\Datatable\Data\DatatableQuery;
 
 /**
  * Payment controller.
@@ -40,7 +45,7 @@ class PaymentController extends BaseController
         $form = $this->createForm(SearchType::class,null, array('method' => 'GET', 'establishment' => $this->getUser()->getEstablishment()))->handleRequest($request);
 
         $pagination = $this->getPaginator()->paginate(
-            $this->getEntityManager()->getRegistredStudent(Student::class , $form , $this->getUser()->getEstablishment()), /* query NOT result */
+            $this->getEntityManager()->getRegistredStudent($form , $this->getUser()->getEstablishment()), /* query NOT result */
             $request->query->getInt('page', 1)/*page number*/,
             9/*limit per page*/,
             array('wrap-queries'=>true)
@@ -77,6 +82,42 @@ class PaymentController extends BaseController
     }
 
     /**
+     * Creates a ajax new payment entity.
+     *
+     * @Route("/ajax/new/{id}/{paymentType_id}", name="ajax_payment_new")
+     * @ParamConverter("paymentType", class="SMSPaymentBundle:PaymentType", options={"id" = "paymentType_id"})
+     * @Method("POST")
+     */
+    public function newAjaxAction(Student $student , PaymentType $paymentType , Request $request)
+    {
+      $isAjax = $request->isXmlHttpRequest();
+
+      if ($isAjax) {
+          $token = $request->request->get('token');
+          $month = $request->request->get('month');
+          $price = $request->request->get('price');
+          $action = $request->request->get('action');
+
+          if (!$this->isCsrfTokenValid('payment', $token) || !in_array($month, range(1, 12)) || !in_array($action , array('info' , 'new'))) {
+              throw new AccessDeniedException('The CSRF token OR The Action OR Month is invalid.');
+          }
+          if (0 === strcasecmp($action , 'info')) {
+            $result = $this->getEntityManager()->getRegistredStudentByStudent($paymentType , $month, $student);
+            return new Response(json_encode(array('result' => $result)), 200);
+          }else{
+            if ($this->getEntityManager()->newPayment($paymentType , $price , $month, $student , $this->getUser())){
+              return new Response($this->get('translator')->trans('payment.new.success'), 200);
+            }else{
+              return new Response($this->get('translator')->trans('payment.new.fail'), 200);
+            }
+          }
+          throw new \LogicException('Unreachable code');
+      }
+
+      return new Response('Bad Request', 400);
+    }
+
+    /**
      * Creates a new payment entity.
      *
      * @Route("/new/{id}", name="payment_new")
@@ -86,15 +127,16 @@ class PaymentController extends BaseController
     public function newAction(Student $student , Request $request)
     {
         $payment = new Payment();
-        $form = $this->createForm(PaymentType::class, $payment, array('student' => $student , 'establishment' => $this->getUser()->getEstablishment()));
-        $form->handleRequest($request);
+        $form = $this->createForm(PaymentTypeForm::class, $payment, array('student' => $student ))->handleRequest($request);
 
         if ($form->isSubmitted() && $form->isValid() && $form->get('save')->isClicked()) {
             if ($this->getEntityManager()->addPayment($payment , $this->getUser())){
               $this->flashSuccessMsg('payment.add.success');
-              return $this->redirectToRoute('user_payment_show', array('id' => $student->getId()));
+              $form = $this->createForm(PaymentTypeForm::class, $payment, array('student' => $student ));
+            }else {
+              $form->get('price')->addError(new FormError($this->get('translator')->trans('payment.add.fail')));
             }
-            $this->flashErrorMsg('payment.add.error');
+
         }
 
         return array(
@@ -115,11 +157,11 @@ class PaymentController extends BaseController
     {
         $payments = $this->getPaymentEntityManager();
         $payments->buildDatatable(array('id' => $student->getId()));
-        $paymentsInfo = $this->getDoctrine()->getRepository(Payment::class)->findByStudent($student);
+        $paymentsStats = $this->getEntityManager()->getStatsByStudent($student);
         return array(
             'student' => $student,
             'payments' => $payments,
-            'paymentsInfo' => $paymentsInfo
+            'stats' => $paymentsStats
         );
     }
 
@@ -144,30 +186,25 @@ class PaymentController extends BaseController
         };
 
         $query->addWhereAll($function);
+
         return $query->getResponse();
     }
 
     /**
      * Displays a form to edit an existing payment entity.
      *
-     * @Route("/{id}/edit", name="payment_edit", options={"expose"=true})
+     * @Route("staistics", name="payment_staistics")
      * @Method({"GET", "POST"})
-     * @Template("SMSPaymentBundle:payment:edit.html.twig")
+     * @Template("SMSPaymentBundle:payment:staistics.html.twig")
      */
-    public function editAction(Request $request, Payment $payment)
+    public function staisticsAction(Request $request)
     {
-        $editForm = $this->createForm(PaymentType::class, $payment, array('student' => $payment->getStudent() ,'establishment' => $this->getUser()->getEstablishment()))->handleRequest($request);
-        if ($editForm->isSubmitted() && $editForm->isValid() && $editForm->get('save')->isClicked()) {
-            $this->getEntityManager()->updatePayment($payment);
-            $this->flashSuccessMsg('payment.edit.success');
-            return $this->redirectToRoute('user_payment_show', array('id' => $payment->getStudent()->getId()));
-        }
+      $paymentsStats = $this->getEntityManager()->getPaymentStats($this->getUser()->getEstablishment());
 
-        return array(
-            'payment' => $payment,
-            'student' => $payment->getStudent(),
-            'form' => $editForm->createView(),
-        );
+      return array(
+        'payment' => $paymentsStats
+      );
+
     }
 
     /**

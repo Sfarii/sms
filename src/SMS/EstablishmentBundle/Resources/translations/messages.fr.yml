@@ -41,7 +41,7 @@ establishment:
         email: Email   # FIXME
         establishmentName: Nom de l'établissement   # FIXME
         phone: Téléphone   # FIXME
-
+        theme: Theme
     list:
         title: Listes d'établissement  # FIXME
 

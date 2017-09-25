@@ -1,0 +1,170 @@
+{% extends 'layout/base_no_header.html.twig' %}
+
+{% block sticky_button %}
+<a class="md-fab md-fab-accent md-fab-wave waves-effect waves-button" href="{{ path('paymenttype_index') }}">
+    <i class="material-icons">&#xE88A;</i>
+</a>
+{% endblock %}
+
+{% block slider %}
+  <div id="top_bar">
+    <div class="md-top-bar">
+      <div class="uk-width-large-8-10 uk-container-center">
+        <div class="uk-slidenav-position uk-slidenav-hover" data-uk-slider>
+          <div class="uk-slider-container">
+            <ul class="uk-slider uk-grid-width-small-1-6 top_bar_nav" id="month_filter">
+              <li {% if month == 'all' %} class="uk-active" {% endif %}>
+                <a id="payment_months" data-href="{{ path('paymenttype_statistics',app.request.query.all|merge({'id': paymentType.id  , 'month': 'all'})) }}">{{ 'filter.field.all'|trans}}</a>
+              </li>
+              {% for key in range(1, 12) %}
+                <li {% if month == key %} class="uk-active" {% endif %}>
+                  <a data-month="{{ key }}" id="payment_months" data-href="{{ path('paymenttype_statistics',app.request.query.all|merge({'id': paymentType.id  , 'month': key})) }}">
+                    {{ key|trans }}
+                  </a>
+                </li>
+              {% endfor %}
+            </ul>
+          </div>
+          <a href="#" class="uk-slidenav uk-slidenav-previous" draggable="false" data-uk-slider-item="previous"></a>
+          <a href="#" class="uk-slidenav uk-slidenav-next" draggable="false" data-uk-slider-item="next"></a>
+        </div>
+      </div>
+    </div>
+  </div>
+{% endblock %}
+
+{% block body %}
+
+  <div  id="content" class="uk-margin-medium-top">
+    <!-- info cards -->
+    {% if pagination is empty %}
+      <div class="uk-alert uk-alert-large" data-uk-alert="">
+        <h4 class="heading_b">{{ "search.result_not_found.title"|trans}}</h4>
+        <p>
+          <h4 class="heading_a">{{ "search.result_not_found.sub-title"|trans}}
+            :</h4>
+          {{ "search.result_not_found.text"|trans}}
+        </p>
+      </div>
+    {% else %}
+      <div class="uk-grid uk-grid-medium uk-grid-width-medium-1-3 uk-grid-width-large-1-4" data-uk-grid="{gutter: 20}" data-uk-grid-margin data-uk-grid-match="{target:'.md-card-content'}">
+
+        {% for result in pagination %}
+          <div>
+            <div class="md-card">
+              <div class="md-card-head md-bg-blue-700">
+                <div class="md-card-head-menu" data-uk-dropdown="{pos:'bottom-right'}">
+                  <i class="md-icon material-icons md-icon-light">&#xE5D4;</i>
+                  <div class="uk-dropdown uk-dropdown-small">
+                    <ul class="uk-nav">
+                      <li>
+                        <a target="_blank" href="{{ path('user_payment_show' , {'id' : result.studentInfo.id })}}">{{ "payment.payment_info"|trans }}</a>
+                      </li>
+                      <li>
+                        <a id="payment_new_edit" data-href="{{ path('ajax_payment_new' , {'paymentType_id' : paymentType.id , 'id' : result.studentInfo.id })}}" >{{ "payment.new.title"|trans }}</a>
+                      </li>
+                    </ul>
+                  </div>
+                </div>
+                <div class="uk-text-center">
+                  {% if result.studentInfo.imageName %}
+                    <img class="md-card-head-avatar" src="{{ vich_uploader_asset(result.studentInfo, 'imageFile') }}" alt="{{ result.studentInfo.imageName }}"/>
+                  {% else %}
+                    <img class="md-card-head-avatar md-bg-grey-50" src="{{ asset('assets/img/avatars/user@2x.png') }}" alt="user avatar"/>
+                  {% endif %}
+                </div>
+                <h3 class="md-card-head-text uk-text-center md-color-white ">
+                  {{ result.studentInfo.firstName }}
+                  {{ result.studentInfo.lastName }}
+                  <span>{{ result.studentInfo.username }}</span>
+                </h3>
+              </div>
+              <div class="md-card-content">
+                <ul class="md-list">
+                  <li>
+                    <div class="md-list-content">
+                      <span class="md-list-heading">{{ result.paid|price }}</span>
+                      <span class="uk-text-small uk-text-muted">{{'payment.field.price'|trans }}</span>
+                    </div>
+                  </li>
+                  <li>
+                    <div class="md-list-content">
+                      <span class="md-list-heading">{{ result.credit|price }}</span>
+                      <span class="uk-text-small uk-text-muted">{{'payment.field.credit'|trans }}</span>
+                    </div>
+                  </li>
+                </ul>
+              </div>
+            </div>
+          </div>
+        {% endfor %}
+        <div class="uk-margin-large-top uk-width-medium-3-3 uk-grid-width-large-2-2">
+          {{ knp_pagination_render(pagination) }}
+        </div>
+      </div>
+    {% endif %}
+  </div>
+  <div class="uk-modal" id="new_edit_payment">
+    <div class="uk-modal-dialog">
+      <button type="button" class="uk-modal-close uk-close"></button>
+      <div class="uk-modal-header uk-margin-medium-bottom">
+        <h3 class="uk-modal-title">{{ 'payment.new.title'|trans }}</h3>
+      </div>
+      <form id="new_edit_payment_form">
+        <input type="text" hidden="hidden" id="action" name="action">
+        <input type="text" hidden="hidden" value="" id="maxPrice">
+        <input type="text" hidden="hidden" value="{{ csrf_token('payment') }}" name="token">
+        <div class="uk-grid uk-grid-medium uk-grid-width-medium-1-2 uk-grid-width-large-1-2" data-uk-grid="{gutter: 25}"  data-uk-grid-margin data-uk-grid-match="{target:'.uk-form-row'}">
+          <div>
+            <div class="uk-form-row">
+              <select name="month" id="select_month" data-md-selectize>
+                <option value="">{{ 'paymenttype.field.select_months'|trans }}</option>
+                {% for key in range(1, 12) %}
+                  <option value="{{key}}">{{ key|trans }}</option>
+                {% endfor %}
+              </select>
+              <span class="uk-form-help-block">{{ 'payment.field.month'|trans }}</span>
+              <div class="parsley-errors-list filled uk-text-danger"></div>
+            </div>
+          </div>
+          <div>
+            <div class="uk-form-row">
+              <div class="md-input-wrapper">
+                <label class="uk-form-label">{{ 'payment.field.price'|trans }}</label>
+                <input maxlength="10" id="price" name="price" type="number" class="md-input input-count"/>
+              </div>
+              <div class="parsley-errors-list"></div>
+            </div>
+          </div>
+          <div>
+            <div class="uk-form-row">
+              <div class="md-input-wrapper md-input-filled">
+                <label class="uk-form-label uk-text-bold">{{ 'payment.field.price'|trans }}</label>
+                <input id="paid" type="text" class="md-input" value="{{ '0'|price }} {{ 'payment.unit.price'|trans }}" disabled/>
+              </div>
+            </div>
+          </div>
+          <div>
+            <div class="uk-form-row">
+              <div class="md-input-wrapper md-input-filled">
+                <label class="uk-form-label uk-text-bold">{{ 'payment.field.credit'|trans }}</label>
+                <input id="credit" type="text" class="md-input" value="{{ '0'|price }} {{ 'payment.unit.price'|trans }}" disabled/>
+              </div>
+            </div>
+          </div>
+        </div>
+        <div class="uk-modal-footer uk-text-right">
+          <button type="button" class="md-btn md-btn-flat uk-modal-close">{{ 'datatables.dialog.close'|trans({}, 'messages') }}</button>
+          <button type="button" id="submit" class="md-btn md-btn-flat md-btn-flat-primary">{{ 'payment.field.submit'|trans({}, 'messages') }}</button>
+        </div>
+
+      </form>
+    </div>
+  </div>
+{% endblock %}
+
+{% block javascripts %}
+  {{ parent() }}
+  <!-- page specific plugins -->
+  {% include '@SMSPayment/js/new_payment.html.twig' %}
+{% endblock %}

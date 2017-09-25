@@ -1,0 +1,106 @@
+{% extends 'layout/base_no_header.html.twig' %}
+
+{% block title_page %}
+  {{ 'student.list.title'|trans }}
+{% endblock %}
+
+{% block body %}
+  <div class="md-card">
+    <div class="md-card-content">
+      {{ form_start(form) }}
+      <div class="uk-grid" data-uk-grid-margin="">
+        <div class="uk-width-medium-1-2">
+          <div class="uk-vertical-align">
+            <div class="uk-vertical-align-middle">
+              <ul id="contact_list_filter" class="uk-subnav uk-subnav-pill uk-margin-remove">
+                <li {% if pagination.isSorted('student.firstName') %} class="uk-active" {% endif %}>
+                  {{ knp_pagination_sortable(pagination, 'student.field.firstName'|trans , 'student.firstName') }}
+                </li>
+                <li {% if pagination.isSorted('student.lastName') %} class="uk-active" {% endif %}>
+                  {{ knp_pagination_sortable(pagination, 'student.field.lastName'|trans , 'student.lastName') }}
+                </li>
+                <li {% if pagination.isSorted('student.email') %} class="uk-active" {% endif %}>
+                  {{ knp_pagination_sortable(pagination, 'user.field.email'|trans , 'student.email') }}
+                </li>
+                <li {% if pagination.isSorted('student.phone') %} class="uk-active" {% endif %}>
+                  {{ knp_pagination_sortable(pagination, 'student.field.phone'|trans , 'student.phone') }}
+                </li>
+                <li {% if pagination.isSorted('student.gender') %} class="uk-active" {% endif %}>
+                  {{ knp_pagination_sortable(pagination, 'user.field.gender'|trans , 'student.gender') }}
+                </li>
+                <li {% if pagination.isSorted('student.birthday') %} class="uk-active" {% endif %}>
+                  {{ knp_pagination_sortable(pagination, 'user.field.age'|trans , 'student.birthday') }}
+                </li>
+              </ul>
+            </div>
+          </div>
+        </div>
+        <div class="uk-width-medium-1-2">
+          {{ form_label(form.textField)}}
+          {{ form_widget(form.textField)}}
+        </div>
+      </div>
+      {{ form_end(form) }}
+    </div>
+  </div>
+  <!-- info cards -->
+  {% if pagination is empty %}
+    <div class="uk-alert uk-alert-large" data-uk-alert="">
+      <h4 class="heading_b">{{ "search.result_not_found.title"|trans}}</h4>
+      <p>
+        <h4 class="heading_a">{{ "search.result_not_found.sub-title"|trans}}
+          :</h4>
+        {{ "search.result_not_found.text_student"|trans}}
+      </p>
+    </div>
+  {% else %}
+    <div class="uk-grid uk-grid-medium uk-grid-width-medium-1-3 uk-grid-width-large-1-4 hierarchical_show" data-uk-grid="{gutter: 20}" data-uk-grid-margin data-uk-grid-match="{target:'.md-card-content'}">
+
+      {% for student in pagination %}
+        <div>
+          <div class="md-card">
+            <div class="md-card-head md-bg-blue-700">
+              <div class="md-card-head-menu" data-uk-dropdown="{pos:'bottom-right'}">
+                <a href="{{ path('attendance_student_show' , { 'id' : student.id })}}">
+                  <i class="md-icon material-icons md-icon-light">&#xE88F;</i>
+                </a>
+              </div>
+              <div class="uk-text-center">
+                {% if student.imageName %}
+                  <img class="md-card-head-avatar" src="{{ vich_uploader_asset(student, 'imageFile') }}" alt="{{ student.imageName }}"/>
+                {% else %}
+                  <img class="md-card-head-avatar md-bg-grey-50" src="{{ asset('assets/img/avatars/user@2x.png') }}" alt="user avatar"/>
+                {% endif %}
+              </div>
+              <h3 class="md-card-head-text uk-text-center md-color-white ">
+                {{ student.firstName }}
+                {{ student.lastName }}
+                <span>{{ student.username }}</span>
+              </h3>
+            </div>
+            <div class="md-card-content">
+              <ul class="md-list">
+                <li>
+                  <div class="md-list-content">
+                    <span class="md-list-heading">{{ student.email }}</span>
+                    <span class="uk-text-small uk-text-muted">{{'user.field.email'|trans }}</span>
+                  </div>
+                </li>
+                <li>
+                  <div class="md-list-content">
+                    <span class="md-list-heading">{{ student.phone }}</span>
+                    <span class="uk-text-small uk-text-muted">{{'student.field.phone'|trans }}</span>
+                  </div>
+                </li>
+              </ul>
+            </div>
+          </div>
+        </div>
+      {% endfor %}
+      <div class="uk-margin-large-top uk-width-medium-3-3 uk-grid-width-large-2-2">
+        {{ knp_pagination_render(pagination) }}
+      </div>
+    </div>
+  {% endif %}
+</div>
+{% endblock %}

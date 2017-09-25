@@ -5,13 +5,14 @@ namespace SMS\PaymentBundle\Form;
 use Symfony\Component\Form\AbstractType;
 use Symfony\Component\Form\FormBuilderInterface;
 use Symfony\Component\OptionsResolver\OptionsResolver;
-use Symfony\Component\Form\Extension\Core\Type\CheckboxType;
+use Symfony\Component\Form\Extension\Core\Type\ChoiceType;
 use Symfony\Component\Form\Extension\Core\Type\DateType;
 use Symfony\Bridge\Doctrine\Form\Type\EntityType;
 use Symfony\Component\Form\Extension\Core\Type\TextType;
 use SMS\PaymentBundle\Entity\PaymentType as TypePayment;
 use Doctrine\ORM\EntityManager;
 use API\Form\Type\HiddenEntityType;
+use SMS\PaymentBundle\Form\Type\GenderType;
 use API\Form\Type\MonthType;
 use SMS\EstablishmentBundle\Entity\Establishment;
 
@@ -25,55 +26,23 @@ class SearchType extends AbstractType
       $establishment = $options['establishment'];
 
         $builder
-            ->add('textField' ,TextType::class , array(
+              ->add('textField' ,TextType::class , array(
                   'label' => 'search.student.by_every_thing')
               )
-            ->add('paymentType' , EntityType::class , array(
-                'class' => TypePayment::class ,
-                'property' => "TypePaymentName",
-                'query_builder' => function ( $er) use ($establishment) {
-                    return $er->createQueryBuilder('paymentType')
-                              ->join('paymentType.establishment', 'establishment')
-                              ->andWhere('establishment.id = :establishment')
-                              ->setParameter('establishment', $establishment->getId());
-                },
-                'placeholder'   => 'payment.field.select_paymentType',
-                'label' => 'payment.field.paymentType')
-            )
-            ->add('months' ,MonthType::class , array(
-                  'label' => 'paymenttype.field.months',
-                  'placeholder'   => 'paymenttype.field.select_months')
+              ->add('gender' ,GenderType::class , array(
+                  'label' => 'user.field.gender')
               )
-            ->add('paid', CheckboxType::class, array(
-              'label' => 'search.payment.paid',
-              'attr' => ['class' => 'paid']
-                )
-            )
-            ->add('hasCredit', CheckboxType::class, array(
-              'label' => 'search.payment.has_credit',
-              'attr' => ['class' => 'hasCredit']
-                )
-            )
-            ->add('Registred', CheckboxType::class, array(
-              'label' => 'search.registration.registred',
-              'attr' => ['class' => 'Registred']
-                )
-            )
-            ->add('notRegistred', CheckboxType::class, array(
-              'label' => 'search.registration.not_registred',
-              'attr' => ['class' => 'notRegistred']
-                )
-            )
-            ->add('extern', CheckboxType::class, array(
-              'label' => 'search.student.extern',
-              'attr' => ['class' => 'extern']
-                )
-              )
-            ->add('intren', CheckboxType::class, array(
-              'label' => 'search.student.intren',
-              'attr' => ['class' => 'intren']
-                )
-            );
+              ->add('birthday', TextType::class, array(
+                  'label' => 'student.field.birthday' ,
+                  'attr' => [ 'class' => 'birthday'],
+              ))
+              ->add('status', ChoiceType::class, array(
+                'choices'  => array(
+                    'extern' => 'search.student.extern',
+                    'intren' => 'search.student.intren',
+                ),
+                'placeholder'   => 'search.student.status'
+            ));
 
     }
 

@@ -1,0 +1,110 @@
+{% extends 'layout/base.html.twig' %}
+
+{% block title_page %}
+  {{ 'purchase.new.title'|trans }}
+{% endblock %}
+
+{% block sub_title_page %}
+  <a href="{{ path('purchase_index') }}">
+    {{ 'purchase.list.title'|trans }}
+  </a>
+  /
+  <a href="#">
+    {{ 'purchase.new.title'|trans }}
+  </a>
+{% endblock %}
+
+{% block body %}
+  <div class="md-card">
+    <div class="md-card-toolbar">
+      <h3 class="md-card-toolbar-heading-text large uk-margin-small-left">
+        {{ 'purchase.show.title'|trans }}
+      </h3>
+    </div>
+    <div class="md-card-content">
+      <div class="uk-grid uk-grid-divider" data-uk-grid-margin>
+        <div class="uk-width-medium-1-3">
+          {{ form_start(form) }}
+          <div class="uk-margin-small-top">
+            <div class="uk-form-row">
+              {{ form_label(form.provider) }}
+              {{ form_widget(form.provider)}}
+              <div class="parsley-errors-list filled uk-text-danger">
+                {{ form_errors(form.provider) }}
+              </div>
+            </div>
+
+            <div class="uk-form-row">
+              {{ form_label(form.state) }}
+              {{ form_widget(form.state)}}
+              <div class="parsley-errors-list filled uk-text-danger">
+                {{ form_errors(form.state) }}
+              </div>
+            </div>
+            <div class="uk-form-row">
+              {{ form_label(form.purchaseDate) }}
+              {{ form_widget(form.purchaseDate)}}
+              <div class="parsley-errors-list filled uk-text-danger">
+                {{ form_errors(form.purchaseDate) }}
+              </div>
+            </div>
+            {{ form_widget(form) }}
+
+            {{ form_end(form) }}
+          </div>
+        </div>
+        <div class="uk-width-medium-2-3">
+          <div id="purchase_line"></div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <div class="md-card uk-margin-medium-bottom">
+    <div class="md-card-toolbar">
+      <h3 class="md-card-toolbar-heading-text large uk-margin-small-left">
+        {{ 'product.list.title'|trans }}
+      </h3>
+    </div>
+    <div class="md-card-content">
+      {{ datatable_render(products) }}
+    </div>
+  </div>
+
+  <div class="uk-modal" id="modal_new_product">
+    <div class="uk-modal-dialog">
+      <div class="uk-modal-header uk-margin-medium-bottom">
+        <h3 class="uk-modal-title">{{ 'purchase_items.new.title'|trans }}</h3>
+      </div>
+      <div id="product" style="display:none;"></div>
+      <div class="uk-grid uk-margin-medium-top" data-uk-grid-margin>
+        <div class="uk-width-small-1-2">
+          <div id="price_elem" class="uk-input-group">
+            <span class="uk-input-group-addon">
+              <i class="uk-input-group-icon uk-icon-money"></i>
+            </span>
+            <label for="price">{{'product.field.price'|trans }}</label>
+            <input class="md-input" type="number" id="price">
+          </div>
+        </div>
+        <div class="uk-width-small-1-2">
+          <div id="quantity_elem" class="uk-input-group">
+            <span class="uk-input-group-addon">
+              <i class="uk-icon-cubes"></i>
+            </span>
+            <label for="quantity">{{ 'product.field.quantity'|trans }}</label>
+            <input class="md-input" type="number" id="quantity">
+          </div>
+        </div>
+      </div>
+      <div class="uk-modal-footer uk-text-right">
+        <button type="button" class="md-btn md-btn-flat uk-modal-close">{{ 'datatables.dialog.close'|trans({}, 'messages') }}</button>
+        <button type="button" id="new_action" class="md-btn md-btn-flat md-btn-flat-primary">{{ 'purchase_items.save'|trans({}, 'messages') }}</button>
+      </div>
+    </div>
+  </div>
+{% endblock %}
+{% block javascripts %}
+  {{ parent()}}
+  {% include '@SMSStore/purchase/new_action.html.twig' %}
+{% endblock %}

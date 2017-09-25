@@ -1,0 +1,629 @@
+<!DOCTYPE>
+<html>
+  <head>
+
+    <!-- Define Charset -->
+    <meta charset="UTF-8">
+
+    <!-- Responsive Meta Tag -->
+    <meta name="viewport" content="width=device-width; initial-scale=1.0; maximum-scale=1.0;"/>
+
+    <link href='http://fonts.googleapis.com/css?family=Questrial' rel='stylesheet' type='text/css'>
+    <link href='http://fonts.googleapis.com/css?family=Montserrat:400,300,700,600' rel='stylesheet' type='text/css'>
+
+    <title>{{ purchase.reference }}</title>
+    <!-- Responsive Styles and Valid Styles -->
+
+    <style type="text/css">
+
+      /**
+      * Footer Styles
+      */
+
+      .footer {
+        position: absolute;
+        right: 0;
+        bottom: 0;
+        left: 0;
+        color: #686b74;
+        font-size: 14px;
+        font-family: 'Montserrat', sans-serif;
+        mso-line-height-rule: exactly;
+        line-height: 26px;
+        padding: 1rem;
+        text-align: center;
+      }
+      body {
+        width: 100%;
+        margin: 0;
+        padding-top: 3rem;
+        -webkit-font-smoothing: antialiased;
+        mso-margin-top-alt: 0;
+        mso-margin-bottom-alt: 0;
+        mso-padding-alt: 0 0 0 0;
+      }
+
+      h1,
+      h2,
+      h3,
+      h4,
+      p {
+        margin-top: 0;
+        margin-bottom: 0;
+        padding-top: 0;
+        padding-bottom: 0;
+      }
+
+      span.preheader {
+        display: none;
+        font-size: 1px;
+      }
+
+      html {
+        width: 100%;
+      }
+
+      table {
+        font-size: 14px;
+        border: 0;
+      }
+
+      /* ----------- responsivity ----------- */
+      @media only screen and (max-width: 640px) {
+        /*------ top header ------ */
+        body[yahoo] .show {
+          display: block !important;
+        }
+        body[yahoo] .hide {
+          display: none !important;
+        }
+
+        /*----- main image -------*/
+        body[yahoo] .main-image img {
+          width: 440px !important;
+          height: auto !important;
+        }
+
+        /* ====== divider ====== */
+        body[yahoo] .divider img {
+          width: 440px !important;
+        }
+
+        /*--------- banner ----------*/
+        body[yahoo] .banner img {
+          width: 440px !important;
+          height: auto !important;
+        }
+        /*-------- container --------*/
+        body[yahoo] .container590 {
+          width: 440px !important;
+        }
+        body[yahoo] .container580 {
+          width: 400px !important;
+        }
+        body[yahoo] .container1 {
+          width: 420px !important;
+        }
+        body[yahoo] .container2 {
+          width: 400px !important;
+        }
+        body[yahoo] .container3 {
+          width: 380px !important;
+        }
+
+        /*-------- secions ----------*/
+        body .section-item {
+          width: 300px !important;
+        }
+        body .section-img img {
+          width: 440px !important;
+          height: auto !important;
+        }
+      }
+      @media only screen and (max-width: 479px) {
+        /*------ top header ------ */
+        body[yahoo] .main-header {
+          font-size: 24px !important;
+        }
+        body[yahoo] .resize-text {
+          font-size: 14px !important;
+        }
+
+        /*----- main image -------*/
+        body[yahoo] .main-image img {
+          width: 280px !important;
+          height: auto !important;
+        }
+
+        /* ====== divider ====== */
+        body[yahoo] .divider img {
+          width: 280px !important;
+        }
+        body[yahoo] .align-center {
+          text-align: center !important;
+        }
+
+        /*-------- container --------*/
+        body[yahoo] .container590 {
+          width: 280px !important;
+        }
+        body[yahoo] .container580 {
+          width: 250px !important;
+        }
+        body[yahoo] .container1 {
+          width: 260px !important;
+        }
+        body[yahoo] .container2 {
+          width: 240px !important;
+        }
+        body[yahoo] .container3 {
+          width: 220px !important;
+        }
+
+        /*------- CTA -------------*/
+        body[yahoo] .cta-button {
+          width: 200px !important;
+        }
+        body[yahoo] .cta-text {
+          font-size: 14px !important;
+        }
+      }
+
+    </style>
+  </head>
+
+  <body leftmargin="0" topmargin="0" marginwidth="0" marginheight="0">
+
+    <table border="0" width="100%" cellpadding="0" cellspacing="0" bgcolor="e8e8e8" class="body_color">
+
+      <tbody>
+        <tr>
+          <td>
+            <table border="0" align="center" width="100%" cellpadding="0" cellspacing="0" bgcolor="ffffff" class=" bg_color">
+              <tbody>
+                <tr>
+                  <td>
+                    <table border="0" align="center" width="90%" cellpadding="0" cellspacing="0">
+
+                      <tbody>
+
+                        <tr>
+                          <td>
+                            <table border="0" align="left" cellpadding="0" cellspacing="0" style="border-collapse:collapse; mso-table-lspace:0pt; mso-table-rspace:0pt;" class="container590">
+
+                              <tbody>
+                                <tbody>
+                                  <tr>
+                                    <td align="left" style="color: #686b74; font-size: 10px; font-family: 'Montserrat', sans-serif; font-weight: 700; mso-line-height-rule: exactly; line-height: 24px;" class="text_color main-header">
+
+                                      <!-- ======= section header ======= -->
+
+                                      <div class="editable_text" style="line-height: 24px;">
+                                        <span class="text_container">
+
+                                          {{ 'establishment.field.establishmentName'|trans }}
+
+                                        </span>
+                                      </div>
+                                    </td>
+                                  </tr>
+
+                                  <tr>
+                                    <td align="right" style="color: #222222; font-size: 20px; font-family: 'Montserrat', sans-serif; font-weight: 700; mso-line-height-rule: exactly; line-height: 24px;" class="title_color main-header">
+
+                                      <!-- ======= section header ======= -->
+
+                                      <div class="editable_text" style="line-height: 24px;">
+                                        <span class="text_container">{{ purchase.author.establishment.establishmentName }}</span>
+                                      </div>
+                                    </td>
+                                  </tr>
+                                </tbody>
+                              </tbody>
+                            </table>
+
+                            <table border="0" align="left" width="5" cellpadding="0" cellspacing="0" style="border-collapse:collapse; mso-table-lspace:0pt; mso-table-rspace:0pt;" class="container590">
+                              <tbody>
+                                <tr>
+                                  <td height="20" width="5" style="font-size: 20px; line-height: 20px;">&nbsp;</td>
+                                </tr>
+                              </tbody>
+                            </table>
+
+                            <table border="0" align="right" cellpadding="0" cellspacing="0" style="border-collapse:collapse; mso-table-lspace:0pt; mso-table-rspace:0pt;" class="container590">
+                              <tbody>
+                                <tr>
+                                  <td align="left" style="color: #686b74; font-size: 10px; font-family: 'Montserrat', sans-serif; font-weight: 700; mso-line-height-rule: exactly; line-height: 24px;" class="text_color main-header">
+
+                                    <!-- ======= section header ======= -->
+
+                                    <div class="editable_text" style="line-height: 24px;">
+                                      <span class="text_container">
+
+                                        {{ 'store.notification'|trans }}
+
+                                      </span>
+                                    </div>
+                                  </td>
+                                </tr>
+
+                                <tr>
+                                  <td align="left" style="color: #222222; font-size: 20px; font-family: 'Montserrat', sans-serif; font-weight: 700; mso-line-height-rule: exactly; line-height: 24px;" class="title_color main-header">
+
+                                    <!-- ======= section header ======= -->
+
+                                    <div class="editable_text" style="line-height: 24px;">
+                                      <span class="text_container">{{ 'store.purchase'|trans }}</span>
+                                    </div>
+                                  </td>
+                                </tr>
+                              </tbody>
+                            </table>
+                          </td>
+                        </tr>
+
+                        <tr>
+                          <td height="40" style="font-size: 40px; line-height: 40px;">&nbsp;</td>
+                        </tr>
+                        <tr>
+                          <td>
+                            <table align="center" width="250" border="0" cellpadding="0" cellspacing="0" bgcolor="ededed" class="divider_color">
+                              <tbody>
+                                <tr>
+                                  <td height="1" style="font-size: 1px; line-height: 1px;">&nbsp;</td>
+                                </tr>
+                              </tbody>
+                            </table>
+                          </td>
+                        </tr>
+                        <tr>
+                          <td height="40" style="font-size: 40px; line-height: 40px;">&nbsp;</td>
+                        </tr>
+                        <tr>
+                          <td>
+
+                            <table border="0" align="left" cellpadding="0" cellspacing="0" style="border-collapse:collapse; mso-table-lspace:0pt; mso-table-rspace:0pt;">
+
+                              <tbody>
+                                <tr>
+                                  <td align="left" style="color: #222222; font-size: 18px; font-family: 'Montserrat', sans-serif; font-weight: 700; mso-line-height-rule: exactly; line-height: 22px;" class="main-header title_color">
+
+                                    <!-- ======= section header ======= -->
+
+                                    <div class="editable_text" style="line-height: 22px;">
+                                      <span class="text_container">{{ purchase.author.establishment.establishmentName }}</span>
+                                    </div>
+                                  </td>
+                                </tr>
+
+                                <tr>
+                                  <td height="10" style="font-size: 10px; line-height: 10px;">&nbsp;</td>
+                                </tr>
+
+                                <tr>
+                                  <td align="left" style="color: #686b74; font-size: 14px; font-family: 'Montserrat', sans-serif; mso-line-height-rule: exactly; line-height: 26px;" class="text_color">
+
+                                    <!-- ======= section text ======= -->
+
+                                    <div class="editable_text" style="line-height: 26px">
+                                      <span class="text_container">
+                                        {{ purchase.author.establishment.address }}
+                                        <br>
+                                        {{ purchase.author.establishment.email }}
+                                        <br>
+                                        {{ purchase.author.establishment.phone }}
+                                      </span>
+                                    </div>
+                                  </td>
+                                </tr>
+
+                              </tbody>
+                            </table>
+
+                            <table border="0" width="5" align="left" cellpadding="0" cellspacing="0" style="border-collapse:collapse; mso-table-lspace:0pt; mso-table-rspace:0pt;">
+                              <tbody>
+                                <tr>
+                                  <td width="5" height="30" style="font-size: 30px; line-height: 30px;">&nbsp;</td>
+                                </tr>
+                              </tbody>
+                            </table>
+
+                            <table border="0" align="right" cellpadding="0" cellspacing="0" bgcolor="39b8d3" style="border-collapse:collapse; mso-table-lspace:0pt; mso-table-rspace:0pt;">
+                              <tr>
+                                <td>
+                                  <table border="0" align="center" cellpadding="0" cellspacing="0" bgcolor="39b8d3" class="section-item">
+                                    <tr>
+                                      <td height="13" style="font-size: 13px; line-height: 13px;">&nbsp;</td>
+                                    </tr>
+                                    <tr>
+                                      <td align="left" style="color: #ffffff; font-size: 14px; font-family: 'Montserrat', sans-serif; mso-line-height-rule: exactly; line-height: 24px;" class="title_color">
+
+                                        <div style="line-height: 24px;padding-left: 10px;">
+
+                                          {{'orderprovider.field.reference'|trans }}
+
+                                        </div>
+                                      </td>
+
+                                      <td align="right" style="color: #ffffff; font-size: 14px; font-family: 'Montserrat', sans-serif; mso-line-height-rule: exactly; line-height: 24px;" class="title_color">
+
+                                        <div style="line-height: 24px;padding-right: 10px;">
+
+                                          {{ purchase.reference }}
+
+                                        </div>
+                                      </td>
+                                    </tr>
+                                    <tr>
+                                      <td height="13" style="font-size: 13px; line-height: 13px;">&nbsp;</td>
+                                    </tr>
+                                  </table>
+                                </td>
+                              </tr>
+                              <tr>
+                                <td colspan="2">
+                                  <table align="center" width="100%" border="0" cellpadding="0" cellspacing="0" bgcolor="84d3e4">
+                                    <tr>
+                                      <td height="1" style="font-size: 1px; line-height: 1px;">&nbsp;</td>
+                                    </tr>
+                                  </table>
+                                </td>
+                              </tr>
+                              <tr>
+                                <td>
+                                  <table border="0" align="center" cellpadding="0" cellspacing="0" bgcolor="39b8d3" class="section-item">
+                                    <tr>
+                                      <td height="13" style="font-size: 13px; line-height: 13px;">&nbsp;</td>
+                                    </tr>
+                                    <tr>
+                                      <td align="left" style="color: #ffffff; font-size: 14px; font-family: 'Montserrat', sans-serif; mso-line-height-rule: exactly; line-height: 24px;" class=" title_color">
+
+                                        <div style="line-height: 24px;padding-left: 10px;">
+
+                                          {{ 'author.created'|trans }}
+
+                                        </div>
+                                      </td>
+
+                                      <td align="right" style="color: #ffffff; font-size: 14px; font-family: 'Montserrat', sans-serif; mso-line-height-rule: exactly; line-height: 24px;" class="title_color">
+
+                                        <div style="line-height: 24px;padding-right: 10px;">
+
+                                          {% if purchase.created %}{{ purchase.created|date('d M Y') }}{% endif %}
+                                        </div>
+                                      </td>
+                                    </tr>
+                                    <tr>
+                                      <td height="13" style="font-size: 13px; line-height: 13px;">&nbsp;</td>
+                                    </tr>
+                                  </table>
+                                </td>
+                              </tr>
+                            </table>
+                          </td>
+                        </tr>
+
+                        <tr>
+                          <td height="40" style="font-size: 40px; line-height: 40px;">&nbsp;</td>
+                        </tr>
+                        <tr>
+                          <td colspan="2">
+                            <table align="center" width="100%" border="0" cellpadding="0" cellspacing="0" bgcolor="ededed" class="divider_color">
+                              <tbody>
+                                <tr>
+                                  <td height="1" style="font-size: 1px; line-height: 1px;">&nbsp;</td>
+                                </tr>
+                              </tbody>
+                            </table>
+                          </td>
+                        </tr>
+                        <tr>
+                          <td height="40" style="font-size: 40px; line-height: 40px;">&nbsp;</td>
+                        </tr>
+                        <tr>
+                          <td align="left" style="color: #222222; font-size: 18px; font-family: 'Montserrat', sans-serif; font-weight: 700; mso-line-height-rule: exactly; line-height: 22px;" class="main-header title_color">
+
+                            <!-- ======= section header ======= -->
+
+                            <div class="editable_text" style="line-height: 22px;">
+                              <span class="text_container">
+
+                                {{ "store.email.purchase_to"|trans }}
+
+                              </span>
+                            </div>
+                          </td>
+                        </tr>
+
+                        <tr>
+                          <td height="10" style="font-size: 10px; line-height: 10px;">&nbsp;</td>
+                        </tr>
+
+                        <tr>
+                          <td align="left" style="color: #686b74; font-size: 14px; font-family: 'Montserrat', sans-serif; mso-line-height-rule: exactly; line-height: 26px;" class="text_color">
+
+                            <!-- ======= section text ======= -->
+
+                            <div class="editable_text" style="line-height: 26px">
+                              <span class="text_container">
+
+                                {{ purchase.provider.socialReason }}
+                                <br>
+                                {{ purchase.provider.address }}
+                                <br>
+                                {{ purchase.provider.phone }}
+                                <br>
+                                {{ purchase.provider.email }}
+                              </span>
+                            </div>
+                          </td>
+                        </tr>
+                        <tr>
+                          <td height="40" style="font-size: 40px; line-height: 40px;">&nbsp;</td>
+                        </tr>
+
+                        <tr>
+                          <td>
+                            <table border="0" width="100%" align="0" cellpadding="0" cellspacing="0" bgcolor="e8e8e8" class="bg2_color">
+
+                              <tbody>
+                                <tr bgcolor="39b8d3" class="main_color">
+                                  <td align="center" height="50" valign="middle" style="color: #ffffff; font-size: 14px; font-family: 'Montserrat', sans-serif; mso-line-height-rule: exactly; line-height: 26px; border-right: solid 1px #84d3e4;" class="text2_color">
+                                    <div class="editable_text" style=" line-height: 22px;">
+                                      <span class="text_container">
+                                        {{ 'product.field.sku'|trans}}
+                                      </span>
+                                    </div>
+                                  </td>
+                                  <td align="center" height="50" valign="middle" style="color: #ffffff; font-size: 14px; font-family: 'Montserrat', sans-serif; mso-line-height-rule: exactly; line-height: 26px; border-right: solid 1px #84d3e4;" class="text2_color">
+                                    <div class="editable_text" style=" line-height: 22px;">
+                                      <span class="text_container">
+                                        {{ 'product.field.productName'|trans}}
+                                      </span>
+                                    </div>
+                                  </td>
+                                  <td align="center" height="50" valign="middle" style="color: #ffffff; font-size: 14px; font-family: 'Montserrat', sans-serif; mso-line-height-rule: exactly; line-height: 26px; border-right: solid 1px #84d3e4;" class="text2_color">
+                                    <div class="editable_text" style=" line-height: 22px;">
+                                      <span class="text_container">
+                                        {{ 'product.field.price'|trans}}
+                                      </span>
+                                    </div>
+                                  </td>
+
+                                  <td align="center" height="50" valign="middle" style="color: #ffffff; font-size: 14px; font-family: 'Montserrat', sans-serif; mso-line-height-rule: exactly; line-height: 26px; border-right: solid 1px #84d3e4;" class="text2_color">
+                                    <div class="editable_text" style=" line-height: 22px;">
+                                      <span class="text_container">
+                                        {{ 'product.field.quantity'|trans}}
+                                      </span>
+                                    </div>
+                                  </td>
+                                </tr>
+                                {% set countPrice = 0 %}
+                                {% set countQuantity = 0 %}
+                                {% for line in purchase.purchaseLines %}
+                                  {% set countPrice = countPrice + (line.price * line.quantity) %}
+                                  {% set countQuantity = countQuantity + line.quantity %}
+                                  <tr>
+                                    <td align="center" height="50" valign="middle" style="color: #686b74; font-size: 14px; font-family: 'Montserrat', sans-serif; mso-line-height-rule: exactly; line-height: 26px; border-right: solid 1px #f1f1f1;" class="text_color">
+                                      <div class="editable_text" style=" line-height: 22px;">
+                                        <span class="text_container">
+                                          {{ line.product.sku }}
+                                        </span>
+                                      </div>
+                                    </td>
+                                    <td align="center" height="50" valign="middle" style="color: #686b74; font-size: 14px; font-family: 'Montserrat', sans-serif; mso-line-height-rule: exactly; line-height: 26px; border-right: solid 1px #f1f1f1;" class="text_color">
+                                      <div class="editable_text" style=" line-height: 22px;">
+                                        <span class="text_container">
+                                          {{ line.product.productName }}
+                                        </span>
+                                      </div>
+                                    </td>
+                                    <td align="center" height="50" valign="middle" style="color: #686b74; font-size: 14px; font-family: 'Montserrat', sans-serif; mso-line-height-rule: exactly; line-height: 26px; border-right: solid 1px #f1f1f1;" class="text_color">
+                                      <div class="editable_text" style=" line-height: 22px;">
+                                        <span class="text_container">
+                                          {{ line.price|price }}
+                                          {{ "store.unit.price"|trans }}
+                                        </span>
+                                      </div>
+                                    </td>
+                                    <td align="center" height="50" valign="middle" style="color: #686b74; font-size: 14px; font-family: 'Montserrat', sans-serif; mso-line-height-rule: exactly; line-height: 26px; border-right: solid 1px #f1f1f1;" class="text_color">
+                                      <div class="editable_text" style=" line-height: 22px;">
+                                        <span class="text_container">
+                                          {{ line.quantity }}
+                                          {{ "store.unit.elem"|trans }}
+                                        </span>
+                                      </div>
+                                    </td>
+
+                                  </tr>
+                                {% endfor %}
+                              </tbody>
+                            </table>
+                          </td>
+                        </tr>
+
+                        <tr>
+                          <td height="50" style="font-size: 50px; line-height: 50px;">&nbsp;</td>
+                        </tr>
+                        <tr>
+                          <td>
+                            <table border="0" align="right" width="250" cellpadding="6" cellspacing="0">
+                              <tbody>
+                                <tr>
+                                  <td mc:edit="about-text27" align="left" height="" valign="middle" style="color: #686b74; font-size: 14px; font-family: 'Montserrat', sans-serif; mso-line-height-rule: exactly; line-height: 26px;" class="text_color">
+                                    <div class="editable_text" style=" line-height: 22px;">
+                                      <span class="text_container">
+                                        <singleline>{{ 'store.total.quantity'|trans}}</singleline>
+                                      </span>
+                                    </div>
+                                  </td>
+                                  <td mc:edit="about-text28" align="right" height="" valign="middle" style="color: #686b74; font-size: 14px; font-family: 'Montserrat', sans-serif; mso-line-height-rule: exactly; line-height: 26px;" class="text_color">
+                                    <div class="editable_text" style=" line-height: 22px;">
+                                      <span class="text_container">
+                                        <singleline>{{ countQuantity }} {{ 'store.unit.elem'|trans }}</singleline>
+                                      </span>
+                                    </div>
+                                  </td>
+                                </tr>
+                                <tr bgcolor="e8e8e8" class="bg2_color">
+                                  <td mc:edit="about-text29" align="left" height="" valign="middle" style="color: #686b74; font-size: 14px; font-family: 'Montserrat', sans-serif; mso-line-height-rule: exactly; line-height: 26px;" class="text_color">
+                                    <div class="editable_text" style=" line-height: 22px;">
+                                      <span class="text_container">
+                                        <singleline>{{ 'store.total.price'|trans}}</singleline>
+                                      </span>
+                                    </div>
+                                  </td>
+                                  <td mc:edit="about-text30" align="right" height="" valign="middle" style="color: #686b74; font-size: 14px; font-family: 'Montserrat', sans-serif; mso-line-height-rule: exactly; line-height: 26px;" class="text_color">
+                                    <div class="editable_text" style=" line-height: 22px;">
+                                      <span class="text_container">
+                                        <singleline>{{ countPrice|price }} {{ 'store.unit.price'|trans }}</singleline>
+                                      </span>
+
+                                    </div>
+                                  </td>
+                                </tr>
+                              </tbody>
+                            </table>
+                          </td>
+                        </tr>
+                        <tr>
+                          <td height="50" style="font-size: 50px; line-height: 50px;">&nbsp;</td>
+                        </tr>
+                        <tr>
+                          <td colspan="2">
+                            <table align="center" width="100%" border="0" cellpadding="0" cellspacing="0" bgcolor="ededed" class="divider_color">
+                              <tbody>
+                                <tr>
+                                  <td height="1" style="font-size: 1px; line-height: 1px;">&nbsp;</td>
+                                </tr>
+                              </tbody>
+                            </table>
+                          </td>
+                        </tr>
+
+                        <tr></tr>
+                      </tbody>
+                    </table>
+                  </td>
+                </tr>
+
+                <tr>
+                  <td height="30" style="font-size: 30px; line-height: 30px;">&nbsp;</td>
+                </tr>
+
+              </tbody>
+            </table>
+          </td>
+        </tr>
+
+      </tbody>
+    </table>
+    <div class="editable_text" style=" line-height: 22px;">
+      <span class="text_container footer">
+
+        {{ "store.email.footer"|trans }}
+
+      </span>
+    </div>
+  </body>
+</html>

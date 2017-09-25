@@ -4,7 +4,7 @@ namespace SMS\StoreBundle\Controller;
 
 use SMS\StoreBundle\Entity\Product;
 use SMS\StoreBundle\Form\ProductType;
-use API\BaseController\BaseController;
+use SMS\StoreBundle\BaseController\BaseController;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\Method;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\Route;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\Template;
@@ -39,7 +39,34 @@ class ProductController extends BaseController
 
         return array('products' => $products);
     }
-  /**
+
+    /**
+     * Lists all product entities.
+     *
+     * @Route("/form/results", name="form_product_results")
+     * @Method("GET")
+     * @return Response
+     */
+    public function indexFormResultsAction()
+    {
+        $products = $this->getFormProductEntityManager();
+        $products->buildDatatable();
+
+        $query = $this->getDataTableQuery()->getQueryFrom($products);
+        $user = $this->getUser();
+        $function = function($qb) use ($user)
+        {
+            $qb->join('product.establishment', 'establishment')
+                ->andWhere('establishment.id = :establishment')
+        				->setParameter('establishment', $user->getEstablishment()->getId());
+        };
+
+        $query->addWhereAll($function);
+
+        return $query->getResponse();
+    }
+
+    /**
      * Lists all product entities.
      *
      * @Route("/results", name="product_results")
@@ -79,7 +106,7 @@ class ProductController extends BaseController
         $form->handleRequest($request);
 
         if ($form->isSubmitted() && $form->isValid() && $form->get('save')->isClicked()) {
-            $this->getEntityManager()->insert($product , $this->getUser());
+            $this->getEntityManager()->addProduct($product , $this->getUser());
             $this->flashSuccessMsg('product.add.success');
             return $this->redirectToRoute('product_index');
         }
@@ -102,7 +129,7 @@ class ProductController extends BaseController
 
         return $this->render('SMSStoreBundle:product:show.html.twig', array(
             'product' => $product,
-            'delete_form' => $deleteForm->createView(),
+            'statistics' => $this->getEntityManager()->productStatistics($product),
         ));
     }
 
@@ -117,7 +144,7 @@ class ProductController extends BaseController
     {
         $editForm = $this->createForm(ProductType::class, $product, array('establishment' => $this->getUser()->getEstablishment()))->handleRequest($request);
         if ($editForm->isSubmitted() && $editForm->isValid() && $editForm->get('save')->isClicked()) {
-            $this->getEntityManager()->update($product);
+            $this->getEntityManager()->updateProduct($product);
             $this->flashSuccessMsg('product.edit.success');
             return $this->redirectToRoute('product_index');
         }
@@ -211,4 +238,21 @@ class ProductController extends BaseController
         }
 
         return $this->get('sms.datatable.product');
-    }}
+    }
+
+    /**
+     * Get product Entity Manager Service.
+     *
+     * @return SMS\Classes\Services\EntityManager
+     *
+     * @throws \NotFoundException
+     */
+    protected function getFormProductEntityManager()
+    {
+        if (!$this->has('sms.datatable.form.product')){
+           throw $this->createNotFoundException('Service Not Found');
+        }
+
+        return $this->get('sms.datatable.form.product');
+    }
+}

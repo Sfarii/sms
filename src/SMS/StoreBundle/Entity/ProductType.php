@@ -56,7 +56,7 @@ class ProductType
      * @ORM\ManyToOne(targetEntity="SMS\UserBundle\Entity\User" ,fetch="EXTRA_LAZY")
      * @ORM\JoinColumn(name="user_id", referencedColumnName="id")
      */
-    private $user;
+    private $author;
 
     /**
      * One establishment has Many Products Types.
@@ -201,29 +201,7 @@ class ProductType
         return $this->products;
     }
 
-    /**
-     * Set user
-     *
-     * @param \SMS\UserBundle\Entity\User $user
-     *
-     * @return ProductType
-     */
-    public function setUser(\SMS\UserBundle\Entity\User $user = null)
-    {
-        $this->user = $user;
-
-        return $this;
-    }
-
-    /**
-     * Get user
-     *
-     * @return \SMS\UserBundle\Entity\User
-     */
-    public function getUser()
-    {
-        return $this->user;
-    }
+    
 
     /**
      * Set establishment
@@ -247,5 +225,29 @@ class ProductType
     public function getEstablishment()
     {
         return $this->establishment;
+    }
+
+    /**
+     * Set author
+     *
+     * @param \SMS\UserBundle\Entity\User $author
+     *
+     * @return ProductType
+     */
+    public function setAuthor(\SMS\UserBundle\Entity\User $author = null)
+    {
+        $this->author = $author;
+
+        return $this;
+    }
+
+    /**
+     * Get author
+     *
+     * @return \SMS\UserBundle\Entity\User
+     */
+    public function getAuthor()
+    {
+        return $this->author;
     }
 }

@@ -4,13 +4,14 @@ namespace SMS\StoreBundle\Controller;
 
 use SMS\StoreBundle\Entity\OrderUser;
 use SMS\StoreBundle\Form\OrderUserType;
-use API\BaseController\BaseController;
+use SMS\StoreBundle\BaseController\BaseController;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\Method;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\Route;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\Template;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\Security;
+use SMS\StoreBundle\Entity\Product;
 
 /**
  * Orderuser controller.
@@ -39,7 +40,8 @@ class OrderUserController extends BaseController
 
         return array('orderUsers' => $orderUsers);
     }
-  /**
+
+    /**
      * Lists all orderUser entities.
      *
      * @Route("/results", name="orderuser_results")
@@ -65,30 +67,6 @@ class OrderUserController extends BaseController
         return $query->getResponse();
     }
 
-    /**
-     * Creates a new orderUser entity.
-     *
-     * @Route("/new", name="orderuser_new", options={"expose"=true})
-     * @Method({"GET", "POST"})
-     * @Template("SMSStoreBundle:orderuser:new.html.twig")
-     */
-    public function newAction(Request $request)
-    {
-        $orderUser = new Orderuser();
-        $form = $this->createForm(OrderUserType::class, $orderUser);
-        $form->handleRequest($request);
-
-        if ($form->isSubmitted() && $form->isValid() && $form->get('save')->isClicked()) {
-            $this->getEntityManager()->insert($orderUser , $this->getUser());
-            $this->flashSuccessMsg('orderUser.add.success');
-            return $this->redirectToRoute('orderuser_index');
-        }
-
-        return array(
-            'orderUser' => $orderUser,
-            'form' => $form->createView(),
-        );
-    }
 
     /**
      * Finds and displays a orderUser entity.
@@ -98,12 +76,57 @@ class OrderUserController extends BaseController
      */
     public function showAction(OrderUser $orderUser)
     {
-        $deleteForm = $this->createDeleteForm($orderUser);
+        $lineOrder = $this->getOrderLineEntityManager();
 
+        $lineOrder->buildDatatable(array('id' => $orderUser->getId()));
         return $this->render('SMSStoreBundle:orderuser:show.html.twig', array(
             'orderUser' => $orderUser,
-            'delete_form' => $deleteForm->createView(),
+            'lineOrder' => $lineOrder
         ));
+    }
+
+    /**
+     * Finds and displays a order provider entity.
+     *
+     * @Route("/pdf/{id}", name="order_user_pdf", options={"expose"=true})
+     * @Method("GET")
+     */
+    public function pdfAction(OrderUser $orderUser)
+    {
+      $html = $this->renderView('SMSStoreBundle:pdf:order_user.html.twig', array(
+          'order_user'  => $orderUser
+      ));
+
+      return new Response(
+          $this->get('knp_snappy.pdf')->getOutputFromHtml($html),
+          200,
+          array(
+              'Content-Type'          => 'application/pdf',
+              'Content-Disposition'   => sprintf('attachment; filename="%s.pdf"' , $orderUser->getReference())
+          )
+      );
+    }
+
+    /**
+     * Finds and displays a order user entity.
+     *
+     * @Route("/img/{id}", name="order_user_img", options={"expose"=true})
+     * @Method("GET")
+     */
+    public function imgAction(OrderUser $orderUser)
+    {
+      $html = $this->renderView('SMSStoreBundle:pdf:order_user.html.twig', array(
+          'order_user'  => $orderUser
+      ));
+
+      return new Response(
+          $this->get('knp_snappy.image')->getOutputFromHtml($html),
+          200,
+          array(
+              'Content-Type'          => 'image/jpg',
+              'Content-Disposition'   => sprintf('attachment; filename="%s.jpg"' , $orderUser->getReference())
+          )
+      );
     }
 
     /**
@@ -115,17 +138,25 @@ class OrderUserController extends BaseController
      */
     public function editAction(Request $request, OrderUser $orderUser)
     {
-        $editForm = $this->createForm(OrderUserType::class, $orderUser)->handleRequest($request);
+        $editForm = $this->createForm(OrderUserType::class, $orderUser, array('establishment' => $this->getUser()->getEstablishment()))->handleRequest($request);
         if ($editForm->isSubmitted() && $editForm->isValid() && $editForm->get('save')->isClicked()) {
-            $this->getEntityManager()->update($orderUser);
-            $this->flashSuccessMsg('orderUser.edit.success');
-            return $this->redirectToRoute('orderuser_index');
+            if ($this->getEntityManager()->updateUserOrder($orderUser)){
+              $this->flashSuccessMsg('orderUser.edit.success');
+            }else {
+              $this->flashErrorMsg('orderUser.edit.fail');
+            }
+            return $this->redirectToRoute('orderuser_show' , array('id' => $orderUser->getId()));
         }
 
+        $products = $this->getProductEntityManager();
+        $products->buildDatatable();
+
         return array(
+            'products' => $products,
             'orderUser' => $orderUser,
-            'edit_form' => $editForm->createView(),
+            'form' => $editForm->createView(),
         );
+
     }
 
     /**
@@ -164,40 +195,6 @@ class OrderUserController extends BaseController
     }
 
     /**
-     * Deletes a orderUser entity.
-     *
-     * @Route("/{id}", name="orderuser_delete")
-     * @Method("DELETE")
-     */
-    public function deleteAction(Request $request, OrderUser $orderUser)
-    {
-        $form = $this->createDeleteForm($orderUser)->handleRequest($request);
-
-        if ($form->isSubmitted() && $form->isValid()) {
-            $this->getEntityManager()->delete($orderUser);
-            $this->flashSuccessMsg('orderUser.delete.one.success');
-        }
-
-        return $this->redirectToRoute('orderuser_index');
-    }
-
-    /**
-     * Creates a form to delete a orderUser entity.
-     *
-     * @param OrderUser $orderUser The orderUser entity
-     *
-     * @return \Symfony\Component\Form\Form The form
-     */
-    private function createDeleteForm(OrderUser $orderUser)
-    {
-        return $this->createFormBuilder()
-            ->setAction($this->generateUrl('orderuser_delete', array('id' => $orderUser->getId())))
-            ->setMethod('DELETE')
-            ->getForm()
-        ;
-    }
-
-    /**
      * Get orderUser Entity Manager Service.
      *
      * @return SMS\Classes\Services\EntityManager
@@ -211,4 +208,37 @@ class OrderUserController extends BaseController
         }
 
         return $this->get('sms.datatable.orderUser');
-    }}
+    }
+
+    /**
+     * Get orderLine Entity Manager Service.
+     *
+     * @return SMS\Classes\Services\EntityManager
+     *
+     * @throws \NotFoundException
+     */
+    protected function getOrderLineEntityManager()
+    {
+        if (!$this->has('sms.datatable.order_line')){
+           throw $this->createNotFoundException('Service Not Found');
+        }
+
+        return $this->get('sms.datatable.order_line');
+    }
+
+    /**
+     * Get product Entity Manager Service.
+     *
+     * @return SMS\Classes\Services\EntityManager
+     *
+     * @throws \NotFoundException
+     */
+    protected function getProductEntityManager()
+    {
+        if (!$this->has('sms.datatable.form.product')){
+           throw $this->createNotFoundException('Service Not Found');
+        }
+
+        return $this->get('sms.datatable.form.product');
+    }
+}

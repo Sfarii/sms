@@ -10,7 +10,6 @@ use Symfony\Bridge\Doctrine\Validator\Constraints\UniqueEntity;
  * Payment
  *
  * @ORM\Table(name="payment")
- * @UniqueEntity(fields={"month" , "paymentType" , "student", "establishment"} , errorPath="month")
  * @ORM\HasLifecycleCallbacks
  * @ORM\Entity(repositoryClass="SMS\PaymentBundle\Repository\PaymentRepository")
  */
@@ -28,8 +27,15 @@ class Payment
     /**
      * @var string
      *
+     * @ORM\Column(name="reference", type="string", length=150)
+     */
+    protected $reference;
+
+    /**
+     * @var string
+     *
      * @ORM\Column(name="month", type="string", length=2)
-     * @Assert\Choice({"01" , "02" , "03" ,  "04" ,"05" , "06" , "07" ,"08" ,"09"  , "10"  ,"11"  , "12"})
+     * @Assert\Choice({"1" , "2" , "3" ,  "4" ,"5" , "6" , "7" ,"8" ,"9"  , "10"  ,"11"  , "12"})
      * @Assert\NotBlank()
      */
     private $month;
@@ -39,10 +45,7 @@ class Payment
      *
      * @ORM\Column(name="price", type="float")
      * @Assert\NotBlank()
-     * @Assert\Range(
-     *      min = 0,
-     *      max = 99999999999999)
-     * @Assert\Expression(expression="this.getPaymentType().getPrice() >= value")
+     * @Assert\Range(min = 0, max = 99999999999999)
      */
     private $price;
 
@@ -55,9 +58,9 @@ class Payment
 
     /**
      * Many Payments have One PaymentType.
+     * @Assert\NotBlank()
      * @ORM\ManyToOne(targetEntity="PaymentType", inversedBy="payments" ,fetch="EXTRA_LAZY")
      * @ORM\JoinColumn(name="type_payment_id", referencedColumnName="id")
-     * @Assert\NotBlank()
      */
     private $paymentType;
 
@@ -67,6 +70,13 @@ class Payment
      * @ORM\JoinColumn(name="student_id", referencedColumnName="id")
      */
     private $student;
+
+    /**
+     * One User has Many Payments.
+     * @ORM\ManyToOne(targetEntity="SMS\UserBundle\Entity\User" ,fetch="EXTRA_LAZY")
+     * @ORM\JoinColumn(name="author_id", referencedColumnName="id")
+     */
+    private $author;
 
     /**
      * @var datetime $created
@@ -81,20 +91,6 @@ class Payment
      * @ORM\Column(type="datetime", nullable = true)
      */
     protected $updated;
-
-    /**
-     * One User has Many Payments.
-     * @ORM\ManyToOne(targetEntity="SMS\UserBundle\Entity\User" ,fetch="EXTRA_LAZY")
-     * @ORM\JoinColumn(name="user_id", referencedColumnName="id")
-     */
-    private $user;
-
-    /**
-     * One establishment has Many Payment.
-     * @ORM\ManyToOne(targetEntity="SMS\EstablishmentBundle\Entity\Establishment" ,fetch="EXTRA_LAZY")
-     * @ORM\JoinColumn(name="establishment_id", referencedColumnName="id")
-     */
-    private $establishment;
 
     /**
     * @ORM\PrePersist
@@ -112,83 +108,11 @@ class Payment
     /**
      * Get id
      *
-     * @return int
+     * @return integer
      */
     public function getId()
     {
         return $this->id;
-    }
-
-    /**
-     * Set prix
-     *
-     * @param integer $prix
-     *
-     * @return Payment
-     */
-    public function setPrix($prix)
-    {
-        $this->prix = $prix;
-
-        return $this;
-    }
-
-    /**
-     * Get prix
-     *
-     * @return int
-     */
-    public function getPrix()
-    {
-        return $this->prix;
-    }
-
-    /**
-     * Set price
-     *
-     * @param integer $price
-     *
-     * @return Payment
-     */
-    public function setPrice($price)
-    {
-        $this->price = $price;
-
-        return $this;
-    }
-
-    /**
-     * Get price
-     *
-     * @return int
-     */
-    public function getPrice()
-    {
-        return $this->price;
-    }
-
-    /**
-     * Set credit
-     *
-     * @param integer $credit
-     *
-     * @return Payment
-     */
-    public function setCredit($credit)
-    {
-        $this->credit = $credit;
-
-        return $this;
-    }
-
-    /**
-     * Get credit
-     *
-     * @return int
-     */
-    public function getCredit()
-    {
-        return $this->credit;
     }
 
     /**
@@ -213,6 +137,54 @@ class Payment
     public function getMonth()
     {
         return $this->month;
+    }
+
+    /**
+     * Set price
+     *
+     * @param float $price
+     *
+     * @return Payment
+     */
+    public function setPrice($price)
+    {
+        $this->price = $price;
+
+        return $this;
+    }
+
+    /**
+     * Get price
+     *
+     * @return float
+     */
+    public function getPrice()
+    {
+        return $this->price;
+    }
+
+    /**
+     * Set credit
+     *
+     * @param float $credit
+     *
+     * @return Payment
+     */
+    public function setCredit($credit)
+    {
+        $this->credit = $credit;
+
+        return $this;
+    }
+
+    /**
+     * Get credit
+     *
+     * @return float
+     */
+    public function getCredit()
+    {
+        return $this->credit;
     }
 
     /**
@@ -312,50 +284,50 @@ class Payment
     }
 
     /**
-     * Set user
+     * Set author
      *
-     * @param \SMS\UserBundle\Entity\User $user
+     * @param \SMS\UserBundle\Entity\User $author
      *
      * @return Payment
      */
-    public function setUser(\SMS\UserBundle\Entity\User $user = null)
+    public function setAuthor(\SMS\UserBundle\Entity\User $author = null)
     {
-        $this->user = $user;
+        $this->author = $author;
 
         return $this;
     }
 
     /**
-     * Get user
+     * Get author
      *
      * @return \SMS\UserBundle\Entity\User
      */
-    public function getUser()
+    public function getAuthor()
     {
-        return $this->user;
+        return $this->author;
     }
 
     /**
-     * Set establishment
+     * Set reference
      *
-     * @param \SMS\EstablishmentBundle\Entity\Establishment $establishment
+     * @param string $reference
      *
-     * @return Payment
+     * @return Purchase
      */
-    public function setEstablishment(\SMS\EstablishmentBundle\Entity\Establishment $establishment = null)
+    public function setReference($reference)
     {
-        $this->establishment = $establishment;
+        $this->reference = $reference;
 
         return $this;
     }
 
     /**
-     * Get establishment
+     * Get reference
      *
-     * @return \SMS\EstablishmentBundle\Entity\Establishment
+     * @return string
      */
-    public function getEstablishment()
+    public function getReference()
     {
-        return $this->establishment;
+        return $this->reference;
     }
 }

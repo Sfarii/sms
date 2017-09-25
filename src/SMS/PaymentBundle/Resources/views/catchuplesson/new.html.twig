@@ -1,0 +1,145 @@
+{% extends 'layout/base.html.twig' %}
+{% block sub_title_page %}
+  <a href="{{ path('catchuplesson_index') }}">
+    {{ 'catchuplesson.list.title'|trans }}
+  </a>
+  /
+  <a href="#">
+    {{ 'catchuplesson.new.title'|trans }}
+  </a>
+{% endblock %}
+{% block title_page %}
+  {{ 'catchuplesson.new.title'|trans }}
+{% endblock %}
+
+{% block body %}
+  {{ form_start(form)}}
+  <div class="md-card">
+    <div class="md-card-toolbar">
+      <div class="md-card-toolbar-actions">
+        <a href="#" id="new">
+          <i class="material-icons md-24">&#xE146;</i>
+        </a>
+      </div>
+      <h3 class="md-card-toolbar-heading-text">
+        {{ "catchuplesson.schedule.title"|trans }}
+      </h3>
+    </div>
+    <div class="md-card-content">
+      <div id="schedule_list"></div>
+    </div>
+  </div>
+
+  <div class="md-card">
+    <div class="md-card-toolbar">
+      <h3 class="md-card-toolbar-heading-text">
+        {{ "catchuplesson.show.title"|trans }}
+      </h3>
+    </div>
+    <div class="md-card-content">
+      <div id="form_start">
+        <div class="uk-grid uk-grid-divider uk-grid-medium" data-uk-grid-margin>
+
+          <div class="uk-width-large-1-2">
+            <div class="uk-form-row">
+
+              <label class="uk-form-label">{{ form_label(form.typePaymentName) }}</label>
+              {{ form_widget(form.typePaymentName)}}
+              <div class="parsley-errors-list filled uk-text-danger">
+                {{ form_errors(form.typePaymentName) }}
+              </div>
+            </div>
+
+            <div class="uk-form-row">
+
+              <label class="uk-form-label">{{ form_label(form.description) }}</label>
+              {{ form_widget(form.description)}}
+              <div class="parsley-errors-list filled uk-text-danger">
+                {{ form_errors(form.description) }}
+              </div>
+            </div>
+          </div>
+          <div class="uk-width-large-1-2">
+            <div class="uk-form-row">
+
+              {{ form_widget(form.professor)}}
+              <span class="uk-form-help-block">{{ form_label(form.professor) }}</span>
+              <div class="parsley-errors-list filled uk-text-danger">
+                {{ form_errors(form.professor) }}
+              </div>
+            </div>
+            <div class="uk-form-row">
+
+              <label class="uk-form-label">{{ form_label(form.price) }}</label>
+              {{ form_widget(form.price)}}
+              <div class="parsley-errors-list filled uk-text-danger">
+                {{ form_errors(form.price) }}
+              </div>
+            </div>
+            <div class="uk-form-row">
+
+              <label class="uk-form-label">{{ form_label(form.registrationFee) }}</label>
+              {{ form_widget(form.registrationFee)}}
+              <div class="parsley-errors-list filled uk-text-danger">
+                {{ form_errors(form.registrationFee) }}
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+  {{ form_widget(form)}}
+  {{ form_end(form)}}
+  <div class="uk-modal" id="modal_daterange">
+    <div class="uk-modal-dialog">
+      <div class="uk-modal-header uk-margin-medium-bottom">
+        <h3 class="uk-modal-title">{{"catchuplesson.schedule.title"|trans}}</h3>
+      </div>
+      <form action="{{ path('catchUpLesson_bulk_session_schedule_crud')}}" method="post">
+        <div class="uk-grid" data-uk-grid-margin>
+          <div class="uk-width-small-1-1 uk-margin-medium-bottom">
+            <select id="day" name="day" data-md-selectize>
+              <option value="">{{"catchuplesson.schedule.select_day"|trans}}</option>
+              {% for key, day in days %}
+                <option value="{{ key }}">{{ day|trans}}</option>
+              {% endfor %}
+            </select>
+          </div>
+          <input type="text" hidden="hidden" id="schedule_id" name="id" value="">
+          <div class="uk-width-small-1-2 uk-margin-medium-bottom">
+            <div class="uk-input-group">
+              <span class="uk-input-group-addon">
+                <i class="uk-input-group-icon uk-icon-calendar"></i>
+              </span>
+              <div class="md-input-wrapper">
+                <label for="ts_dp_start">{{"catchuplesson.schedule.start_time"|trans}}</label>
+                <input class="md-input" name="startTime" type="text" id="ts_dp_start">
+              </div>
+            </div>
+          </div>
+          <div class="uk-width-small-1-2 uk-margin-medium-bottom">
+            <div class="uk-input-group">
+              <span class="uk-input-group-addon">
+                <i class="uk-input-group-icon uk-icon-calendar"></i>
+              </span>
+              <div class="md-input-wrapper">
+                <label for="ts_dp_end">{{"catchuplesson.schedule.end_time"|trans}}</label>
+                <input class="md-input" name="endTime" type="text" id="ts_dp_end">
+              </div>
+            </div>
+          </div>
+        </div>
+        <div class="uk-modal-footer uk-text-right">
+          <button type="button" class="md-btn md-btn-flat uk-modal-close">{{ 'datatables.dialog.close'|trans({}, 'messages') }}</button>
+          <button type="button" id="apply" class="md-btn md-btn-flat md-btn-flat-primary">{{ 'daterange.apply'|trans({}, 'messages') }}</button>
+        </div>
+      </form>
+    </div>
+  </div>
+{% endblock %}
+{% block javascripts %}
+  {{ parent() }}
+  <!-- page specific plugins -->
+  {% include '@SMSPayment/js/catchuplesson_new_action.html.twig' %}
+{% endblock %}

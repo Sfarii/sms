@@ -10,4 +10,33 @@ namespace SMS\StoreBundle\Repository;
  */
 class ProductRepository extends \Doctrine\ORM\EntityRepository
 {
+    /**
+     * Get All Product
+     *
+     * @param Object $establishment
+     * @return array
+     */
+    public function findAllActiveProduct($establishment)
+    {
+        return $this->createQueryBuilder('product')
+          ->join('product.establishment', 'establishment')
+          ->where('establishment.id = :establishment')
+          ->andWhere("product.active = True")
+          ->setParameter('establishment', $establishment->getId());
+    }
+
+    /**
+     * Get Product By ids
+     *
+     * @param array $ids
+     * @return array
+     */
+    public function findAllProductByIds($ids)
+    {
+        return $this->createQueryBuilder('product')
+          ->where('product.id in (:product)')
+          ->setParameter('product', $ids)
+          ->getQuery()
+          ->getResult();
+    }
 }

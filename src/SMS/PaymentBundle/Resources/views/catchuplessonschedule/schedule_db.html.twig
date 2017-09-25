@@ -1,0 +1,53 @@
+<div class="md-card-content uk-margin-medium-bottom uk-animation-fade">
+  <div class="uk-overflow-container" data-uk-grid-margin>
+    <div id="division_datatable_multiselect_actions">
+      <div class="dt_colVis_buttons">
+        <a rel="tooltip" title="{{ 'action.delete'|trans }}" class="md-btn-danger md-btn md-btn-primary md-btn-wave-light waves-effect waves-button waves-light schedule_delete" role="button">
+          <i class="material-icons">&#xE92B;</i>{{ 'action.delete'|trans }}</a>
+      </div>
+    </div>
+    <div class="dataTables_scrollBody" style="position: relative; overflow: auto; height: 200px; width: 100%;">
+      <table class="uk-table uk-table-striped uk-table-align-vertical table_check uk-margin-medium-bottom">
+        <thead>
+          <tr class="uk-text-large">
+            <th class="uk-width-1-10 uk-text-center small_col md-bg-grey-100"><input type="checkbox" class="check_all wizard-icheck"></th>
+            <th class="uk-text-center md-bg-grey-100">{{ 'catchuplesson.schedule.day'|trans }}</th>
+            <th class="uk-text-center md-bg-grey-100">{{ 'catchuplesson.schedule.start_time'|trans }}</th>
+            <th class="uk-text-center md-bg-grey-100">{{ 'catchuplesson.schedule.end_time'|trans }}</th>
+            <th class="uk-text-center md-bg-grey-100">{{ 'datatables.actions.title'|trans }}</th>
+          </tr>
+        </thead>
+        <tbody>
+          {% for schedule in result %}
+            <tr id="{{ schedule.id }}">
+              <td class="uk-text-center uk-table-middle small_col">
+                <input type="checkbox" value="{{ schedule.id }}" class="check_row wizard-icheck">
+              </td>
+              <td class="uk-text-large uk-text-center uk-text-nowrap">
+                {{ schedule.day|trans }}
+              </td>
+              <td class="uk-text-nowrap uk-text-center">
+                {{ schedule.startTime|date('H:i') }}
+              </td>
+              <td class="uk-text-nowrap uk-text-center">
+                {{ schedule.endTime|date('H:i') }}
+              </td>
+              <td class="uk-text-nowrap uk-text-center">
+                <a data-day="{{ schedule.day }}" data-id="{{ schedule.id }}" data-start-Time="{{ schedule.startTime|date('H:i') }}" data-end-Time="{{ schedule.endTime|date('H:i') }}" id="edit">
+                  <i class="material-icons md-icon">&#xE150;</i>
+                </a>
+              </td>
+            </tr>
+          {% else %}
+            <tr>
+              <td colspan="6" class="uk-text-center">
+                {{ 'datatables.datatable.zeroRecords'|trans }}
+              </td>
+            </tr>
+
+          {% endfor %}
+        </tbody>
+      </table>
+    </div>
+  </div>
+</div>

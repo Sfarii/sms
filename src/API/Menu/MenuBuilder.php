@@ -76,19 +76,6 @@ class MenuBuilder
       $menu->addChild('menu.dashbord', array('route' => 'dashbord_index'))
           ->setAttribute('icon', '&#xE871;');
 
-      $menu->addChild('establishment', array('label' => 'menu.establishment.title'))
-          ->setAttribute('dropdown', true)
-          ->setAttribute('icon', '&#xE80C;');
-          $menu['establishment']->addChild('menu.establishment.division', array('route' => 'division_index'));
-          $menu['establishment']->addChild('menu.establishment.grade', array('route' => 'grade_index'));
-          $menu['establishment']->addChild('menu.establishment.section', array('route' => 'section_index'));
-
-      $menu->addChild('payment', array('label' => 'menu.payment.title'))
-          ->setAttribute('dropdown', true)
-          ->setAttribute('icon', '&#xE53E;');
-          $menu['payment']->addChild('menu.payment.payment', array('route' => 'payment_index'));
-          $menu['payment']->addChild('menu.payment.paymentType', array('route' => 'paymenttype_index'));
-
       $menu->addChild('users', array('label' => 'menu.users.title'))
           ->setAttribute('dropdown', true)
           ->setAttribute('icon', '&#xE7EF;');
@@ -97,23 +84,29 @@ class MenuBuilder
           $menu['users']->addChild('menu.users.professor', array('route' => 'professor_index'));
           $menu['users']->addChild('menu.users.adminstrator', array('route' => 'administrator_index'));
 
+      $menu->addChild('establishment', array('label' => 'menu.establishment.title'))
+          ->setAttribute('dropdown', true)
+          ->setAttribute('icon', '&#xE80C;');
+          $menu['establishment']->addChild('menu.establishment.division', array('route' => 'division_index'));
+          $menu['establishment']->addChild('menu.establishment.grade', array('route' => 'grade_index'));
+          $menu['establishment']->addChild('menu.establishment.section', array('route' => 'section_index'));
+
       $menu->addChild('menu.course', array('route' => 'course_index'))
           ->setAttribute('icon', '&#xE865;');
-
-      $menu->addChild('menu.config_schedule.session', array('route' => 'session_index'))
-          ->setAttribute('icon', '&#xE425;');
 
       $menu->addChild('attendance', array('label' => 'menu.administration.attendance'))
           ->setAttribute('dropdown', true)
           ->setAttribute('icon', '&#xE0DF;');
-          $menu['attendance']->addChild('menu.administration.attendance_student', array('route' => 'attendance_student_new'));
+          $menu['attendance']->addChild('menu.administration.attendance_section', array('route' => 'attendance_section_new'));
           $menu['attendance']->addChild('menu.administration.attendance_professor', array('route' => 'attendance_professor_new'));
+          $menu['attendance']->addChild('menu.administration.attendance_student', array('route' => 'attendance_student_new'));
 
       $menu->addChild('schedule', array('label' => 'menu.schedule.title'))
           ->setAttribute('dropdown', true)
           ->setAttribute('icon', '&#xE8B5;');
       $menu['schedule']->addChild('menu.schedule.student', array('route' => 'schedule_student_index'));
       $menu['schedule']->addChild('menu.schedule.professor', array('route' => 'schedule_professor_index'));
+      $menu['schedule']->addChild('menu.config_schedule.session', array('route' => 'session_index'));
 
       $menu->addChild('exam', array('label' => 'menu.exam.title'))
           ->setAttribute('dropdown', true)
@@ -122,28 +115,36 @@ class MenuBuilder
           $menu['exam']->addChild('menu.exam.title', array('route' => 'exam_index'));
           $menu['exam']->addChild('menu.exam.student', array('route' => 'exam_students_index'));
 
-      $menu->addChild('store', array('label' => 'menu.store.title'))
-          ->setAttribute('dropdown', true)
-          ->setAttribute('icon', '&#xE14F;');
-          $menu['store']->addChild('menu.store.product', array('route' => 'product_index'));
-          $menu['store']->addChild('menu.store.product_type', array('route' => 'producttype_index'));
 
-      $menu->addChild('menu.provider.title', array('route' => 'provider_index'))
-              ->setAttribute('icon', '&#xE425;');
+      $menu->addChild('payment', array('label' => 'menu.payment.title'))
+          ->setAttribute('dropdown', true)
+          ->setAttribute('icon', '&#xE53E;');
+          $menu['payment']->addChild('menu.payment.payment', array('route' => 'payment_index'));
+          $menu['payment']->addChild('menu.payment.paymentType', array('route' => 'paymenttype_index'));
+          $menu['payment']->addChild('menu.payment.catchUpLesson', array('route' => 'catchuplesson_index'));
+          $menu['payment']->addChild('menu.payment.statistics', array('route' => 'payment_staistics'));
+
+      $menu->addChild('menu.store.title', array('route' => 'shop_index'))
+              ->setAttribute('icon', '&#xE8D1;');
 
       $menu->addChild('store_managment', array('label' => 'menu.store_managment.title'))
           ->setAttribute('dropdown', true)
-          ->setAttribute('icon', '&#xE14F;');
-          $menu['store_managment']->addChild('menu.store_managment.delivery', array('route' => 'delivery_index'));
+          ->setAttribute('icon', '&#xE8C9;');
+          $menu['store_managment']->addChild('menu.store_managment.provider', array('route' => 'provider_index'));
+          $menu['store_managment']->addChild('menu.store_managment.product', array('route' => 'product_index'));
+          $menu['store_managment']->addChild('menu.store_managment.product_type', array('route' => 'producttype_index'));
+          $menu['store_managment']->addChild('menu.store_managment.delivery', array('route' => 'purchase_index'));
           $menu['store_managment']->addChild('menu.store_managment.order', array('route' => 'orderprovider_index'));
           $menu['store_managment']->addChild('menu.store_managment.order_managment', array('route' => 'orderuser_index'));
-          $menu['store_managment']->addChild('menu.store_managment.inovice', array('route' => 'invoice_index'));
+          $menu['store_managment']->addChild('menu.store_managment.statistics', array('route' => 'shop_statistics_index'));
 
       $menu->addChild('administration', array('label' => 'menu.administration.title'))
           ->setAttribute('dropdown', true)
           ->setAttribute('icon', '&#xE0AF;');
           $menu['administration']->addChild('menu.administration.sanction', array('route' => 'sanction_index'));
 
+      $menu->addChild('menu.administration.configuration', array('route' => 'configuration_options'))
+              ->setAttribute('icon', '&#xE8B8;');
 
       return $menu;
     }
@@ -292,5 +293,24 @@ class MenuBuilder
         $menu->addChild('menu.login.title', array('route' => 'login'));
         $menu->addChild('menu.contact.title', array('route' => 'contact_page'));
         return $menu;
+    }
+
+    /**
+     * @param int $level     The level of the ancestor to be returned
+     * @return \Knp\Menu\ItemInterface
+     */
+    public function getAncestor($level = null)
+    {
+        if ($level) {
+            $obj = $this;
+
+            do {
+                if($obj->getLevel() == $level) {
+                    return $obj;
+                }
+            } while ($obj = $obj->getParent());
+        }
+
+        return false;
     }
 }

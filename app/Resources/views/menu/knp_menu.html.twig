@@ -46,7 +46,7 @@
     {%- set listAttributes = item.childrenAttributes|merge({'class': childrenClasses|join(' ') }) %}
 
 {# displaying the item #}
-    <li{{ macros.attributes(attributes[1:]) }}>
+    <li{{ macros.attributes(attributes[1:]) }} >
 
         {%- if is_dropdown %}
             {{ block('dropdownElement') }}
@@ -117,9 +117,7 @@
                 </i>
             </span>
         {% endif %}
-        <span class="menu_title">
-    	{{ block('label') }} 
-    	 </span>
+        <span class="menu_title">{{ block('label') }}</span>
     </a>
 {% endblock %}
 

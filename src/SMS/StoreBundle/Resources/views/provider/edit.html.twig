@@ -37,26 +37,22 @@
 									{{ form_errors(form.phone) }}
 								</div>
 							</div>
-							<div class="uk-form-row uk-input-group">
-								<span class="uk-input-group-addon">
-									<i class="md-list-addon-icon material-icons md-24">&#xE55F;</i>
-								</span>
-								<label class="uk-form-label">{{ form_label(form.address) }}</label>
-								{{ form_widget(form.address)}}
-								<div class="parsley-errors-list filled uk-text-danger">
-									{{ form_errors(form.address) }}
-								</div>
-							</div>
             </div>
             <div class="uk-width-1-2">
-							<div class="uk-form-row">
+							<div class="uk-form-row uk-input-group">
+                <span class="uk-input-group-addon">
+                  <i class="md-list-addon-icon material-icons md-24">&#xE8CE;</i>
+                </span>
 								<label class="uk-form-label">{{ form_label(form.fax) }}</label>
 								{{ form_widget(form.fax)}}
 								<div class="parsley-errors-list filled uk-text-danger">
 									{{ form_errors(form.fax) }}
 								</div>
 							</div>
-							<div class="uk-form-row ">
+							<div class="uk-form-row  uk-input-group">
+                <span class="uk-input-group-addon">
+                  <i class="md-list-addon-icon material-icons md-24">&#xE0BE;</i>
+                </span>
 								<label class="uk-form-label">{{ form_label(form.email) }}</label>
 								{{ form_widget(form.email)}}
 								<div class="parsley-errors-list filled uk-text-danger">
@@ -66,6 +62,17 @@
             </div>
 
 					</div>
+
+          <div class="uk-form-row uk-input-group">
+            <span class="uk-input-group-addon">
+              <i class="md-list-addon-icon material-icons md-24">&#xE55F;</i>
+            </span>
+            <label class="uk-form-label">{{ form_label(form.address) }}</label>
+            {{ form_widget(form.address)}}
+            <div class="parsley-errors-list filled uk-text-danger">
+              {{ form_errors(form.address) }}
+            </div>
+          </div>
           {{ form_widget(form) }}
 
           {{ form_end(form) }}

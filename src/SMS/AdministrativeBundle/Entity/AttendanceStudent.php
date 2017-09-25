@@ -30,11 +30,12 @@ class AttendanceStudent
     private $status;
 
     /**
-     * @var \DateTime
-     *
-     * @ORM\Column(name="date", type="date")
+     * Many Attendance Student have One Attendance Section.
+     * @ORM\ManyToOne(targetEntity="AttendanceSection" , inversedBy="attendanceStudent")
+     * @ORM\JoinColumn(name="attendance_section_id", referencedColumnName="id")
+     * @Assert\NotBlank()
      */
-    private $date;
+    private $attendanceSection;
 
     /**
      * Many Attendances have One Student.
@@ -42,21 +43,6 @@ class AttendanceStudent
      * @ORM\JoinColumn(name="student_id", referencedColumnName="id")
      */
     private $student;
-
-    /**
-     * Many Attendances have One Session.
-     * @ORM\ManyToOne(targetEntity="SMS\StudyPlanBundle\Entity\Session")
-     * @ORM\JoinColumn(name="session_id", referencedColumnName="id")
-     */
-    private $session;
-
-    /**
-     * Many Attendances have One Course.
-     * @ORM\ManyToOne(targetEntity="SMS\StudyPlanBundle\Entity\Course",fetch="EXTRA_LAZY")
-     * @ORM\JoinColumn(name="course_id", referencedColumnName="id")
-     * @Assert\NotBlank()
-     */
-    private $course;
 
     /**
      * @var \DateTime $created
@@ -292,5 +278,29 @@ class AttendanceStudent
     public function getCourse()
     {
         return $this->course;
+    }
+
+    /**
+     * Set attendanceSection
+     *
+     * @param \SMS\AdministrativeBundle\Entity\AttendanceSection $attendanceSection
+     *
+     * @return AttendanceStudent
+     */
+    public function setAttendanceSection(\SMS\AdministrativeBundle\Entity\AttendanceSection $attendanceSection = null)
+    {
+        $this->attendanceSection = $attendanceSection;
+
+        return $this;
+    }
+
+    /**
+     * Get attendanceSection
+     *
+     * @return \SMS\AdministrativeBundle\Entity\AttendanceSection
+     */
+    public function getAttendanceSection()
+    {
+        return $this->attendanceSection;
     }
 }

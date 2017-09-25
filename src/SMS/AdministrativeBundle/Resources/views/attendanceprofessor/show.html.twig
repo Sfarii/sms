@@ -1,23 +1,16 @@
 {% extends 'layout/base.html.twig' %}
-{% block heading_actions %}
-  <a href="{{ path('attendance_professor_show' , { 'id' : professor.id }) }}">
-    <i class="md-icon material-icons">&#xE5D5;</i>
-  </a>
-	<a href="{{ path('attendance_professor_new') }}">
-    <i class="md-icon material-icons">&#xE88A;</i>
-  </a>
-{% endblock %}
 {% block title_page %}
-  {{ 'attendance.list.title'|trans }}
+  {{ professor }}
 {% endblock %}
 
 {% block sub_title_page %}
-  <p class="uk-text-bold uk-margin-small-top">
-    {{professor}}
-  </p>
+  <a  href="{{ url('attendance_professor_new') }}" class="uk-margin-small-top">
+    {{ 'professor.list.title'|trans }}
+  </a>
 {% endblock %}
+
 {% block sticky_button %}
-  <a class="md-fab md-fab-primary" href="{{ url('attendanceprofessor_index', {'id' : professor.id}) }}">
+  <a class="md-fab md-fab-accent md-fab-wave waves-effect waves-button" href="{{ url('attendanceprofessor_index', {'id' : professor.id}) }}">
     <i class="material-icons">&#xE145;</i>
   </a>
 {% endblock %}
@@ -29,7 +22,7 @@
     </h3>
   </div>
   <div class="md-card-content">
-    {% if echarts is empty %}
+    {% if echarts.date is empty %}
       <div class="echart-large">
         <span class="chart_icon">
           <i class="material-icons">&#xE88B;</i>
@@ -37,7 +30,7 @@
         </span>
       </div>
     {% else %}
-        <div data-echarts-bar data-values='{{ echarts|json_encode|raw }}' class="echart-large"></div>
+        <div data-echarts-line data-legend='{{ echarts.date|json_encode|raw }}'  data-retard='{{ echarts.retard|json_encode|raw }}' data-absent='{{ echarts.absent|json_encode|raw }}' data-present='{{ echarts.present|json_encode|raw }}' class="echart-large"></div>
     {% endif %}
   </div>
 </div>

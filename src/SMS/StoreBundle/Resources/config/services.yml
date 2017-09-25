@@ -1,20 +1,56 @@
 services:
-  #StoreDatatable
-  sms.datatable.delivery:
-      class: SMS\StoreBundle\StoreDatatable\DeliveryDatatable
+  #Datatable
+  sms.datatable.store_order_line:
+      class: SMS\StoreBundle\Datatable\StoreOrderLineDatatable
+      parent: sg_datatables.datatable.abstract
+  sms.datatable.purchase_line:
+      class: SMS\StoreBundle\Datatable\PurshaseLineDatatable
+      parent: sg_datatables.datatable.abstract
+  sms.datatable.purchase:
+      class: SMS\StoreBundle\Datatable\PurchaseDatatable
+      parent: sg_datatables.datatable.abstract
+      calls:
+          - [ setProviderClass , [SMS\StoreBundle\Entity\Provider]]
+  sms.datatable.order_line:
+      class: SMS\StoreBundle\Datatable\OrderLineDatatable
       parent: sg_datatables.datatable.abstract
   sms.datatable.orderProvider:
-      class: SMS\StoreBundle\StoreDatatable\OrderProviderDatatable
+      class: SMS\StoreBundle\Datatable\OrderProviderDatatable
       parent: sg_datatables.datatable.abstract
+      calls:
+          - [ setProviderClass , [SMS\StoreBundle\Entity\Provider]]
   sms.datatable.orderUser:
-      class: SMS\StoreBundle\StoreDatatable\OrderUserDatatable
+      class: SMS\StoreBundle\Datatable\OrderUserDatatable
       parent: sg_datatables.datatable.abstract
   sms.datatable.product:
-      class: SMS\StoreBundle\StoreDatatable\ProductDatatable
+      class: SMS\StoreBundle\Datatable\ProductDatatable
       parent: sg_datatables.datatable.abstract
+      calls:
+          - [ setProductTypeClass , [SMS\StoreBundle\Entity\ProductType]]
+  sms.datatable.form.product:
+      class: SMS\StoreBundle\Datatable\FormProductDatatable
+      parent: sg_datatables.datatable.abstract
+      calls:
+          - [ setProductTypeClass , [SMS\StoreBundle\Entity\ProductType]]
   sms.datatable.productType:
-      class: SMS\StoreBundle\StoreDatatable\ProductTypeDatatable
+      class: SMS\StoreBundle\Datatable\ProductTypeDatatable
       parent: sg_datatables.datatable.abstract
   sms.datatable.provider:
-      class: SMS\StoreBundle\StoreDatatable\ProviderDatatable
+      class: SMS\StoreBundle\Datatable\ProviderDatatable
       parent: sg_datatables.datatable.abstract
+  #Services
+  sms.store.entity_manager:
+      class: SMS\StoreBundle\Services\ShopEntityManager
+      arguments: ["@doctrine.orm.entity_Manager" , "@translator"]
+      calls:
+        - [setMailer, ['@sms.store.mailer']]
+        - [setOrderUserClassName, [SMS\StoreBundle\Entity\OrderUser]]
+        - [setStoreOrderLineClassName, [SMS\StoreBundle\Entity\StoreOrderLine]]
+        - [setOrderProviderClassName, [SMS\StoreBundle\Entity\OrderProvider]]
+        - [setPurchaseClassName, [SMS\StoreBundle\Entity\Purchase]]
+        - [setOrderLineClassName, [SMS\StoreBundle\Entity\OrderLine]]
+        - [setPurchaseLineClassName, [SMS\StoreBundle\Entity\PurchaseLine]]
+        - [setProductClassName, [SMS\StoreBundle\Entity\Product]]
+  sms.store.mailer:
+      class: SMS\StoreBundle\Services\Mailer
+      arguments: ["@mailer" , "@templating"]

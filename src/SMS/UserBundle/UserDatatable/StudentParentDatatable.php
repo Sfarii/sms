@@ -56,23 +56,23 @@ class StudentParentDatatable extends AbstractDatatableView
                 'actions' => array(
                   array(
                       'route' => 'user_bulk_deactivate',
-                      'icon' => '&#xE14C;',
+                      'icon' => '&#xE899;',
                       'label' => $this->translator->trans('action.deactivate'),
                       'attributes' => array(
                           'rel' => 'tooltip',
                           'title' => $this->translator->trans('action.delete'),
-                          'class' => 'md-btn buttons-copy buttons-html5',
+                          'class' => 'md-btn md-btn-primary md-btn-wave-light waves-effect waves-button waves-light',
                           'role' => 'button'
                       ),
                   ),
                   array(
                       'route' => 'user_bulk_activate',
-                      'icon' => '&#xE876;',
+                      'icon' => '&#xE898;',
                       'label' => $this->translator->trans('action.activate'),
                       'attributes' => array(
                           'rel' => 'tooltip',
                           'title' => $this->translator->trans('action.delete'),
-                          'class' => 'md-btn buttons-copy buttons-html5',
+                          'class' => 'md-btn md-btn-primary md-btn-wave-light waves-effect waves-button waves-light',
                           'role' => 'button'
                       ),
                   ),
@@ -115,8 +115,8 @@ class StudentParentDatatable extends AbstractDatatableView
             ))
             ->add('enabled', 'boolean', array(
                 'title' => $this->translator->trans('user.field.enabled'),
-                'true_label' => $this->translator->trans('user.active.true_label'),
-                'false_label' => $this->translator->trans('user.active.false_label'),
+                'true_icon' => 'uk-icon-check',
+                'false_icon' => 'uk-icon-close',
                 'filter' => array('select', array(
                     'search_type' => 'eq',
                     'select_options' => array('' => $this->translator->trans('filter.field.all') , true => $this->translator->trans('user.active.true_label') , false => $this->translator->trans('user.active.false_label')) ,

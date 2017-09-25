@@ -17,9 +17,9 @@ payment:
         success: The specified payments successfully deleted   # FIXME
     add:
         success: Payment successfully added    # FIXME
+        fail: Please check the credit.
     edit:
         success: Payment successfully edited   # FIXME
-    edit:
         title: Edit Payment   # FIXME
     to:
       Bill To
@@ -27,12 +27,14 @@ payment:
       notification: Notification
       footer: © Copyright Texhnolyze Solution All Rights Reserved
     field:
+        submit: Submit
         credit: Credit   # FIXME
         month: Monthly Payment   # FIXME
         paymentType: Payment Type   # FIXME
         select_paymentType: Select Payment Type ...  # FIXME
         price: Price paid   # FIXME
         student: Student   # FIXME
+        reference: Payment Number
         student.firstName: Student First Name   # FIXME
         student.lastName: Student Last Name
         student.section: Section Name
@@ -42,9 +44,9 @@ payment:
         totalCredit: Total Credit
         total: Total
         totalRegistration: Total Registration
-        id: Payment Number
     unit:
         price: TND
+        registration: Registration
     list:
         title: Payment Lists   # FIXME
 
@@ -54,25 +56,18 @@ payment:
     show:
         detail: Payment Detail   # FIXME
         title: Payment Information   # FIXME
-
-    unit: Dinar   # FIXME
 search:
     student:
-        title: Filter By Student
         by_every_thing: Search
         extern: Extern Student
         intren: Intern Student
+        status: Status ..
     payment:
-        title: Filter By Payment
         paid: Paid
         has_credit: Has Credit
         not_paid: Not Paid
-    registration:
-        title: Filter By Registration
-        registred: Registred
-        not_registred: Unregistred
     submit: Filter
-    reset: Reset Page
+    reset: Reset
     result_not_found:
         title: OOps! No Results Found
         sub-title: Suggestions
@@ -87,18 +82,51 @@ paymentType:
         success: Payment Type successfully edited   # FIXME
     field:
         TypePaymentName:  Payment Type Name   # FIXME
+catchuplesson:
+    edit:
+        title: Edit catchUp Lesson   # FIXME
 
+    field:
+        catchUpLessonName: CatchUp Lesson Name # FIXME
+        description: CatchUp Lesson Description
+        price: CatchUp Lesson Price By Month   # FIXME
+        registrationFee: Registration Fee   # FIXME
+        professorPrice: Professor Price By Month
+        professor: Professor
+        select_professor: Select Professor
+        months: Months   # FIXME
+        select_months: Select Months ..   # FIXME
+    registration:
+        title: Registered Students
+    list:
+        title: CatchUp Lesson Lists   # FIXME
+    schedule:
+        title: CatchUp Lesson schedule
+        day: Day
+        select_day: Select Day ...
+        end_time: End Time
+        start_time: Start Time
+    new:
+        title: Adding an CatchUp Lesson   # FIXME
+    stats:
+        not_found: Not enough data available
+        title: CatchUp Lesson Monthly Statistics
+    show:
+        detail: CatchUp Lesson Detail   # FIXME
+        title: CatchUp Lesson information   # FIXME
 paymenttype:
     edit:
         title: Edit Payment Type   # FIXME
 
     field:
-        TypePaymentName: Payment Type Name   # FIXME
+        typePaymentName: Payment Type Name   # FIXME
         price: Price By Month   # FIXME
         registrationFee: Registration Fee   # FIXME
         months: Months   # FIXME
         select_months: Select Months ..   # FIXME
 
+    registration:
+        title: Registered Students
     list:
         title: Payment Type Lists   # FIXME
     detail:
@@ -112,7 +140,7 @@ paymenttype:
         title: Adding an Payment Type   # FIXME
     stats:
         not_found: Not enough data available
-        title: Payment Type Stats By Month
+        title: Payment Type Monthly Statistics
     show:
         detail: Payment Type Detail   # FIXME
         title: Payment Type information   # FIXME

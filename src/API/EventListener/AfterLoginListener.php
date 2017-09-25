@@ -38,6 +38,7 @@ class AfterLoginListener
         $user = $event->getAuthenticationToken()->getUser();
         if (!$user instanceof Manager) {
             $this->_session->set('_logo' , $this->_helper->asset($user->getEstablishment(), 'imageFile') );
+            $this->_session->set('_theme' , $user->getEstablishment()->getTheme() );
         }
 
     }

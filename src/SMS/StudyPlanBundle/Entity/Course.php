@@ -70,6 +70,12 @@ class Course
     private $exams;
 
     /**
+     * One Course has Many Schedule.
+     * @ORM\OneToMany(targetEntity="Schedule", mappedBy="course")
+     */
+    private $schedules;
+
+    /**
      * One User has Many Divivsions.
      * @ORM\ManyToOne(targetEntity="SMS\UserBundle\Entity\User" ,fetch="EXTRA_LAZY")
      * @ORM\JoinColumn(name="user_id", referencedColumnName="id")

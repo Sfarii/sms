@@ -1,0 +1,171 @@
+{% extends 'layout/base_no_header.html.twig' %}
+
+{% block sticky_button %}
+  <a class="md-fab md-fab-accent md-fab-wave waves-effect waves-button" href="{{ path('shop_index') }}">
+    <i class="material-icons">&#xE8D1;</i>
+  </a>
+{% endblock %}
+
+{% block body %}
+
+  <div class="content clearfix">
+    <div class="md-card uk-margin-large-bottom">
+      <div class="md-card-content">
+        <div role="application" class="wizard clearfix">
+          <div class="steps clearfix">
+            <ul role="tablist">
+              <li role="tab" class="disabled" aria-selected="true">
+                <a id="wizard_advanced-t-1" aria-controls="wizard_advanced-p-1">
+                  <span class="current-info audible"></span>
+                  <span class="number">1</span>
+                  <span class="title">{{ 'cart.title'|trans }}</span>
+                </a>
+              </li>
+              <li role="tab" class="disabled" aria-disabled="true">
+                <a id="wizard_advanced-t-1" aria-controls="wizard_advanced-p-1">
+                  <span class="number">2</span>
+                  <span class="title">{{ 'cart.order.provider'|trans }}</span>
+                </a>
+              </li>
+              <li role="tab" class="disabled" aria-disabled="true">
+                <a id="wizard_advanced-t-1" aria-controls="wizard_advanced-p-1">
+                  <span class="number">2</span>
+                  <span class="title">{{ 'cart.order.user'|trans }}</span>
+                </a>
+              </li>
+              <li role="tab" class="  first current" aria-disabled="true">
+                <a id="wizard_advanced-t-1" href="#wizard_advanced-h-1" aria-controls="wizard_advanced-p-1">
+                  <span class="number">3</span>
+                  <span class="title">{{ 'cart.finish'|trans }}</span>
+                </a>
+              </li>
+            </ul>
+          </div>
+        </div>
+        <!-- first section -->
+        <section class="uk-margin-large-bottom uk-margin-large-top">
+          <h2 class="heading_a">
+            {{ 'cart.finish'|trans }}
+            <span class="sub-heading">{{ 'cart.sub-title'|trans }}</span>
+          </h2>
+          <hr class="md-hr"/>
+          <div class="md-card-content invoice_content print_bg invoice_footer_active">
+            <div class="uk-margin-medium-bottom">
+              <span class="uk-text-muted uk-text-small uk-text-italic">Due Date:</span>
+              <span>
+                <p>
+                  <strong>{{ date('now')|date('Y.m.d') }}</strong>
+                </p>
+              </span>
+            </div>
+            <div class="uk-grid" data-uk-grid-margin="">
+              <div class="uk-width-small-3-5 uk-row-first">
+                <div class="uk-margin-bottom">
+                  <span class="uk-text-muted uk-text-small uk-text-italic">From:</span>
+                  <address>
+                    <p>
+                      <strong>{{ establishment.establishmentName }}</strong>
+                    </p>
+                    <p>{{ establishment.address }}</p>
+                    <p>{{ establishment.phone }}</p>
+                  </address>
+                </div>
+                <div class="uk-margin-medium-bottom">
+                  <span class="uk-text-muted uk-text-small uk-text-italic">To:</span>
+                  <address>
+                    <p>
+                      <strong>Price Ltd</strong>
+                    </p>
+                    <p>2894 Bond Street</p>
+                    <p>Providence, RI 02908</p>
+                  </address>
+                </div>
+              </div>
+              <div class="uk-width-small-2-5">
+                <span class="uk-text-muted uk-text-small uk-text-italic">{{ 'cart.total.title'|trans }} :</span>
+                <p class="heading_b uk-text-success"><span id="totalPrice">{{ totalPrice|price }}</span>
+                {{ 'store.unit.price'|trans }} </p>
+              </div>
+            </div>
+            <div class="uk-grid uk-margin-large-bottom">
+              <div class="uk-width-1-1">
+                <table class="uk-table">
+                  <thead>
+                    <tr class="uk-text-upper">
+                      <th class="uk-width-5-10 ">{{ 'product.field.description'|trans }}</th>
+                      <th class="uk-width-2-10 uk-text-center">{{ 'product.field.price'|trans }}</th>
+                      <th class="uk-width-1-10 uk-text-center">{{ 'cart.quantity.title'|trans }}</th>
+                      <th class="uk-width-2-10 uk-text-center">{{ 'cart.total.title'|trans }}</th>
+                    </tr>
+                  </thead>
+                  <tbody>
+                    {% for product in result %}
+                      <tr class="uk-table-middle">
+                        <td>
+                          <span class="uk-text-large">{{ product.productName }}</span><br>
+                          <span class="uk-text-muted uk-text-small">{{'product.field.sku'|trans }} : {{ product.sku }}</span>
+                        </td>
+                        <td class="uk-text-center">
+                          {{ product.price|price }}
+                          {{ 'store.unit.price'|trans }}
+                        </td>
+                        <td class="uk-text-center">
+                          {{ product.quantity }}
+                        </td>
+                        <td class="uk-text-center">
+                          {% set total = product.quantity * product.price %}
+                          <span class="total" id="total_{{ product.id }}" data-price='{{ product.price }}'>
+                            {{ total|price }}
+                          </span>
+                          {{ 'store.unit.price'|trans }}
+                        </td>
+                      </tr>
+                    {% endfor %}
+                  </tbody>
+                </table>
+              </div>
+            </div>
+          </div>
+        </section>
+        <div role="application" class="wizard clearfix">
+          <div class="actions clearfix">
+            <ul role="menu" aria-label="Pagination">
+              <li class="button_previous" aria-disabled="false">
+                <a href="{{ (path('cart_index'))}}" role="menuitem">
+                  <i class="material-icons">&#xE314;</i>
+                  {{ "datatables.datatable.first"|trans }}</a>
+              </li>
+              <li class="button_next" aria-hidden="false" aria-disabled="false">
+                <a id="next" role="menuitem">
+                  {{ 'cart.finish'|trans }}
+                  <i class="material-icons">&#xE409;</i>
+                </a>
+              </li>
+            </ul>
+          </div>
+        </div>
+      </div>
+    </form>
+  </div>
+</div>
+{% endblock %}
+{% block head_javascripts %}
+{{ parent() }}
+<!-- page specific plugins -->
+<!-- datatables -->
+<script src="{{ asset('assets/plugins/datatables/js/jquery.dataTables.min.js')}}"></script>
+<script src="{{ asset('bundles/fosjsrouting/js/router.js') }}"></script>
+<script src="{{ path('fos_js_routing_js', {'callback': 'fos.Router.setData'}) }}"></script>
+<!--  form file input functions -->
+<!-- uikit functions -->
+<script src="{{ asset('assets/js/uikit_custom.min.js')}}"></script>
+{% endblock %}
+{% block javascripts %}
+<!-- altair common functions/helpers -->
+<script src="{{ asset('assets/js/altair_admin_common.min.js')}}"></script>
+<!-- datatables custom integration -->
+<script src="{{ asset('assets/js/custom/datatables/datatables.uikit.min.js')}}"></script>
+<script src="{{ asset('assets/js/uikit_custom_dataTable.js')}}"></script>
+<!-- page specific plugins -->
+{% include '@SMSPayment/registration/multiselect_action.html.twig' %}
+{% endblock %}

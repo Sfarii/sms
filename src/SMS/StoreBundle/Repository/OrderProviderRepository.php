@@ -10,4 +10,22 @@ namespace SMS\StoreBundle\Repository;
  */
 class OrderProviderRepository extends \Doctrine\ORM\EntityRepository
 {
+  /**
+   * Get order_providers price by Provider
+   *
+   * @param SMS/StoreBundle/Entity/Provider $provider
+   * @return array
+   */
+  public function findOrderPriceByProvider($provider)
+  {
+      return $this->createQueryBuilder('order_provider')
+                ->select(" sum(order_providerLine.price * order_providerLine.quantity) as price, order_provider.created AS month")
+                ->join('order_provider.orderLines', 'order_providerLine')
+                ->join('order_provider.provider', 'provider')
+                ->where('provider.id = :provider')
+                ->setParameter('provider', $provider->getId())
+                ->groupBy('order_provider')
+                ->getQuery()
+                ->getResult();
+  }
 }

@@ -1,0 +1,166 @@
+<script>
+  {% set token = csrf_token('catchUpLesson') %}
+  a = UIkit.modal("#modal_daterange", {
+    center: !0
+  });
+  var o = $("#ts_dp_start");
+  var l = $("#ts_dp_end");
+  var $day = $('#day');
+	var $schedule_id = $('#schedule_id');
+  var s = UIkit.timepicker(o, {format: "24h"});
+  var c = UIkit.timepicker(l, {format: "24h"});
+
+	show();
+  function show() {
+    // show preloader
+    altair_helpers.content_preloader_show('md');
+    $.ajax({
+      url: Routing.generate('catchUpLesson_db_schedule_show' , { id : {{  catchUpLesson.id }}}),
+      type: "GET",
+      cache: false,
+      success: function(html) {
+          $('#schedule_list').empty().append(html).resize();
+				// reinitialize checkboxes
+        altair_md.checkbox_radio($(".wizard-icheck"));
+        // reinitialize table check all
+        $table_check = $('.table_check');
+        $table_check.each(function() {
+          var $this = $(this),
+            $checkAll = $this.find('.check_all'),
+            $checkRow = $this.find('.check_row');
+
+          $checkAll.on('ifChecked', function() {
+            $checkRow.iCheck('check');
+          }).on('ifUnchecked', function() {
+            $checkRow.iCheck('uncheck');
+          });
+
+          $checkRow.on('ifChecked', function(event) {
+            $(event.currentTarget).closest('tr').addClass('row_checked');
+          }).on('ifUnchecked', function(event) {
+            $(event.currentTarget).closest('tr').removeClass('row_checked');
+          })
+        });
+        // hide preloader
+        altair_helpers.content_preloader_hide();
+      },
+      error: function(XMLHttpRequest, textStatus, errorThrown) {
+        console.log(XMLHttpRequest + ' ' + textStatus + ' ' + errorThrown);
+        new UIkit.notify({
+          message: "<a href='#' class='notify-action'><span class='uk-icon-times'></span></a>" + textStatus,
+          status: "error",
+          timeout: 5000,
+          group: null,
+          pos: 'top-right'
+        });
+      }
+    });
+		$window.resize();
+  }
+
+	$(document).on('click' , '#edit', function () {
+		a.show();
+		$schedule_id.val($(this).data('id'));
+		$('#ts_dp_start').val($(this).data('start-Time')).change().blur();
+	  $('#ts_dp_end').val($(this).data('end-Time')).change().blur();
+		$day[0].selectize.setValue($(this).data('day'));
+	});
+
+	$(document).on('click' , '#new', function () {
+		a.show();
+		// reinitialize Form
+		$schedule_id.val(0);
+		$day[0].selectize.setValue("");
+		o.val("").change().blur();
+		l.val("").change().blur();
+	});
+
+  $("#apply").on("click", function(e) {
+    console.log( parseInt(l.val(), 10) - parseInt(o.val(), 10));
+    if ( ( parseInt(l.val(), 10) - parseInt(o.val(), 10)) < 0 || o.val() == "" || l.val() == "" || $day.val() == "") {
+			$("#modal_daterange").addClass('uk-animation-shake');
+			setTimeout(function() {
+				$("#modal_daterange").removeClass('uk-animation-shake')
+			}, 500)
+      return false;
+    }
+    e.preventDefault();
+    a.hide();
+    var $form = $(this).closest('form');
+    $.ajax({
+      url: $form.attr('action'),
+      type: $form.attr('method'),
+      data: {
+        'action': 'new_edit',
+        'token': '{{ token }}',
+        'data': $form.serializeObject()
+      },
+      cache: false,
+      timeout: 3000,
+      success: function(result) {
+        new UIkit.notify({
+          message: "<a href='#' class='notify-action'><span class='uk-icon-times'></span></a>" + result,
+          status: "success",
+          timeout: 100,
+          group: null,
+          pos: 'top-right'
+        });
+        show();
+      },
+      error: function(XMLHttpRequest, textStatus, errorThrown) {
+        console.log(XMLHttpRequest + ' ' + textStatus + ' ' + errorThrown);
+        new UIkit.notify({
+          message: "<a href='#' class='notify-action'><span class='uk-icon-times'></span></a>" + textStatus,
+          status: "error",
+          timeout: 5000,
+          group: null,
+          pos: 'top-right'
+        });
+      }
+    });
+  });
+  $(document).on('click', '.schedule_delete', function(event) {
+    var $this = $(this);
+    var length = $("input.check_row:checkbox:checked").length;
+    if (length > 0) {
+      UIkit.modal.confirm("{{ 'datatables.bulk.confirmMsg'|trans({}, 'messages') }} ", function() {
+        var checkValues = $('input.check_row:checkbox:checked').map(function() {
+          return {'value': $(this).val()};
+        }).get();
+        $.ajax({
+          url: Routing.generate('catchUpLesson_bulk_db_schedule_crud', { id : {{  catchUpLesson.id }}}),
+          type: "POST",
+          cache: false,
+          data: {
+            'token': '{{ token }}',
+            'data': checkValues,
+            'action': 'delete'
+          },
+          success: function(success) {
+            new UIkit.notify({
+              message: "<a href='#' class='notify-action'><span class='uk-icon-times'></span></a>" + success,
+              status: "error",
+              timeout: 5000,
+              group: null,
+              pos: 'top-right'
+            });
+            show();
+          },
+          error: function(XMLHttpRequest, textStatus, errorThrown) {
+            console.log(XMLHttpRequest + ' ' + textStatus + ' ' + errorThrown);
+            new UIkit.notify({
+              message: "<a href='#' class='notify-action'><span class='uk-icon-times'></span></a>" + textStatus,
+              status: "error",
+              timeout: 5000,
+              group: null,
+              pos: 'top-right'
+            });
+          }
+        });
+
+      });
+    } else {
+      UIkit.modal.alert("{{ 'datatables.bulk.selectError'|trans({}, 'messages') }}");
+    }
+  });
+</script>

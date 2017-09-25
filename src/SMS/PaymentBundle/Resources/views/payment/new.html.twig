@@ -9,62 +9,18 @@
         </a>
         <h3 class="md-card-toolbar-heading-text large uk-margin-small-left">
           {{ 'payment.new.title'|trans }}
+          (
+          {{ student }}
+          )
         </h3>
       </div>
-      <div class="md-card-content ">
-        <h2 class="heading_c full_width_in_card">{{ 'student.show.title'|trans }}</h2>
-        <div class="uk-grid uk-margin-medium-top" data-uk-grid-margin>
-          <div class="uk-width-large-1-2">
-            <ul class="md-list">
-              <li>
-                <div class="md-list-content">
+      <div class="md-card-content">
 
-                  <span class="md-list-heading uk-text-large">{{ student.firstName }}</span>
-                  <span class="uk-text-small uk-text-muted uk-display-block">
-                    {{'student.field.firstName'|trans }}</span>
-                </div>
-              </li>
-              <li>
-                <div class="md-list-content">
-
-                  <span class="md-list-heading uk-text-large">{{ student.gender|trans }}</span>
-                  <span class="uk-text-small uk-text-muted uk-display-block">
-                    {{'student.field.gender'|trans }}</span>
-                </div>
-              </li>
-
-            </ul>
-          </div>
-          <div class="uk-width-large-1-2">
-            <ul class="md-list">
-              <li>
-                <div class="md-list-content">
-
-                  <span class="md-list-heading uk-text-large">{{ student.lastName }}</span>
-                  <span class="uk-text-small uk-text-muted uk-display-block">
-                    {{'student.field.lastName'|trans }}</span>
-                </div>
-              </li>
-              <li>
-                <div class="md-list-content">
-
-                  <span class="md-list-heading uk-text-large">
-                    {% if student.birthday %}{{ student.birthday|date('d/m/Y') }}{% endif %}
-                  </span>
-                  <span class="uk-text-small uk-text-muted uk-display-block">
-                    {{'student.field.birthday'|trans }}</span>
-                </div>
-              </li>
-            </ul>
-          </div>
-
-        </div>
-        <div class="uk-margin-medium-top">
-          <h2 class="heading_c full_width_in_card">{{ 'payment.show.title'|trans }}</h2>
+        <div class="">
           {{ form_start(form) }}
 
-          <div class="uk-grid uk-margin-medium-top" data-uk-grid-margin>
-            <div class="uk-width-large-1-2">
+          <div class="uk-grid uk-grid-medium uk-grid-width-medium-1-2 uk-grid-width-large-1-2" data-uk-grid-margin data-uk-grid-match="{target:'.uk-form-row'}">
+            <div>
               <div class="uk-form-row">
                 {{ form_widget(form.month)}}
                 <span class="uk-form-help-block uk-form-label">{{ form_label(form.month) }}</span>
@@ -72,29 +28,53 @@
                   {{ form_errors(form.month) }}
                 </div>
               </div>
-              <div class="uk-form-row uk-input-group">
+            </div>
+            <div>
+              <div class="uk-form-row">
+                {{ form_widget(form.paymentType)}}
+                <span class="uk-form-help-block uk-form-label">{{ form_label(form.paymentType) }}</span>
+                <div class="parsley-errors-list filled uk-text-danger">
+                  {{ form_errors(form.paymentType) }}
+                </div>
+              </div>
+            </div>
+
+            <div id="paid">
+              <div class="uk-form-row">
+                <div class="md-input-wrapper md-input-wrapper-disabled">
+                  <label class="uk-form-label">{{ form_label(form.paid) }}</label>
+                  {{ form_widget(form.paid)}}
+                </div>
+                <div class="parsley-errors-list">
+                  {{ form_errors(form.paid) }}
+                </div>
+              </div>
+            </div>
+            <div id="credit">
+              <div class="uk-form-row">
+                <div class="md-input-wrapper md-input-wrapper-disabled">
+                  <label class="uk-form-label">{{ form_label(form.credit) }}</label>
+                  {{ form_widget(form.credit)}}
+                </div>
+                <div class="parsley-errors-list">
+                  {{ form_errors(form.credit) }}
+                </div>
+              </div>
+            </div>
+            <div>
+              <div class="uk-form-row  uk-input-group">
                 <label class="uk-form-label">{{ form_label(form.price) }}</label>
                 {{ form_widget(form.price)}}
                 <div class="parsley-errors-list">
                   {{ form_errors(form.price) }}
                 </div>
-                <span class="uk-input-group-addon" style="{{ form_errors(form.price)|length > 2 ? "" : "vertical-align: bottom;"}}">
+                <span class="uk-input-group-addon" style="{{ form_errors(form.price)|length > 2 ? " " : " vertical-align: bottom;"}}">
 
                   <div class="uk-text-bold">
                     <span class="uk-text-large uk-text-bold" id="price"></span>
                     {{ "payment.unit.price"|trans }}
                   </div>
                 </span>
-
-              </div>
-            </div>
-            <div class="uk-width-large-1-2">
-              <div class="uk-form-row">
-                {{ form_widget(form.paymentType)}}
-                  <span class="uk-form-help-block uk-form-label">{{ form_label(form.paymentType) }}</span>
-                <div class="parsley-errors-list filled uk-text-danger">
-                  {{ form_errors(form.paymentType) }}
-                </div>
               </div>
             </div>
           </div>
@@ -102,16 +82,13 @@
 
           {{ form_end(form) }}
         </div>
-      </div>
 
+      </div>
     </div>
   </div>
 </div>
-</div>
 {% endblock %}
 {% block javascripts %}
-  {{ parent() }}
-  <script src="{{ asset('bundles/fosjsrouting/js/router.js') }}"></script>
-  <script src="{{ path('fos_js_routing_js', {'callback': 'fos.Router.setData'}) }}"></script>
-  {% include '@SMSPayment/payment/paymentTypePrice.html.twig' %}
+{{ parent() }}
+{% include '@SMSPayment/payment/new_edit_payment.html.twig' %}
 {% endblock %}

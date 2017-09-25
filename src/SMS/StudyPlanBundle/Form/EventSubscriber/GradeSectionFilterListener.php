@@ -62,9 +62,6 @@ class GradeSectionFilterListener implements EventSubscriberInterface
      * @return Void
      */
     public function addElements(FormInterface $form, Grade $grade = null ) {
-        // Remove the submit button, we will place this at the end of the form later
-        $submit = $form->get('save');
-        $form->remove('save');
         $establishment = $this->establishment ;
         // Add the grade element
         $form->add('grade' , EntityType::class , array(
@@ -78,7 +75,6 @@ class GradeSectionFilterListener implements EventSubscriberInterface
                     },
                     'property'      => 'gradeName',
                     'placeholder'   => 'filter.field.select_grade',
-                    'mapped'        => false,
                     'constraints'   => [new NotBlank()],
                     'label'         => false,
                     'attr'          => [ 'class'=> 'gradeField'])
@@ -102,8 +98,6 @@ class GradeSectionFilterListener implements EventSubscriberInterface
                     'attr'          => [ 'class'=> 'sectionField']
                     )
                 );
-        // Add submit button again, this time, it's back at the end of the form
-        $form->add($submit);
     }
 
     /**

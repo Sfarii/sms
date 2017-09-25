@@ -24,7 +24,6 @@ class CourseDatatable extends AbstractDatatableView
         $establishment = $this->securityToken->getToken()->getUser()->getEstablishment();
 
         $divisions = $this->em->getRepository(Division::class)->findBy(array("establishment" => $establishment));
-        $gardes = $this->em->getRepository(Grade::class)->findBy(array("establishment" => $establishment));
 
         $this->callbacks->set(array(
         'row_callback' => array(
@@ -51,7 +50,7 @@ class CourseDatatable extends AbstractDatatableView
         ));
 
         $this->ajax->set(array(
-            'url' => $this->router->generate('course_results'),
+            'url' => $this->router->generate('course_results' , array('id' => $options['id'])),
             'type' => 'GET',
             'pipeline' => 0
         ));
@@ -66,7 +65,7 @@ class CourseDatatable extends AbstractDatatableView
                         'attributes' => array(
                             'rel' => 'tooltip',
                             'title' => $this->translator->trans('action.delete'),
-                            'class' => 'md-btn buttons-copy buttons-html5',
+                            'class' => 'md-btn md-btn-primary md-btn-wave-light waves-effect waves-button waves-light',
                             'role' => 'button'
                         ),
                     ),
@@ -92,15 +91,6 @@ class CourseDatatable extends AbstractDatatableView
                     'class' => "tablesorter-filter"
                 ))
             ))
-            ->add('grade.gradeName', 'column', array(
-                'title' => $this->translator->trans('grade.field.gradeName'),
-                'filter' => array('select', array(
-                    'search_type' => 'eq',
-                    'select_options' => array('' => $this->translator->trans('filter.field.all')) + $this->getCollectionAsOptionsArray($gardes, 'gradeName', 'gradeName'),
-                    'class' => "tablesorter-filter",
-                ))
-            ))
-
             ->add('user.username', 'column', array(
                 'title' => $this->translator->trans('author.creator'),
                 'filter' => array('text', array(

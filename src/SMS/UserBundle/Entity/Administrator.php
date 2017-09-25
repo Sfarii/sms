@@ -215,4 +215,12 @@ class Administrator extends User
     {
         return $this->address;
     }
+
+    /**
+     * @return string
+     */
+    public function __toString()
+    {
+        return sprintf("%s %s",$this->getFirstName(),$this->getLastName());
+    }
 }

@@ -1,6 +1,6 @@
 <!DOCTYPE html>
 <!--[if lte IE 9]> <html class="lte-ie9" lang="en"> <![endif]-->
-<!--[if gt IE 9]><!--> <html lang="en"> <!--<![endif]-->
+<!--[if gt IE 9]><!--> <html lang="en" class="{% if app.session.get('_theme') is not null  %}{{app.session.get('_theme')}}{% endif %}"> <!--<![endif]-->
 
 <head>
     <meta charset="UTF-8">
@@ -34,7 +34,7 @@
         <link rel="stylesheet" href="{{ asset('assets/icons/flags/flags.min.css') }}" media="all">
 
         <!-- altair admin -->
-        <link rel="stylesheet" href="{{ asset('assets/css/main.min.css') }}" media="all">
+        <link rel="stylesheet" href="{{ asset('assets/css/main.fix.min.css') }}" media="all">
 
         <!-- themes -->
         <link rel="stylesheet" href="{{ asset('assets/css/themes/themes_combined.min.css') }}" media="all">
@@ -77,14 +77,14 @@
 
         {% endblock %}
     </div>
-    <!-- main sidebar -->
-    {% include 'layout/sidebar.html.twig' %}
     <!-- main sidebar end -->
     {% block javascripts %}
       <!-- uikit functions -->
       <script src="{{ asset('assets/js/uikit_custom.min.js')}}"></script>
       <!-- altair common functions/helpers -->
       <script src="{{ asset('assets/js/altair_admin_common.min.js')}}"></script>
+      <script src="{{ asset('bundles/fosjsrouting/js/router.js') }}"></script>
+      <script src="{{ path('fos_js_routing_js', {'callback': 'fos.Router.setData'}) }}"></script>
       <!-- sms Web Socket-->
     {% endblock %}
 
@@ -104,10 +104,5 @@
         </script>
     {% endfor %}
     <!-- main flash success message end -->
-
-    {% block audio %}
-        <audio id="audio-alert" src="{{ asset('assets/audio/alert.mp3')}}" preload="auto"></audio>
-        <audio id="audio-fail" src="{{ asset('assets/audio/fail.mp3')}}" preload="auto"></audio>
-    {% endblock %}
 </body>
 </html>

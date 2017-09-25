@@ -1,0 +1,90 @@
+{% extends 'layout/base_no_header.html.twig' %}
+
+{% block body %}
+  <!-- statistics (small charts) -->
+  <div id="info" class="uk-grid uk-grid-width-large-1-2 uk-grid-width-medium-1-2 uk-grid-medium uk-sortable sortable-handler" data-uk-grid-margin>
+    <div>
+      <div class="md-card">
+        <div class="md-card-content">
+          <div class="uk-float-right uk-margin-top uk-margin-small-right">
+            <i class="material-icons  md-36">&#xE227;</i>
+          </div>
+          <span class=" uk-text-large  uk-text-bold">{{'payment.field.totalPrice'|trans }}</span>
+          <h2 class="uk-margin-remove" id="registrationFee">
+            {% if payment.paymentsInfo.price %}
+              {{ payment.paymentsInfo.price|price }}
+            {% else %}
+              0
+            {% endif %}
+            {{ 'payment.unit.price'|trans }}
+          </h2>
+        </div>
+      </div>
+    </div>
+    <div>
+      <div class="md-card">
+        <div class="md-card-content">
+          <div class="uk-float-right uk-margin-top uk-margin-small-right">
+            <i class="material-icons  md-36">&#xE25C;</i>
+          </div>
+          <span class=" uk-text-large  uk-text-bold">{{'payment.field.totalCredit'|trans }}</span>
+          <h2 class="uk-margin-remove" id="registrationFee">
+            {% if payment.paymentsInfo.credit %}
+              {{ payment.paymentsInfo.credit|price }}
+            {% else %}
+              0
+            {% endif %}
+            {{ 'payment.unit.price'|trans }}
+          </h2>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <div class="md-card">
+    <div class="md-card-toolbar">
+      <h3 class="md-card-toolbar-heading-text">
+        {{ 'paymenttype.stats.title'|trans }}
+      </h3>
+    </div>
+    <div class="md-card-content">
+      {% if payment.paymentsChart.month is empty or payment.paymentsChart.credit is empty or payment.paymentsChart.pricePaid is empty %}
+        <div class="echart-large uk-container-center">
+          <span class="chart_icon">
+            <i class="material-icons">&#xE88B;</i>
+            <h1 class="uk-text-large">{{ 'paymenttype.payment.not_found'|trans }}</h1>
+          </span>
+        </div>
+      {% else %}
+        <div data-echarts-table data-month='{{ payment.paymentsChart.month|json_encode|raw }}' data-credit='{{ payment.paymentsChart.credit|json_encode|raw }}' data-price='{{ payment.paymentsChart.pricePaid|json_encode|raw }}' class="echart-large"></div>
+      {% endif %}
+    </div>
+  </div>
+
+  <div class="md-card">
+    <div class="md-card-toolbar">
+      <h3 class="md-card-toolbar-heading-text">
+        {{ 'catchuplesson.stats.title'|trans }}
+      </h3>
+    </div>
+    <div class="md-card-content">
+      {% if payment.catchUpLessonChart.month is empty or payment.catchUpLessonChart.credit is empty or payment.catchUpLessonChart.pricePaid is empty %}
+        <div class="echart-large uk-container-center">
+          <span class="chart_icon">
+            <i class="material-icons">&#xE88B;</i>
+            <h1 class="uk-text-large">{{ 'paymenttype.payment.not_found'|trans }}</h1>
+          </span>
+        </div>
+      {% else %}
+        <div data-echarts-table data-month='{{ payment.catchUpLessonChart.month|json_encode|raw }}' data-credit='{{ payment.catchUpLessonChart.credit|json_encode|raw }}' data-price='{{ payment.catchUpLessonChart.pricePaid|json_encode|raw }}' class="echart-large"></div>
+      {% endif %}
+    </div>
+  </div>
+{% endblock %}
+{% block javascripts %}
+  {{ parent() }}
+  <script src="{{ asset('assets/plugins/chart/echarts.min.js')}}"></script>
+  <script src="{{ asset('assets/plugins/easypiechart/jquery.easypiechart.min.js')}}"></script>
+  <!-- page specific plugins -->
+  {% include '@SMSPayment/js/echarts.html.twig' %}
+{% endblock %}

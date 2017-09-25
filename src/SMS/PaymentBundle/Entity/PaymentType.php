@@ -10,9 +10,12 @@ use Symfony\Bridge\Doctrine\Validator\Constraints\UniqueEntity;
  * PaymentType
  *
  * @ORM\Table(name="payment_type")
- * @UniqueEntity(fields={"TypePaymentName", "establishment"})
  * @ORM\HasLifecycleCallbacks
+ * @UniqueEntity(fields={"typePaymentName" , "establishment"} , errorPath="typePaymentName")
  * @ORM\Entity(repositoryClass="SMS\PaymentBundle\Repository\PaymentTypeRepository")
+ * @ORM\InheritanceType("JOINED")
+ * @ORM\DiscriminatorColumn(name="discr", type="string")
+ * @ORM\DiscriminatorMap({"payment_type" = "PaymentType", "catch_up_lesson" = "CatchUpLesson"})
  */
 class PaymentType
 {
@@ -28,9 +31,55 @@ class PaymentType
     /**
      * @var string
      *
-     * @ORM\Column(name="TypePaymentName", type="string", length=100, unique=true)
+     * @ORM\Column(name="typePaymentName", type="string", length=100)
+     * @Assert\NotBlank()
+     * @Assert\Length(min = 2, max = 99)
+     * @Assert\Regex(pattern="/^[a-z0-9 .\-]+$/i" ,match=true)
      */
-    private $TypePaymentName;
+    protected $typePaymentName;
+
+    /**
+     * @var int
+     *
+     * @ORM\Column(name="price", type="float")
+     * @Assert\NotBlank()
+     * @Assert\Range(
+     *      min = 0,
+     *      max = 99999999999999)
+     */
+    protected $price;
+
+    /**
+     * @var int
+     *
+     * @ORM\Column(name="registrationFee", type="float")
+     * @Assert\NotBlank()
+     * @Assert\Range(
+     *      min = 0,
+     *      max = 99999999999999)
+     */
+    protected $registrationFee;
+
+    /**
+     * One PaymentType has Many Payments.
+     * @ORM\OneToMany(targetEntity="Payment", mappedBy="paymentType",fetch="EXTRA_LAZY")
+     */
+    protected $payments;
+
+    /**
+     * One establishment has Many PaymentType.
+     * @ORM\ManyToOne(targetEntity="SMS\EstablishmentBundle\Entity\Establishment" ,fetch="EXTRA_LAZY")
+     * @ORM\JoinColumn(name="establishment_id", referencedColumnName="id")
+     */
+    protected $establishment;
+
+
+    /**
+     * One User has Many Payments.
+     * @ORM\ManyToOne(targetEntity="SMS\UserBundle\Entity\User" ,fetch="EXTRA_LAZY")
+     * @ORM\JoinColumn(name="author_id", referencedColumnName="id")
+     */
+    protected $author;
 
     /**
      * @var datetime $created
@@ -47,44 +96,14 @@ class PaymentType
     protected $updated;
 
     /**
-     * One User has Many Payments.
-     * @ORM\ManyToOne(targetEntity="SMS\UserBundle\Entity\User" ,fetch="EXTRA_LAZY")
-     * @ORM\JoinColumn(name="user_id", referencedColumnName="id")
+     * One Payments has Many Users.
+     * @ORM\ManyToMany(targetEntity="SMS\UserBundle\Entity\Student" , inversedBy="registrations" ,fetch="EXTRA_LAZY")
+     * @ORM\JoinTable(name="payments_users",
+     *      joinColumns={@ORM\JoinColumn(name="users_id", referencedColumnName="id")},
+     *      inverseJoinColumns={@ORM\JoinColumn(name="payments_id", referencedColumnName="id")}
+     *      )
      */
-    private $user;
-
-    /**
-     * @var int
-     *
-     * @ORM\Column(name="price", type="float")
-     */
-    private $price;
-
-    /**
-     * @var int
-     *
-     * @ORM\Column(name="registrationFee", type="float")
-     */
-    private $registrationFee;
-
-    /**
-     * One PaymentType has Many Payments.
-     * @ORM\OneToMany(targetEntity="Payment", mappedBy="paymentType",fetch="EXTRA_LAZY")
-     */
-    private $payments;
-
-    /**
-     * One PaymentType has Many Registration.
-     * @ORM\OneToMany(targetEntity="Registration", mappedBy="paymentType",fetch="EXTRA_LAZY")
-     */
-    private $registrations;
-
-    /**
-     * One establishment has Many PaymentType.
-     * @ORM\ManyToOne(targetEntity="SMS\EstablishmentBundle\Entity\Establishment" ,fetch="EXTRA_LAZY")
-     * @ORM\JoinColumn(name="establishment_id", referencedColumnName="id")
-     */
-    private $establishment;
+    protected $student;
 
     /**
     * @ORM\PrePersist
@@ -99,21 +118,24 @@ class PaymentType
        }
    }
 
-    /**
-     * Get id
-     *
-     * @return int
-     */
-    public function getId()
-    {
-        return $this->id;
-    }
+
     /**
      * Constructor
      */
     public function __construct()
     {
         $this->payments = new \Doctrine\Common\Collections\ArrayCollection();
+        $this->student = new \Doctrine\Common\Collections\ArrayCollection();
+    }
+
+    /**
+     * Get id
+     *
+     * @return integer
+     */
+    public function getId()
+    {
+        return $this->id;
     }
 
     /**
@@ -125,7 +147,7 @@ class PaymentType
      */
     public function setTypePaymentName($typePaymentName)
     {
-        $this->TypePaymentName = $typePaymentName;
+        $this->typePaymentName = $typePaymentName;
 
         return $this;
     }
@@ -137,7 +159,55 @@ class PaymentType
      */
     public function getTypePaymentName()
     {
-        return $this->TypePaymentName;
+        return $this->typePaymentName;
+    }
+
+    /**
+     * Set price
+     *
+     * @param float $price
+     *
+     * @return PaymentType
+     */
+    public function setPrice($price)
+    {
+        $this->price = $price;
+
+        return $this;
+    }
+
+    /**
+     * Get price
+     *
+     * @return float
+     */
+    public function getPrice()
+    {
+        return $this->price;
+    }
+
+    /**
+     * Set registrationFee
+     *
+     * @param float $registrationFee
+     *
+     * @return PaymentType
+     */
+    public function setRegistrationFee($registrationFee)
+    {
+        $this->registrationFee = $registrationFee;
+
+        return $this;
+    }
+
+    /**
+     * Get registrationFee
+     *
+     * @return float
+     */
+    public function getRegistrationFee()
+    {
+        return $this->registrationFee;
     }
 
     /**
@@ -186,54 +256,6 @@ class PaymentType
     public function getUpdated()
     {
         return $this->updated;
-    }
-
-    /**
-     * Set price
-     *
-     * @param integer $price
-     *
-     * @return PaymentType
-     */
-    public function setPrice($price)
-    {
-        $this->price = $price;
-
-        return $this;
-    }
-
-    /**
-     * Get price
-     *
-     * @return integer
-     */
-    public function getPrice()
-    {
-        return $this->price;
-    }
-
-    /**
-     * Set user
-     *
-     * @param \SMS\UserBundle\Entity\User $user
-     *
-     * @return PaymentType
-     */
-    public function setUser(\SMS\UserBundle\Entity\User $user = null)
-    {
-        $this->user = $user;
-
-        return $this;
-    }
-
-    /**
-     * Get user
-     *
-     * @return \SMS\UserBundle\Entity\User
-     */
-    public function getUser()
-    {
-        return $this->user;
     }
 
     /**
@@ -295,50 +317,60 @@ class PaymentType
     }
 
     /**
-     * Set months
+     * Set author
      *
-     * @param array $months
+     * @param \SMS\UserBundle\Entity\User $author
      *
      * @return PaymentType
      */
-    public function setMonths($months)
+    public function setAuthor(\SMS\UserBundle\Entity\User $author = null)
     {
-        $this->months = $months;
+        $this->author = $author;
 
         return $this;
     }
 
     /**
-     * Get months
+     * Get author
      *
-     * @return array
+     * @return \SMS\UserBundle\Entity\User
      */
-    public function getMonths()
+    public function getAuthor()
     {
-        return $this->months;
+        return $this->author;
     }
 
     /**
-     * Set registrationFee
+     * Add student
      *
-     * @param integer $registrationFee
+     * @param \SMS\UserBundle\Entity\Student $student
      *
      * @return PaymentType
      */
-    public function setRegistrationFee($registrationFee)
+    public function addStudent(\SMS\UserBundle\Entity\Student $student)
     {
-        $this->registrationFee = $registrationFee;
+        $this->student[] = $student;
 
         return $this;
     }
 
     /**
-     * Get registrationFee
+     * Remove student
      *
-     * @return integer
+     * @param \SMS\UserBundle\Entity\Student $student
      */
-    public function getRegistrationFee()
+    public function removeStudent(\SMS\UserBundle\Entity\Student $student)
     {
-        return $this->registrationFee;
+        $this->student->removeElement($student);
+    }
+
+    /**
+     * Get student
+     *
+     * @return \Doctrine\Common\Collections\Collection
+     */
+    public function getStudent()
+    {
+        return $this->student;
     }
 }

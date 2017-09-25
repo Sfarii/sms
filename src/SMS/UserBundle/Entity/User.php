@@ -653,14 +653,6 @@ use Vich\UploaderBundle\Mapping\Annotation as Vich;
     }
 
     /**
-     * @return string
-     */
-    public function __toString()
-    {
-        return (string) $this->getUsername();
-    }
-
-    /**
      * Set creator
      *
      * @param \SMS\UserBundle\Entity\User $creator

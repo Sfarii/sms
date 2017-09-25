@@ -10,9 +10,9 @@ payment:
         success: Les paiements spécifiés ont été supprimés avec succès   # FIXME
     add:
         success: Paiement ajouté avec succès    # FIXME
+        fail: Veuillez vérifier le crédit.
     edit:
         success: Paiement réussi édité   # FIXME
-    edit:
         title: Modifier le paiement  # FIXME
     to:
       Facturer
@@ -23,9 +23,9 @@ payment:
         credit: Crédit   # FIXME
         month: Mois   # FIXME
         paymentType: Type de paiement   # FIXME
-        select_paymentType: Sélectionnez le type de paiement ...  # FIXME
+        select_paymentType: Type de paiement ...  # FIXME
         price: Prix payé  # FIXME
-        student: élève   # FIXME
+        student: Élève   # FIXME
         student.firstName: Prénom de l'élève   # FIXME
         student.lastName: Nom de l'élève
         student.section: Nom de la section
@@ -34,8 +34,8 @@ payment:
         totalPrice: Prix total payé
         totalCredit: Crédit total
         total: Total
+        reference: Numéro de paiement
         totalRegistration: Enregistrement total
-        id: Numéro de paiement
     unit:
         price: TND
     list:
@@ -65,7 +65,6 @@ search:
         registred: Inscrit
         not_registred: Pas encore inscrit
     submit: Filtre
-    reset: Réinitialiser la page
     result_not_found:
         title: Oops! Aucun résultat trouvé
         sub-title: Suggestions
@@ -80,13 +79,44 @@ paymentType:
         success: Type de paiement réussi à être édité   # FIXME
     field:
         TypePaymentName:  Nom de paiement   # FIXME
+catchuplesson:
+    edit:
+        title: Modifier la leçon de rattrapage   # FIXME
 
+    field:
+        catchUpLessonName: Nom de la leçon # FIXME
+        description: Description de la leçon
+        price: Prix de la leçon par mois   # FIXME
+        registrationFee: Frais d'inscription   # FIXME
+        professorPrice: Professeur Prix par mois
+        professor: Professeur
+        select_professor: Sélectionnez Professeur ...
+        months: Mois   # FIXME
+        select_months: Sélectionnez un mois ..   # FIXME
+    registration:
+        title: Etudiants inscrits
+    list:
+        title: Listes des leçons   # FIXME
+    schedule:
+        title: Emploi de temps
+        day: Jour
+        select_day: Sélectionnez le jour ...
+        end_time: Heure de fin
+        start_time: Heure de début
+    new:
+        title: Ajout d'une leçon de rattrapage   # FIXME
+    stats:
+        not_found: Pas assez de données disponibles
+        title: Leçon de rattrapage Statistiques par mois
+    show:
+        detail: Détail de la leçon   # FIXME
+        title: Information sur la leçon   # FIXME
 paymenttype:
     edit:
         title: Modifier le type de paiement   # FIXME
 
     field:
-        TypePaymentName: Nom de paiement    # FIXME
+        typePaymentName: Nom de paiement    # FIXME
         price: Prix par mois   # FIXME
         registrationFee: Frais d'inscription   # FIXME
         months: Mois   # FIXME
@@ -96,13 +126,12 @@ paymenttype:
         title: Listes de type de paiement   # FIXME
     detail:
         credit: Crédit
-        income: Revenu
-        student: élève
+        student: Élève
     new:
         title: Ajout d'un type de paiement   # FIXME
     stats:
         not_found: Pas assez de données disponibles
-        title: Statistiques par mois
+        title: Type de paiement Statistiques par mois
     show:
         detail: Détail du type de paiement   # FIXME
         title: Informations sur le type de paiement   # FIXME

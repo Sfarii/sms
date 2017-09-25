@@ -61,7 +61,7 @@ class ScheduleDatatable extends AbstractDatatableView
                         'attributes' => array(
                             'rel' => 'tooltip',
                             'title' => $this->translator->trans('action.delete'),
-                            'class' => 'md-btn buttons-copy buttons-html5',
+                            'class' => 'md-btn md-btn-primary md-btn-wave-light waves-effect waves-button waves-light',
                             'role' => 'button'
                         ),
                     ),

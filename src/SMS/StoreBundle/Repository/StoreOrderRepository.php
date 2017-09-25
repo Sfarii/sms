@@ -10,4 +10,18 @@ namespace SMS\StoreBundle\Repository;
  */
 class StoreOrderRepository extends \Doctrine\ORM\EntityRepository
 {
+  /**
+   * Get order By reference
+   *
+   * @param String $reference
+   * @return array
+   */
+    public function findOrderByRefrence($reference)
+    {
+        return $this->createQueryBuilder('u')
+            ->where('u.reference = :reference')
+            ->setParameter('reference', $reference)
+            ->getQuery()
+            ->getOneOrNullResult();
+    }
 }

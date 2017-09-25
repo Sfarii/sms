@@ -6,63 +6,116 @@ $(function() {
 });
 echarts_bar = {
     init: function() {
-      var $elem = $("[data-echarts-bar],.data-echarts-bar");
+      var $elem = $("[data-echarts-line],.data-echarts-line");
       if ($elem.length) {
         $elem.each(function() {
-            var $this = this,
-              this_data = $($this).data('values');
-            var $myChart = echarts.init($this);
-            option = {
-              color: ['#00bfa5','#3398DB','#e53935'],
-              tooltip: {
-                trigger: 'axis',
-                axisPointer: { // 坐标轴指示器，坐标轴触发有效
-                  type: 'shadow' // 默认为直线，可选为：'line' | 'shadow'
-                }
+          var $this = this,
+            this_title = $($this).data('title'),
+            data_present = $($this).data('presence'),
+            data_absent = $($this).data('absent'),
+            data_retard = $($this).data('retard'),
+            dataAxis = $($this).data('legend');
+          var $myChart = echarts.init($this);
+          option = {
+            tooltip: {
+              trigger: 'axis',
+              position: function(pt) {
+                return [pt[0], '10%'];
               },
-              toolbox: {
-                show: true,
-                feature: {
-                  saveAsImage: {
-                    title: ' ',
-                    show: true
+            },
+            legend: {
+              orient: 'horizontal',
+              y: 'top',
+              x: 'center',
+              data: ["{{ 'attendance_action.present'|trans }}","{{ 'attendance_action.absent'|trans }}", "{{ 'attendance_action.retard'|trans }}"]
+            },
+            toolbox: {
+              show: true,
+              feature: {
+                saveAsImage: {
+                  title: ' ',
+                  show: true
+                }
+              }
+            },
+            grid: {
+              bottom: '10%',
+              containLabel: true
+            },
+            xAxis: {
+              type: 'category',
+              boundaryGap: false,
+              data: dataAxis
+            },
+            yAxis: {
+              type: 'value',
+              boundaryGap: [0, '100%']
+            },
+            dataZoom: [
+              {
+                type: 'inside'
+              }, {
+                start: 0,
+                end: 10,
+                handleIcon: 'M10.7,11.9v-1.3H9.3v1.3c-4.9,0.3-8.8,4.4-8.8,9.4c0,5,3.9,9.1,8.8,9.4v1.3h1.3v-1.3c4.9-0.3,8.8-4.4,8.8-9.4C19.5,16.3,15.6,12.2,10.7,11.9z M13.3,24.4H6.7V23h6.6V24.4z M13.3,19.6H6.7v-1.4h6.6V19.6z',
+                handleSize: '80%',
+                handleStyle: {
+                  color: '#fff',
+                  shadowBlur: 3,
+                  shadowColor: 'rgba(0, 0, 0, 0.6)',
+                  shadowOffsetX: 2,
+                  shadowOffsetY: 2
+                }
+              }
+            ],
+            series: [
+              {
+                name: "{{ 'attendance_action.present'|trans }}",
+                type: 'line',
+                smooth: true,
+                symbol: 'none',
+                sampling: 'average',
+                itemStyle: {
+                  normal: {
+                    color: '#00bfa5'
                   }
-                }
-              },
-              grid: {
-                left: '3%',
-                right: '4%',
-                bottom: '3%',
-                containLabel: true
-              },
-              xAxis: [{
-                type: 'category',
-                data: jQuery.map(this_data, function(n, i) {
-                  return (n.month);
-                }),
-                axisTick: {
-                  alignWithLabel: true
-                }
-              }],
-              yAxis: [{
-                type: 'value'
-              }],
-              series: [
-              {% for key, val in attendance_professor %}
-                {
-                  name: "{{ val|trans }}",
-                  type: 'bar',
-                  data: jQuery.map(this_data, function(n, i) {
-                    return (n.{{ key }});
-                  })
                 },
-              {% endfor %}
+                data: data_present
+              },
+              {
+                name: "{{ 'attendance_action.retard'|trans }}",
+                type: 'line',
+                smooth: true,
+                symbol: 'none',
+                sampling: 'average',
+                itemStyle: {
+                  normal: {
+                    color: '#3398DB'
+                  }
+                },
+                data: data_retard
+              }, {
+                name: "{{ 'attendance_action.absent'|trans }}",
+                type: 'line',
+                smooth: true,
+                symbol: 'none',
+                sampling: 'average',
+                itemStyle: {
+                  normal: {
+                    color: '#e53935'
+                  }
+                },
+                data: data_absent
+              }
             ]
-            };
-            $myChart.setOption(option);
-          });
+          };
 
-        }
+          $myChart.setOption(option);
+          $window.on("debouncedresize", function() {
+            $myChart.resize()
+          });
+        });
       }
     }
+  }
 </script>

@@ -27,6 +27,23 @@ class PaymentRepository extends \Doctrine\ORM\EntityRepository
     }
 
     /**
+     * Get All registred users
+     * @param $student
+     * @return array
+     */
+    public function findAllByStudent($student)
+    {
+        return $this->createQueryBuilder('payment')
+          ->join('payment.student', 'student')
+          ->where('student.id = :student')
+          ->setParameter('student', $student->getId())
+          ->select("payment.month , SUM(payment.credit) as credit , SUM(payment.price) as price")
+          ->groupBy('payment.month')
+          ->getQuery()
+          ->getResult();
+    }
+
+    /**
      * findByPayment
      * @param $payment
      * @return array
@@ -55,6 +72,7 @@ class PaymentRepository extends \Doctrine\ORM\EntityRepository
           ->where('establishment.id = :establishment')
           ->setParameter('establishment', $establishment->getId())
           ->select("SUM(paymentType.registrationFee) as registrationFee, SUM(payment.credit) as credit , SUM(payment.price) as price")
+
           ->getQuery()
           ->getOneOrNullResult();
     }
@@ -81,12 +99,13 @@ class PaymentRepository extends \Doctrine\ORM\EntityRepository
      * @param $establishment
      * @return array
      */
-    public function findChartByAll($establishment)
+    public function findChartByCatchUpLesson($establishment)
     {
         return $this->createQueryBuilder('payment')
           ->join('payment.paymentType', 'paymentType')
           ->join('paymentType.establishment', 'establishment')
           ->where('establishment.id = :establishment')
+          ->andWhere('paymentType INSTANCE OF SMS\PaymentBundle\Entity\CatchUpLesson')
           ->setParameter('establishment', $establishment->getId())
           ->select("payment.month , SUM(payment.credit) as credit , SUM(payment.price) as price")
           ->groupBy('payment.month')
@@ -95,20 +114,20 @@ class PaymentRepository extends \Doctrine\ORM\EntityRepository
     }
 
     /**
-     * findByRegistration
-     * @param $registration
+     * Chart By All Payment
+     * @param $establishment
      * @return array
      */
-    public function findByRegistration($registration)
+    public function findChartByTypePayment($establishment)
     {
         return $this->createQueryBuilder('payment')
-          ->join('payment.student', 'student')
           ->join('payment.paymentType', 'paymentType')
-          ->select("partial payment.{id ,credit , price , month}")
-          ->where('student.id = :student')
-          ->setParameter('student', $registration->getStudent()->getId())
-          ->andWhere('paymentType.id = :paymentType')
-          ->setParameter('paymentType', $registration->getPaymentType()->getId())
+          ->join('paymentType.establishment', 'establishment')
+          ->where('establishment.id = :establishment')
+          ->andWhere('paymentType INSTANCE OF SMS\PaymentBundle\Entity\PaymentType')
+          ->setParameter('establishment', $establishment->getId())
+          ->select("payment.month , SUM(payment.credit) as credit , SUM(payment.price) as price")
+          ->groupBy('payment.month')
           ->getQuery()
           ->getResult();
     }

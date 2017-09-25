@@ -1,112 +1,162 @@
 {% extends 'layout/base.html.twig' %}
+{% block stylesheets %}
+  <!-- page specific plugins -->
+  <link rel="stylesheet" href="{{ asset('assets/css/jquery-ui.min.css')}}">
+  {{ parent() }}
+{% endblock %}
 
-{% block heading_actions %} 
+{% block heading_actions %}
+  <a href="{{ path('order_user_pdf' , { 'id' : orderUser.id }) }}">
+    <i class="md-icon material-icons">&#xE8AD;</i>
+  </a>
+  <a href="{{ path('order_user_img' , { 'id' : orderUser.id }) }}">
+    <i class="md-icon material-icons">&#xE412;</i>
+  </a>
+{% endblock %}
+{% block sub_title_page %}
   <a href="{{ path('orderuser_index') }}">
-    <i class="md-icon material-icons">&#xE5C4;</i>
+    {{ 'orderuser.list.title'|trans }}
   </a>
-  <a href="{{ path('orderuser_new') }}">
-    <i class="md-icon material-icons">&#xE5C8;</i>
+  /
+  <a href="#">
+    {{ 'orderuser.show.title'|trans }}
   </a>
-{% endblock %} 
-
+{% endblock %}
 {% block sticky_button %}
-<a class="md-fab md-fab-primary" href="{{ path('orderuser_edit', { 'id': orderUser.id }) }}">
+<a class="md-fab md-fab-accent md-fab-wave waves-effect waves-button" href="{{ path('orderuser_edit', { 'id': orderUser.id }) }}">
     <i class="material-icons">&#xE254;</i>
 </a>
 {% endblock %}
 
-{% block title_page %} 
+{% block title_page %}
  {{ 'orderuser.show.title'|trans }}
 {% endblock %}
 
 {% block body %}
-    <div class="uk-grid uk-grid-medium" data-uk-grid-margin>
+<div class="md-card">
+  <div class="md-card-toolbar">
+    <h3 class="md-card-toolbar-heading-text">
+      {{ 'orderuser.show.detail'|trans }}
+    </h3>
+  </div>
+  <div class="md-card-content">
+    <div class="uk-grid uk-grid-divider" data-uk-grid-margin>
 
-        <div class="uk-width-xLarge-8-10  uk-width-large-7-10">
-            <div class="md-card">
-                <div class="md-card-toolbar">
-                    <h3 class="md-card-toolbar-heading-text">
-                        {{ 'orderuser.show.detail'|trans }}
-                    </h3>
+      <div class="uk-width-xLarge-8-10  uk-width-large-7-10">
+
+        <div class="uk-grid" data-uk-grid-margin>
+          <div class="uk-width-xLarge-1-2  uk-width-large-1-2">
+            <ul class="md-list">
+
+              <li>
+                <div class="md-list-content">
+                  <span class="md-list-heading uk-text-large">{{ orderUser.userOrder }}</span>
                 </div>
-                <div class="md-card-content">
-                    <ul class="md-list">
-                        <li>
-                            <div class="md-list-content">
-                            <span class="md-list-heading uk-text-large">{{ orderUser.id }}</span>
-                        </div>
-                        <span class="uk-text-small uk-text-muted uk-display-block"> {{'orderuser.field.id'|trans }}</span>
-                    </li>
-                        <li>
-                            <div class="md-list-content">
-                            <span class="md-list-heading uk-text-large">{{ orderUser.price }}</span>
-                        </div>
-                        <span class="uk-text-small uk-text-muted uk-display-block"> {{'orderuser.field.price'|trans }}</span>
-                    </li>
-                        <li>
-                            <div class="md-list-content">
-                            <span class="md-list-heading uk-text-large">{{ orderUser.quantity }}</span>
-                        </div>
-                        <span class="uk-text-small uk-text-muted uk-display-block"> {{'orderuser.field.quantity'|trans }}</span>
-                    </li>
-                        <li>
-                            <div class="md-list-content">
-                            <span class="md-list-heading uk-text-large">{% if orderUser.state %}Yes{% else %}No{% endif %}</span>
-                        </div>
-                        <span class="uk-text-small uk-text-muted uk-display-block"> {{'orderuser.field.state'|trans }}</span>
-                    </li>
-                        <li>
-                            <div class="md-list-content">
-                            <span class="md-list-heading uk-text-large">{% if orderUser.created %}{{ orderUser.created|date('Y-m-d H:i:s') }}{% endif %}</span>
-                        </div>
-                        <span class="uk-text-small uk-text-muted uk-display-block"> {{'orderuser.field.created'|trans }}</span>
-                    </li>
-                        <li>
-                            <div class="md-list-content">
-                            <span class="md-list-heading uk-text-large">{% if orderUser.updated %}{{ orderUser.updated|date('Y-m-d H:i:s') }}{% endif %}</span>
-                        </div>
-                        <span class="uk-text-small uk-text-muted uk-display-block"> {{'orderuser.field.updated'|trans }}</span>
-                    </li>                    </ul>
+                <span class="uk-text-small uk-text-muted uk-display-block">
+                  {{'provider.field.socialReason'|trans }}</span>
+              </li>
+              <li>
+                <div class="md-list-content">
+                  <span class="md-list-heading uk-text-large">{{ orderUser.userOrder.phone }}</span>
                 </div>
-            </div>
+                <span class="uk-text-small uk-text-muted uk-display-block">
+                  {{'provider.field.phone'|trans }}</span>
+              </li>
+              <li>
+                <div class="md-list-content">
+                  <span class="md-list-heading uk-text-large">{{ orderUser.userOrder.email }}</span>
+                </div>
+                <span class="uk-text-small uk-text-muted uk-display-block">
+                  {{'provider.field.address'|trans }}</span>
+              </li>
+            </ul>
+          </div>
+          <div class="uk-width-xLarge-1-2  uk-width-large-1-2">
+
+            <ul class="md-list">
+              <li class="active" style="border-bottom: 1;">
+                <div class="md-list-content">
+                  <span class="md-list-heading uk-text-large">
+                    {% if orderUser.state %}
+                      {{ 'out_of_stock'|trans }}
+                    {% else %}
+                      {{ 'store.state.padding'|trans }}
+                    {% endif %}
+                  </span>
+                </div>
+                <span class="uk-text-small uk-text-muted uk-display-block">
+                  {{'orderuser.field.state'|trans }}</span>
+              </li>
+              <li class="active" style="border-bottom: 1;">
+                <div class="md-list-content">
+                  <span class="md-list-heading uk-text-large">{{ orderUser.reference }}</span>
+                </div>
+                <span class="uk-text-small uk-text-muted uk-display-block">
+                  {{'orderuser.field.reference'|trans }}</span>
+              </li>
+              <li class="active" style="border-bottom: 1;">
+                <div class="md-list-content">
+                  <span class="md-list-heading uk-text-large">{{ orderUser.orderDate|date('d M Y') }}</span>
+                </div>
+                <span class="uk-text-small uk-text-muted uk-display-block">
+                  {{'orderuser.field.orderDate'|trans }}</span>
+              </li>
+            </ul>
+          </div>
         </div>
-        <div class="uk-width-xLarge-2-10 uk-width-large-3-10">
-            <div class="md-card">
-                <div class="md-card-toolbar">
-                    <h3 class="md-card-toolbar-heading-text">
-                        {{ 'author.info'|trans }}
-                    </h3>
-                </div>
-                <div class="md-card-content">
-                    <ul class="md-list md-list-addon">
-                        <li>
-                            <div class="md-list-addon-element">
-                                <i class="md-list-addon-icon material-icons">&#xE7FD;</i>
-                            </div>
-                            <div class="md-list-content">
-                                <span class="md-list-heading">{{ orderUser.user.username }}</span>
-                                <span class="uk-text-small uk-text-muted">{{ 'author.creator'|trans }}</span>
-                            </div>
-                        </li>
-                        <li>
-                            <div class="md-list-addon-element">
-                                <i class="md-list-addon-icon material-icons">&#xE8DF;</i>
-                            </div>
-                            <div class="md-list-content"><span class="md-list-heading">{% if orderUser.created %}{{ orderUser.created|date('d M Y') }}{% endif %}</span>
-                                <span class="uk-text-small uk-text-muted">{{ 'author.updated'|trans }}</span>
-                            </div>
-                        </li>
-                        <li>
-                            <div class="md-list-addon-element">
-                                <i class="md-list-addon-icon material-icons">&#xE8B5;</i>
-                            </div>
-                            <div class="md-list-content"><span class="md-list-heading">{% if orderUser.created %}{{ orderUser.created|date('d M Y') }}{% endif %}</span>
-                                <span class="uk-text-small uk-text-muted">{{ 'author.created'|trans }}</span>
-                            </div>
-                        </li>
-                    </ul>
-                </div>
+      </div>
+      <div class="uk-width-xLarge-2-10 uk-width-large-3-10">
+        <h3 class="heading_c uk-margin-small-bottom uk-margin-small-top">
+          {{ 'author.info'|trans }}
+        </h3>
+        <ul class="md-list md-list-addon">
+          <li>
+            <div class="md-list-addon-element">
+              <i class="md-list-addon-icon material-icons">&#xE7FD;</i>
             </div>
-        </div>
+            <div class="md-list-content">
+              <span class="md-list-heading">{{ orderUser.author.username }}</span>
+              <span class="uk-text-small uk-text-muted">{{ 'author.creator'|trans }}</span>
+            </div>
+          </li>
+          <li>
+            <div class="md-list-addon-element">
+              <i class="md-list-addon-icon material-icons">&#xE8DF;</i>
+            </div>
+            <div class="md-list-content">
+              <span class="md-list-heading">
+                {% if orderUser.created %}{{ orderUser.created|date('d M Y') }}{% endif %}
+              </span>
+              <span class="uk-text-small uk-text-muted">{{ 'author.updated'|trans }}</span>
+            </div>
+          </li>
+          <li>
+            <div class="md-list-addon-element">
+              <i class="md-list-addon-icon material-icons">&#xE8B5;</i>
+            </div>
+            <div class="md-list-content">
+              <span class="md-list-heading">
+                {% if orderUser.created %}{{ orderUser.created|date('d M Y') }}{% endif %}
+              </span>
+              <span class="uk-text-small uk-text-muted">{{ 'author.created'|trans }}</span>
+            </div>
+          </li>
+        </ul>
+      </div>
     </div>
+  </div>
+</div>
+<div class="md-card">
+  <div class="md-card-content">
+    {{ datatable_render(lineOrder) }}
+  </div>
+</div>
+{% endblock %}
+{% block head_javascripts %}
+  {{ parent() }}
+  <!-- page specific plugins -->
+  <!--  form file input functions -->
+  <script src="{{ asset('assets/js/jquery.poshytip.min.js')}}"></script>
+  <script src="{{ asset('assets/js/jquery-editable-poshytip.js')}}"></script>
+
 {% endblock %}

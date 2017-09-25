@@ -30,6 +30,11 @@ services:
         class: API\EventListener\CacheListener
         tags:
             - { name: kernel.event_listener, event: kernel.response, method: onKernelResponse }
+    sms.twig_extension:
+        class: API\Twig\PriceExtension
+        public: false
+        tags:
+            - { name: twig.extension }
     #user.onligne_user_listener:
         #class: API\EventListener\OnligneUserListener
         #arguments: [@security.context, @sms.user.entity_manager]

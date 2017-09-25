@@ -1,0 +1,74 @@
+<script>
+$(function() {
+	var $paymentType = $('.paymentTypeField');
+	var $monthField = $('.monthField');
+	var $paid = $('#sms_paymentbundle_payment_paid');
+	var $credit = $('#sms_paymentbundle_payment_credit');
+	$paid.val($paid.val() == '' ? '0 {{ "payment.unit.price"|trans }}' : $paid.val() + ' {{ "payment.unit.price"|trans }}').change().blur();
+	$credit.val($credit.val()  ==  '' ? '0 {{ "payment.unit.price"|trans }}' : $credit.val() + ' {{ "payment.unit.price"|trans }}').change().blur();
+	// When grade gets selected ...
+	$monthField.change(function() {
+		if ($(this).val() == '' || $paymentType.val() == ''){
+			return false;
+		}
+		var $form = $(this).closest('form');
+		// show preloader
+		altair_helpers.content_preloader_show('md');
+		// Submit data via AJAX to the form's action path.
+		$.ajax({
+			url: $form.attr('action'),
+			type: $form.attr('method'),
+			data: $form.serializeObject(),
+			cache: false,
+			timeout: 3000,
+			success: function(html) {
+				$('#paid').empty().append(
+	        // ... with the returned one from the AJAX response.
+	        $(html).find('#paid').html()
+	      );
+				$('#credit').empty().append(
+	        // ... with the returned one from the AJAX response.
+	        $(html).find('#credit').html()
+	      );
+				$('#sms_paymentbundle_payment_paid').val($('#sms_paymentbundle_payment_paid').val() + ' {{ "payment.unit.price"|trans }}').change().blur();
+				$('#sms_paymentbundle_payment_credit').val($('#sms_paymentbundle_payment_credit').val() + ' {{ "payment.unit.price"|trans }}').change().blur();
+				// hide preloader
+				altair_helpers.content_preloader_hide();
+				// Position field now displays the appropriate positions.
+			}
+		});
+	});
+	// When grade gets selected ...
+	$paymentType.change(function() {
+		if ($(this).val() == ''|| $monthField.val() == ''){
+			return false;
+		}
+		var $form = $(this).closest('form');
+		// show preloader
+		altair_helpers.content_preloader_show('md');
+		// Submit data via AJAX to the form's action path.
+		$.ajax({
+			url: $form.attr('action'),
+			type: $form.attr('method'),
+			data: $form.serializeObject(),
+			cache: false,
+			timeout: 3000,
+			success: function(html) {
+				$('#paid').empty().append(
+	        // ... with the returned one from the AJAX response.
+	        $(html).find('#paid').html()
+	      );
+				$('#credit').empty().append(
+	        // ... with the returned one from the AJAX response.
+	        $(html).find('#credit').html()
+	      );
+				$('#sms_paymentbundle_payment_paid').val($('#sms_paymentbundle_payment_paid').val() + ' {{ "payment.unit.price"|trans }}').change().blur();
+				$('#sms_paymentbundle_payment_credit').val($('#sms_paymentbundle_payment_credit').val() + ' {{ "payment.unit.price"|trans }}').change().blur();
+				// hide preloader
+				altair_helpers.content_preloader_hide();
+				// Position field now displays the appropriate positions.
+			}
+		});
+	});
+});
+</script>

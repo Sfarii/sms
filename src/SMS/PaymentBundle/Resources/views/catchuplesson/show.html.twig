@@ -1,0 +1,275 @@
+{% extends 'layout/base.html.twig' %}
+
+{% block sub_title_page %}
+  <a href="{{ path('catchuplesson_index') }}">
+    {{ 'catchuplesson.list.title'|trans }}
+  </a>
+  /
+  <a href="#">
+    {{ 'catchuplesson.show.title'|trans }}
+  </a>
+{% endblock %}
+
+{% block sticky_button %}
+  <a class="md-fab md-fab-accent md-fab-wave waves-effect waves-button" href="{{ path('catchuplesson_edit', { 'id': catchUpLesson.id }) }}">
+    <i class="material-icons">&#xE254;</i>
+  </a>
+{% endblock %}
+
+{% block title_page %}
+  {{ 'catchuplesson.show.title'|trans }}
+{% endblock %}
+
+{% block body %}
+  <!-- statistics (small charts) -->
+  <div class="uk-grid uk-grid-width-large-1-4 uk-grid-width-medium-1-2 uk-grid-medium uk-sortable sortable-handler hierarchical_show" data-uk-grid-margin>
+    <div>
+      <div class="md-card">
+        <div class="md-card-content">
+          <div class="uk-float-right uk-margin-top uk-margin-small-right">
+            <i class="material-icons  md-36">&#xE8D3;</i>
+          </div>
+          <span class=" uk-text-large  uk-text-bold">{{'paymenttype.detail.student'|trans }}</span>
+          <h2 class="uk-margin-remove">
+            <span>
+              {{ catchUpLesson.student|length }}
+            </span>
+          </h2>
+        </div>
+      </div>
+    </div>
+    <div>
+      <div class="md-card">
+        <div class="md-card-content">
+          <div class="uk-float-right uk-margin-top uk-margin-small-right">
+            <i class="material-icons md-36">&#xE227;</i>
+          </div>
+          <span class=" uk-text-large  uk-text-bold">{{'payment.field.totalPrice'|trans }}</span>
+          <h2 class="uk-margin-remove">
+            <span>
+              {% if stats.paymentsInfo.price %}
+                {{ stats.paymentsInfo.price|price }}
+              {% else %}
+                0
+              {% endif %}
+              {{ 'payment.unit.price'|trans }}
+            </span>
+          </h2>
+        </div>
+      </div>
+    </div>
+    <div>
+      <div class="md-card">
+        <div class="md-card-content">
+          <div class="uk-float-right uk-margin-top uk-margin-small-right">
+            <i class="material-icons  md-36">&#xE25C;</i>
+          </div>
+          <span class=" uk-text-large  uk-text-bold">{{'payment.field.totalCredit'|trans }}</span>
+          <h2 class="uk-margin-remove">
+            <span class="countUpMe">
+              {% if stats.paymentsInfo.credit %}
+                {{ stats.paymentsInfo.credit|price }}
+              {% else %}
+                0
+              {% endif %}
+            </span>{{ 'payment.unit.price'|trans }}</h2>
+        </div>
+      </div>
+    </div>
+    <div>
+      <div class="md-card">
+        <div class="md-card-content">
+          <div class="uk-float-right uk-margin-top uk-margin-small-right">
+            <i class="material-icons  md-36">&#xE263;</i>
+          </div>
+          <span class=" uk-text-large  uk-text-bold">{{'payment.field.totalRegistration'|trans }}</span>
+          <h2 class="uk-margin-remove" id="peity_live_text">
+            {{ catchUpLesson.registrationFee * catchUpLesson.student|length }}
+            {{ 'payment.unit.price'|trans }}
+          </h2>
+        </div>
+      </div>
+    </div>
+  </div>
+  <div class="md-card">
+    <div class="md-card-toolbar">
+      <h3 class="md-card-toolbar-heading-text">
+        {{ 'paymenttype.stats.title'|trans }}
+      </h3>
+    </div>
+    <div class="md-card-content">
+      {% if stats.month is empty or stats.credit is empty or stats.pricePaid is empty %}
+        <div class="echart-large uk-container-center">
+          <span class="chart_icon">
+            <i class="material-icons">&#xE88B;</i>
+            <h1 class="uk-text-large">{{ 'paymenttype.stats.not_found'|trans }}</h1>
+          </span>
+        </div>
+      {% else %}
+        <div data-echarts-table data-month='{{ stats.month|json_encode|raw }}' data-credit='{{ stats.credit|json_encode|raw }}' data-price='{{ stats.pricePaid|json_encode|raw }}' class="echart-large"></div>
+      {% endif %}
+    </div>
+  </div>
+  <div class="md-card">
+    <div class="md-card-toolbar">
+      <h3 class="md-card-toolbar-heading-text">
+        {{ 'catchuplesson.show.detail'|trans }}
+      </h3>
+    </div>
+    <div class="md-card-content">
+
+      <div class="uk-grid uk-grid-divider" data-uk-grid-margin>
+
+        <div class="uk-width-xLarge-8-10  uk-width-large-7-10">
+          <div class="uk-grid" data-uk-grid-margin>
+            <div class="uk-width-medium-1-2">
+              <ul class="md-list">
+                <li>
+                  <div class="md-list-content">
+                    <span class="md-list-heading uk-text-large">{{ catchUpLesson.typePaymentName }}</span>
+                  </div>
+                  <span class="uk-text-small uk-text-muted uk-display-block">
+                    {{'paymenttype.field.typePaymentName'|trans }}</span>
+                </li>
+
+                <li>
+                  <div class="md-list-content">
+                    <span class="md-list-heading uk-text-large">{{ catchUpLesson.description }}</span>
+                  </div>
+                  <span class="uk-text-small uk-text-muted uk-display-block">
+                    {{'catchuplesson.field.description'|trans }}</span>
+                </li>
+              </ul>
+            </div>
+            <div class="uk-width-medium-1-2">
+              <ul class="md-list">
+                <li>
+                  <div class="md-list-content">
+                    <span class="md-list-heading uk-text-large">{{ catchUpLesson.professor }}</span>
+                  </div>
+                  <span class="uk-text-small uk-text-muted uk-display-block">
+                    {{'catchuplesson.field.professor'|trans }}</span>
+                </li>
+                <li>
+                  <div class="md-list-content">
+                    <span class="md-list-heading uk-text-large">{{ catchUpLesson.price }}
+                      {{ 'payment.unit.price'|trans }}</span>
+                  </div>
+                  <span class="uk-text-small uk-text-muted uk-display-block">
+                    {{'paymenttype.field.price'|trans }}</span>
+                </li>
+                <li>
+                  <div class="md-list-content">
+                    <span class="md-list-heading uk-text-large">{{ catchUpLesson.registrationFee }}
+                      {{ 'payment.unit.price'|trans }}</span>
+                  </div>
+                  <span class="uk-text-small uk-text-muted uk-display-block">
+                    {{'paymenttype.field.registrationFee'|trans }}</span>
+                </li>
+              </ul>
+            </div>
+          </div>
+        </div>
+        <div class="uk-width-xLarge-2-10 uk-width-large-3-10">
+          <h3 class="heading_c uk-margin-small-bottom uk-margin-small-top">
+            {{ 'author.info'|trans }}
+          </h3>
+          <ul class="md-list md-list-addon">
+            <li>
+              <div class="md-list-addon-element">
+                <i class="md-list-addon-icon material-icons">&#xE7FD;</i>
+              </div>
+              <div class="md-list-content">
+                <span class="md-list-heading">{{ catchUpLesson.author.username }}</span>
+                <span class="uk-text-small uk-text-muted">{{ 'author.creator'|trans }}</span>
+              </div>
+            </li>
+            <li>
+              <div class="md-list-addon-element">
+                <i class="md-list-addon-icon material-icons">&#xE8DF;</i>
+              </div>
+              <div class="md-list-content">
+                <span class="md-list-heading">
+                  {% if catchUpLesson.created %}{{ catchUpLesson.created|date('d M Y') }}{% endif %}
+                </span>
+                <span class="uk-text-small uk-text-muted">{{ 'author.updated'|trans }}</span>
+              </div>
+            </li>
+            <li>
+              <div class="md-list-addon-element">
+                <i class="md-list-addon-icon material-icons">&#xE8B5;</i>
+              </div>
+              <div class="md-list-content">
+                <span class="md-list-heading">
+                  {% if catchUpLesson.created %}{{ catchUpLesson.created|date('d M Y') }}{% endif %}
+                </span>
+                <span class="uk-text-small uk-text-muted">{{ 'author.created'|trans }}</span>
+              </div>
+            </li>
+          </ul>
+        </div>
+      </div>
+      <hr class="uk-grid-divider">
+      <h3 class="heading_c uk-text-bold uk-margin-medium-bottom uk-margin-small-top">
+        {{ "catchuplesson.schedule.title"|trans }}
+      </h3>
+
+
+        <div class="uk-grid uk-grid-width-medium-1-3 uk-grid-width-large-1-3" data-uk-grid-margin="">
+          <div>
+            <ul class="md-list">
+              {% for schedule in catchUpLesson.schedules %}
+              <li>
+                <div class="md-list-content">
+                  <span class="md-list-heading">{{ schedule.day|trans }}</span>
+                  <span class="uk-text-small uk-text-muted">{{ 'catchuplesson.schedule.day'|trans }}</span>
+                </div>
+              </li>
+              {% endfor %}
+              <li></li>
+            </ul>
+          </div>
+          <div>
+            <ul class="md-list md-list-addon">
+              {% for schedule in catchUpLesson.schedules %}
+              <li>
+                <div class="md-list-addon-element">
+                  <i class="md-list-addon-icon material-icons">&#xE8B5;</i>
+                </div>
+                <div class="md-list-content">
+                  <span class="md-list-heading">{{ schedule.startTime|date('H:i') }}</span>
+                  <span class="uk-text-small uk-text-muted">{{ 'catchuplesson.schedule.start_time'|trans }}</span>
+                </div>
+              </li>
+              {% endfor %}
+              <li></li>
+            </ul>
+          </div>
+          <div>
+            <ul class="md-list md-list-addon">
+              {% for schedule in catchUpLesson.schedules %}
+              <li>
+                <div class="md-list-addon-element">
+                  <i class="md-list-addon-icon material-icons">&#xE8B5;</i>
+                </div>
+                <div class="md-list-content">
+                  <span class="md-list-heading">{{ schedule.endTime|date('H:i') }}</span>
+                  <span class="uk-text-small uk-text-muted">{{ 'catchuplesson.schedule.end_time'|trans }}</span>
+                </div>
+              </li>
+              {% endfor %}
+              <li></li>
+            </ul>
+          </div>
+        </div>
+    </div>
+  </div>
+
+{% endblock %}
+{% block javascripts %}
+  {{ parent() }}
+  <script src="{{ asset('assets/plugins/chart/echarts.min.js')}}"></script>
+  <script src="{{ asset('assets/plugins/easypiechart/jquery.easypiechart.min.js')}}"></script>
+  <!-- page specific plugins -->
+  {% include '@SMSPayment/js/echarts.html.twig' %}
+{% endblock %}

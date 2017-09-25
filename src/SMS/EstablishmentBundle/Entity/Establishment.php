@@ -80,6 +80,15 @@ class Establishment
     private $email;
 
     /**
+     * @var string
+     *
+     * @ORM\Column(name="theme", type="string", length=20)
+     * @Assert\NotBlank()
+     * @Assert\Length(min = 2, max = 20)
+     */
+    private $theme;
+
+    /**
      * @ORM\Column(type="datetime", nullable=true)
      *
      * @var \DateTime
@@ -416,5 +425,29 @@ class Establishment
     public function __toString()
     {
         return sprintf("%s",$this->getEstablishmentName());
+    }
+
+    /**
+     * Set theme
+     *
+     * @param string $theme
+     *
+     * @return Establishment
+     */
+    public function setTheme($theme)
+    {
+        $this->theme = $theme;
+
+        return $this;
+    }
+
+    /**
+     * Get theme
+     *
+     * @return string
+     */
+    public function getTheme()
+    {
+        return $this->theme;
     }
 }

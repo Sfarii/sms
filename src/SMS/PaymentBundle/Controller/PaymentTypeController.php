@@ -4,7 +4,7 @@ namespace SMS\PaymentBundle\Controller;
 
 use SMS\PaymentBundle\Entity\Payment;
 use SMS\PaymentBundle\Entity\PaymentType;
-use SMS\PaymentBundle\Entity\Registration;
+use SMS\PaymentBundle\Entity\CatchUpLesson;
 use SMS\PaymentBundle\Form\PaymentTypeType;
 use SMS\PaymentBundle\BaseController\BaseController;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\Method;
@@ -56,11 +56,13 @@ class PaymentTypeController extends BaseController
         $paymentTypes->buildDatatable();
 
         $query = $this->getDataTableQuery()->getQueryFrom($paymentTypes);
+
         $user = $this->getUser();
         $function = function($qb) use ($user)
         {
             $qb->join('payment_type.establishment', 'establishment')
                 ->andWhere('establishment.id = :establishment')
+                ->andWhere('payment_type INSTANCE OF SMS\PaymentBundle\Entity\PaymentType')
         				->setParameter('establishment', $user->getEstablishment()->getId());
         };
 
@@ -76,7 +78,7 @@ class PaymentTypeController extends BaseController
      */
     public function newAction(Request $request)
     {
-        $paymentType = new Paymenttype();
+        $paymentType = new PaymentType();
         $form = $this->createForm(PaymentTypeType::class, $paymentType, array('establishment' => $this->getUser()->getEstablishment()));
         $form->handleRequest($request);
 
@@ -101,14 +103,9 @@ class PaymentTypeController extends BaseController
      */
     public function showAction(PaymentType $paymentType)
     {
-        $paymentRepository = $this->getDoctrine()->getRepository(Payment::class);
-        $registrationRepository = $this->getDoctrine()->getRepository(Registration::class);
-
         return array(
             'paymentType' => $paymentType,
-            'paymentsInfo' => $paymentRepository->findByPayment($paymentType) ,
-            'studentInfo' => $registrationRepository->findByPayment($paymentType) ,
-            'chart' => $paymentRepository->findChartByPayment($paymentType)
+            'stats' => $this->getEntityManager()->getStatsByPaymentType($paymentType)
         );
     }
 
@@ -185,37 +182,68 @@ class PaymentTypeController extends BaseController
     }
 
     /**
-     * Deletes a paymentType entity.
+     * Creates a new registration entity.
      *
-     * @Route("/{id}", name="paymenttype_delete")
-     * @Method("DELETE")
+     * @Route("/registration/new/{id}", name="paymenttype_registration_new", options={"expose"=true})
+     * @Method("GET")
+     * @Template("SMSPaymentBundle:paymenttype:registration.html.twig")
      */
-    public function deleteAction(Request $request, PaymentType $paymentType)
+    public function registrationAction(Request $request, PaymentType $paymentType)
     {
-        $form = $this->createDeleteForm($paymentType)->handleRequest($request);
+      $student = $this->getStudentEntityManager();
+      $student->buildDatatable();
 
-        if ($form->isSubmitted() && $form->isValid()) {
-            $this->getEntityManager()->delete($paymentType);
-            $this->flashSuccessMsg('paymentType.delete.one.success');
-        }
-
-        return $this->redirectToRoute('paymenttype_index');
+      return array('students' => $student ,'paymentType' => $paymentType);
     }
 
     /**
-     * Creates a form to delete a paymentType entity.
+     * Creates a new registration entity.
      *
-     * @param PaymentType $paymentType The paymentType entity
-     *
-     * @return \Symfony\Component\Form\Form The form
+     * @Route("/registration/bulk/{id}/{registered}" , requirements={"registered": "0|1"}, name="paymenttype_registration_bulk_new", options={"expose"=true})
+     * @Method("POST")
      */
-    private function createDeleteForm(PaymentType $paymentType)
+    public function newRegistrationAction(Request $request, PaymentType $paymentType , $registered)
     {
-        return $this->createFormBuilder()
-            ->setAction($this->generateUrl('paymenttype_delete', array('id' => $paymentType->getId())))
-            ->setMethod('DELETE')
-            ->getForm()
-        ;
+      $isAjax = $request->isXmlHttpRequest();
+
+      if ($isAjax) {
+          $choices = $request->request->get('data');
+          $token = $request->request->get('token');
+
+          if (!$this->isCsrfTokenValid('multiselect', $token)) {
+              throw new AccessDeniedException('The CSRF token is invalid.');
+          }
+
+          $this->getEntityManager()->updatePaymentTypeRegistration($paymentType , $choices , $registered);
+          return new Response($this->get('translator')->trans('paymenttype.registration.success'), 200);
+      }
+
+      return new Response('Bad Request', 400);
+    }
+
+    /**
+     * Finds and displays a paymenttype entity.
+     *
+     * @Route("/statistics/{id}", name="paymenttype_statistics", options={"expose"=true})
+     * @Method("GET")
+     * @Template("SMSPaymentBundle:paymenttype:payment.html.twig")
+     */
+    public function statisticsAction(Request $request , PaymentType $paymentType )
+    {
+      $month = $request->query->get('month', 'all');
+      $pagination = $this->getPaginator()->paginate(
+          $this->getEntityManager()->getRegistredStudentByPaymentType($paymentType,  $month), /* query NOT result */
+          $request->query->getInt('page', 1)/*page number*/,
+          12/*limit per page*/,
+          array('wrap-queries'=>true)
+      );
+      $sort = $request->query->get('sort', 'empty');
+      if ($sort == "empty"){
+        $pagination->setParam('sort', 'student.firstName');
+        $pagination->setParam('direction', 'asc');
+      }
+      // parameters to template
+      return array('month' => $month , 'pagination' => $pagination , 'paymentType' => $paymentType);
     }
 
     /**
@@ -232,4 +260,36 @@ class PaymentTypeController extends BaseController
         }
 
         return $this->get('sms.datatable.paymentType');
-    }}
+    }
+
+    /**
+     * Get student Entity Manager Service.
+     *
+     * @return API\Services\EntityManager
+     *
+     * @throws \NotFoundException
+     */
+    protected function getStudentEntityManager()
+    {
+        if (!$this->has('sms.datatable.registration.students')){
+           throw $this->createNotFoundException('Service Not Found');
+        }
+
+        return $this->get('sms.datatable.registration.students');
+    }
+
+    /**
+     * Get paginator Manager Service.
+     *
+     * @return SMS\Classes\Services\EntityManager
+     * @throws \NotFoundException
+     */
+    protected function getPaginator()
+    {
+        if (!$this->has('knp_paginator')){
+           throw $this->createNotFoundException('Service Not Found');
+        }
+
+        return $this->get('knp_paginator');
+    }
+}

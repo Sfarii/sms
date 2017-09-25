@@ -1,0 +1,63 @@
+<?php
+
+namespace SMS\PaymentBundle\Entity;
+
+use Doctrine\ORM\Mapping as ORM;
+use Symfony\Component\Validator\Constraints as Assert;
+use Symfony\Bridge\Doctrine\Validator\Constraints\UniqueEntity;
+
+/**
+ * CatchUpLessonSechdule
+ *
+ * @ORM\Table(name="catch_up_lesson_sechdule")
+ * @ORM\Entity(repositoryClass="SMS\PaymentBundle\Repository\CatchUpLessonSechduleRepository")
+ * @ORM\HasLifecycleCallbacks
+ */
+class CatchUpLessonSechdule
+{
+    /**
+     * @var int
+     *
+     * @ORM\Column(name="id", type="integer")
+     * @ORM\Id
+     * @ORM\GeneratedValue(strategy="AUTO")
+     */
+    private $id;
+
+    /**
+     * @var string
+     *
+     * @ORM\Column(name="day", type="string", length=50)
+     * @Assert\Choice({"Sunday", "Monday", "Tuesday","Wednesday", "Thursday", "Friday","Saturday"})
+     * @Assert\NotBlank()
+     */
+    private $day;
+
+    /**
+     * @var \DateTime
+     *
+     * @ORM\Column(name="startTime", type="time")
+     * @Assert\NotBlank()
+     * @Assert\Time()
+     */
+     private $startTime;
+
+    /**
+     * @var \DateTime
+     *
+     * @ORM\Column(name="endTime", type="time")
+     * @Assert\NotBlank()
+     * @Assert\Expression(expression="this.getStartTime() < value")
+     * @Assert\Time()
+     */
+     private $endTime;
+
+     /**
+      * Many CatchUpLessonSechdule have One CatchUpLesson.
+      * @ORM\ManyToOne(targetEntity="CatchUpLesson", inversedBy="schedules" ,fetch="EXTRA_LAZY")
+      * @ORM\JoinColumn(name="schedule_id", referencedColumnName="id")
+      * @Assert\NotBlank()
+      */
+     private $catchUpLesson;
+
+}

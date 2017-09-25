@@ -1,11 +1,36 @@
 <script type="text/javascript">
   $(function() {
-    $(".new-action").on('click', function(event) {
+    // Prevent form submission
+    $("#filter").submit(function(event) {
+      event.preventDefault();
+      // show preloader
+      altair_helpers.content_preloader_show('md');
+      var $form = $(this);
+      // Submit data via AJAX to the form's action path.
+      $.ajax({
+        url: $form.attr('action'),
+        type: $form.attr('method'),
+        data: $form.serializeObject(),
+        cache: false,
+        timeout: 3000,
+        success: function(html) {
+          // Replace current position field ...
+          $('#schedules').empty().append(
+          // ... with the returned one from the AJAX response.
+          $(html).find('#schedule'));
+          altair_forms.init();
+          // hide preloader
+          altair_helpers.content_preloader_hide();
+          // Position field now displays the appropriate positions.
+        }
+      });
+    });
+    $(document).on('click', '.new-action', function() {
       var modal = UIkit.modal("#" + $(this).data('session'));
       var $status = $('#' + $(this).data('status'));
       var $error = $('.' + $(this).data('error'));
       var $course = $(this).data('course');
-      var $session =  $(this).data('session');
+      var $session = $(this).data('session');
       var error = false;
       console.log($status.val());
       if ($status.val() == "") {
@@ -32,12 +57,12 @@
             cache: false,
             data: {
               'data': {
-                'professor' : '{{ professor.id }}',
-                'session' : $session,
-                'date' : '{% if form.vars.value.date is defined %}{{ form.vars.value.date|date('Y-m-d') }}{% endif %}',
-                'division' : '{% if form.vars.value.division is defined %}{{ form.vars.value.division.id }}{% endif %}',
-                'status' : $status.val(),
-                'course' : $course
+                'professor': '{{ professor.id }}',
+                'session': $session,
+                'date': '{% if form.vars.value.date is defined %}{{ form.vars.value.date|date('Y-m-d') }}{% endif %}',
+                'division': '{% if form.vars.value.division is defined %}{{ form.vars.value.division.id }}{% endif %}',
+                'status': $status.val(),
+                'course': $course
               },
               'token': '{{ token }}'
             },

@@ -1,6 +1,8 @@
 <script type="text/javascript">
   $(function() {
     $("#sms_paymentbundle_registration_paymentType").on('change', function() {
+      // show preloader
+      altair_helpers.content_preloader_show('md');
       if (this.value == "") {
         $(".error").css("display", '');
       } else {
@@ -46,6 +48,8 @@
                 group: null,
                 pos: 'top-right'
               });
+              // hide preloader
+              altair_helpers.content_preloader_hide();
             },
             error: function(XMLHttpRequest, textStatus, errorThrown) {
               console.log(XMLHttpRequest + ' ' + textStatus + ' ' + errorThrown);

@@ -5,11 +5,11 @@
         <div class="sidebar_logo">
             <a href="#" class="sSidebar_hide sidebar_logo_large">
                 <img class="logo_regular" src="{{ asset('assets/img/logo_main.png')}}" alt="" height="15" width="71"/>
-                <img class="logo_light" src="{{ asset('assets/img/logo_main_white.png')}}" alt="" height="15" width="71"/>
+                <img class="logo_light" src="{{ asset('assets/img/logo_main.png')}}" alt="" height="15" width="71"/>
             </a>
             <a href="#" class="sSidebar_show sidebar_logo_small">
-                <img class="logo_regular" src="{{ asset('assets/img/logo_main_small.png')}}" alt="" height="32" width="32"/>
-                <img class="logo_light" src="{{ asset('assets/img/logo_main_small_light.png')}}" alt="" height="32" width="32"/>
+                <img class="logo_regular" src="{{ asset('assets/img/logo_main.png')}}" alt="" height="32" width="32"/>
+                <img class="logo_light" src="{{ asset('assets/img/logo_main.png')}}" alt="" height="32" width="32"/>
             </a>
         </div>
         {% else %}
@@ -34,6 +34,6 @@
     </div>
 
     <div class="menu_section">
-        {{ knp_menu_render('main' , { 'template': 'menu/knp_menu.html.twig'}) }}
+        {{ knp_menu_render('main' , { 'template': 'menu/knp_menu.html.twig' , 'currentClass': 'act_item current_section'}) }}
     </div>
 </aside>

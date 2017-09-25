@@ -11,11 +11,12 @@ attendance_action:
     exclude : Exclude
 search:
     professor:
-        by_every_thing: Search By AnyThing
+        by_every_thing: Search then press enter
         active: Activated
     result_not_found:
       text_section: Make sure you Have section in your establishment.
       text_professor: Make sure you Have professors in your establishment.
+      text_student: Make sure you Have Students in your establishment.
 attendance:
     action:
         close: Close   # FIXME
@@ -49,6 +50,7 @@ attendance_student:
         status: Status Info   # FIXME
         courseName: Course Name
     stats:
+        title: Student Attendance stats
         name: Section Attendance stats
         not_found: Not enough data available yet
 attendanceprofessor:

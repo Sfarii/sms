@@ -24,8 +24,8 @@ class PaymentTypeType extends AbstractType
         $establishment = $options['establishment'];
 
         $builder
-              ->add('TypePaymentName' ,TextType::class , array(
-                  'label' => 'paymenttype.field.TypePaymentName')
+              ->add('typePaymentName' ,TextType::class , array(
+                  'label' => 'paymenttype.field.typePaymentName')
               )
               ->add('price' ,TextType::class , array(
                   'label' => 'paymenttype.field.price')

@@ -1,0 +1,99 @@
+{% extends 'layout/base_no_header.html.twig' %}
+
+{% block sticky_button %}
+  <a class="md-fab md-fab-accent md-fab-wave waves-effect waves-button" href="{{ path('shop_index') }}">
+    <i class="material-icons">&#xE8D1;</i>
+  </a>
+{% endblock %}
+
+{% block body %}
+  <!-- statistics (small charts) -->
+  <div class="uk-grid uk-grid-width-large-1-2 uk-grid-width-medium-1-2 uk-grid-medium uk-sortable sortable-handler" data-uk-grid-margin>
+    <div>
+      <div class="md-card">
+        <div class="md-card-content">
+          <div class="uk-float-right uk-margin-top uk-margin-small-right">
+            <i class="material-icons md-36">&#xE227;</i>
+          </div>
+          <span class=" uk-text-large  uk-text-bold">{{'store.title.order_user'|trans }}</span>
+          <h2 class="uk-margin-remove">
+            <span>
+              {{ total_order|price }}
+              {{ 'store.unit.price'|trans }}
+            </span>
+          </h2>
+        </div>
+      </div>
+    </div>
+    <div>
+      <div class="md-card">
+        <div class="md-card-content">
+          <div class="uk-float-right uk-margin-top uk-margin-small-right">
+            <i class="material-icons  md-36">&#xE227;</i>
+          </div>
+          <span class=" uk-text-large  uk-text-bold">{{'store.title.purchase'|trans }}</span>
+          <h2 class="uk-margin-remove">
+            <span class="countUpMe">
+              {{ total_purshase|price }}
+              {{ 'store.unit.price'|trans }}
+            </span>
+          </h2>
+        </div>
+      </div>
+    </div>
+  </div>
+  <div class="uk-grid uk-grid-width-1-1">
+    <div>
+      <div class="md-card">
+        <div class="md-card-toolbar">
+          <h3 class="md-card-toolbar-heading-text">
+            {{ 'store.statistics.by_day'|trans }}
+          </h3>
+        </div>
+        <div class="md-card-content">
+          {% if all_days %}
+          <div data-echarts-line data-legend='{{ all_days|json_encode|raw }}' data-order='{{ order_chart_day|json_encode|raw }}' data-purchase='{{ purchase_chart_day|json_encode|raw }}' class="echart-large"></div>
+          {% else %}
+            <div class="echart-large">
+              <span class="chart_icon">
+                <i class="material-icons">&#xE88B;</i>
+                <h1 class="uk-text-large">{{ 'store.statistics.not_found'|trans }}</h1>
+              </span>
+            </div>
+          {% endif %}
+        </div>
+      </div>
+    </div>
+  </div>
+  <div class="uk-grid uk-grid-width-1-1">
+    <div>
+      <div class="md-card">
+        <div class="md-card-toolbar">
+          <h3 class="md-card-toolbar-heading-text">
+            {{ 'store.statistics.by_month'|trans }}
+          </h3>
+        </div>
+        <div class="md-card-content">
+          {% if all_month %}
+          <div data-echarts-table data-legend='{{ all_month|json_encode|raw }}' data-order='{{ order_chart|json_encode|raw }}' data-purchase='{{ purchase_chart|json_encode|raw }}' class="echart-large"></div>
+          {% else %}
+            <div class="echart-large">
+              <span class="chart_icon">
+                <i class="material-icons">&#xE88B;</i>
+                <h1 class="uk-text-large">{{ 'store.statistics.not_found'|trans }}</h1>
+              </span>
+            </div>
+          {% endif %}
+        </div>
+      </div>
+    </div>
+  </div>
+
+{% endblock %}
+{% block javascripts %}
+  {{ parent()}}
+  <!--  echarts plugin  -->
+  <script src="{{ asset('assets/plugins/chart/echarts.min.js')}}"></script>
+  <script src="{{ asset('assets/plugins/easypiechart/jquery.easypiechart.min.js')}}"></script>
+  {% include '@SMSStore/shop/statistics_action.html.twig' %}
+{% endblock %}

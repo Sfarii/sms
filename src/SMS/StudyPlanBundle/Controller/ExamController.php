@@ -5,6 +5,7 @@ namespace SMS\StudyPlanBundle\Controller;
 use SMS\StudyPlanBundle\Entity\Exam;
 use SMS\StudyPlanBundle\Entity\Course;
 use SMS\StudyPlanBundle\Form\ExamType;
+use SMS\StudyPlanBundle\Form\SearchType;
 use SMS\StudyPlanBundle\BaseController\BaseController;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\Method;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\Route;
@@ -17,6 +18,7 @@ use Sensio\Bundle\FrameworkExtraBundle\Configuration\ParamConverter;
 use SMS\EstablishmentBundle\Entity\Section;
 use SMS\EstablishmentBundle\Entity\Division;
 use SMS\StudyPlanBundle\Entity\TypeExam;
+use SMS\UserBundle\Entity\Student;
 
 /**
  * Exam controller.
@@ -86,7 +88,7 @@ class ExamController extends BaseController
     /**
      * Finds and displays a exam entity.
      *
-     * @Route("/{id}", name="exam_show")
+     * @Route("/show/{id}", name="exam_show")
      * @Method("GET")
      * @Template("SMSStudyPlanBundle:exam:show.html.twig")
      */
@@ -171,13 +173,12 @@ class ExamController extends BaseController
      */
     public function StudentsExamAction(Request $request)
     {
-      $form = $this->createForm(SearchType::class,null, array('method' => 'GET', 'establishment' => $this->getUser()->getEstablishment()))->handleRequest($request);
+      $form = $this->createForm(SearchType::class,null, array('method' => 'GET','establishment' => $this->getUser()->getEstablishment()))->handleRequest($request);
 
       $pagination = $this->getPaginator()->paginate(
-          $this->getEntityManager()->getRegistredStudent(Student::class , $form , $this->getUser()->getEstablishment()), /* query NOT result */
+          $this->getEntityManager()->getAllStudents($form , $this->getUser()->getEstablishment()), /* query NOT result */
           $request->query->getInt('page', 1)/*page number*/,
-          9/*limit per page*/,
-          array('wrap-queries'=>true)
+          12/*limit per page*/
       );
       $sort = $request->query->get('sort', 'empty');
       if ($sort == "empty"){
@@ -186,6 +187,26 @@ class ExamController extends BaseController
       }
       // parameters to template
       return array('pagination' => $pagination , 'form' => $form->createView());
+    }
+
+    /**
+     * Lists all note by Student entities.
+     *
+     * @Route("/mark/{id}", name="mark_student_index")
+     * @Method({"GET", "POST"})
+     * @Template("SMSStudyPlanBundle:exam:mark.html.twig")
+     */
+    public function noteAction(Request $request , Student $student)
+    {
+        $divisions = $this->getDoctrine()->getRepository(Division::class)->findBy(array('establishment' => $this->getUser()->getEstablishment()));
+        $divisionId = $request->query->get('division', reset($divisions)->getId());
+        $division = array_filter($divisions, function($value) use ($divisionId) { return strcasecmp($divisionId,$value->getId()) == 0 ; });
+        $division = reset($division);
+        if (!is_null($division)) {
+            return array('divisionID' => $divisionId , 'student'=> $student , 'divisions' => $divisions , 'result' => $this->getEntityManager()->getNotes($student, $division));
+        }
+
+        return $this->redirectToRoute('exam_students_index');
     }
 
     /**

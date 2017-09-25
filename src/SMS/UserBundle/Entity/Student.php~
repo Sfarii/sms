@@ -97,19 +97,12 @@ class Student extends User
     private $studentParent;
 
     /**
-     * One Student has Many Registration.
-     * @ORM\OneToMany(targetEntity="SMS\PaymentBundle\Entity\Registration", mappedBy="student",fetch="EXTRA_LAZY")
+     * Many Students have Many registrations.
+     * @ORM\ManyToMany(targetEntity="SMS\PaymentBundle\Entity\PaymentType", mappedBy="student",fetch="EXTRA_LAZY")
      */
-    private $registrations;
+     private $registrations;
 
-    /**
-     * User constructor.
-     */
-    public function __construct()
-    {
-        parent::__construct();
-        $this->roles = array(self::ROLE_STUDENT);
-    }
+    
 
     /**
      * Get id
@@ -329,14 +322,6 @@ class Student extends User
     }
 
     /**
-     * @return string
-     */
-    public function __toString()
-    {
-        return sprintf("%s %s",$this->getFirstName(),$this->getLastName());
-    }
-
-    /**
      * Set studentType
      *
      * @param boolean $studentType
@@ -382,5 +367,47 @@ class Student extends User
     public function getPhone()
     {
         return $this->phone;
+    }
+
+    /**
+     * Add registration
+     *
+     * @param \SMS\PaymentBundle\Entity\PaymentType $registration
+     *
+     * @return Student
+     */
+    public function addRegistration(\SMS\PaymentBundle\Entity\PaymentType $registration)
+    {
+        $this->registrations[] = $registration;
+
+        return $this;
+    }
+
+    /**
+     * Remove registration
+     *
+     * @param \SMS\PaymentBundle\Entity\PaymentType $registration
+     */
+    public function removeRegistration(\SMS\PaymentBundle\Entity\PaymentType $registration)
+    {
+        $this->registrations->removeElement($registration);
+    }
+
+    /**
+     * Get registrations
+     *
+     * @return \Doctrine\Common\Collections\Collection
+     */
+    public function getRegistrations()
+    {
+        return $this->registrations;
+    }
+
+    /**
+     * @return string
+     */
+    public function __toString()
+    {
+        return sprintf("%s %s",$this->getFirstName(),$this->getLastName());
     }
 }

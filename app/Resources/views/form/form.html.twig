@@ -25,11 +25,9 @@
   {% if attr.button_type is not defined %}
     <div class="uk-form-row">
       <div class="md-fab-wrapper {{ label|default('md-fab-in-card') }}">
-        <div class="md-fab md-fab-danger md-fab-toolbar">
-          <button type="{{ type|default('button') }}" title="{{'action.save'|trans}}" class="md-fab md-fab-primary md-fab-wave-light waves-effect waves-button waves-light" data-uk-tooltip="{pos:'top'}" {{ block('button_attributes') }}>
-            <i class="material-icons">&#xE161;</i>
-          </button>
-        </div>
+        <button type="{{ type|default('button') }}" title="{{'action.save'|trans}}" class="md-fab md-fab-accent md-fab-wave waves-effect waves-button" data-uk-tooltip="{pos:'top'}" {{ block('button_attributes') }}>
+          <i class="material-icons">&#xE161;</i>
+        </button>
       </div>
     </div>
   {% else %}
@@ -43,7 +41,7 @@
   {%- if required and placeholder is none and not placeholder_in_choices and not multiple and (attr.size is not defined or attr.size <= 1) -%}
     {% set required = false %}
   {%- endif -%}
-  <select data-md-selectize data-md-selectize-bottom {{ block('widget_attributes') }} {% if multiple %} multiple="multiple" {% endif %}>
+  <select {% if attr.selectize is not defined %} data-md-selectize {% endif %} data-md-selectize-bottom {{ block('widget_attributes') }} {% if multiple %} multiple="multiple" {% endif %}>
     {%- if placeholder is not none -%}
       <option value="" {% if required and value is empty %} selected="selected" {% endif %}>{{ placeholder != '' ? (translation_domain is same as(false) ? placeholder : placeholder|trans({}, translation_domain)) }}</option>
     {%- endif -%}
@@ -76,7 +74,9 @@
     <input type="{{ type }}" {{ block('widget_attributes') }} {% if value is not empty %} {% endif %}/>
 
   {% else %}
-  {% set attr = attr|merge({ 'class': (attr.class|default('') ~ ' md-input')|trim }) %}
+    {% set attr = attr | merge({
+      'class': (attr.class | default('') ~ ' md-input') | trim
+    }) %}
     <input type="{{ type }}" {{ block('widget_attributes') }} {% if value is not empty %} value="{{ value }}" {% endif %}/>
 
   {% endif %}
@@ -96,21 +96,22 @@
 {%- endblock textarea_widget -%}
 
 {% block form_errors %}
-{% spaceless %}
-      {% if errors|length > 0 %}
-          {% if compound %}
-              <ul class="parsley-errors-list">
-                  {% for error in errors %}
-                      <li>{{ error.message }}</li>
-                  {% endfor %}
-              </ul>
-          {% else %}
-              {% for error in errors %}
-                <span class="parsley-required">
-                  {{ error.message }}</span>
-              {% endfor %}
-          {% endif %}
+  {% spaceless %}
+    {% if errors | length > 0 %}
+      {% if compound %}
+        <div class="uk-alert uk-alert-danger" data-uk-alert="">
+          <a href="#" class="uk-alert-close uk-close"></a>
+          {% for error in errors %}
+            <p>{{ error.message }}</p>
+          {% endfor %}
+        </div>
+      {% else %}
+        {% for error in errors %}
+          <span class="parsley-required">
+            {{ error.message }}</span>
+        {% endfor %}
       {% endif %}
+    {% endif %}
   {% endspaceless %}
 {% endblock form_errors %}
 
@@ -213,13 +214,14 @@
   {% block sms_translatable_field_widget %}
     {{ form_errors(form) }}
     <div class="sms_translations tabbable">
-      <ul class="uk-tab" data-uk-tab="{connect:'#{{ form.vars.field }}'}" >
+      <ul class="uk-tab" data-uk-tab="{connect:'#{{ form.vars.field }}'}">
         {% for translationsFields in form.vars.locales %}
           {% set locale = translationsFields %}
 
           <li class="{% if app.request.locale == locale %}uk-active{% endif %}">
             <a href="#" data-toggle="tab">
-              {{ locale|capitalize }} {% if locale == form.vars.default_locale %}[*]{% endif %}
+              {{ locale|capitalize }}
+              {% if locale == form.vars.default_locale %}[*]{% endif %}
             </a>
           </li>
         {% endfor %}

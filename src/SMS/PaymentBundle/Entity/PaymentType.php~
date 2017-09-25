@@ -10,8 +10,8 @@ use Symfony\Bridge\Doctrine\Validator\Constraints\UniqueEntity;
  * PaymentType
  *
  * @ORM\Table(name="payment_type")
- * @UniqueEntity(fields={"TypePaymentName", "establishment"})
  * @ORM\HasLifecycleCallbacks
+ * @UniqueEntity(fields={"paymentTypeName" , "establishment"} , errorPath="paymentTypeName")
  * @ORM\Entity(repositoryClass="SMS\PaymentBundle\Repository\PaymentTypeRepository")
  */
 class PaymentType
@@ -28,35 +28,21 @@ class PaymentType
     /**
      * @var string
      *
-     * @ORM\Column(name="TypePaymentName", type="string", length=100, unique=true)
+     * @ORM\Column(name="TypePaymentName", type="string", length=100)
+     * @Assert\NotBlank()
+     * @Assert\Length(min = 2, max = 99)
+     * @Assert\Regex(pattern="/^[a-z0-9 .\-]+$/i" ,match=true)
      */
     private $TypePaymentName;
-
-    /**
-     * @var datetime $created
-     *
-     * @ORM\Column(type="datetime")
-     */
-    protected $created;
-
-    /**
-     * @var datetime $updated
-     *
-     * @ORM\Column(type="datetime", nullable = true)
-     */
-    protected $updated;
-
-    /**
-     * One User has Many Payments.
-     * @ORM\ManyToOne(targetEntity="SMS\UserBundle\Entity\User" ,fetch="EXTRA_LAZY")
-     * @ORM\JoinColumn(name="user_id", referencedColumnName="id")
-     */
-    private $user;
 
     /**
      * @var int
      *
      * @ORM\Column(name="price", type="float")
+     * @Assert\NotBlank()
+     * @Assert\Range(
+     *      min = 0,
+     *      max = 99999999999999)
      */
     private $price;
 
@@ -64,6 +50,10 @@ class PaymentType
      * @var int
      *
      * @ORM\Column(name="registrationFee", type="float")
+     * @Assert\NotBlank()
+     * @Assert\Range(
+     *      min = 0,
+     *      max = 99999999999999)
      */
     private $registrationFee;
 
@@ -80,6 +70,38 @@ class PaymentType
      */
     private $establishment;
 
+
+    /**
+     * One User has Many Payments.
+     * @ORM\ManyToOne(targetEntity="SMS\UserBundle\Entity\User" ,fetch="EXTRA_LAZY")
+     * @ORM\JoinColumn(name="user_id", referencedColumnName="id")
+     */
+    private $author;
+
+    /**
+     * @var datetime $created
+     *
+     * @ORM\Column(type="datetime")
+     */
+    private $created;
+
+    /**
+     * @var datetime $updated
+     *
+     * @ORM\Column(type="datetime", nullable = true)
+     */
+    private $updated;
+
+    /**
+     * One Payments has Many Users.
+     * @ORM\ManyToMany(targetEntity="SMS\UserBundle\Entity\Student" ,fetch="EXTRA_LAZY")
+     * @ORM\JoinTable(name="payments_users",
+     *      joinColumns={@ORM\JoinColumn(name="users_id", referencedColumnName="id")},
+     *      inverseJoinColumns={@ORM\JoinColumn(name="payments_id", referencedColumnName="id")}
+     *      )
+     */
+    private $student;
+
     /**
     * @ORM\PrePersist
     * @ORM\PreUpdate
@@ -93,270 +115,5 @@ class PaymentType
        }
    }
 
-    /**
-     * Get id
-     *
-     * @return int
-     */
-    public function getId()
-    {
-        return $this->id;
-    }
-    /**
-     * Constructor
-     */
-    public function __construct()
-    {
-        $this->payments = new \Doctrine\Common\Collections\ArrayCollection();
-    }
 
-    /**
-     * Set typePaymentName
-     *
-     * @param string $typePaymentName
-     *
-     * @return PaymentType
-     */
-    public function setTypePaymentName($typePaymentName)
-    {
-        $this->TypePaymentName = $typePaymentName;
-
-        return $this;
-    }
-
-    /**
-     * Get typePaymentName
-     *
-     * @return string
-     */
-    public function getTypePaymentName()
-    {
-        return $this->TypePaymentName;
-    }
-
-    /**
-     * Set created
-     *
-     * @param \DateTime $created
-     *
-     * @return PaymentType
-     */
-    public function setCreated($created)
-    {
-        $this->created = $created;
-
-        return $this;
-    }
-
-    /**
-     * Get created
-     *
-     * @return \DateTime
-     */
-    public function getCreated()
-    {
-        return $this->created;
-    }
-
-    /**
-     * Set updated
-     *
-     * @param \DateTime $updated
-     *
-     * @return PaymentType
-     */
-    public function setUpdated($updated)
-    {
-        $this->updated = $updated;
-
-        return $this;
-    }
-
-    /**
-     * Get updated
-     *
-     * @return \DateTime
-     */
-    public function getUpdated()
-    {
-        return $this->updated;
-    }
-
-    /**
-     * Set price
-     *
-     * @param integer $price
-     *
-     * @return PaymentType
-     */
-    public function setPrice($price)
-    {
-        $this->price = $price;
-
-        return $this;
-    }
-
-    /**
-     * Get price
-     *
-     * @return integer
-     */
-    public function getPrice()
-    {
-        return $this->price;
-    }
-
-    /**
-     * Set user
-     *
-     * @param \SMS\UserBundle\Entity\User $user
-     *
-     * @return PaymentType
-     */
-    public function setUser(\SMS\UserBundle\Entity\User $user = null)
-    {
-        $this->user = $user;
-
-        return $this;
-    }
-
-    /**
-     * Get user
-     *
-     * @return \SMS\UserBundle\Entity\User
-     */
-    public function getUser()
-    {
-        return $this->user;
-    }
-
-    /**
-     * Add payment
-     *
-     * @param \SMS\PaymentBundle\Entity\Payment $payment
-     *
-     * @return PaymentType
-     */
-    public function addPayment(\SMS\PaymentBundle\Entity\Payment $payment)
-    {
-        $this->payments[] = $payment;
-
-        return $this;
-    }
-
-    /**
-     * Remove payment
-     *
-     * @param \SMS\PaymentBundle\Entity\Payment $payment
-     */
-    public function removePayment(\SMS\PaymentBundle\Entity\Payment $payment)
-    {
-        $this->payments->removeElement($payment);
-    }
-
-    /**
-     * Get payments
-     *
-     * @return \Doctrine\Common\Collections\Collection
-     */
-    public function getPayments()
-    {
-        return $this->payments;
-    }
-
-    /**
-     * Set establishment
-     *
-     * @param \SMS\EstablishmentBundle\Entity\Establishment $establishment
-     *
-     * @return PaymentType
-     */
-    public function setEstablishment(\SMS\EstablishmentBundle\Entity\Establishment $establishment = null)
-    {
-        $this->establishment = $establishment;
-
-        return $this;
-    }
-
-    /**
-     * Get establishment
-     *
-     * @return \SMS\EstablishmentBundle\Entity\Establishment
-     */
-    public function getEstablishment()
-    {
-        return $this->establishment;
-    }
-
-    /**
-     * Set registrationType
-     *
-     * @param \SMS\PaymentBundle\Entity\RegistrationType $registrationType
-     *
-     * @return PaymentType
-     */
-    public function setRegistrationType(\SMS\PaymentBundle\Entity\RegistrationType $registrationType = null)
-    {
-        $this->registrationType = $registrationType;
-
-        return $this;
-    }
-
-    /**
-     * Get registrationType
-     *
-     * @return \SMS\PaymentBundle\Entity\RegistrationType
-     */
-    public function getRegistrationType()
-    {
-        return $this->registrationType;
-    }
-
-    /**
-     * Set months
-     *
-     * @param array $months
-     *
-     * @return PaymentType
-     */
-    public function setMonths($months)
-    {
-        $this->months = $months;
-
-        return $this;
-    }
-
-    /**
-     * Get months
-     *
-     * @return array
-     */
-    public function getMonths()
-    {
-        return $this->months;
-    }
-
-    /**
-     * Set registrationFee
-     *
-     * @param integer $registrationFee
-     *
-     * @return PaymentType
-     */
-    public function setRegistrationFee($registrationFee)
-    {
-        $this->registrationFee = $registrationFee;
-
-        return $this;
-    }
-
-    /**
-     * Get registrationFee
-     *
-     * @return integer
-     */
-    public function getRegistrationFee()
-    {
-        return $this->registrationFee;
-    }
 }

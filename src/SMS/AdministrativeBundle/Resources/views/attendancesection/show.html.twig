@@ -1,0 +1,49 @@
+{% extends 'layout/base.html.twig' %}
+{% block sub_title_page %}
+  <a  href="{{ url('attendance_section_new') }}" class="uk-margin-small-top">
+    {{ 'section.list.title'|trans }}
+  </a>
+{% endblock %}
+{% block sticky_button %}
+  <a class="md-fab md-fab-accent md-fab-wave waves-effect waves-button" href="{{ url('attendance_section_index', {'id' : section.id}) }}">
+    <i class="material-icons">&#xE145;</i>
+  </a>
+{% endblock %}
+
+{% block title_page %}
+  {{section.sectionName}}
+{% endblock %}
+
+{% block body %}
+<div class="md-card">
+  <div class="md-card-toolbar">
+    <h3 class="md-card-toolbar-heading-text">
+      {{ 'attendance_student.stats.name'|trans }}
+    </h3>
+  </div>
+  <div class="md-card-content">
+    {% if echarts.date is empty %}
+      <div class="echart-large">
+        <span class="chart_icon">
+          <i class="material-icons">&#xE88B;</i>
+          <h1 class="uk-text-large">{{ 'attendance_student.stats.not_found'|trans }}</h1>
+        </span>
+      </div>
+    {% else %}
+        <div data-echarts-line data-legend='{{ echarts.date|json_encode|raw }}'  data-retard='{{ echarts.retard|json_encode|raw }}' data-exclude='{{ echarts.exclude|json_encode|raw }}' data-absent='{{ echarts.absent|json_encode|raw }}' data-present='{{ echarts.present|json_encode|raw }}' class="echart-large"></div>
+    {% endif %}
+  </div>
+</div>
+<div class="md-card uk-margin-medium-bottom">
+		<div class="md-card-content">
+				{{ datatable_render(attendanceSections) }}
+		</div>
+</div>
+{% endblock %}
+{% block javascripts %}
+  {{ parent() }}
+  <script src="{{ asset('assets/plugins/chart/echarts.min.js')}}"></script>
+  <script src="{{ asset('assets/plugins/easypiechart/jquery.easypiechart.min.js')}}"></script>
+  <!-- page specific plugins -->
+  {% include '@SMSAdministrative/attendancesection/echarts.html.twig' %}
+{% endblock %}

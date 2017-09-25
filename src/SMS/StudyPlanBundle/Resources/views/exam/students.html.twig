@@ -1,0 +1,136 @@
+{% extends 'layout/base_no_header.html.twig' %}
+
+{% block title_page %}
+  {{ 'student.list.title'|trans }}
+{% endblock %}
+
+{% block body %}
+<div class="md-card">
+  <div class="md-card-content">
+    {{ form_start(form) }}
+    <div class="uk-grid uk-grid-medium uk-grid-width-medium-1-2 uk-grid-width-large-1-4" data-uk-grid-margin="">
+      <div>
+        <div class="uk-form-row">
+          <label class="uk-form-label">{{ form_label(form.textField) }}</label>
+          {{ form_widget(form.textField)}}
+          <div class="parsley-errors-list filled uk-text-danger">
+            {{ form_errors(form.textField) }}
+          </div>
+        </div>
+
+      </div>
+      <div>
+        <div>
+          <div class="uk-form-row">
+            {{ form_widget(form.grade) }}
+          </div>
+        </div>
+
+      </div>
+      <div>
+        <div>
+          <div class="uk-form-row">
+            {{ form_widget(form.section) }}
+          </div>
+        </div>
+      </div>
+      <div class="uk-text-center">
+        <div class="md-btn-group uk-margin-small-top">
+          <button type="submit" class="md-btn md-btn-primary uk-margin-small-top">{{ "search.submit"|trans}}</button>
+          <a href="{{ path('exam_students_index')}}" class="md-btn md-btn-twitter uk-margin-small-top">{{ "search.reset"|trans}}</a>
+        </div>
+      </div>
+    </div>
+    {{ form_widget(form)}}
+    {{ form_end(form) }}
+  </div>
+</div>
+  <!-- info cards -->
+  {% if pagination is empty %}
+    <div class="uk-alert uk-alert-large" data-uk-alert="">
+      <h4 class="heading_b">{{ "search.result_not_found.title"|trans}}</h4>
+      <p>
+        <h4 class="heading_a">{{ "search.result_not_found.sub-title"|trans}}
+          :</h4>
+        {{ "search.result_not_found.text_student"|trans}}
+      </p>
+    </div>
+  {% else %}
+    <div class="uk-grid uk-grid-medium uk-grid-width-medium-1-3 uk-grid-width-large-1-4 hierarchical_show" data-uk-grid="{gutter: 20}" data-uk-grid-margin data-uk-grid-match="{target:'.md-card-content'}">
+
+      {% for student in pagination %}
+        <div>
+          <div class="md-card">
+            <div class="md-card-head md-bg-blue-700">
+              <div class="md-card-head-menu" data-uk-dropdown="{pos:'bottom-right'}">
+                <a href="{{ path('mark_student_index' , { 'id' : student.id })}}">
+                  <i class="md-icon material-icons md-icon-light">&#xE88F;</i>
+                </a>
+              </div>
+              <div class="uk-text-center">
+                {% if student.imageName %}
+                  <img class="md-card-head-avatar" src="{{ vich_uploader_asset(student, 'imageFile') }}" alt="{{ student.imageName }}"/>
+                {% else %}
+                  <img class="md-card-head-avatar md-bg-grey-50" src="{{ asset('assets/img/avatars/user@2x.png') }}" alt="user avatar"/>
+                {% endif %}
+              </div>
+              <h3 class="md-card-head-text uk-text-center md-color-white ">
+                {{ student.firstName }}
+                {{ student.lastName }}
+                <span>{{ student.username }}</span>
+              </h3>
+            </div>
+            <div class="md-card-content">
+              <ul class="md-list">
+                <li>
+                  <div class="md-list-content">
+                    <span class="md-list-heading">{{ student.email }}</span>
+                    <span class="uk-text-small uk-text-muted">{{'user.field.email'|trans }}</span>
+                  </div>
+                </li>
+                <li>
+                  <div class="md-list-content">
+                    <span class="md-list-heading">{{ student.phone }}</span>
+                    <span class="uk-text-small uk-text-muted">{{'student.field.phone'|trans }}</span>
+                  </div>
+                </li>
+              </ul>
+            </div>
+          </div>
+        </div>
+      {% endfor %}
+      <div class="uk-margin-large-top uk-width-medium-3-3 uk-grid-width-large-2-2">
+        {{ knp_pagination_render(pagination) }}
+      </div>
+    </div>
+  {% endif %}
+</div>
+{% endblock %}
+{% block javascripts %}
+  {{ parent() }}
+  <script>
+  // When grade gets selected ...
+	$(document).on('change' , '.gradeField', function () {
+		altair_helpers.content_preloader_show('md');
+	  var $form = $(this).closest('form');
+	  // Submit data via AJAX to the form's action path.
+	  $.ajax({
+	    url : $form.attr('action'),
+	    type: $form.attr('method'),
+	    data : $form.serializeObject(),
+        cache: false,
+        timeout: 3000,
+	    success: function(html) {
+				altair_helpers.content_preloader_hide();
+	      // Replace current position field ...
+	      $('.sectionField').parent(".uk-form-row").empty().append(
+	        // ... with the returned one from the AJAX response.
+	        $(html).find('.sectionField').parent().html()
+	      );
+	      altair_forms.init();
+	      // Position field now displays the appropriate positions.
+	    }
+	  });
+	});
+  </script>
+{% endblock %}

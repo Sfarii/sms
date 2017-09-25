@@ -88,4 +88,19 @@ class BaseController extends Controller
 	    }
     	return $errors;
 		}
+
+		/**
+     * Get paginator Manager Service.
+     *
+     * @return SMS\Classes\Services\EntityManager
+     * @throws \NotFoundException
+     */
+    protected function getPaginator()
+    {
+        if (!$this->has('knp_paginator')){
+           throw $this->createNotFoundException('Service Not Found');
+        }
+
+        return $this->get('knp_paginator');
+    }
 }

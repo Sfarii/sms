@@ -97,19 +97,20 @@ class Student extends User
     private $studentParent;
 
     /**
-     * One Student has Many Registration.
-     * @ORM\OneToMany(targetEntity="SMS\PaymentBundle\Entity\Registration", mappedBy="student",fetch="EXTRA_LAZY")
+     * Many Students have Many registrations.
+     * @ORM\ManyToMany(targetEntity="SMS\PaymentBundle\Entity\PaymentType", mappedBy="student",fetch="EXTRA_LAZY")
      */
-    private $registrations;
+     private $registrations;
 
-    /**
-     * User constructor.
-     */
-    public function __construct()
-    {
-        parent::__construct();
-        $this->roles = array(self::ROLE_STUDENT);
-    }
+     /**
+      * User constructor.
+      */
+     public function __construct()
+     {
+         parent::__construct();
+         $this->roles = array(self::ROLE_STUDENT);
+         $this->registrations = new \Doctrine\Common\Collections\ArrayCollection();
+     }
 
     /**
      * Get id
@@ -329,14 +330,6 @@ class Student extends User
     }
 
     /**
-     * @return string
-     */
-    public function __toString()
-    {
-        return sprintf("%s %s",$this->getFirstName(),$this->getLastName());
-    }
-
-    /**
      * Set studentType
      *
      * @param boolean $studentType
@@ -387,11 +380,11 @@ class Student extends User
     /**
      * Add registration
      *
-     * @param \SMS\PaymentBundle\Entity\Registration $registration
+     * @param \SMS\PaymentBundle\Entity\PaymentType $registration
      *
      * @return Student
      */
-    public function addRegistration(\SMS\PaymentBundle\Entity\Registration $registration)
+    public function addRegistration(\SMS\PaymentBundle\Entity\PaymentType $registration)
     {
         $this->registrations[] = $registration;
 
@@ -401,9 +394,9 @@ class Student extends User
     /**
      * Remove registration
      *
-     * @param \SMS\PaymentBundle\Entity\Registration $registration
+     * @param \SMS\PaymentBundle\Entity\PaymentType $registration
      */
-    public function removeRegistration(\SMS\PaymentBundle\Entity\Registration $registration)
+    public function removeRegistration(\SMS\PaymentBundle\Entity\PaymentType $registration)
     {
         $this->registrations->removeElement($registration);
     }
@@ -416,5 +409,13 @@ class Student extends User
     public function getRegistrations()
     {
         return $this->registrations;
+    }
+
+    /**
+     * @return string
+     */
+    public function __toString()
+    {
+        return sprintf("%s %s",$this->getFirstName(),$this->getLastName());
     }
 }

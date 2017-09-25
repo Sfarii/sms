@@ -86,6 +86,7 @@ note:
         created: note created
         mark: Mark
         updated: Updated
+        sum: Average
 
     item: Note
 

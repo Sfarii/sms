@@ -1,0 +1,68 @@
+{% extends 'layout/base.html.twig' %}
+{% block title_page %}
+  {{ student }}
+{% endblock %}
+
+{% block sub_title_page %}
+  <a  href="{{ url('attendance_student_new') }}" class="uk-margin-small-top">
+    {{ 'student.list.title'|trans }}
+  </a>
+{% endblock %}
+
+{% block sticky_button %}
+  <a class="md-fab md-fab-accent md-fab-wave waves-effect waves-button" href="#page_content" id="scrollTop" data-uk-smooth-scroll="{offset: 48, duration: 800, easing: bez_easing_swiftOut}">
+    <i class="material-icons">&#xE316;</i>
+  </a>
+{% endblock %}
+
+{% block body %}
+<div class="md-card">
+  <div class="md-card-toolbar">
+    <h3 class="md-card-toolbar-heading-text">
+      {{ 'attendance_student.stats.title'|trans }}
+    </h3>
+  </div>
+  <div class="md-card-content">
+    {% if echarts.date is empty %}
+      <div class="echart-large">
+        <span class="chart_icon">
+          <i class="material-icons">&#xE88B;</i>
+          <h1 class="uk-text-large">{{ 'attendance_student.stats.not_found'|trans }}</h1>
+        </span>
+      </div>
+    {% else %}
+        <div data-echarts-line data-legend='{{ echarts.date|json_encode|raw }}'  data-retard='{{ echarts.retard|json_encode|raw }}' data-absent='{{ echarts.absent|json_encode|raw }}' data-present='{{ echarts.present|json_encode|raw }}' class="echart-large"></div>
+    {% endif %}
+  </div>
+</div>
+<div class="md-card uk-margin-medium-bottom">
+		<div class="md-card-content">
+				{{ datatable_render(attendanceStudent) }}
+		</div>
+</div>
+{% endblock %}
+
+{% block head_javascripts %}
+  {{ parent() }}
+  <!-- page specific plugins -->
+  <!-- datatables -->
+  <script src="{{ asset('assets/plugins/datatables/js/jquery.dataTables.min.js')}}"></script>
+  <script src="{{ asset('bundles/fosjsrouting/js/router.js') }}"></script>
+  <script src="{{ path('fos_js_routing_js', {'callback': 'fos.Router.setData'}) }}"></script>
+  <!--  form file input functions -->
+  <!-- uikit functions -->
+  <script src="{{ asset('assets/js/uikit_custom.min.js')}}"></script>
+
+  <script src="{{ asset('assets/js/moment-with-locales.min.js')}}"></script>
+{% endblock %}
+{% block javascripts %}
+  <!-- altair common functions/helpers -->
+  <script src="{{ asset('assets/js/altair_admin_common.min.js')}}"></script>
+  <!-- datatables custom integration -->
+  <script src="{{ asset('assets/js/custom/datatables/datatables.uikit.min.js')}}"></script>
+  <script src="{{ asset('assets/js/uikit_custom_dataTable.js')}}"></script>
+  <script src="{{ asset('assets/plugins/chart/echarts.min.js')}}"></script>
+  <script src="{{ asset('assets/plugins/easypiechart/jquery.easypiechart.min.js')}}"></script>
+  <!-- page specific plugins -->
+  {% include '@SMSAdministrative/attendancestudent/echarts.html.twig' %}
+{% endblock %}

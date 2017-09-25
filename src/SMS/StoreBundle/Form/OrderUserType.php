@@ -5,7 +5,7 @@ namespace SMS\StoreBundle\Form;
 use Symfony\Component\Form\AbstractType;
 use Symfony\Component\Form\FormBuilderInterface;
 use Symfony\Component\OptionsResolver\OptionsResolver;
-use Symfony\Component\Form\Extension\Core\Type\TextType;
+use SMS\StoreBundle\Form\Type\OrderStatusType;
 use Symfony\Component\Form\Extension\Core\Type\DateType;
 use Symfony\Bridge\Doctrine\Form\Type\EntityType;
 use Symfony\Component\Form\Extension\Core\Type\SubmitType;
@@ -20,45 +20,26 @@ class OrderUserType extends AbstractType
      */
     public function buildForm(FormBuilderInterface $builder, array $options)
     {
+        $establishment = $options['establishment'];
+
         $builder
-    ->add('id' ,TextType::class , array(
-        'label' => 'orderuser.field.id' ,
-        'attr' => [ 'form.grid'=> "none"])
-    )
-    ->add('price' ,TextType::class , array(
-        'label' => 'orderuser.field.price')
-    )
-    ->add('quantity' ,TextType::class , array(
-        'label' => 'orderuser.field.quantity')
-    )
-    ->add('state' ,TextType::class , array(
-        'label' => 'orderuser.field.state')
-    )
-    ->add('created', DateType::class, array(
-        'widget' => 'single_text',
-        'html5' => false,
-        'label' => 'orderuser.field.created' ,
-        'attr' => [ 'data-uk-datepicker'=> "{format:'YYYY-MM-DD'}"],
-    ))
-    ->add('updated', DateType::class, array(
-        'widget' => 'single_text',
-        'html5' => false,
-        'label' => 'orderuser.field.updated' ,
-        'attr' => [ 'data-uk-datepicker'=> "{format:'YYYY-MM-DD'}"],
-    ))
-    ->add('product' , EntityType::class , array(
-        'label' => 'orderuser.field.product')
-    )
-    ->add('student' , EntityType::class , array(
-        'label' => 'orderuser.field.student')
-    )
-    ->add('user' , EntityType::class , array(
-        'label' => 'orderuser.field.user')
-    )
-    ->add('save', SubmitType::class);
+          ->add('state' ,OrderStatusType::class , array(
+              'label' => 'orderuser.field.state')
+          )
+          ->add('orderDate', DateType::class, array(
+              'widget' => 'single_text',
+              'html5' => false,
+              'label' => 'orderuser.field.orderDate' ,
+              'attr' => [ 'data-uk-datepicker'=> "{format:'YYYY-MM-DD'}"],
+          ))
+          ->add('establishment', HiddenEntityType::class, array(
+              'class' => Establishment::class,
+              'data' =>  $establishment, // Field value by default
+              ))
+          ->add('save', SubmitType::class , array ("label" => "md-fab"));
 
     }
-    
+
     /**
      * {@inheritdoc}
      */
@@ -67,6 +48,7 @@ class OrderUserType extends AbstractType
         $resolver->setDefaults(array(
             'data_class' => OrderUser::class
         ));
+        $resolver->setRequired('establishment');
     }
 
     /**
@@ -74,7 +56,7 @@ class OrderUserType extends AbstractType
      */
     public function getBlockPrefix()
     {
-        return 'sms_storebundle_orderuser';
+        return 'sms_storebundle_Order_User';
     }
 
 

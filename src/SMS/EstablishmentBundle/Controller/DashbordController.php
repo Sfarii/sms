@@ -2,15 +2,13 @@
 
 namespace SMS\EstablishmentBundle\Controller;
 
-use API\BaseController\BaseController;
+use SMS\EstablishmentBundle\BaseController\BaseController;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\Method;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\Route;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\Template;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\Security;
-use SMS\PaymentBundle\Entity\Payment;
-use SMS\PaymentBundle\Entity\Registration;
 /**
  * Division controller.
  *
@@ -33,13 +31,9 @@ class DashbordController extends BaseController
      */
     public function indexAction()
     {
-      $paymentRepository = $this->getDoctrine()->getRepository(Payment::class);
-      $registrationRepository = $this->getDoctrine()->getRepository(Registration::class);
-
       return array(
-          'paymentsInfo' => $paymentRepository->getPaymentInfoByEstablishment($this->getUser()->getEstablishment()) ,
-          'studentInfo' => $registrationRepository->getRegistredStudent($this->getUser()->getEstablishment()) ,
-          'chart' => $paymentRepository->findChartByAll($this->getUser()->getEstablishment())
+        
+        'info' => $this->getEntityManager()->establishmentInfo($this->getUser()->getEstablishment())
       );
     }
 }

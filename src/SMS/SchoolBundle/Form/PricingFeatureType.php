@@ -12,6 +12,7 @@ use Symfony\Bridge\Doctrine\Form\Type\EntityType;
 use Symfony\Component\Form\Extension\Core\Type\SubmitType;
 use SMS\SchoolBundle\Entity\PricingFeature;
 use SMS\SchoolBundle\Entity\Pricing;
+use Symfony\Component\Form\Extension\Core\Type\TextareaType;
 use SMS\SchoolBundle\Entity\Translations\PricingFeatureTranslation;
 
 class PricingFeatureType extends AbstractType

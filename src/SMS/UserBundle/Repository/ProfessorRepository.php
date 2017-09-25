@@ -26,12 +26,30 @@ class ProfessorRepository extends EntityRepository
 	 * @param SMS\EstablishmentBundle\Entity\Establishment $establishment
 	 * @return array
 	 */
-	public function findAllByEstablishment($establishment)
+	public function findAllProfessorByEstablishment($establishment)
 	{
 			$query = $this->createQueryBuilder('professor')
 				->join('professor.establishment', 'establishment')
 				->where('establishment.id = :establishment')
 				->setParameter('establishment', $establishment->getId());
 			return $query;
+	}
+
+	/**
+	 * Get professors By establishment
+	 *
+	 * @param integer $establishment
+	 * @return array
+	 */
+	public function findStatsByEstablishment($establishment)
+	{
+			return $this->createQueryBuilder('professor')
+							->select("Count(professor) as value , professor.gender as name")
+							->join('professor.establishment', 'establishment')
+							->andWhere('establishment.id = :establishment')
+							->setParameter('establishment', $establishment->getId())
+							->groupBy('name')
+							->getQuery()
+							->getResult();
 	}
 }

@@ -1,7 +1,7 @@
 <!doctype html>
 <!--[if lte IE 9]> <html class="lte-ie9" lang="en"> <![endif]-->
 <!--[if gt IE 9]><!-->
-<html lang="en">
+<html lang="en" class="{% if app.session.get('_theme') is not null  %}{{app.session.get('_theme')}}{% endif %}">
     <!--<![endif]-->
     <head>
         <meta charset="UTF-8">
@@ -35,7 +35,7 @@
             <link rel="stylesheet" href="{{ asset('assets/icons/flags/flags.min.css') }}" media="all">
 
             <!-- altair admin -->
-            <link rel="stylesheet" href="{{ asset('assets/css/main.min.css') }}" media="all">
+            <link rel="stylesheet" href="{{ asset('assets/css/main.fix.min.css') }}" media="all">
 
             <!-- themes -->
             <link rel="stylesheet" href="{{ asset('assets/css/themes/themes_combined.min.css') }}" media="all">

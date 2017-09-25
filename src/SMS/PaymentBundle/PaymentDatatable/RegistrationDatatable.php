@@ -81,7 +81,7 @@ class RegistrationDatatable extends AbstractDatatableView
                         'attributes' => array(
                             'rel' => 'tooltip',
                             'title' => $this->translator->trans('action.registered'),
-                            'class' => 'md-btn buttons-copy buttons-html5',
+                            'class' => 'md-btn md-btn-primary md-btn-wave-light waves-effect waves-button waves-light',
                             'role' => 'button'
                         ),
                     ),
@@ -92,7 +92,7 @@ class RegistrationDatatable extends AbstractDatatableView
                         'attributes' => array(
                             'rel' => 'tooltip',
                             'title' => $this->translator->trans('action.not_registered'),
-                            'class' => 'md-btn buttons-copy buttons-html5',
+                            'class' => 'md-btn md-btn-primary md-btn-wave-light waves-effect waves-button waves-light',
                             'role' => 'button'
                         ),
                     ),

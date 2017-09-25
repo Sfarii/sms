@@ -86,11 +86,23 @@ class Provider
     protected $updated;
 
     /**
-     * One User has Many Payments.
+     * One User has Many providers.
      * @ORM\ManyToOne(targetEntity="SMS\UserBundle\Entity\User" ,fetch="EXTRA_LAZY")
      * @ORM\JoinColumn(name="user_id", referencedColumnName="id")
      */
-    private $user;
+    private $author;
+
+    /**
+     * One Provider has Many OrderProviders.
+     * @ORM\OneToMany(targetEntity="OrderProvider", mappedBy="provider",fetch="EXTRA_LAZY")
+     */
+    private $orders;
+
+    /**
+     * One Provider has Many Purchases.
+     * @ORM\OneToMany(targetEntity="Purchase", mappedBy="provider",fetch="EXTRA_LAZY")
+     */
+    private $purchases;
 
 
 
@@ -310,27 +322,105 @@ class Provider
         return $this->establishment;
     }
 
+
+
     /**
-     * Set user
+     * Set author
      *
-     * @param \SMS\UserBundle\Entity\User $user
+     * @param \SMS\UserBundle\Entity\User $author
      *
      * @return Provider
      */
-    public function setUser(\SMS\UserBundle\Entity\User $user = null)
+    public function setAuthor(\SMS\UserBundle\Entity\User $author = null)
     {
-        $this->user = $user;
+        $this->author = $author;
 
         return $this;
     }
 
     /**
-     * Get user
+     * Get author
      *
      * @return \SMS\UserBundle\Entity\User
      */
-    public function getUser()
+    public function getAuthor()
     {
-        return $this->user;
+        return $this->author;
+    }
+    /**
+     * Constructor
+     */
+    public function __construct()
+    {
+        $this->orders = new \Doctrine\Common\Collections\ArrayCollection();
+        $this->purchases = new \Doctrine\Common\Collections\ArrayCollection();
+    }
+
+    /**
+     * Add order
+     *
+     * @param \SMS\StoreBundle\Entity\OrderProvider $order
+     *
+     * @return Provider
+     */
+    public function addOrder(\SMS\StoreBundle\Entity\OrderProvider $order)
+    {
+        $this->orders[] = $order;
+
+        return $this;
+    }
+
+    /**
+     * Remove order
+     *
+     * @param \SMS\StoreBundle\Entity\OrderProvider $order
+     */
+    public function removeOrder(\SMS\StoreBundle\Entity\OrderProvider $order)
+    {
+        $this->orders->removeElement($order);
+    }
+
+    /**
+     * Get orders
+     *
+     * @return \Doctrine\Common\Collections\Collection
+     */
+    public function getOrders()
+    {
+        return $this->orders;
+    }
+
+    /**
+     * Add purchase
+     *
+     * @param \SMS\StoreBundle\Entity\Purchase $purchase
+     *
+     * @return Provider
+     */
+    public function addPurchase(\SMS\StoreBundle\Entity\Purchase $purchase)
+    {
+        $this->purchases[] = $purchase;
+
+        return $this;
+    }
+
+    /**
+     * Remove purchase
+     *
+     * @param \SMS\StoreBundle\Entity\Purchase $purchase
+     */
+    public function removePurchase(\SMS\StoreBundle\Entity\Purchase $purchase)
+    {
+        $this->purchases->removeElement($purchase);
+    }
+
+    /**
+     * Get purchases
+     *
+     * @return \Doctrine\Common\Collections\Collection
+     */
+    public function getPurchases()
+    {
+        return $this->purchases;
     }
 }

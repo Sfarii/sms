@@ -101,6 +101,13 @@ class Professor extends User
     private $schedules;
 
     /**
+     * One Professor has Many CatchUpLessons.
+     * @ORM\OneToMany(targetEntity="SMS\PaymentBundle\Entity\CatchUpLesson", mappedBy="professor")
+     */
+    private $catchUpLessons;
+
+
+    /**
      * User constructor.
      */
     public function __construct()

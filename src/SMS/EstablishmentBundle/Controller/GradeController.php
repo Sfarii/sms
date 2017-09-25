@@ -4,7 +4,7 @@ namespace SMS\EstablishmentBundle\Controller;
 
 use SMS\EstablishmentBundle\Entity\Grade;
 use SMS\EstablishmentBundle\Form\GradeType;
-use API\BaseController\BaseController;
+use SMS\EstablishmentBundle\BaseController\BaseController;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\Method;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\Route;
 use Symfony\Component\HttpFoundation\Request;
@@ -150,7 +150,7 @@ class GradeController extends BaseController
     /**
      * get grade Entity Manager Service.
      *
-     * @return API\Services\EntityManager
+     * @return SMS\EstablishmentBundle\Services\EntityManager
      *
      * @throws \NotFoundException
      */

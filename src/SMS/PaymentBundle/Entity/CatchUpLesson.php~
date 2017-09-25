@@ -1,0 +1,146 @@
+<?php
+
+namespace SMS\PaymentBundle\Entity;
+
+use Doctrine\ORM\Mapping as ORM;
+use Symfony\Component\Validator\Constraints as Assert;
+use Symfony\Bridge\Doctrine\Validator\Constraints\UniqueEntity;
+
+/**
+ * CatchUpLesson
+ *
+ * @ORM\Table(name="catch_up_lesson")
+ * @ORM\HasLifecycleCallbacks
+ * @ORM\Entity(repositoryClass="SMS\PaymentBundle\Repository\CatchUpLessonRepository")
+ * @UniqueEntity(fields={"CatchUpLessonName" , "establishment"}, errorPath="CatchUpLessonName")
+ */
+class CatchUpLesson
+{
+    /**
+     * @var int
+     *
+     * @ORM\Column(name="id", type="integer")
+     * @ORM\Id
+     * @ORM\GeneratedValue(strategy="AUTO")
+     */
+    private $id;
+
+    /**
+     * @var string
+     *
+     * @ORM\Column(name="CatchUpLessonName", type="string", length=100)
+     * @Assert\NotBlank()
+     * @Assert\Length(min = 2, max = 99)
+     * @Assert\Regex(pattern="/^[a-z0-9 .\-]+$/i" ,match=true)
+     */
+    protected $CatchUpLessonName;
+
+    /**
+     * @var int
+     *
+     * @ORM\Column(name="price", type="float")
+     * @Assert\NotBlank()
+     * @Assert\Range(
+     *      min = 0,
+     *      max = 99999999999999)
+     */
+    protected $price;
+
+    /**
+     * @var int
+     *
+     * @ORM\Column(name="registrationFee", type="float")
+     * @Assert\NotBlank()
+     * @Assert\Range(
+     *      min = 0,
+     *      max = 99999999999999)
+     */
+    protected $registrationFee;
+
+    /**
+     * One establishment has Many PaymentType.
+     * @ORM\ManyToOne(targetEntity="SMS\EstablishmentBundle\Entity\Establishment" ,fetch="EXTRA_LAZY")
+     * @ORM\JoinColumn(name="establishment_id", referencedColumnName="id")
+     */
+    protected $establishment;
+
+
+    /**
+     * One User has Many Payments.
+     * @ORM\ManyToOne(targetEntity="SMS\UserBundle\Entity\User" ,fetch="EXTRA_LAZY")
+     * @ORM\JoinColumn(name="user_id", referencedColumnName="id")
+     */
+    protected $author;
+
+    /**
+     * @var datetime $created
+     *
+     * @ORM\Column(type="datetime")
+     */
+    protected $created;
+
+    /**
+     * @var datetime $updated
+     *
+     * @ORM\Column(type="datetime", nullable = true)
+     */
+    protected $updated;
+
+    /**
+     * @var string
+     *
+     * @ORM\Column(name="description", type="text")
+     * @Assert\NotBlank()
+     * @Assert\Length(min = 2, max = 1000)
+     * @Assert\Regex(pattern="/^[a-z0-9 .\-]+$/i" ,match=false)
+     */
+    private $description;
+
+    /**
+     * Many CatchUpLessons have One Professor.
+     * @ORM\ManyToOne(targetEntity="SMS\UserBundle\Entity\Professor" , inversedBy="catchUpLessons",fetch="EXTRA_LAZY")
+     * @ORM\JoinColumn(name="professor_id", referencedColumnName="id")
+     * @Assert\NotBlank()
+     */
+    private $professor;
+
+    /**
+     * @var int
+     *
+     * @ORM\Column(name="professor_price", type="float")
+     * @Assert\NotBlank()
+     * @Assert\Range(
+     *      min = 0,
+     *      max = 99999999999999)
+     */
+    private $professorPrice;
+
+    /**
+     * One CatchUpLessons has Many CatchUpLessonSechdule.
+     * @ORM\OneToMany(targetEntity="CatchUpLessonSechdule", mappedBy="catchUpLesson",fetch="EXTRA_LAZY")
+     */
+    private $schedules;
+
+    /**
+     * One CatchUpLessons has Many Users.
+     * @ORM\ManyToMany(targetEntity="SMS\UserBundle\Entity\Student" ,fetch="EXTRA_LAZY")
+     * @ORM\JoinTable(name="catchUpLessons_users",
+     *      joinColumns={@ORM\JoinColumn(name="user_id", referencedColumnName="id")},
+     *      inverseJoinColumns={@ORM\JoinColumn(name="catchUpLessons_id", referencedColumnName="id")}
+     *      )
+     */
+    private $student;
+
+    /**
+    * @ORM\PrePersist
+    * @ORM\PreUpdate
+    */
+   public function updatedTimestamps()
+   {
+       $this->setUpdated(new \DateTime('now'));
+
+       if ($this->getCreated() == null) {
+           $this->setCreated(new \DateTime('now'));
+       }
+   }
+}

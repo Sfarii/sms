@@ -1,37 +1,95 @@
 {% extends 'layout/base.html.twig' %}
 
-{% block heading_actions %}
-  <a href="{{ path('provider_index') }}">
-    <i class="md-icon material-icons">&#xE5C4;</i>
-  </a>
-  <a href="{{ path('provider_new') }}">
-    <i class="md-icon material-icons">&#xE5C8;</i>
-  </a>
-{% endblock %}
-
 {% block sticky_button %}
-  <a class="md-fab md-fab-primary" href="{{ path('provider_edit', { 'id': provider.id }) }}">
+  <a class="md-fab md-fab-accent md-fab-wave waves-effect waves-button" href="{{ path('provider_edit', { 'id': provider.id }) }}">
     <i class="material-icons">&#xE254;</i>
   </a>
 {% endblock %}
-
+{% block sub_title_page %}
+  <a href="{{ path('provider_index') }}">
+    {{ 'provider.list.title'|trans }}
+  </a>
+  /
+  <a href="#">
+    {{ 'provider.show.title'|trans }}
+  </a>
+{% endblock %}
 {% block title_page %}
   {{ 'provider.show.title'|trans }}
 {% endblock %}
 
 {% block body %}
-  <div class="uk-grid uk-grid-medium" data-uk-grid-margin>
-
-    <div class="uk-width-xLarge-8-10  uk-width-large-7-10">
+  <!-- statistics (small charts) -->
+  <div class="uk-grid uk-grid-width-large-1-2 uk-grid-width-medium-1-2 uk-grid-medium uk-sortable sortable-handler hierarchical_show" data-uk-grid-margin>
+    <div>
+      <div class="md-card">
+        <div class="md-card-content">
+          <div class="uk-float-right uk-margin-top uk-margin-small-right">
+            <i class="material-icons md-36">&#xE227;</i>
+          </div>
+          <span class=" uk-text-large  uk-text-bold">{{'provider.show.purchase'|trans }}</span>
+          <h2 class="uk-margin-remove">
+            <span>
+              {{ provider.purchases|length }}
+              {{ 'store.unit.purchase'|trans }}
+            </span>
+          </h2>
+        </div>
+      </div>
+    </div>
+    <div>
+      <div class="md-card">
+        <div class="md-card-content">
+          <div class="uk-float-right uk-margin-top uk-margin-small-right">
+            <i class="material-icons  md-36">&#xE25C;</i>
+          </div>
+          <span class=" uk-text-large  uk-text-bold">{{'provider.show.order'|trans }}</span>
+          <h2 class="uk-margin-remove">
+            <span class="countUpMe">
+              {{ provider.orders|length }}
+              {{ 'store.unit.order'|trans }}
+            </span>
+          </h2>
+        </div>
+      </div>
+    </div>
+  </div>
+  <div class="uk-grid uk-grid-width-1-1">
+    <div>
       <div class="md-card">
         <div class="md-card-toolbar">
           <h3 class="md-card-toolbar-heading-text">
-            {{ 'provider.show.detail'|trans }}
+            {{ 'provider.statistics.by_day'|trans }}
           </h3>
         </div>
         <div class="md-card-content">
-          <div class="uk-grid uk-grid-divider uk-margin-small-top uk-grid-medium" data-uk-grid-margin>
-            <div class="uk-width-large-1-2">
+          {% if statistics.all_days %}
+            <div data-echarts-line data-legend='{{ statistics.all_days|json_encode|raw }}' data-order='{{ statistics.order_chart_day|json_encode|raw }}' data-purchase='{{ statistics.purchase_chart_day|json_encode|raw }}' class="echart-large"></div>
+          {% else %}
+            <div class="echart-large">
+              <span class="chart_icon">
+                <i class="material-icons">&#xE88B;</i>
+                <h1 class="uk-text-large">{{ 'store.statistics.not_found'|trans }}</h1>
+              </span>
+            </div>
+          {% endif %}
+
+        </div>
+      </div>
+    </div>
+  </div>
+  <div class="md-card">
+    <div class="md-card-toolbar">
+      <h3 class="md-card-toolbar-heading-text">
+        {{ 'provider.show.detail'|trans }}
+      </h3>
+    </div>
+    <div class="md-card-content">
+      <div class="uk-grid uk-grid-divider" data-uk-grid-margin>
+
+        <div class="uk-width-medium-2-3">
+          <div class="uk-grid" data-uk-grid-margin>
+            <div class="uk-width-medium-1-2">
               <ul class="md-list">
                 <li>
                   <div class="md-list-content">
@@ -56,7 +114,7 @@
                 </li>
               </ul>
             </div>
-            <div class="uk-width-large-1-2">
+            <div class="uk-width-medium-1-2">
               <ul class="md-list">
                 <li>
                   <div class="md-list-content">
@@ -75,52 +133,52 @@
               </ul>
             </div>
           </div>
-          </div>
         </div>
-      </div>
-      <div class="uk-width-xLarge-2-10 uk-width-large-3-10">
-        <div class="md-card">
-          <div class="md-card-toolbar">
-            <h3 class="md-card-toolbar-heading-text">
-              {{ 'author.info'|trans }}
-            </h3>
-          </div>
-          <div class="md-card-content">
-            <ul class="md-list md-list-addon">
-              <li>
-                <div class="md-list-addon-element">
-                  <i class="md-list-addon-icon material-icons">&#xE7FD;</i>
-                </div>
-                <div class="md-list-content">
-                  <span class="md-list-heading">{{ provider.user.username }}</span>
-                  <span class="uk-text-small uk-text-muted">{{ 'author.creator'|trans }}</span>
-                </div>
-              </li>
-              <li>
-                <div class="md-list-addon-element">
-                  <i class="md-list-addon-icon material-icons">&#xE8DF;</i>
-                </div>
-                <div class="md-list-content">
-                  <span class="md-list-heading">
-                    {% if provider.created %}{{ provider.created|date('d M Y') }}{% endif %}
-                  </span>
-                  <span class="uk-text-small uk-text-muted">{{ 'author.updated'|trans }}</span>
-                </div>
-              </li>
-              <li>
-                <div class="md-list-addon-element">
-                  <i class="md-list-addon-icon material-icons">&#xE8B5;</i>
-                </div>
-                <div class="md-list-content">
-                  <span class="md-list-heading">
-                    {% if provider.created %}{{ provider.created|date('d M Y') }}{% endif %}
-                  </span>
-                  <span class="uk-text-small uk-text-muted">{{ 'author.created'|trans }}</span>
-                </div>
-              </li>
-            </ul>
-          </div>
+        <div class="uk-width-medium-1-3">
+          <h3 class="heading_c uk-margin-small-bottom uk-margin-small-top">
+            {{ 'author.info'|trans }}
+          </h3>
+          <ul class="md-list md-list-addon">
+            <li>
+              <div class="md-list-addon-element">
+                <i class="md-list-addon-icon material-icons">&#xE7FD;</i>
+              </div>
+              <div class="md-list-content">
+                <span class="md-list-heading">{{ provider.author.username }}</span>
+                <span class="uk-text-small uk-text-muted">{{ 'author.creator'|trans }}</span>
+              </div>
+            </li>
+            <li>
+              <div class="md-list-addon-element">
+                <i class="md-list-addon-icon material-icons">&#xE8DF;</i>
+              </div>
+              <div class="md-list-content">
+                <span class="md-list-heading">
+                  {% if provider.created %}{{ provider.created|date('d M Y') }}{% endif %}
+                </span>
+                <span class="uk-text-small uk-text-muted">{{ 'author.updated'|trans }}</span>
+              </div>
+            </li>
+            <li>
+              <div class="md-list-addon-element">
+                <i class="md-list-addon-icon material-icons">&#xE8B5;</i>
+              </div>
+              <div class="md-list-content">
+                <span class="md-list-heading">
+                  {% if provider.created %}{{ provider.created|date('d M Y') }}{% endif %}
+                </span>
+                <span class="uk-text-small uk-text-muted">{{ 'author.created'|trans }}</span>
+              </div>
+            </li>
+          </ul>
         </div>
       </div>
     </div>
-  {% endblock %}
+  </div>
+{% endblock %}
+{% block javascripts %}
+  {{ parent()}}
+  <!--  echarts plugin  -->
+  <script src="{{ asset('assets/plugins/chart/echarts.min.js')}}"></script>
+  {% include '@SMSStore/shop/statistics_action.html.twig' %}
+{% endblock %}

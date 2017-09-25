@@ -1,0 +1,174 @@
+{% extends 'layout/base_no_header.html.twig' %}
+
+{% block sticky_button %}
+  <a class="md-fab md-fab-accent md-fab-wave waves-effect waves-button" href="{{ path('exam_students_index') }}">
+    <i class="material-icons">&#xE88A;</i>
+  </a>
+{% endblock %}
+
+{% block slider %}
+  <div id="top_bar">
+    <div class="md-top-bar">
+      <div class="uk-width-large-8-10 uk-container-center">
+        <div class="uk-slidenav-position uk-slidenav-hover" data-uk-slider>
+          <div class="uk-slider-container">
+            <ul class="uk-slider uk-grid-width-small-1-{{ divisions|length }} top_bar_nav" id="month_filter">
+              {% for division in divisions %}
+                <li {% if divisionID == division.id %} class="uk-active" {% endif %}>
+                  <a id="division" data-href="{{ path('mark_student_index',app.request.query.all|merge({'id': student.id  , 'division': division.id})) }}">
+                    {{ division.divisionName }}
+                  </a>
+                </li>
+              {% endfor %}
+            </ul>
+          </div>
+          <a href="#" class="uk-slidenav uk-slidenav-previous" draggable="false" data-uk-slider-item="previous"></a>
+          <a href="#" class="uk-slidenav uk-slidenav-next" draggable="false" data-uk-slider-item="next"></a>
+        </div>
+      </div>
+    </div>
+  </div>
+{% endblock %}
+
+{% block body %}
+
+    <div id="exam" class="uk-margin-medium-top">
+      {% if result is defined %}
+      {% set coefficient = 0 %}
+        <div class="md-card">
+          <div class="md-card-content">
+            <div class="uk-overflow-container">
+              <table class="uk-table uk-table-nowrap uk-table-align-vertical">
+                <thead>
+                  <tr>
+                    <th class="uk-width-1-10"></th>
+                    <th class="uk-width-1-10 border-table-left border-table-right uk-text-center md-bg-grey-100">
+                      <h4 class="heading_d uk-margin-small-bottom">
+                        {{ "course.field.coefficient"|trans }}
+                      </h4>
+                    </th>
+                    {% for typeExam in result.typeExams %}
+                      <th class="uk-width-1-10 border-table-left uk-text-center md-bg-grey-100">
+                        <h4 class="heading_d uk-margin-small-bottom">
+                          {{ typeExam.typeExamName }}
+                        </h4>
+                      </th>
+                    {% endfor %}
+                    <th class="uk-width-1-10 border-table-left border-table-right uk-text-center md-bg-grey-100">
+                      <h4 class="heading_d uk-margin-small-bottom">
+                        {{ "note.field.sum"|trans }}
+                      </h4>
+                    </th>
+                  </tr>
+                </thead>
+                <tbody>
+                  {% for mark in result.marks %}
+                    <tr>
+                      <td class="uk-text-large md-bg-grey-100 uk-text-center border-table">
+                        {{ mark.courseName }}
+                      </td>
+                      <td class=" uk-text-center border-table">
+                        {{mark.coefficient }}
+                        {% set coefficient = coefficient + mark.coefficient %}
+                      </td>
+                      {% for typeExam in mark.typeExams %}
+                        <td class="border-table-left   {% if typeExam.exams is empty %} uk-text-center {% endif %}">
+                          {% if typeExam.exams is empty %}
+                            <p class="uk-text-center uk-text-bold uk-margin-top">
+                              <i class="material-icons md-24 uk-text-primary">&#xE612;</i>
+                            </p>
+                          {% else %}
+                            {% for exam in typeExam.exams %}
+                              <p class="uk-margin-remove">
+                                <ul class="md-list">
+                                  <li>
+                                    <div class="md-list-content">
+                                      <span class="md-list-heading">{{ exam.examName }}</span>
+                                      <span class="uk-text-small uk-text-muted">{{ "exam.field.examName"|trans }}</span>
+                                    </div>
+                                  </li>
+                                  <li>
+                                    <div class="md-list-content">
+                                      <span class="md-list-heading">{{ exam.dateExam|date("m/d/Y") }}</span>
+                                      <span class="uk-text-small uk-text-muted">{{ "exam.field.dateExam"|trans }}</span>
+                                    </div>
+                                  </li>
+                                  <li>
+                                    <div class="md-list-content">
+                                      <span class="md-list-heading">{{ exam.mark|price(2) }}</span>
+                                      <span class="uk-text-small uk-text-muted">{{ "note.field.mark"|trans }}</span>
+                                    </div>
+                                  </li>
+
+                                </ul>
+                              </p>
+                            {% endfor %}
+                          </td>
+                        {% endif %}
+                      {% endfor %}
+                      <td class="uk-text-center border-table-left border-table-right">
+                        <p class="uk-text-center uk-text-bold uk-margin-top">
+                          <i class="material-icons md-24 uk-text-primary">&#xE612;</i>
+                        </p>
+                      </td>
+                    </tr>
+                  {% endfor %}
+
+                </tbody>
+                <tfoot>
+                  <tr >
+                    <th class="uk-text-large uk-text-center ">
+                    </th>
+                    <th class="uk-text-center md-bg-grey-100 border-table"> {{ coefficient }}</th>
+                    <th colspan="{{ result.typeExams|length }}" class="uk-width-1-10"></th>
+                    <th class="uk-text-center md-bg-grey-100 border-table-left border-table-right">
+                      <p class=" uk-text-bold"> -- /20</p>
+                    </th>
+                  </tr>
+                </tfoot>
+              </table>
+            </div>
+          </div>
+
+        {% endif %}
+      </div>
+{% endblock %}
+{% block javascripts %}
+  {{ parent() }}
+  <!-- page specific plugins -->
+  <script>
+  $(document).on('click', '#division', function() {
+    // show preloader
+    altair_helpers.content_preloader_show('md');
+    var $href = $(this).data('href');
+    $('.uk-active').each(function() {
+      $(this).removeClass('uk-active');
+    });
+    $(this).parent('li').addClass('uk-active');
+    $.ajax({
+      url: $href,
+      type: "GET",
+      cache: false,
+      timeout: 5000,
+      success: function(html) {
+        $('#exam').empty().append($(html).find('#exam').html()).resize();
+        // reinitialize select
+        altair_uikit.reinitialize_grid_margin();
+        // hide preloader
+        altair_helpers.content_preloader_hide();
+      },
+      error: function(XMLHttpRequest, textStatus, errorThrown) {
+        console.log(XMLHttpRequest + ' ' + textStatus + ' ' + errorThrown);
+        new UIkit.notify({
+          message: "<a href='#' class='notify-action'><span class='uk-icon-times'></span></a>" + textStatus,
+          status: "error",
+          timeout: 5000,
+          group: null,
+          pos: 'top-right'
+        });
+      }
+    });
+    $window.resize();
+  });
+</script>
+{% endblock %}

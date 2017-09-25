@@ -1,7 +1,7 @@
 {% extends 'layout/base_no_header.html.twig' %}
 
 {% block sticky_button %}
-  <a class="md-fab md-fab-primary" href="{{ path('student_edit', { 'id': student.id }) }}">
+  <a class="md-fab md-fab-accent md-fab-wave waves-effect waves-button" href="{{ path('student_edit', { 'id': student.id }) }}">
     <i class="material-icons">&#xE254;</i>
   </a>
 {% endblock %}
@@ -32,25 +32,12 @@
             </h2>
           </div>
           <div class="md-fab-wrapper">
-            <a class="md-fab md-fab-small md-fab-success" href="{{ path('change_password', { 'id': student.id }) }}">
-              <i class="material-icons">&#xE8B8;</i>
+            <a class="md-fab md-fab-small md-fab-accent" href="{{ path('change_password', { 'id': student.id }) }}">
+              <i class="material-icons">&#xE898;</i>
             </a>
           </div>
         </div>
         <div class="user_content">
-          <div class="uk-margin-medium-bottom">
-            <ul class="uk-tab">
-              <li  class="uk-active">
-                <a href="{{ path("student_show" , { "id" : student.id})}}">{{ "student.show.title"|trans}}</a>
-              </li>
-              <li>
-                <a href="{{ path("user_payment_show" , { "id" : student.id})}}">{{ "payment.show.detail"|trans}}</a>
-              </li>
-              <li>
-                <a href="{{ path("user_registration_show" , { "id" : student.id})}}">{{ "registration.show.detail"|trans}}</a>
-              </li>
-            </ul>
-          </div>
           <h3 class="full_width_in_card heading_c">{{ 'user.show.general_info'|trans }}</h3>
           <div class="uk-grid uk-margin-medium-top uk-margin-large-bottom" data-uk-grid-margin>
             <div class="uk-width-large-1-2">

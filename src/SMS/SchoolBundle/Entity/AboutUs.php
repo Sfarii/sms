@@ -381,19 +381,4 @@ class AboutUs
     {
         return $this->user;
     }
-
-    /**
-     * Remove translation
-     *
-     * @param \SMS\SchoolBundle\Entity\AboutUsTranslation $translation
-     */
-    public function removeTranslation(\SMS\SchoolBundle\Entity\AboutUsTranslation $translation)
-    {
-        $this->translations->removeElement($translation);
-    }
-
-    public static function getTranslationEntityClass()
-    {
-        return 'SMS\SchoolBundle\Entity\AboutUsTranslation';
-    }
 }

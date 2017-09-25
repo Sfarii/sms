@@ -12,7 +12,6 @@
     "require": {
         "php": "<=5.6.30",
         "ddeboer/data-import-bundle": "~0.1",
-        "stof/doctrine-extensions-bundle": "^1.2",
         "doctrine/doctrine-bundle": "~1.4",
         "doctrine/orm": "^2.4.8",
         "friendsofsymfony/jsrouting-bundle": "^1.6",
@@ -26,7 +25,8 @@
         "sensio/distribution-bundle": "~4.0",
         "sensio/framework-extra-bundle": "^3.0.2",
         "sg/datatablesbundle": "^0.13.0",
-        "symfony/assetic-bundle": "~2.3",
+        "stof/doctrine-extensions-bundle": "^1.2",
+        "symfony/assetic-bundle": "^2.8",
         "symfony/monolog-bundle": "^3.0.2",
         "symfony/swiftmailer-bundle": "~2.3,>=2.3.10",
         "symfony/symfony": "2.8.*",
@@ -40,7 +40,6 @@
     },
     "scripts": {
         "symfony-scripts": [
-          "Incenteev\\ParameterHandler\\ScriptHandler::buildParameters",
           "Sensio\\Bundle\\DistributionBundle\\Composer\\ScriptHandler::buildBootstrap",
           "Sensio\\Bundle\\DistributionBundle\\Composer\\ScriptHandler::clearCache",
           "Sensio\\Bundle\\DistributionBundle\\Composer\\ScriptHandler::installAssets",

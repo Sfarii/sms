@@ -16,6 +16,13 @@ daterange:
     title: Date Range
     start_date: Start Date
     end_date: End Date
+numberrange:
+    title: Number Range
+    start: Start Number
+    end: End Number
+    cancel: Cancel
+    apply: Apply
+
 #menu
 menu:
   feature.title: Feature
@@ -23,9 +30,6 @@ menu:
   login.title: Login
   contact.title: Contact
   home.title: Home
-  lang.title: Languages
-  lang.french: french
-  lang.english: English
   aboutus: About Us
   contact: Contact Us
   users:
@@ -37,20 +41,21 @@ menu:
     manager: Manager
   store:
     title: Store
-    product: Product
-    product_type: Product Type
-  provider:
-    title: Provider
   store_managment:
+    provider: Provider
     title: Store Management
-    delivery: B.L
-    order: B.C
+    delivery: Purchase
+    order: Purchase order
     order_managment: Order User
-    inovice: Inovice
+    statistics: Shop Statistics
+    product: Product
+    product_type: Product Category
   payment:
-    title: Payment
+    title: School payments
+    catchUpLesson: CatchUp Lesson
+    statistics: Payment Statistics
     payment: Payment
-    paymentType: payment Type
+    paymentType: Payment Type
   registration:
     title: Registration
     registration: Registration
@@ -73,10 +78,11 @@ menu:
   exam:
     show_exam: Exam Date
     show_note: Note
-    title: Exam/Note
-    note: Note Managment
+    title: Exam/Mark
+    note: Mark Managment
     exam: Exam Managment
     examType: Exam Type Managment
+    student: Student Mark
   administration:
     show_sanction: Sanction
     show_attendance: Attendance
@@ -85,6 +91,8 @@ menu:
     attendance: Attendance
     attendance_professor: Attendance Professor
     attendance_student: Attendance Student
+    attendance_section: Attendance Section
+    configuration: Settings
   dashbord: Dashbord
   slider: Slider
   feature: Feature

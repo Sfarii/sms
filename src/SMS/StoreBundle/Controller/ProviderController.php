@@ -4,7 +4,7 @@ namespace SMS\StoreBundle\Controller;
 
 use SMS\StoreBundle\Entity\Provider;
 use SMS\StoreBundle\Form\ProviderType;
-use API\BaseController\BaseController;
+use SMS\StoreBundle\BaseController\BaseController;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\Method;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\Route;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\Template;
@@ -101,7 +101,7 @@ class ProviderController extends BaseController
 
         return $this->render('SMSStoreBundle:provider:show.html.twig', array(
             'provider' => $provider,
-            'delete_form' => $deleteForm->createView(),
+            'statistics' => $this->getEntityManager()->providerStatistics($provider),
         ));
     }
 
@@ -210,4 +210,5 @@ class ProviderController extends BaseController
         }
 
         return $this->get('sms.datatable.provider');
-    }}
+    }
+}

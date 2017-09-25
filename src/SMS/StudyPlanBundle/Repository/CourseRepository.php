@@ -13,6 +13,26 @@ use SMS\StudyPlanBundle\Entity\Note;
  */
 class CourseRepository extends EntityRepository
 {
+
+		/**
+     * Get course By establishment
+     *
+     * @param integer $establishment
+     * @return array
+     */
+    public function totalSessionsByEstablishment($establishment)
+    {
+        return $this->createQueryBuilder('course')
+                ->select("Count(sessions ) as totalSessions")
+								->join('course.schedules', 'schedule')
+								->join('schedule.sessions', 'sessions')
+                ->join('course.establishment', 'establishment')
+                ->andWhere('establishment.id = :establishment')
+                ->setParameter('establishment', $establishment->getId())
+                ->getQuery()
+                ->getOneOrNullResult();
+    }
+
 		/**
      * Get Note By ids
      *

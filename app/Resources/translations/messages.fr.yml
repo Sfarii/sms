@@ -46,20 +46,24 @@ menu:
     manager: Directeur
   store:
     title: Boutique
-    product: Produit
-    product_type: Type de produit
-  provider:
-    title: Fournisseur
   store_managment:
     title: Gestion de Boutique
-    delivery: bon de livraison
+    delivery: Achat
     order: Bon de commande
     order_managment: Commander l'utilisateur
     inovice: Facture d'achat
+    provider: Fournisseur
+    product: Produit
+    product_type: Type de produit
+    statistics: Statistiques
   payment:
     title: Gestion paiements
     payment: Paiement
     paymentType: Type de paiement
+    catchUpLesson: Leçon de rattrapage
+    statistics: Statistiques
+    payment: Payment
+    paymentType: Payment Type
   establishment:
     title: Établissement
     division: Semestre
@@ -81,6 +85,7 @@ menu:
     note: Gestion des notes
     exam: Gestion des examens
     examType: Gestion du type d'examen
+    student: Notes des étudiants
   administration:
     show_sanction: Sanction
     show_attendance: Présence

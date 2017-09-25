@@ -1,12 +1,22 @@
 {% extends 'layout/base.html.twig' %}
 
 {% block sticky_button %}
-<a class="md-fab md-fab-primary" href="{{ path('course_new') }}">
+<a class="md-fab md-fab-accent md-fab-wave waves-effect waves-button" href="{{ path('course_new') }}">
     <i class="material-icons">&#xE145;</i>
 </a>
 {% endblock %}
 
-{% block title_page %} 
+{% block sub_title_page %}
+  <a href="{{ path('course_index') }}">
+    {{ 'grade.list.title'|trans }}
+  </a>
+  /
+  <a href="#">
+    {{ 'course.list.title'|trans }}
+  </a>
+{% endblock %}
+
+{% block title_page %}
  {{ 'course.list.title'|trans }}
 {% endblock %}
 

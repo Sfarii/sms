@@ -20,11 +20,11 @@ class EstablishmentType extends AbstractType
     public function buildForm(FormBuilderInterface $builder, array $options)
     {
         $builder
-        ->add('imageFile',  VichImageType::class, array(
-                'allow_delete' => true, // not mandatory, default is true
-                'download_link' => false, // not mandatory, default is true
-                'label' => false )
-            )
+              ->add('imageFile',  VichImageType::class, array(
+                      'allow_delete' => false, // not mandatory, default is true
+                      'download_link' => false, // not mandatory, default is true
+                      'label' => false )
+                  )
               ->add('establishmentName' ,TextType::class , array(
                   'label' => 'establishment.field.establishmentName')
               )
@@ -37,7 +37,13 @@ class EstablishmentType extends AbstractType
               ->add('address' ,TextType::class , array(
                   'label' => 'establishment.field.address')
               )
-              ->add('save', SubmitType::class);
+              ->add('theme' ,TextType::class , array(
+                  'label' => 'establishment.field.theme' ,
+                  'attr' => ['class' => 'theme'])
+              )
+              ->add('save', SubmitType::class, array(
+                  'label' => 'md-fab')
+              );
 
     }
 

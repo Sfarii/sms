@@ -1,51 +1,46 @@
 {% extends 'layout/base.html.twig' %}
 
-{% block heading_actions %}
+{% block sub_title_page %}
   <a href="{{ path('exam_index') }}">
-    <i class="md-icon material-icons">&#xE5C4;</i>
+    {{ 'exam.list.title'|trans }}
+  </a>
+  /
+  <a href="#">
+    {{ 'exam.show.title'|trans }}
   </a>
 {% endblock %}
 
 {% block stylesheets %}
-	{{ parent() }}
-	<!-- page specific plugins -->
-	<link rel="stylesheet" href="{{ asset('assets/plugins/bootstrap/css/bootstrap.min.css')}}">
-    <link rel="stylesheet" href="{{ asset('assets/plugins/editable/css/bootstrap-editable.css')}}">
 
+  <!-- page specific plugins -->
+  <link rel="stylesheet" href="{{ asset('assets/css/jquery-ui.min.css')}}">
+  <link rel="stylesheet" href="{{ asset('assets/css/main.fix.min.css')}}">
+  {{ parent() }}
 {% endblock %}
 
-{% block sticky_button %}
-  <a class="md-fab md-fab-primary" href="{{ path('exam_update', { 'id': exam.id }) }}">
-    <i class="material-icons">&#xE923;</i>
-  </a>
-{% endblock %}
 
 {% block title_page %}
   {{ 'exam.show.title'|trans }}
 {% endblock %}
 
 {% block body %}
-  <div class="uk-grid uk-grid-medium" data-uk-grid-margin>
+  <div class="md-card">
+    <div class="md-card-toolbar">
+      <h3 class="md-card-toolbar-heading-text">
+        {{ 'exam.show.detail'|trans }}
+      </h3>
+    </div>
+    <div class="md-card-content">
+      <div class="uk-grid uk-grid-divider" data-uk-grid-margin>
 
-    <div class="uk-width-xLarge-8-10  uk-width-large-7-10">
-      <div class="md-card">
-        <div class="md-card-toolbar">
-          <h3 class="md-card-toolbar-heading-text">
-            {{ 'exam.show.detail'|trans }}
-          </h3>
-        </div>
-        <div class="md-card-content">
+        <div class="uk-width-xLarge-8-10  uk-width-large-7-10">
 
-          <div class="uk-grid uk-grid-divider" data-uk-grid-margin>
+          <div class="uk-grid  uk-grid-medium" data-uk-grid-margin>
             <div class="uk-width-1-2">
-              <ul class="md-list md-list-addon">
+              <ul class="md-list">
 
                 <li>
                   <div class="md-list-content">
-
-                    <div class="md-list-addon-element">
-                      <i class="md-list-addon-icon material-icons">&#xE80C;</i>
-                    </div>
                     <span class="md-list-heading uk-text-large">{{ exam.section.grade.gradeName }}</span>
 
                     <span class="uk-text-small uk-text-muted uk-display-block">
@@ -54,10 +49,6 @@
                 </li>
                 <li>
                   <div class="md-list-content">
-                    <div class="md-list-addon-element">
-                      <i class="md-list-addon-icon material-icons">&#xE8CE;</i>
-                    </div>
-
                     <span class="md-list-heading uk-text-large">{{ exam.examName }}</span>
                   </div>
                   <span class="uk-text-small uk-text-muted uk-display-block">
@@ -66,9 +57,6 @@
 
                 <li>
                   <div class="md-list-content">
-                    <div class="md-list-addon-element">
-                      <i class="md-list-addon-icon material-icons">&#xE8DF;</i>
-                    </div>
                     <span class="md-list-heading uk-text-large">
                       {% if exam.dateExam %}{{ exam.dateExam|date('Y/m/d') }}{% endif %}
                     </span>
@@ -79,9 +67,6 @@
                 </li>
                 <li>
                   <div class="md-list-content">
-                    <div class="md-list-addon-element">
-                      <i class="md-list-addon-icon material-icons">&#xE425;</i>
-                    </div>
                     <span class="md-list-heading uk-text-large">{{ exam.startTime|date('H:i:s') }}</span>
 
                     <span class="uk-text-small uk-text-muted uk-display-block">
@@ -91,13 +76,9 @@
               </ul>
             </div>
             <div class="uk-width-1-2">
-              <ul class="md-list  md-list-addon">
+              <ul class="md-list">
                 <li>
                   <div class="md-list-content">
-
-                    <div class="md-list-addon-element">
-                      <i class="md-list-addon-icon material-icons">&#xE80C;</i>
-                    </div>
                     <span class="md-list-heading uk-text-large">{{ exam.section.sectionName }}</span>
 
                     <span class="uk-text-small uk-text-muted uk-display-block">
@@ -106,11 +87,8 @@
                 </li>
                 <li>
                   <div class="md-list-content">
-                    <div class="md-list-addon-element">
-                      <i class="md-list-addon-icon material-icons">&#xE14C;</i>
-                    </div>
                     <span class="md-list-heading uk-text-large">
-                      {{ exam.typeExam.factor }}</span>
+                      * {{ exam.typeExam.factor }}</span>
                   </div>
                   <span class="uk-text-small uk-text-muted uk-display-block">
                     {{'typeexam.field.factor'|trans }}</span>
@@ -118,10 +96,6 @@
 
                 <li>
                   <div class="md-list-content">
-
-                    <div class="md-list-addon-element">
-                      <i class="md-list-addon-icon material-icons">&#xE165;</i>
-                    </div>
                     <span class="md-list-heading uk-text-large">{{ exam.typeExam.typeExamName }}</span>
 
                     <span class="uk-text-small uk-text-muted uk-display-block">
@@ -130,10 +104,6 @@
                 </li>
                 <li>
                   <div class="md-list-content">
-
-                    <div class="md-list-addon-element">
-                      <i class="md-list-addon-icon material-icons">&#xE426;</i>
-                    </div>
                     <span class="md-list-heading uk-text-large">{{ exam.endTime|date('H:i:s') }}</span>
 
                     <span class="uk-text-small uk-text-muted uk-display-block">
@@ -145,16 +115,10 @@
 
           </div>
         </div>
-      </div>
-    </div>
-    <div class="uk-width-xLarge-2-10 uk-width-large-3-10">
-      <div class="md-card">
-        <div class="md-card-toolbar">
-          <h3 class="md-card-toolbar-heading-text">
+        <div class="uk-width-xLarge-2-10 uk-width-large-3-10">
+          <h3 class="heading_c uk-margin-small-bottom uk-margin-small-top">
             {{ 'author.info'|trans }}
           </h3>
-        </div>
-        <div class="md-card-content">
           <ul class="md-list md-list-addon">
             <li>
               <div class="md-list-addon-element">
@@ -194,22 +158,26 @@
   </div>
   <div class="md-card uk-margin-medium-bottom">
     <div class="md-card-toolbar">
+      <div class="md-card-toolbar-actions">
+        <a  href="{{ path('exam_update', { 'id': exam.id }) }}">
+          <i class="md-icon material-icons">&#xE923;</i>
+        </a>
+      </div>
       <h3 class="md-card-toolbar-heading-text">
         {{ 'note.show.detail'|trans }}
       </h3>
     </div>
-      <div class="md-card-content">
-          {{ datatable_render(notes) }}
-      </div>
+    <div class="md-card-content">
+      {{ datatable_render(notes) }}
+    </div>
   </div>
 {% endblock %}
 
 {% block head_javascripts %}
-	{{ parent() }}
-	<!-- page specific plugins -->
-    <!--  form file input functions -->
-    <script src="{{ asset('assets/plugins/bootstrap/js/bootstrap.min.js')}}"></script>
-    <script src="{{ asset('assets/plugins/editable/js/bootstrap-editable.min.js')}}"></script>
-
+  {{ parent() }}
+  <!-- page specific plugins -->
+  <!--  form file input functions -->
+  <script src="{{ asset('assets/js/jquery.poshytip.min.js')}}"></script>
+  <script src="{{ asset('assets/js/jquery-editable-poshytip.js')}}"></script>
 
 {% endblock %}

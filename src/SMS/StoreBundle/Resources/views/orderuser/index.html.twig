@@ -1,12 +1,12 @@
 {% extends 'layout/base.html.twig' %}
 
 {% block sticky_button %}
-<a class="md-fab md-fab-primary" href="{{ path('orderuser_new') }}">
+<a class="md-fab md-fab-accent md-fab-wave waves-effect waves-button" href="{{ path('cart_index') }}">
     <i class="material-icons">&#xE145;</i>
 </a>
 {% endblock %}
 
-{% block title_page %} 
+{% block title_page %}
  {{ 'orderuser.list.title'|trans }}
 {% endblock %}
 

@@ -1,3 +1,15 @@
+dashbord:
+    detail:
+        session: Total Sessions
+        student: Total Students
+        professor: Total Professors
+    stats:
+        student: Total Male vs Female Students
+        professor: Total Male vs Female  Professors
+    unit:
+        sessions: Sessions
+        students: Students
+        professors: Professors
 division:
     delete:
         fail: Could not delete from the specified divisions   # FIXME
@@ -41,7 +53,7 @@ establishment:
         email: Email   # FIXME
         establishmentName: Establishment Name   # FIXME
         phone: Phone   # FIXME
-
+        theme: Theme
     list:
         title: Establishment Lists   # FIXME
 
