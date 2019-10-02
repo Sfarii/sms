@@ -13,7 +13,7 @@ Requirements
 Installation
 ------------
 
-# Clone the project
+### Clone the project
 
 Now clone the project from github.
 
@@ -21,7 +21,7 @@ Now clone the project from github.
 $ git clone https://github.com/Sfarii/symfony-sms.git
 ```
 
-# Install dependencies
+### Install dependencies
 
 Now that the project is cloned, running the following command should install all the symfony dependencies:
 
@@ -29,11 +29,11 @@ Now that the project is cloned, running the following command should install all
 $ composer install
 ```
 
-# Configuration
+### Configuration
 
 Now configure the parameters.yaml file under app under config.
 
-# run
+### run the project
 
 Now run this command to run the built-in web server and access the application in your browser at <http://localhost:8000>:
 
